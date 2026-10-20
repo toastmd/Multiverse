@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MULTIVERSE MUD Area Builder</title>
+<style>
+:root{--bg:#000;--panel:#0b0b0b;--line:#2a2a2a;--text:#e8e4d8;--dim:#8a8a8a;--sea:#19e3ff;--lamp:#ff4fd8;--bad:#ff6b5a;--ok:#7be0a0}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,"Helvetica Neue",Arial,sans-serif}
+header{display:flex;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}header h1{margin:0;font-size:17px;color:var(--lamp)}header .sp{flex:1}
+#app{display:grid;grid-template-columns:290px minmax(0,1fr) 330px;height:calc(100% - 45px)}
+section{padding:12px;overflow:auto;min-height:0}#left{border-right:1px solid var(--line)}#right{border-left:1px solid var(--line)}
+h2{font-size:13px;margin:14px 0 6px;color:var(--sea);text-transform:uppercase;letter-spacing:.06em}h2:first-child{margin-top:0}
+label{display:block;margin:6px 0 2px;color:var(--dim);font-size:12px}
+input,select,textarea,button{background:#000;color:var(--text);border:1px solid var(--line);border-radius:3px;padding:6px 8px;font:inherit;max-width:100%}
+input[type=text],input[type=number],select,textarea{width:100%}textarea{min-height:110px;resize:vertical}input[type=checkbox]{width:auto}
+button{cursor:pointer;background:#151515}button:hover{border-color:var(--sea)}button.pri{background:var(--sea);color:#00131a;border:0;font-weight:700}button.del{color:var(--bad)}button.on{border-color:var(--lamp);color:var(--lamp)}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row>button{flex:0 0 auto}.chk{display:flex;gap:14px;flex-wrap:wrap}.chk label{display:flex;gap:4px;align-items:center;margin:0;color:var(--text)}
+canvas{background:#050505;border:1px solid var(--line);display:block;cursor:crosshair;max-width:100%}
+#msg{min-height:20px;margin:8px 0;font-size:13px}.good{color:var(--ok)}.bad{color:var(--bad)}.dim{color:var(--dim);font-size:12px}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}.tag{display:inline-flex;gap:6px;border:1px solid var(--line);border-radius:10px;padding:1px 8px;margin:2px;font-size:12px}
+ul{margin:4px 0;padding-left:18px}li{margin:2px 0}
+@media(max-width:1000px){#app{grid-template-columns:1fr;height:auto}html,body{overflow:auto}}
+</style>
+</head>
+<body>
+<header><h1>MULTIVERSE MUD Area Builder</h1><span class="dim">paint rooms on the grid, link them, save: the new area goes live instantly</span><span class="sp"></span>
+  <input id="key" type="password" placeholder="builder key (see server log)" style="width:210px"><button id="keyb" class="pri">Connect</button></header>
+<div id="app">
+<section id="left">
+  <h2>Area</h2>
+  <label>Area id (a-z, 0-9, _; becomes the room id prefix)</label><input id="aid" type="text" maxlength="21" placeholder="dread_moor">
+  <label>Display name</label><input id="aname" type="text" maxlength="60" placeholder="Dread Moor">
+  <label>Default terrain for the area (rooms can override)</label><select id="aterr"><option>grass</option><option>dirt</option><option>stone</option><option>concrete</option><option>metal</option></select>
+  <label>World position of grid cell 0,0 (x, y, floor) <button id="sug" type="button" style="padding:1px 6px">suggest free spot</button></label>
+  <div class="row"><input id="ox" type="number"><input id="oy" type="number"><input id="oz" type="number"></div>
+  <div class="row" style="margin-top:10px"><button id="save" class="pri">Save to server</button><button id="exp">Export JSON</button><button id="imp">Import JSON</button><input id="file" type="file" accept=".json" hidden></div>
+  <label>Edit an existing custom area</label>
+  <div class="row"><select id="existing"></select><button id="loadx">Load</button><button id="delx" class="del">Delete</button></div>
+  <div id="msg"></div>
+  <h2>Monsters you create</h2>
+  <div class="row"><input id="mid" type="text" placeholder="id e.g. moor_wraith"><input id="mname" type="text" placeholder="name"></div>
+  <div class="row"><input id="micon" type="text" placeholder="icon 👻" maxlength="4"><input id="mlvl" type="number" min="1" max="40" value="10"></div>
+  <div class="chk" style="margin:6px 0"><label><input id="mboss" type="checkbox"> boss</label><label><input id="magg" type="checkbox" checked> aggressive</label><label><input id="mwan" type="checkbox"> wanders</label><button id="madd">Add</button></div>
+  <div id="mlist"></div>
+  <p class="dim">Stats (HP, damage, XP, credits, drops) are generated from the level, same as the built-in monsters. You can also use any existing monster id in a room.</p>
+  <h2>How to use</h2>
+  <ul class="dim"><li><b>Paint</b>: click an empty cell to make a room; with <i>auto-link</i> it connects to neighbours.</li><li><b>Link</b>: click two adjacent rooms to toggle the exit.</li><li><b>Erase</b>: click a room (or right-click anywhere).</li><li>Connect to the existing world with an <b>external link</b> in the room editor.</li><li>Rooms on other floors: use the floor buttons, then set Up/Down links in the editor.</li></ul>
+</section>
+<section id="center">
+  <div class="tools"><span class="dim">Tool:</span><button id="tpaint" class="on">Paint / select</button><button id="tlink">Link</button><button id="terase">Erase</button>
+    <label style="display:flex;gap:4px;align-items:center;margin:0 10px"><input id="auto" type="checkbox" checked> auto-link</label>
+    <span class="dim">Floor</span><button id="zdn">-</button><b id="zl">0</b><button id="zup">+</button>
+    <span class="dim">Pan</span><button id="pl">◀</button><button id="pu">▲</button><button id="pd">▼</button><button id="pr">▶</button></div>
+  <canvas id="grid" width="960" height="600"></canvas>
+  <div class="dim" id="hint"></div>
+</section>
+<section id="right">
+  <h2>Selected room</h2>
+  <div id="editor" class="dim">Click a room on the grid to edit it.</div>
+</section>
+</div>
+<datalist id="dmobs"></datalist><datalist id="ditems"></datalist><datalist id="drooms"></datalist>
+<script>
+const $=s=>document.querySelector(s), CELL=40, COLS=24, ROWS=15, DIRS={n:[0,-1],s:[0,1],e:[1,0],w:[-1,0]}, OPP={n:'s',s:'n',e:'w',w:'e',u:'d',d:'u'};
+let KEY=''; try{ KEY=localStorage.getItem('sp_key')||''; }catch(e){}
+let world={mobs:[],items:[],rooms:[],custom:[],suggest:{x:30,y:0,z:0}};
+let A={id:'',name:'',terrain:'dirt',origin:{x:30,y:0,z:0},mobs:{},rooms:{}}, view={ox:-2,oy:-2,gz:0}, sel=null, tool='paint', linkFrom=null;
+const key=(x,y,z)=>x+','+y+','+z, byId=id=>Object.values(A.rooms).find(r=>r.id===id), at=(x,y,z)=>A.rooms[key(x,y,z)];
+const say=(t,c)=>{ $('#msg').textContent=t; $('#msg').className=c||''; };
+async function api(path,opts={}){ const r=await fetch(path,{...opts,headers:{'x-key':KEY,'Content-Type':'application/json'}}); const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error||('HTTP '+r.status)); return j; }
+
+// ---------- connection and world data ----------
+async function connect(){
+  KEY=$('#key').value||KEY; try{ localStorage.setItem('sp_key',KEY); }catch(e){}
+  try{ world=await api('/api/world'); say('Connected. '+world.rooms.length+' rooms, '+world.mobs.length+' monsters, '+world.items.length+' items known.','good'); }catch(e){ return say(e.message,'bad'); }
+  $('#dmobs').innerHTML=[...world.mobs.map(m=>m.id),...Object.keys(A.mobs)].map(i=>`<option value="${i}">`).join('');
+  $('#ditems').innerHTML=world.items.map(i=>`<option value="${i.id}" label="${i.name}">`).join('');
+  $('#drooms').innerHTML=world.rooms.map(r=>`<option value="${r.id}" label="${r.name}">`).join('');
+  $('#existing').innerHTML='<option value="">(choose)</option>'+world.custom.map(c=>`<option>${c}</option>`).join('');
+  if(!A.rooms||!Object.keys(A.rooms).length){ A.origin={...world.suggest}; paintMeta(); }
+}
+const TCOL={grass:'#2f6d2a',dirt:'#6e4b2a',stone:'#5e636b',concrete:'#8b8b88',metal:'#7f8b98'}, terr=r=>r.terrain||A.terrain||'dirt';
+function paintMeta(){ $('#aterr').value=A.terrain||'dirt'; $('#aid').value=A.id; $('#aname').value=A.name; $('#ox').value=A.origin.x; $('#oy').value=A.origin.y; $('#oz').value=A.origin.z; mlist(); draw(); }
+$('#keyb').onclick=connect; $('#key').value=KEY; if(KEY) connect();
+$('#sug').onclick=()=>{ A.origin={...world.suggest}; paintMeta(); };
+$('#aterr').onchange=e=>{ A.terrain=e.target.value; draft(); draw(); };
+for(const [id,k] of [['aid','id'],['aname','name']]) $('#'+id).oninput=e=>{ A[k]=k==='id'?e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,''):e.target.value; if(k==='id') e.target.value=A.id; draft(); };
+for(const [id,k] of [['ox','x'],['oy','y'],['oz','z']]) $('#'+id).oninput=e=>{ A.origin[k]=Math.trunc(+e.target.value)||0; draft(); };
+
+// ---------- grid drawing ----------
+function draw(){
+  const c=$('#grid'),g=c.getContext('2d'); g.clearRect(0,0,c.width,c.height); g.font='11px -apple-system,Arial';
+  for(let i=0;i<=COLS;i++){ g.strokeStyle=(view.ox+i===0)?'#3a2a40':'#161616'; g.beginPath(); g.moveTo(i*CELL,0); g.lineTo(i*CELL,ROWS*CELL); g.stroke(); }
+  for(let j=0;j<=ROWS;j++){ g.strokeStyle=(view.oy+j===0)?'#3a2a40':'#161616'; g.beginPath(); g.moveTo(0,j*CELL); g.lineTo(COLS*CELL,j*CELL); g.stroke(); }
+  const pos=r=>[(r.gx-view.ox)*CELL+CELL/2,(r.gy-view.oy)*CELL+CELL/2];
+  g.lineWidth=5; g.lineCap='round';
+  for(const r of Object.values(A.rooms)){ if(r.gz!==view.gz) continue; const [x,y]=pos(r);
+    for(const [d,to] of Object.entries(r.exits)){ const v=DIRS[d]; if(!v) continue; const t=byId(to); if(!t||t.gz!==view.gz) continue; const [tx,ty]=pos(t); g.strokeStyle='#19e3ff'; g.beginPath(); g.moveTo(x,y); g.lineTo(tx,ty); g.stroke(); }
+    for(const d of Object.keys(r.ext||{})){ const v=DIRS[d]; if(!v) continue; g.strokeStyle='#ffd34a'; g.setLineDash([3,5]); g.beginPath(); g.moveTo(x,y); g.lineTo(x+v[0]*CELL*.6,y+v[1]*CELL*.6); g.stroke(); g.setLineDash([]); } }
+  for(const r of Object.values(A.rooms)){ if(r.gz!==view.gz) continue; const [x,y]=pos(r), s=CELL*0.62, isSel=sel===r.id, isFrom=linkFrom===r.id;
+    g.fillStyle=TCOL[terr(r)]; g.strokeStyle=isSel?'#ff4fd8':isFrom?'#ffd34a':(r.flags.safe?'#7be0a0':r.mobs.length?'#ff6b5a':'#222'); g.lineWidth=isSel?3:2;
+    g.beginPath(); g.roundRect(x-s/2,y-s/2,s,s,6); g.fill(); g.stroke();
+    g.fillStyle='#e8e4d8'; g.textAlign='center'; g.textBaseline='middle'; g.fillText((r.name||r.id).slice(0,6),x,y);
+    const marks=(r.exits.u?'▲':'')+(r.exits.d?'▼':'')+(r.flags.camp?'⛺':'')+(r.shop.length?'$':'')+(r.flags.forge?'⚒':''); if(marks){ g.fillStyle='#ffd34a'; g.font='10px Arial'; g.fillText(marks,x,y+s/2+7); g.font='11px -apple-system,Arial'; } }
+  $('#zl').textContent=view.gz; $('#hint').textContent=`Grid 0,0 sits at world ${A.origin.x},${A.origin.y} floor ${A.origin.z}. Rooms: ${Object.keys(A.rooms).length}. Pink lines mark the origin row/column; yellow dashed stubs are external links.`;
+}
+function cell(e){ const b=$('#grid').getBoundingClientRect(), sx=$('#grid').width/b.width, sy=$('#grid').height/b.height; return [Math.floor((e.clientX-b.left)*sx/CELL)+view.ox, Math.floor((e.clientY-b.top)*sy/CELL)+view.oy]; }
+function newId(){ let n=Object.keys(A.rooms).length+1; while(byId('r'+n)) n++; return 'r'+n; }
+function autoLink(r){ if(!$('#auto').checked) return; for(const [d,v] of Object.entries(DIRS)){ const n=at(r.gx+v[0],r.gy+v[1],r.gz); if(n){ r.exits[d]=n.id; n.exits[OPP[d]]=r.id; } } }
+function unlink(r){ for(const o of Object.values(A.rooms)) for(const [d,to] of Object.entries(o.exits)) if(to===r.id) delete o.exits[d]; }
+$('#grid').onclick=e=>{
+  const [gx,gy]=cell(e), r=at(gx,gy,view.gz);
+  if(tool==='erase'){ if(r){ unlink(r); delete A.rooms[key(r.gx,r.gy,r.gz)]; if(sel===r.id) sel=null; editor(); draft(); draw(); } return; }
+  if(tool==='link'){ if(!r) return; if(!linkFrom){ linkFrom=r.id; draw(); return; } const a=byId(linkFrom); linkFrom=null;
+    const d=Object.entries(DIRS).find(([,v])=>a.gx+v[0]===r.gx&&a.gy+v[1]===r.gy&&a.gz===r.gz); if(!d){ say('Rooms must be next to each other on the same floor to link.','bad'); draw(); return; }
+    if(a.exits[d[0]]===r.id){ delete a.exits[d[0]]; delete r.exits[OPP[d[0]]]; } else { a.exits[d[0]]=r.id; r.exits[OPP[d[0]]]=a.id; } draft(); draw(); return; }
+  if(r){ sel=r.id; editor(); draw(); return; }
+  const id=newId(), room={id,name:'New room '+id,long:'',gx,gy,gz:view.gz,flags:{},exits:{},ext:{},mobs:[],items:[],res:{},shop:[]};
+  A.rooms[key(gx,gy,view.gz)]=room; autoLink(room); sel=id; editor(); draft(); draw();
+};
+$('#grid').oncontextmenu=e=>{ e.preventDefault(); const [gx,gy]=cell(e), r=at(gx,gy,view.gz); if(r){ unlink(r); delete A.rooms[key(r.gx,r.gy,r.gz)]; if(sel===r.id){ sel=null; editor(); } draft(); draw(); } };
+for(const [id,t] of [['tpaint','paint'],['tlink','link'],['terase','erase']]) $('#'+id).onclick=()=>{ tool=t; linkFrom=null; for(const [i] of [['tpaint'],['tlink'],['terase']]) $('#'+i).classList.toggle('on',i==='t'+t); draw(); };
+$('#zup').onclick=()=>{ view.gz++; draw(); }; $('#zdn').onclick=()=>{ view.gz--; draw(); };
+$('#pl').onclick=()=>{ view.ox-=4; draw(); }; $('#pr').onclick=()=>{ view.ox+=4; draw(); }; $('#pu').onclick=()=>{ view.oy-=3; draw(); }; $('#pd').onclick=()=>{ view.oy+=3; draw(); };
+
+// ---------- room editor ----------
+function editor(){
+  const r=sel&&byId(sel), E=$('#editor'); if(!r){ E.className='dim'; E.textContent='Click a room on the grid to edit it.'; return; } E.className='';
+  const others=Object.values(A.rooms).filter(o=>o.id!==r.id).map(o=>`<option value="${o.id}">${o.name} (${o.id}, floor ${o.gz})</option>`).join('');
+  E.innerHTML=`<label>Room id</label><input id="rid" type="text" value="${r.id}" maxlength="25">
+  <label>Name</label><input id="rname" type="text" value="${esc(r.name)}" maxlength="60">
+  <label>Description (a few sentences, about 50 words reads well)</label><textarea id="rlong">${esc(r.long)}</textarea>
+  <label>Terrain</label><select id="rterr"><option value="">(area default: ${A.terrain||'dirt'})</option>${['grass','dirt','stone','concrete','metal'].map(t=>`<option ${r.terrain===t?'selected':''}>${t}</option>`).join('')}</select>
+  <label>Flags</label><div class="chk">${['safe','camp','inn','healer','forge'].map(f=>`<label><input type="checkbox" data-f="${f}" ${r.flags[f]?'checked':''}> ${f}</label>`).join('')}</div>
+  <label>Gathering nodes (herb / ore / fish, 0 = none)</label><div class="row">${['herb','ore','fish'].map(k=>`<input type="number" min="0" max="9" data-res="${k}" value="${r.res[k]||0}" title="${k}">`).join('')}</div>
+  <label>Monsters (comma separated ids; repeat an id for more than one)</label><input id="rmobs" type="text" list="dmobs" value="${r.mobs.join(', ')}">
+  <label>Floor items that respawn</label><input id="ritems" type="text" list="ditems" value="${r.items.join(', ')}">
+  <label>Shop stock (item ids; makes this a shop)</label><input id="rshop" type="text" list="ditems" value="${r.shop.join(', ')}">
+  <label>Up / Down links to other rooms in this area</label><div class="row"><select id="rup"><option value="">no up exit</option>${others}</select><select id="rdn"><option value="">no down exit</option>${others}</select></div>
+  <label>External link to the existing world</label><div class="row"><select id="xd"><option>n</option><option>s</option><option>e</option><option>w</option><option>u</option><option>d</option></select><input id="xr" type="text" list="drooms" placeholder="town/gate"><button id="xadd" type="button">Add</button></div>
+  <div id="xlist">${Object.entries(r.ext).map(([d,t])=>`<span class="tag">${d} to ${t} <a href="#" data-x="${d}" style="color:#ff6b5a">x</a></span>`).join('')}</div>
+  <div class="row" style="margin-top:10px"><button id="rdel" class="del">Delete room</button></div>`;
+  $('#rup').value=r.exits.u||''; $('#rdn').value=r.exits.d||'';
+  $('#rname').oninput=e=>{ r.name=e.target.value; draft(); draw(); }; $('#rlong').oninput=e=>{ r.long=e.target.value; draft(); };
+  $('#rid').onchange=e=>{ const v=e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,''); if(!/^[a-z][a-z0-9_]*$/.test(v)||(v!==r.id&&byId(v))){ say('Room id must be unique, start with a letter, use a-z 0-9 _.','bad'); e.target.value=r.id; return; }
+    for(const o of Object.values(A.rooms)) for(const [d,t] of Object.entries(o.exits)) if(t===r.id) o.exits[d]=v; r.id=v; sel=v; draft(); draw(); };
+  $('#rterr').onchange=e=>{ if(e.target.value) r.terrain=e.target.value; else delete r.terrain; draft(); draw(); };
+  E.querySelectorAll('[data-f]').forEach(c=>c.onchange=()=>{ r.flags[c.dataset.f]=c.checked; draft(); });
+  E.querySelectorAll('[data-res]').forEach(c=>c.oninput=()=>{ const v=Math.max(0,Math.min(9,+c.value||0)); if(v) r.res[c.dataset.res]=v; else delete r.res[c.dataset.res]; draft(); });
+  const list=v=>v.split(',').map(s=>s.trim()).filter(Boolean);
+  $('#rmobs').oninput=e=>{ r.mobs=list(e.target.value); draft(); draw(); }; $('#ritems').oninput=e=>{ r.items=list(e.target.value); draft(); }; $('#rshop').oninput=e=>{ r.shop=list(e.target.value); draft(); draw(); };
+  const ud=(sel2,d)=>{ $(sel2).onchange=e=>{ const old=r.exits[d]; if(old){ const o=byId(old); if(o) delete o.exits[OPP[d]]; delete r.exits[d]; } const t=byId(e.target.value); if(t){ r.exits[d]=t.id; t.exits[OPP[d]]=r.id; } draft(); draw(); }; }; ud('#rup','u'); ud('#rdn','d');
+  $('#xadd').onclick=()=>{ const t=$('#xr').value.trim(); if(!t) return; if(!world.rooms.some(x=>x.id===t)) say('That room id is not in the world yet (it must be an existing room).','bad'); r.ext[$('#xd').value]=t; draft(); editor(); draw(); };
+  E.querySelectorAll('[data-x]').forEach(a=>a.onclick=ev=>{ ev.preventDefault(); delete r.ext[a.dataset.x]; draft(); editor(); draw(); });
+  $('#rdel').onclick=()=>{ unlink(r); delete A.rooms[key(r.gx,r.gy,r.gz)]; sel=null; editor(); draft(); draw(); };
+}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+// ---------- monsters ----------
+function mlist(){
+  $('#mlist').innerHTML=Object.entries(A.mobs).map(([id,m])=>`<span class="tag">${esc(m.icon||'')} ${esc(m.name)} L${m.level}${m.boss?' boss':''} <a href="#" data-m="${id}" style="color:#ff6b5a">x</a></span>`).join('')||'<span class="dim">none yet</span>';
+  document.querySelectorAll('[data-m]').forEach(a=>a.onclick=e=>{ e.preventDefault(); delete A.mobs[a.dataset.m]; mlist(); draft(); });
+  $('#dmobs').innerHTML=[...world.mobs.map(m=>m.id),...Object.keys(A.mobs)].map(i=>`<option value="${i}">`).join('');
+}
+$('#madd').onclick=()=>{ const id=$('#mid').value.toLowerCase().replace(/[^a-z0-9_]/g,''), name=$('#mname').value.trim(); if(!/^[a-z][a-z0-9_]*$/.test(id)||!name) return say('A monster needs an id (letters/digits/_) and a name.','bad');
+  A.mobs[id]={name,icon:$('#micon').value||'👾',level:Math.max(1,Math.min(40,+$('#mlvl').value||1)),boss:$('#mboss').checked,aggro:$('#magg').checked,wander:$('#mwan').checked}; mlist(); draft(); say('Added monster '+id+'. Use it in a room by id.','good'); };
+
+// ---------- save, load, export ----------
+function payload(){ return {id:A.id,name:A.name,terrain:A.terrain||'dirt',origin:A.origin,mobs:A.mobs,rooms:Object.values(A.rooms)}; }
+function load(j){ A={id:j.id||'',name:j.name||'',terrain:j.terrain||'dirt',origin:j.origin||{x:30,y:0,z:0},mobs:j.mobs||{},rooms:{}}; for(const r of j.rooms||[]){ const room={flags:{},exits:{},ext:{},mobs:[],items:[],res:{},shop:[],long:'',gz:0,...r}; A.rooms[key(room.gx,room.gy,room.gz)]=room; } sel=null; view={ox:-2,oy:-2,gz:0}; paintMeta(); editor(); }
+$('#save').onclick=async()=>{ if(!A.id) return say('Give the area an id first.','bad'); try{ const r=await api('/api/area',{method:'POST',body:JSON.stringify(payload())}); await connect(); say(`Saved ${r.rooms} rooms. The area is live now.`+(r.warnings.length?' Warnings: '+r.warnings.join(' '):''),r.warnings.length?'':'good'); }catch(e){ say(e.message,'bad'); } };
+$('#exp').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(payload(),null,1)],{type:'application/json'})); a.download=(A.id||'area')+'.json'; a.click(); };
+$('#imp').onclick=()=>$('#file').click(); $('#file').onchange=e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ load(JSON.parse(t)); say('Imported.','good'); }catch(err){ say('Not a valid area file.','bad'); } }); };
+$('#loadx').onclick=async()=>{ const n=$('#existing').value; if(!n) return; try{ load(await api('/api/area?name='+n)); say('Loaded '+n+'.','good'); }catch(e){ say(e.message,'bad'); } };
+$('#delx').onclick=async()=>{ const n=$('#existing').value; if(!n) return; if(!confirm('Delete the area "'+n+'" from the live world? Players inside are moved to Ashfall.')) return; try{ await api('/api/area?name='+n,{method:'DELETE'}); say('Deleted '+n+'.','good'); connect(); }catch(e){ say(e.message,'bad'); } };
+function draft(){ try{ localStorage.setItem('sp_draft',JSON.stringify(payload())); }catch(e){} }
+try{ const d=JSON.parse(localStorage.getItem('sp_draft')||'null'); if(d&&d.rooms&&d.rooms.length) load(d); }catch(e){}
+paintMeta();
+</script>
+</body>
+</html>

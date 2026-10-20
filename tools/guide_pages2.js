@@ -1,0 +1,76 @@
+'use strict';
+// Guide pages: Magic and Skills, Items.
+module.exports = (L) => {
+  const { D, esc, nm, cap, num, writeImg, art, table, pill, h2, card, imgTag, emit, route, ROOM, CATALOG, AREAS } = L;
+  const K = D.K.CLASSES, SP = D.K.SPELLS, T = D.T, ROM = ['I', 'II', 'III', 'IV', 'V'];
+  const KINDN = { dmg: 'Damage', heal: 'Heal', buff: 'Buff', summon: 'Summon', escape: 'Escape', gather: 'Gathering', craft: 'Crafting' };
+  const power = (s) => { const b = [];
+    if (s.kind === 'dmg') { b.push(`${s.dmg[0]}-${s.dmg[1]}${s.hits ? ` × ${s.hits} hits` : ''}${s.aoe ? ' to every foe' : ''}`); if (s.stun) b.push(`stuns ${s.stun} round${s.stun > 1 ? 's' : ''}`); if (s.drain) b.push(`drains ${Math.round(s.drain * 100)}%`); if (s.dot) b.push(`+${s.dot.dmg[0]}-${s.dot.dmg[1]}/round for ${s.dot.ticks}`); if (s.exec) b.push('double vs wounded'); if (s.crit) b.push(`+${Math.round(s.crit * 100)}% crit`); }
+    else if (s.kind === 'heal') { b.push(`${s.heal[0]}-${s.heal[1]} health`); if (s.hot) b.push(`+${s.hot}/round for ${s.ticks}`); }
+    else if (s.kind === 'buff') { for (const [k, n] of [['ac', 'armor'], ['atk', 'damage'], ['regen', 'regen']]) if (s[k]) b.push(`${s[k] > 0 ? '+' : ''}${s[k]} ${n}`); if (s.crit) b.push(`+${Math.round(s.crit * 100)}% crit`); if (s.evade) b.push(`+${Math.round(s.evade * 100)}% evade`); if (s.heal) b.push(`heal ${s.heal[0]}-${s.heal[1]}`); b.push(`${s.ticks} rounds`); }
+    else if (s.kind === 'summon') b.push(`${s.sdmg[0]}-${s.sdmg[1]} per round for ${s.ticks} rounds`); else if (s.kind === 'escape') b.push('slip away'); else if (s.kind === 'gather') b.push(`gathers ${s.res}`); else if (s.kind === 'craft') b.push(`tier ${s.tier} recipes${s.forge ? ' (needs a forge)' : ''}`);
+    return b.join(', '); };
+  const kindName = (s) => (s.kind === 'dmg' && s.aoe ? 'Area damage' : KINDN[s.kind]);
+  const keys = Object.keys(K);
+  emit('spells', 'Spells', 'Every ability of every class. Spell power grows with your level, so base numbers below are before level scaling.', `
+<p>Cast by typing the spell name (<code>fireball</code>) or <code>cast fireball goblin</code>. Spells cost mana and have a short cooldown (3 seconds unless noted). Damage and healing scale <b>+12% per level past 10</b>, ×1.4 for remort classes, and +3% per remort. Targets resist spell damage with a dice pool (up to 25% off).</p>
+<div class="chips">${keys.map((k) => `<a href="#${k}">${K[k].icon} ${K[k].name}</a>`).join('')}</div>
+${keys.map((k) => `${h2(`${K[k].icon} ${K[k].name}${K[k].remort ? ' ' + pill('Remort class', 'c') : ''}`, k)}<p class="m">${esc(K[k].desc)}</p>${table(['Level', 'Spell', 'Mana', 'Type', 'Effect', 'Cooldown', 'Description'], SP[k].map((s) => [s.lvl, `<b>${s.i} ${esc(s.n)}</b>`, s.mp, kindName(s), power(s), (s.cd ?? 3) + 's', esc(s.d)]))}`).join('')}`);
+
+  // ---------------- tradeskills ----------------
+  const SK = T.SKILLS, ICON = { foraging: 'herb', mining: 'ore', fishing: 'fish', smithing: 'hammer', brewing: 'alembic', cooking: 'skillet', salvaging: 'crowbar' };
+  for (const n of ['herb', 'bloom', 'ore', 'silver', 'fish', 'pearl', 'mithril', 'scale', 'fishingpole', 'miningpick', 'sickle', 'hammer', 'alembic', 'skillet', 'crowbar', 'bag', 'dice']) writeImg(`icon-${n}.svg`, art.icon(n));
+  const nodesFor = (res) => { const by = {}; for (const r of CATALOG) if (r.def.res && r.def.res[res]) by[r.area] = (by[r.area] || 0) + 1; return Object.entries(by).map(([a, n]) => `${AREAS[a][0]} (${n})`).join(', '); };
+  const mat = (id) => nm(id);
+  emit('tradeskills', 'Tradeskills', 'Seven crafts anyone can learn at any time, for free. Gather materials, craft gear and consumables, and break loot down for parts.', `
+<div class="banner2">${imgTag('banner-tradeskills.svg', 'Tradeskills')}<p>Type <code>tradeskills</code> in the game to see all seven and whether you have learned them. <code>learn mining</code> teaches one on the spot, anywhere. Skills level 1 to ${T.MAX} by use. Prospectors learn 50% faster and find extra. Your bound <a href="tools-bag.html">tools</a> improve every skill.</p></div>
+<div class="cards">${Object.entries(SK).map(([id, s]) => card(imgTag(`icon-${ICON[id]}.svg`, s.name), `${s.icon} ${s.name}`, `<p>${esc(s.desc)}</p><p class="m">Command: <code>${s.verb}</code> · <a href="#${id}">Details</a></p>`)).join('')}</div>
+${Object.entries(SK).map(([id, s]) => `${h2(`${s.icon} ${s.name}`, id)}<p>${esc(s.desc)}</p>` + (s.kind === 'gather' ? `<p>Works in rooms with <b>${s.nodeName}</b> (nodes refill every minute). Found in: ${nodesFor(s.res)}.</p>${table(['Finds', 'Needs skill level', 'Chance'], s.loot.map((l) => [`<b>${mat(l.id)}</b>`, l.min, l.rare ? 'rare, improves with skill and tool' : 'common']))}` : s.kind === 'salvage' ? '<p>Type <code>salvage &lt;item&gt;</code> for any unworn weapon or armor in your pack or bag. Better gear gives better materials.</p>' : table(['Skill', 'Recipe', 'Materials', 'Makes'], s.recipes.filter((r) => D.W.items[r.out]).map((r) => [r.lvl, `<code>${r.k}</code>`, Object.entries(r.need).map(([m, n]) => `${n} ${mat(m)}`).join(', '), `<b>${nm(r.out)}</b>`]), { filter: 'rec-' + id }))).join('')}
+${h2('Tips')}<ul class="tips"><li>Foraging, mining and fishing need a room with the right resource node. Look at the room: "Resources here: herb x3".</li><li>Crafting uses materials in your <b>bag</b> as well as your pack.</li><li>Smithing needs a forge (Brann's Smithy, the abandoned forge in the mines, the Ember Forge-Temple). Cooking needs a hearth: an inn, camp, forge or any safe room.</li><li>All materials sell at every shop. The <b>Salvage Exchange</b> in Ashfall pays 60%.</li></ul>`);
+
+  // ---------------- tools and bag ----------------
+  const bonus = (skill, t) => { const s = SK[skill], xp = `+${10 * t}% skill XP`; if (s.kind === 'gather') return `${(Math.max(1800, 3000 - 300 * (t - 1)) / 1000).toFixed(1)}s between uses, ${10 * t}% chance of an extra find, better rare finds, ${xp}`; if (skill === 'smithing') return `${5 * t}% chance to save materials, ${xp}`; if (skill === 'salvaging') return `+${Math.floor(t / 2)} main material, ${5 * t}% chance of double, ${xp}`; return `${5 * t}% chance of a double batch, ${xp}`; };
+  const caprow = Array.from({ length: 41 }, (_, r) => [`Remort ${r}`, 60 + 20 * r]);
+  emit('tools-bag', 'Tools and Bag of Holding', 'Two things every character has from the start: bound tools that improve with use, and a huge bag that grows with every remort.', `
+<div class="banner2">${imgTag('icon-bag.svg', 'Bag of holding')}<p>Both are <b>autoloading</b> (you already have them), <b>unsellable</b>, <b>non-droppable</b>, and <b>saved to your character</b> when you log out.</p></div>
+${h2('Bound tools')}<p>One tool per tradeskill. Each improves from Mk I to Mk V by use. Type <code>tools</code> to see yours.</p>
+${table(['Tool', 'Skill', 'What it does', 'Uses for Mk II / III / IV / V'], Object.values(T.TOOLS).map((t) => [`<b>${t.icon} ${t.name}</b>`, SK[t.skill].name, esc(t.desc), T.TOOL_TIERS.slice(1).join(' / ')]))}
+${h2('Bonuses by Mark')}${Object.values(T.TOOLS).map((t) => `<h3>${t.icon} ${t.name}</h3>${table(['Mark', 'Bonus'], T.TOOL_TIERS.map((_, i) => [`Mk ${ROM[i]}`, bonus(t.skill, i + 1)]))}`).join('')}
+${h2('Bag of Holding')}<p>A bottomless-feeling bag for loot and materials. <b>Base capacity 60 items, plus 20 for every remort</b>, so Remort 40 holds 860. It stores gathered materials and looted gear automatically, so your pack stays free for potions and equipment.</p>
+${table(['Command', 'What it does'], [['<code>bag</code>', 'List the contents and capacity'], ['<code>bag put &lt;item|all|materials|gear&gt;</code>', 'Move items from your pack into the bag'], ['<code>bag get &lt;item&gt; [n|all]</code>', 'Take items out'], ['<code>bag sell [materials]</code>', 'Sell the bag\'s contents at a shop'], ['<code>bag auto loot</code>', 'Gathered materials and looted gear go straight into the bag (default)'], ['<code>bag auto overflow</code>', 'Only use the bag when your pack is full'], ['<code>bag auto off</code>', 'Never use the bag']])}
+<p>Crafting and <code>salvage</code> use materials and gear from the bag. <code>sell all</code> and <code>sell materials</code> sell bag contents too. Drops, quest rewards and purchases go to your pack (and overflow to the bag).</p>
+${h2('Capacity by remort')}${table(['Remort', 'Bag slots'], caprow)}`);
+
+  // ---------------- materials ----------------
+  const MATS = ['herb', 'bloom', 'ore', 'silver', 'fish', 'pearl', 'mithril', 'scale'], RECS = [...Object.entries(SK).filter(([, s]) => s.recipes).flatMap(([id, s]) => s.recipes.map((r) => [s.name, r])), ...D.K.RECIPES.map((r) => ['Prospector crafting', r])];
+  const SRC = { herb: ['Foraging', 'herb'], bloom: ['Foraging (skill 8+, rare)', 'herb'], ore: ['Mining', 'ore'], silver: ['Mining (skill 10+, rare)', 'ore'], mithril: ['Mining (skill 25+, very rare), monster drops from level 12', 'ore'], fish: ['Fishing', 'fish'], pearl: ['Fishing (skill 12+, rare)', 'fish'], scale: ['Monster drops from level 28', null] };
+  emit('materials', 'Materials', 'Eight gathered materials, where to find them, what they sell for, and what they make.', `
+<div class="cards">${MATS.map((id) => { const d = D.W.items[id], s = SRC[id]; return card(imgTag(`icon-${id}.svg`, d.name), d.name, `<p>${esc(d.long)}</p><p class="m">${pill(s[0], 'b')}</p><p class="m">Value ${d.value}c · shop pays ${Math.max(1, Math.floor(d.value * 0.4))}c · Exchange pays ${Math.max(1, Math.floor(d.value * 0.6))}c</p>`); }).join('')}</div>
+${h2('Sources and uses')}${table(['Material', 'How to get it', 'Where', 'Used in'], MATS.map((id) => { const s = SRC[id], used = RECS.filter(([, r]) => r.need[id]).map(([sk, r]) => `${r.k.replace(/_/g, ' ')} (${sk})`); return [`<b>${nm(id)}</b>`, s[0], s[1] ? nodesFor(s[1]) : 'Dropped by monsters level 28 and up (15% each)', used.length > 12 ? used.slice(0, 12).join(', ') + `, and ${used.length - 12} more` : used.join(', ')]; }), { filter: 'mats' })}
+${h2('Selling')}<p>Every material sells at every shop for 40% of its value (at least 1 credit). The <b>Salvage Exchange</b> (${route('town/salvage_exchange')} from the square) pays 60% and sells the basic materials. Use <code>sell materials</code>, or <code>sell all</code> to include loot. Your bag is sold too.</p>`);
+
+  // ---------------- gear ----------------
+  const TIERS = ['iron', 'steel', 'mithril', 'runed', 'adamant', 'dragon', 'void'], PIECES = ['sword', 'mail', 'helm', 'shield', 'boots'];
+  const sold = (id) => { const r = Object.values(ROOM).find((x) => x.def.shop && x.def.shop.stock.includes(id)); return r ? r.name : 'Drop or craft only'; };
+  const grows = TIERS.map((t) => { const sw = D.W.items[t + 'sword']; return [`<b>${cap(sw.name.replace(/ blade$/, ''))}</b>`, sw.lvl, `${sw.dmg[0]}-${sw.dmg[1]}`, PIECES.slice(1).map((p) => D.W.items[t + p].ac).join(' / '), num(sw.value), sold(t + 'sword')]; });
+  const LEG = Object.entries(D.W.mobs).filter(([, m]) => m.legend).map(([, m]) => { const it = D.W.items[m.legend.item]; return [`<b>${esc(it.name)}</b>`, cap(it.type === 'treasure' ? 'treasure (priceless)' : it.type), esc(cap(m.name)), `${Math.round(m.legend.chance * 100)}%`, num(it.value), it.bonus ? Object.entries(it.bonus).map(([k, v]) => `+${v} ${k}`).join(', ') + (it.ac ? `, armor ${it.ac}` : '') + (it.dmg ? `, damage ${it.dmg.join('-')}` : '') : '-']; });
+  emit('gear', 'Weapons and Armor', 'Seven tiers of gear, each with a level requirement. Buy it, loot it, or forge it.', `
+<div class="banner2">${imgTag('banner-gear.svg', 'Gear')}<p>Every weapon and armor piece has a <b>level requirement</b>. Armor slots are body, head, shield and boots (plus a neck slot for charms). Class starting weapons and a free rack of starter gear at Brann's Smithy get you going.</p></div>
+${h2('Gear tiers')}${table(['Tier', 'Level', 'Blade damage', 'Armor: vest / helmet / shield / boots', 'Blade price', 'Sold at'], grows)}
+${h2('Legendary boss items')}<p>Every boss carries one unique legendary item with a 25% drop chance. Equipment versions carry bonus stats far above their level, and treasures are simply priceless. Legendary items sell for their <b>full value</b> (normal gear sells for 40%), and the finder is announced to the whole MUD.</p>${table(['Item', 'Type', 'Dropped by', 'Chance', 'Worth (credits)', 'Bonuses'], LEG)}<p>Armor pieces cost 120% (vest), 50% (helmet), 60% (shield) and 40% (boots) of the blade price. Voidforged gear drops only from the final boss. Smiths can <a href="tradeskills.html#smithing">forge every tier</a>, and <a href="tradeskills.html#salvaging">Salvaging</a> turns old gear into materials.</p>
+${h2('All weapons')}${table(['Weapon', 'Damage', 'Level', 'Price'], Object.entries(D.W.items).filter(([, i]) => i.type === 'weapon').map(([, i]) => [`<b>${i.name}</b>`, `${i.dmg[0]}-${i.dmg[1]}`, i.lvl || 1, num(i.value || 0) + 'c']), { filter: 'wpn' })}
+${h2('All armor')}${table(['Armor', 'Slot', 'Armor', 'Level', 'Price'], Object.entries(D.W.items).filter(([, i]) => i.type === 'armor').map(([, i]) => [`<b>${i.name}</b>`, i.slot, i.ac, i.lvl || 1, num(i.value || 0) + 'c']), { filter: 'arm' })}`);
+
+  // ---------------- consumables ----------------
+  const pots = Object.entries(D.W.items).filter(([, i]) => i.type === 'potion'), madeBy = (id) => { const r = RECS.find(([, x]) => x.out === id); return r ? `${r[0]} lvl ${r[1].lvl}` : '-'; };
+  writeImg('banner-consumables.svg', art.banner('consumables'));
+  emit('consumables', 'Potions and Meals', 'Stims restore health, cells restore mana, and cooked meals heal and give a timed buff.', `
+${table(['Item', 'Restores', 'Buff', 'Value', 'Sold at', 'Made by'], pots.map(([id, i]) => [`<b>${i.name}</b>`, i.heal ? `${num(i.heal)} health` : `${num(i.mana)} ${'mana'}`, i.buff ? Object.entries(i.buff).filter(([k]) => k !== 'ticks').map(([k, v]) => `+${v} ${k}`).join(', ') + ` (${i.buff.ticks} rounds)` : '-', num(i.value) + 'c', sold(id).replace('Drop or craft only', 'Drops, crafting'), madeBy(id)]), { filter: 'pots' })}
+<p>Use them with <code>quaff</code> or <code>eat</code>. Potions are not stored in the bag by default, so they stay in your pack ready for a fight.</p>`);
+
+  // ---------------- shops ----------------
+  const shops = Object.values(ROOM).filter((r) => r.def.shop || r.def.clinic);
+  emit('shops', 'Shops', 'Where to buy and sell. Directions start from Ashfall Square.', `
+${table(['Shop', 'Area', 'From the square', 'Sells'], shops.map((r) => { const st = (r.def.shop || r.def.clinic).stock; return [`<b>${r.name}</b>${r.def.exchange ? ' ' + pill('best for materials', 'b') : ''}`, AREAS[r.area][0], r.area === 'town' ? route(r.path) : 'far from Ashfall', st.map((i) => `${nm(i)} (${num(D.W.items[i].value)}c)`).join(', ')]; }), { filter: 'shops' })}
+<p>Every shop buys your loot. Prices when selling are 40% of an item's value (60% for materials at the Salvage Exchange). The <b>Dawn Clinic</b> heals for free up to level 15. The inn lets you <code>rest</code>.</p>`);
+};

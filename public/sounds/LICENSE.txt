@@ -1,0 +1,4 @@
+The three sound effects in this folder (level_up.wav, quest_complete.wav, death.wav) were synthesized from scratch
+with plain sine/sawtooth tones and noise for this project. They contain no third-party recordings.
+They are dedicated to the public domain under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/).
+Use, modify and redistribute them freely, with no attribution required.

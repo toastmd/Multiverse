@@ -1,0 +1,9 @@
+# secrets and player data never go to GitHub
+data/players/
+data/bots.json
+data/builder.key
+data/config.json
+data/github-sync.json
+node_modules/
+*.log
+*.zip

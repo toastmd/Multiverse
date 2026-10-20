@@ -1,0 +1,31 @@
+{
+  "discord": {
+    "webhookUrl": "https://discord.com/api/webhooks/ID/TOKEN",
+    "botToken": "",
+    "channelId": "",
+    "pollSeconds": 4,
+    "announcements": false,
+    "presence": false
+  },
+  "twitter": {
+    "apiKey": "", "apiSecret": "", "accessToken": "", "accessSecret": "",
+    "events": ["legend", "boss", "remort", "milestone"],
+    "hashtags": ["#game", "#Multiverse"],
+    "minIntervalSeconds": 60,
+    "dryRun": false
+  },
+  "giphy": {
+    "apiKey": "your-giphy-api-key",
+    "rating": "pg",
+    "cooldownSeconds": 6
+  },
+  "github": {
+    "token": "github_pat_...",
+    "repo": "your-name/multiverse-mud",
+    "branch": "main",
+    "intervalMinutes": 5,
+    "debounceSeconds": 20,
+    "authorName": "MULTIVERSE MUD",
+    "authorEmail": "mud@users.noreply.github.com"
+  }
+}

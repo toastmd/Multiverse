@@ -1,0 +1,44 @@
+"""Every picture the game uses: key, destination files, size, and a text-to-image prompt. Used by make_prompts.py and import_art.py."""
+import os, sys
+sys.path.insert(0, os.path.dirname(__file__))
+from render.portraits import CLASSES, NPCS
+from render.scenes import AREAS, BANNER
+from render.icons import ICONS
+
+CLASS_NAMES = {'magician': 'Arcanist (fantasy wizard)', 'thief': 'Rogue (fantasy cutthroat)', 'alchemist': 'Alchemist (fantasy potion-maker)', 'gunslinger': 'Gunslinger (Old West gunfighter)', 'barbarian': 'Chromeblade (sci-fi cybernetic warrior)', 'engineer': 'Mechwright (sci-fi engineer in a powered suit)',
+               'necromancer': 'Necromancer (fantasy death mage)', 'cleric': 'Preacher (Old West preacher and doctor)', 'druid': 'Druid (fantasy forest spirit-caller)', 'bard': 'Showman (Old West saloon entertainer)', 'wirewalker': 'Wirewalker (sci-fi netrunner hacker)', 'scavenger': 'Prospector (Old West gold prospector)',
+               'dragon': 'Dragon (fantasy dragon-blooded warrior with small horns)', 'android': 'Android (sci-fi synthetic human with visible seams)', 'shapeshifter': 'Shapeshifter (fantasy feral beast-changer)'}
+GENDER = {'m': 'man', 'f': 'woman', 'n': 'androgynous non-binary person'}
+ACC = {'hood': 'wearing a hooded cloak', 'cybereye': 'one glowing cybernetic eye', 'mask': 'face mask', 'goggles': 'brass goggles', 'hat': 'wide-brim hat', 'scar': 'facial scar', 'cyberjaw': 'chrome cybernetic jaw plate', 'pauldron': 'armored shoulder plates',
+       'helmet': 'work helmet', 'lamp': 'headlamp', 'faceglow': 'glowing eyes', 'cross': 'red cross medical badge', 'headband': 'headband', 'leaf': 'leaves and feathers in the hair', 'visor': 'wraparound visor', 'antenna': 'small antenna', 'jack': 'neural data cable plugged at the temple',
+       'horns': 'small horns', 'flame': 'ember-like glowing hair', 'beard': 'full beard', 'stubble': 'stubble', 'glasses': 'round glasses', 'turban': 'wrapped turban', 'glow': 'faint ethereal glow', 'headband ': ''}
+NPC_ROLE = {'torv': 'veteran guild master', 'elara': 'compassionate clinic healer', 'brann': 'gruff blacksmith', 'mara': 'sharp market trader', 'hale': 'stern city guard captain', 'pell': 'nervous scavenger', 'fenwick': 'old forest hermit', 'aldous': 'scholarly archivist',
+            'barnaby': 'weathered ferry-boat keeper', 'greta': 'road warrior', 'durn': 'miner foreman', 'rashid': 'desert caravan merchant', 'ulf': 'frost-bitten mountain hermit', 'sael': 'ember-wastes fire-caller', 'voss': 'battle-scarred citadel soldier', 'watcher': 'mysterious ageless watcher of the abyss', 'whitlock': 'grizzled ghost-town sheriff', 'sylwen': 'tall silver-haired fey warden', 'okoro': 'starship survivor officer with a chrome arm', 'marrow': 'ghost of a drowned ship captain', 'cobb': 'weary railroad stationmaster'}
+AREA_DESC = {'town': 'Old West frontier town at sunset with wooden false-front buildings, a saloon, and a faintly glowing portal arch where worlds meet', 'forest': 'misty enchanted fantasy forest at dusk with shafts of light', 'crypt': 'ancient fantasy crypt with stone arches, bones and torchlight', 'marsh': 'foggy fantasy swamp with dead trees, reeds and fireflies',
+             'road': 'Old West desert trail at sunset with red rocks, a wooden sign and telegraph wires', 'mines': 'Old West gold-rush mine tunnel with rail tracks, lantern light and glowing crystals', 'dunes': 'fantasy desert dunes at sunset with ancient ruins', 'frost': 'sci-fi research station on a frozen moon with aurora and snow mountains', 'ember': 'sci-fi volcanic colony world with lava rivers and ash',
+             'citadel': 'ruined fantasy castle towers under moonlight and mist', 'abyss': 'cosmic sci-fi void with a swirling dark vortex and violet light', 'gulch': 'Old West ghost town at night with pale wisps and a glowing portal arch', 'thorn': 'fey forest with giant glowing mushrooms and fireflies', 'aurora': 'wrecked starship corridor lit by red emergency lights', 'reach': 'sunken fantasy kingdom underwater with light rays and coral', 'rail': 'hellish railroad yard with tracks into a glowing tunnel and a locomotive headlight'}
+BANNER_DESC = {'home': 'Old West frontier town at sunset with a glowing portal arch', 'howto': 'dusty frontier main street with a saloon at sunset', 'interface': 'macro of a glowing circuit board', 'commands': 'macro of a green glowing circuit board', 'faq': 'glowing arcane sigil circle in the dark', 'classes': 'a lineup of diverse adventurers: wizard, gunslinger, preacher, netrunner, druid, cyborg, cinematic group portrait',
+               'remorting': 'rebirth: three powerful characters, dragon, android, shapeshifter', 'experience': 'ruined citadel under moonlight', 'combat': 'volcanic wasteland battlefield, lava glow', 'cyberware': 'magenta-lit cybernetic implants and circuitry', 'spells': 'glowing magic circle and runes in darkness',
+               'tradeskills': 'blacksmith forge with glowing metal and sparks', 'toolsbag': 'workshop bench with tools and sparks', 'materials': 'mine cave with glowing crystals', 'gear': 'armory forge, weapons and armor', 'consumables': 'alchemy lab shelves of glowing vials', 'shops': 'frontier market street with striped awnings at sunset',
+               'map': 'holographic map table with glowing routes', 'areas': 'panorama blending city, forest, marsh, desert and snow', 'bestiary': 'misty swamp at night with glowing eyes in the dark', 'npcs': 'a lineup of weathered frontier townsfolk, cinematic group portrait'}
+ICON_DESC = {'herb': 'fresh green healing herb leaves', 'bloom': 'a pale blue glowing flower', 'ore': 'a chunk of raw copper-flecked ore', 'silver': 'a raw nugget of silver', 'mithril': 'a glowing blue crystalline metal nugget', 'fish': 'a fresh silver fish', 'pearl': 'a large lustrous pearl', 'scale': 'a large ember-orange dragon scale',
+             'fishingpole': 'a wooden fishing pole with reel', 'miningpick': 'a worn mining pickaxe', 'sickle': 'a herbalist sickle', 'hammer': 'a smithing hammer', 'alembic': 'a glass alembic flask with glowing pink liquid', 'skillet': 'a cast-iron skillet with an egg', 'crowbar': 'a red salvage crowbar',
+             'bag': 'a purple leather satchel with a glowing cyan clasp', 'chrome': 'a chrome cybernetic arm', 'dice': 'a red six-sided die with white pips'}
+TERRAIN_DESC = {'grass': 'wild grass', 'dirt': 'packed dirt with pebbles', 'stone': 'cracked flagstone paving', 'concrete': 'weathered concrete with seams and stains', 'metal': 'brushed steel plate with rivets and light rust'}
+STYLE = 'photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed'
+NEG = 'cartoon, illustration, drawing, painting, anime, 3d render, cgi, plastic skin, text, watermark, logo'
+
+def build():
+    items = []  # key, kind, files, size, prompt
+    for k, (a1, a2, outfit, acc, hc, theme) in CLASSES.items():
+        for g in 'mfn':
+            extras = ', '.join(ACC[a] for a in acc if ACC.get(a))
+            items.append((f'player-{k}-{g}', 'portrait', [f'public/img/player/{k}-{g}.jpg'], (360, 432), f'Head-and-shoulders portrait of a {GENDER[g]}, {CLASS_NAMES[k]} class, {extras}, {a1} and {a2} rim light, bokeh background matching the genre, {STYLE}'))
+    for k, (g, hc, acc, a1, outfit, sk) in NPCS.items():
+        extras = ', '.join(ACC[a] for a in acc if ACC.get(a))
+        items.append((f'npc-{k}', 'portrait', [f'public/img/npc/{k}.jpg'], (360, 432), f'Head-and-shoulders portrait of a {NPC_ROLE[k]}, {"nonbinary" if g == "nonbinary" else g} person with {hc} hair, {extras}, {a1} accent light, gritty multiverse setting, {STYLE}'))
+    for k in AREAS: items.append((f'area-{k}', 'landscape', [f'public/guide/img/area-{k}.jpg'], (960, 384), f'Wide cinematic landscape photograph: {AREA_DESC[k]}, photorealistic, real photograph, volumetric light, ultra detailed'))
+    for k in BANNER: items.append((f'banner-{k}', 'banner', [f'public/guide/img/banner-{k}.jpg'], (1600, 400), f'Ultra-wide cinematic photograph: {BANNER_DESC[k]}, photorealistic, real photograph, dramatic lighting, ultra detailed'))
+    for k in ICONS: items.append((f'icon-{k}', 'icon', [f'public/guide/img/icon-{k}.jpg'], (256, 256), f'Studio product photograph of {ICON_DESC[k]}, centered, dark moody background with soft bokeh, macro lens, photorealistic, real photograph'))
+    for k, d in TERRAIN_DESC.items(): items.append((f'terrain-{k}', 'texture', [f'public/img/terrain/{k}.jpg', f'public/guide/img/terrain-{k}.jpg'], (256, 256), f'Seamless tileable top-down photographic texture of {d}, even lighting, photorealistic, real photograph'))
+    return items

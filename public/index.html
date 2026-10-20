@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><meta name="build" content="__BUILD__">
 <meta charset="utf-8">
 <link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -163,7 +163,7 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 
 <script src="portrait.js"></script>
 <button id="cog" type="button" title="Settings: theme, volume, fonts, gossip window, keypad, triggers" aria-label="Settings" aria-expanded="false">&#9881;</button>
-<div id="settings" hidden><div class="sethd"><b>Settings</b><button id="setx" type="button" aria-label="Close settings" title="Close">&#10005;</button></div>
+<div id="settings" hidden><div class="sethd"><b>Settings</b><small id="ver" style="color:var(--dim)"></small><button id="setx" type="button" aria-label="Close settings" title="Close">&#10005;</button></div>
     <label>Theme <select id="sth"><option value="black">Black</option><option value="white">White</option><option value="darkgrey">Dark grey</option><option value="darkblue">Dark blue</option><option value="oldwest">Old West</option><option value="futuristic">Futuristic</option><option value="fantasy">Fantasy</option></select></label>
     <label><span>Volume</span> <input id="sv" type="range" min="0" max="100" step="5" aria-label="Sound volume"> <output id="svo"></output></label>
     <label><span>Gossip text size</span> <input id="sgf" type="range" min="11" max="24" step="1" aria-label="Gossip text size"> <output id="sgfo"></output></label>
@@ -186,7 +186,7 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 <div id="fwin" hidden role="dialog" aria-label="Finger"><div class="sbar" id="fbar"><span>Finger</span><span data-x="1" id="fx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="fbody"></div></div>
 <div id="wwin" hidden><div id="wbar"><span>Who is online <small id="wcount"></small></span><span id="wx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="wbody"></div></div>
 <script>
-const $=s=>document.querySelector(s), out=$('#out');
+const $=s=>document.querySelector(s), out=$('#out'), BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 let sock, me={}, map=null, fight=null, hist=[], hi=0, myCls='magician', myGender='nonbinary', myName='', myPic='', theirs=false;
 // ---- portrait window: the NPC picture if there is one, otherwise a generic portrait of you (class + gender) ----
 const genSrc=(c,g)=>'img/player/'+(c||'magician')+'-'+String(g||'nonbinary')[0]+'.jpg';
@@ -292,7 +292,7 @@ let prefs={font:'serif',size:17,keypad:false,gifs:true,yt:true,theme:'black',vol
 function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; $('#sgf').value=prefs.gfs; $('#sgfo').textContent=prefs.gfs+'px'; $('#sgs').value=prefs.gside; const g=$('#gos'); g.style.fontSize=prefs.gfs+'px'; const dest=document.querySelector(prefs.gside==='right'?'aside.right':'aside.left'); if(dest&&g.parentElement!==dest){ dest.appendChild(g); g.scrollTop=g.scrollHeight; } }
 function savePrefs(){ try{ localStorage.setItem('sp_prefs',JSON.stringify(prefs)); }catch(e){} applyPrefs(); }
 $('#healbtn').onclick=()=>{ send({t:'cmd',line:'eat'}); $('#in').focus(); }; // the HEAL quick key sends: eat
-$('#setx').onclick=()=>{ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); };
+$('#ver').textContent='build '+BUILD; $('#setx').onclick=()=>{ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); };
 $('#cog').onclick=()=>{ const s=$('#settings'); s.hidden=!s.hidden; $('#cog').setAttribute('aria-expanded',String(!s.hidden)); }; document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('#settings').hidden){ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); } });
 $('#sgf').oninput=e=>{ prefs.gfs=+e.target.value; savePrefs(); }; $('#sgs').onchange=e=>{ prefs.gside=e.target.value; savePrefs(); };
 $('#mud').onchange=e=>{ const k=e.target.dataset&&e.target.dataset.m; if(k) send({t:'mute',key:k,on:e.target.checked}); }; $('#stb').onclick=()=>send({t:'title',text:$('#stt').value}); $('#seb').onclick=()=>send({t:'email',text:$('#sem').value}); $('#sem').onkeydown=e=>{ e.stopPropagation(); if(e.key==='Enter') send({t:'email',text:$('#sem').value}); }; $('#seh').onchange=e=>send({t:'emailhide',hide:e.target.checked});
@@ -324,7 +324,7 @@ function add(m,c='text'){
 function handle(m){
   if(m.t==='text'){ add(m.m,m.c); trCheck(m.m,m.c); }
   else if(m.t==='mutes'){ document.querySelectorAll('#mud input[data-m]').forEach(i=>{ i.checked=!!(m.mute||{})[i.dataset.m]; }); if(document.activeElement!==$('#stt')) $('#stt').value=m.title||''; if(document.activeElement!==$('#sem')) $('#sem').value=m.email||''; $('#seh').checked=!!m.eh; }
-  else if(m.t==='ok'){ document.body.classList.add('in'); $('#login').style.display='none'; $('#in').focus(); }
+  else if(m.t==='ok'){ if(m.v&&BUILD&&m.v!==BUILD){ let again=false; try{ again=sessionStorage.getItem('sp_reload')===m.v; sessionStorage.setItem('sp_reload',m.v); }catch(e){} if(!again){ location.reload(); return; } setTimeout(()=>add('Your browser is showing an old copy of the game page (page build '+BUILD+', server build '+m.v+'). Press Ctrl+Shift+R (Cmd+Shift+R on a Mac) to load the new interface.','hurt'),800); } document.body.classList.add('in'); $('#login').style.display='none'; $('#in').focus(); }
   else if(m.t==='err') $('#err').textContent=m.m;
   else if(m.t==='stats') stats(m);
   else if(m.t==='map'){ map=m; drawMap(); roomPic(); setWx(m.wx); }
@@ -439,6 +439,7 @@ function wxFrame(){ wxRaf=0; if(!WX) return; const W=wxc.width, H=wxc.height, R=
   else if(WX==='emp'){ wg.fillStyle='rgba(0,40,60,'+(.1+R()*.1)+')'; wg.fillRect(0,0,W,H); const r=(wxT*4)%360; wg.lineWidth=3; for(let k=0;k<3;k++){ const rr=(r+k*120)%360; wg.strokeStyle='rgba(120,235,255,'+(.8*(1-rr/360))+')'; wg.beginPath(); wg.arc(W/2,H/2,rr*1.3,0,7); wg.stroke(); }
     wg.fillStyle='rgba(130,230,255,.16)'; for(let i=0;i<4;i++) wg.fillRect(0,R()*H,W,3+R()*9); if(R()<.08){ wg.fillStyle='rgba(255,255,255,.18)'; wg.fillRect(0,0,W,H); } }
   wxRaf=requestAnimationFrame(wxFrame); }
+function rrect(g,x,y,w,hh,r){ if(g.roundRect) g.roundRect(x,y,w,hh,r); else g.rect(x,y,w,hh); } // roundRect is missing in older Safari
 let rpKey=null; // the static room picture under the map: img/rooms/<room id with / as ->.jpg, falling back to the area's picture
 function roomPic(){ if(!map||!map.me||rpKey===map.me) return; rpKey=map.me; const img=$('#rpimg'); img.style.visibility='visible'; $('#rpname').textContent=map.rn||''; $('#rpnote').textContent='';
   const area=()=>{ img.onerror=()=>{ img.onerror=null; img.style.visibility='hidden'; }; img.src='guide/img/area-'+(map.ra||'town')+'.jpg'; $('#rpnote').textContent='area picture'; };
@@ -453,9 +454,9 @@ function drawMap(){
     for(const e of r.ex){ const v=V[e.d]; if(!v) continue; const t=by[e.to]; let ex,ey; if(t){ [ex,ey]=P(t); } else { ex=x+v[0]*S*.42; ey=y+v[1]*S*.42; }
       g.setLineDash(t?[]:[7,7]); g.strokeStyle='#000'; g.lineWidth=18; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.strokeStyle=tex(g,r.t); g.lineWidth=12; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.setLineDash([]); } }
   for(const r of map.rooms){ const [x,y]=P(r), here=r.p===map.me, z=33;
-    g.save(); g.beginPath(); g.roundRect(x-z,y-z,z*2,z*2,8); g.clip(); g.fillStyle=tex(g,r.t); g.fillRect(x-z,y-z,z*2,z*2);
+    g.save(); g.beginPath(); rrect(g,x-z,y-z,z*2,z*2,8); g.clip(); g.fillStyle=tex(g,r.t); g.fillRect(x-z,y-z,z*2,z*2);
     const sh=g.createLinearGradient(x,y-z,x,y+z); sh.addColorStop(0,'rgba(255,255,255,.14)'); sh.addColorStop(1,'rgba(0,0,0,.28)'); g.fillStyle=sh; g.fillRect(x-z,y-z,z*2,z*2); g.restore();
-    g.beginPath(); g.roundRect(x-z,y-z,z*2,z*2,8); g.lineWidth=here?6:3; g.strokeStyle=here?`rgba(255,154,60,${.65+.35*pulse})`:'#000'; if(here){ g.shadowColor='#ff9a3c'; g.shadowBlur=14*pulse; } g.stroke(); g.shadowBlur=0;
+    g.beginPath(); rrect(g,x-z,y-z,z*2,z*2,8); g.lineWidth=here?6:3; g.strokeStyle=here?`rgba(255,154,60,${.65+.35*pulse})`:'#000'; if(here){ g.shadowColor='#ff9a3c'; g.shadowBlur=14*pulse; } g.stroke(); g.shadowBlur=0;
     g.textAlign='center'; g.textBaseline='middle'; const up=r.ex.some(e=>e.d==='u'),dn=r.ex.some(e=>e.d==='d');
     if(up||dn){ g.font='600 20px ui-sans-serif,system-ui'; g.lineWidth=4; g.strokeStyle='#000'; g.strokeText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); g.fillStyle='#ffe9a8'; g.fillText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); }
     if(map.others.includes(r.p)){ g.fillStyle='#19e3ff'; g.strokeStyle='#000'; g.lineWidth=3; g.beginPath(); g.arc(x+z-5,y-z+5,9,0,7); g.stroke(); g.fill(); }
@@ -493,7 +494,7 @@ function frame(now){
     if(f.hurt&&f.hurt.side===s&&now>=f.hurt.t&&now-f.hurt.t<300){ x+=Math.sin(now/18)*7; g.fillStyle='rgba(229,96,63,.18)'; g.fillRect(pos[s]-100,20,200,H*.76); }
     if(u.hp<=0){ a=.35; rot=s==='L'?-1.2:1.2; }
     g.fillStyle='rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(pos[s],H*.78,70,14,0,0,7); g.fill();
-    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); const im=mobImg(u.mp); if(im){ const bw=190, bh=190; g.beginPath(); g.roundRect(-bw/2,-bh+24,bw,bh,16); g.clip(); const r=Math.min(im.naturalWidth,im.naturalHeight), sx=(im.naturalWidth-r)/2, sy=(im.naturalHeight-r)*.2; g.drawImage(im,sx,sy,r,r,-bw/2,-bh+24,bw,bh); } else { g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); } g.restore(); if(im){ g.save(); g.globalAlpha=a; g.strokeStyle='#e9b44c'; g.lineWidth=3; g.beginPath(); g.roundRect(x-95,y-190+24,190,190,16); g.stroke(); g.restore(); }
+    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); const im=mobImg(u.mp); if(im){ const bw=190, bh=190; g.beginPath(); rrect(g,-bw/2,-bh+24,bw,bh,16); g.clip(); const r=Math.min(im.naturalWidth,im.naturalHeight), sx=(im.naturalWidth-r)/2, sy=(im.naturalHeight-r)*.2; g.drawImage(im,sx,sy,r,r,-bw/2,-bh+24,bw,bh); } else { g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); } g.restore(); if(im){ g.save(); g.globalAlpha=a; g.strokeStyle='#e9b44c'; g.lineWidth=3; g.beginPath(); rrect(g,x-95,y-190+24,190,190,16); g.stroke(); g.restore(); }
     g.fillStyle='#e6dfcb'; g.font='600 26px "Iowan Old Style",Georgia,serif'; g.fillText(`${u.name}  ·  lvl ${u.lvl}`,pos[s],42);
     const bw=250,r=Math.max(0,u.d/u.max); g.fillStyle='#0a1115'; g.fillRect(pos[s]-bw/2,56,bw,22); g.fillStyle=hpColor(r); g.fillRect(pos[s]-bw/2,56,bw*r,22);
     g.strokeStyle='#777'; g.lineWidth=2; g.strokeRect(pos[s]-bw/2,56,bw,22);

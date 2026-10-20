@@ -78,6 +78,7 @@ D.leaderboard = (force) => {
 D.creditOffline = (name, o) => { // add credits or an item to a saved character who is not online (auction proceeds and returned items)
   try { const f = file(name); if (!fs.existsSync(f)) return false; const r = JSON.parse(fs.readFileSync(f, 'utf8')); if (o.gold) r.gold = (r.gold || 0) + o.gold; if (o.bag) { r.bag = r.bag || {}; r.bag[o.bag] = (r.bag[o.bag] || 0) + 1; } fs.writeFileSync(f, JSON.stringify(r)); return true; } catch (e) { D.log('creditOffline', e.message); return false; }
 };
+D.build = () => { try { const t = fs.statSync(path.join(PUB, 'index.html')); return t.mtime.toISOString().slice(0, 16).replace(/[-:T]/g, '') + '-' + t.size.toString(36); } catch (e) { return 'unknown'; } }; // identifies the version of public/index.html the server has right now
 let areaPics = {}, areaAt = 0; // default room picture per area: public/img/areas/<area id>.jpg
 D.areaPic = (area) => { if (Date.now() - areaAt > 30000) { areaAt = Date.now(); try { areaPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'areas')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { areaPics = {}; } } return areaPics[area === 'cit' ? 'citadel' : area] || ''; };
 let people = {}, peopleAt = 0; // custom pictures for particular players (public/img/people/<name>.jpg, e.g. zeph.jpg); everyone else gets the class + gender portrait
@@ -116,7 +117,7 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p);
+  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p);
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
@@ -174,7 +175,13 @@ const server = http.createServer((req, res) => {
   const url = req.url.split('?')[0]; let f = path.join(PUB, url === '/' ? 'index.html' : path.normalize(url));
   if (f.startsWith(PUB) && fs.existsSync(f) && fs.statSync(f).isDirectory()) { if (!url.endsWith('/')) { res.writeHead(301, { Location: url + '/' }); return res.end(); } f = path.join(f, 'index.html'); } // /guide/ serves the player guide
   if (!f.startsWith(PUB) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end('Not found'); }
-  res.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res);
+  const st = fs.statSync(f), type = TYPES[path.extname(f)] || 'application/octet-stream';
+  if (f === path.join(PUB, 'index.html')) { // the game page: never cached, and stamped with its build so the client can tell if it is stale
+    const html = fs.readFileSync(f, 'utf8').split('__BUILD__').join(D.build()); res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-store' }); return res.end(html);
+  }
+  const lm = new Date(Math.floor(st.mtimeMs / 1000) * 1000); // everything else: always revalidate, so new pictures and scripts show up straight away
+  if (req.headers['if-modified-since'] && new Date(req.headers['if-modified-since']) >= lm) { res.writeHead(304, { 'Cache-Control': 'no-cache' }); return res.end(); }
+  res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Last-Modified': lm.toUTCString() }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
 server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); });

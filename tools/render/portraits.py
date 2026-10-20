@@ -29,10 +29,11 @@ def glow(cv, mask, color, k=1.0, s=14):
     return screen(cv, g)
 
 def background(seed, accent, accent2, theme='scifi'):
-    if theme == 'west': accent, accent2 = (255, 160, 80), (255, 205, 130)
+    if theme == 'modern': accent, accent2 = (90, 170, 255), (255, 160, 80)
+    elif theme == 'west': accent, accent2 = (255, 160, 80), (255, 205, 130)
     elif theme == 'fantasy': accent, accent2 = (110, 200, 130), (255, 215, 130)
     r = np.random.default_rng(seed); y = np.linspace(0, 1, H)[:, None, None]
-    top = np.array({'west': [40, 20, 22], 'fantasy': [8, 18, 20], 'scifi': [14, 8, 28]}[theme], np.float32) / 255; bot = np.array({'west': [120, 62, 36], 'fantasy': [26, 44, 34], 'scifi': [34, 14, 52]}[theme], np.float32) / 255
+    top = np.array({'west': [40, 20, 22], 'fantasy': [8, 18, 20], 'scifi': [14, 8, 28], 'modern': [26, 30, 40]}[theme], np.float32) / 255; bot = np.array({'west': [120, 62, 36], 'fantasy': [26, 44, 34], 'scifi': [34, 14, 52], 'modern': [74, 84, 100]}[theme], np.float32) / 255
     cv = (top * (1 - y) + bot * y) * np.ones((1, W, 3), np.float32)
     cv = cv + (np.array(accent2, np.float32) / 255 * 0.10) * np.clip(1 - np.abs(np.linspace(-1, 1, W))[None, :, None] * 1.2, 0, 1) * (1 - y)
     im = Image.new('RGB', (W, H), (0, 0, 0)); d = ImageDraw.Draw(im)
@@ -204,13 +205,15 @@ CLASSES = {  # key: (accent, accent2, outfit rgb, accessories, hair colour, them
     'gunslinger': ('orange', 'gold', (96, 62, 38), ['hat', 'scar', 'stubble'], 'brown', 'west'), 'barbarian': ('red', 'orange', (70, 36, 34), ['scar', 'cyberjaw', 'pauldron'], 'black', 'scifi'), 'engineer': ('gold', 'cyan', (190, 140, 40), ['helmet', 'lamp'], 'brown', 'scifi'),
     'necromancer': ('violet', 'green', (34, 26, 52), ['hood', 'faceglow'], 'black', 'fantasy'), 'cleric': ('gold', 'cyan', (36, 34, 40), ['hat', 'cross'], 'grey', 'west'), 'druid': ('green', 'gold', (44, 86, 56), ['leaf'], 'auburn', 'fantasy'),
     'bard': ('pink', 'cyan', (140, 40, 52), ['hat', 'stubble'], 'brown', 'west'), 'wirewalker': ('cyan', 'pink', (24, 40, 70), ['visor', 'antenna', 'jack'], 'blue', 'scifi'), 'scavenger': ('orange', 'green', (110, 84, 56), ['hat', 'stubble', 'scar'], 'brown', 'west'),
-    'dragon': ('orange', 'red', (110, 34, 24), ['horns', 'flame'], 'red', 'fantasy'), 'android': ('cyan', 'violet', (70, 78, 96), ['visor', 'cyberjaw', 'antenna'], 'grey', 'scifi'), 'shapeshifter': ('green', 'orange', (60, 76, 52), ['leaf', 'scar'], 'brown', 'fantasy')}
+    'dragon': ('orange', 'red', (110, 34, 24), ['horns', 'flame'], 'red', 'fantasy'), 'android': ('cyan', 'violet', (70, 78, 96), ['visor', 'cyberjaw', 'antenna'], 'grey', 'scifi'), 'shapeshifter': ('green', 'orange', (60, 76, 52), ['leaf', 'scar'], 'brown', 'fantasy'),
+    'gambler': ('gold', 'pink', (110, 22, 38), ['hat', 'glasses', 'stubble'], 'black', 'west'), 'ripperdoc': ('cyan', 'green', (200, 206, 214), ['visor', 'cyberjaw'], 'grey', 'scifi'), 'outlaw': ('orange', 'red', (70, 46, 34), ['hat', 'mask', 'scar'], 'brown', 'west'), 'pirate': ('cyan', 'gold', (36, 58, 92), ['hat', 'scar', 'stubble'], 'black', 'fantasy')}
 NPCS = {  # id: gender, hair, acc, accent, outfit, skin
     'torv': ('male', 'grey', ['scar', 'cybereye', 'stubble'], 'gold', (60, 46, 40), 2), 'elara': ('female', 'blond', ['cross', 'headband'], 'green', (226, 226, 232), 1), 'brann': ('male', 'brown', ['goggles', 'beard'], 'orange', (84, 56, 40), 3),
     'mara': ('female', 'auburn', ['headband'], 'pink', (120, 40, 60), 2), 'hale': ('male', 'black', ['helmet'], 'cyan', (50, 70, 100), 4), 'pell': ('male', 'grey', ['glasses', 'stubble'], 'green', (86, 100, 70), 1),
     'fenwick': ('male', 'white', ['hood', 'beard'], 'green', (56, 80, 50), 2), 'aldous': ('male', 'grey', ['hood', 'glasses'], 'violet', (70, 64, 90), 0), 'barnaby': ('male', 'grey', ['hat', 'beard'], 'cyan', (70, 86, 100), 3),
     'greta': ('female', 'brown', ['scar'], 'orange', (110, 60, 40), 1), 'durn': ('male', 'red', ['helmet', 'lamp', 'beard'], 'gold', (96, 70, 44), 2), 'rashid': ('male', 'black', ['turban', 'beard'], 'gold', (150, 110, 60), 4),
-    'ulf': ('male', 'white', ['hood', 'beard', 'visor'], 'cyan', (96, 100, 112), 1), 'sael': ('female', 'red', ['goggles', 'flame'], 'orange', (120, 40, 30), 2), 'voss': ('female', 'brown', ['helmet', 'scar'], 'cyan', (70, 80, 92), 3), 'whitlock': ('male', 'grey', ['hat', 'stubble', 'scar'], 'gold', (70, 56, 44), 1), 'sylwen': ('female', 'white', ['leaf', 'glow'], 'green', (60, 96, 64), 0), 'okoro': ('female', 'black', ['visor', 'cyberjaw'], 'cyan', (60, 70, 90), 4), 'marrow': ('female', 'grey', ['hat', 'glow'], 'cyan', (40, 60, 80), 0), 'cobb': ('male', 'grey', ['hat', 'glasses', 'beard'], 'orange', (40, 38, 44), 2),
+    'ulf': ('male', 'white', ['hood', 'beard', 'visor'], 'cyan', (96, 100, 112), 1), 'sael': ('female', 'red', ['goggles', 'flame'], 'orange', (120, 40, 30), 2), 'voss': ('female', 'brown', ['helmet', 'scar'], 'cyan', (70, 80, 92), 3), 'dale': ('male', 'brown', ['stubble'], 'orange', (70, 90, 120), 2), 'wanda': ('female', 'auburn', ['glasses'], 'pink', (150, 70, 110), 1), 'gary': ('male', 'black', ['stubble'], 'cyan', (36, 52, 96), 3),
+    'slick': ('male', 'black', ['hat', 'scar', 'stubble'], 'orange', (70, 30, 36), 2), 'whitlock': ('male', 'grey', ['hat', 'stubble', 'scar'], 'gold', (70, 56, 44), 1), 'sylwen': ('female', 'white', ['leaf', 'glow'], 'green', (60, 96, 64), 0), 'okoro': ('female', 'black', ['visor', 'cyberjaw'], 'cyan', (60, 70, 90), 4), 'marrow': ('female', 'grey', ['hat', 'glow'], 'cyan', (40, 60, 80), 0), 'cobb': ('male', 'grey', ['hat', 'glasses', 'beard'], 'orange', (40, 38, 44), 2),
     'watcher': ('nonbinary', 'white', ['glow', 'faceglow'], 'violet', (40, 34, 80), 0)}
 
 def run(pub, only=None):
@@ -224,6 +227,6 @@ def run(pub, only=None):
             t = render(spec, seed, os.path.join(pub, 'img/player', f'{k}-{g[0]}.jpg')); n += 1; print('player', k, g[0], round(t, 1), 's', flush=True)
     for k, (g, hc, acc, a1, outfit, sk) in NPCS.items():
         if only and k not in only: continue
-        spec = dict(gender=g, hair=hc, acc=list(acc), accent=a1, accent2='pink', outfit=outfit, skin=sk, hood_c=tuple(int(v * 1.1) for v in outfit), turban_c=(210, 180, 130), theme={'torv': 'west', 'elara': 'west', 'brann': 'west', 'mara': 'west', 'hale': 'west', 'pell': 'fantasy', 'fenwick': 'fantasy', 'aldous': 'fantasy', 'barnaby': 'fantasy', 'greta': 'west', 'durn': 'west', 'rashid': 'fantasy', 'ulf': 'scifi', 'sael': 'scifi', 'voss': 'fantasy', 'watcher': 'scifi', 'whitlock': 'west', 'sylwen': 'fantasy', 'okoro': 'scifi', 'marrow': 'fantasy', 'cobb': 'west'}.get(k, 'fantasy'))
+        spec = dict(gender=g, hair=hc, acc=list(acc), accent=a1, accent2='pink', outfit=outfit, skin=sk, hood_c=tuple(int(v * 1.1) for v in outfit), turban_c=(210, 180, 130), theme={'torv': 'west', 'elara': 'west', 'brann': 'west', 'mara': 'west', 'hale': 'west', 'pell': 'fantasy', 'fenwick': 'fantasy', 'aldous': 'fantasy', 'barnaby': 'fantasy', 'greta': 'west', 'durn': 'west', 'rashid': 'fantasy', 'ulf': 'scifi', 'sael': 'scifi', 'voss': 'fantasy', 'watcher': 'scifi', 'dale': 'modern', 'wanda': 'modern', 'gary': 'modern', 'slick': 'west', 'whitlock': 'west', 'sylwen': 'fantasy', 'okoro': 'scifi', 'marrow': 'fantasy', 'cobb': 'west'}.get(k, 'fantasy'))
         t = render(spec, sum(ord(c) for c in k) * 17, os.path.join(pub, 'img/npc', f'{k}.jpg')); n += 1; print('npc', k, round(t, 1), 's', flush=True)
     return n

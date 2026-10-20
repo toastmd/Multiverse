@@ -211,7 +211,9 @@ def railyard(c): # Brimstone Rail Yard: rails running into a hellmouth, with a l
     im, d = c.im(); d.rectangle([c.w * .44, c.h * .3, c.w * .56, c.h * .5], fill=255); d.rectangle([c.w * .46, c.h * .22, c.w * .49, c.h * .3], fill=255); c.paint(im, (12, 10, 14), 1); hl, hd = c.im(); hd.ellipse([c.w * .485, c.h * .4, c.w * .515, c.h * .4 + c.w * .03], fill=255); c.paint(hl, (255, 230, 160), 1, 2, 22, 1.8)
     sm = np.clip(fbm(c.h, c.w, c.seed + 8, 60, 4) * .5 + .3, 0, 1) * np.clip(1 - np.abs((np.arange(c.w)[None, :] - c.w * .475) / (c.w * .16)), 0, 1) * (np.arange(c.h)[:, None] < c.h * .3); c.cv = comp(c.cv, np.array([70, 50, 50], np.float32) / 255, np.clip(sm, 0, .8))
     im, d = c.im(); [d.ellipse([x, y, x + r, y + r], fill=255) for x, y, r in [(c.w * .5 + c.R.gauss(0, c.w * .25), c.R.random() * c.h * .8, c.R.choice([2, 3, 4])) for _ in range(200)]]; c.paint(im, (255, 150, 60), .9, .6, 5, .9); bloom(c, .6, 22, .6)
-NEW_AREAS = {'gulch': ghosttown, 'thorn': thorn, 'aurora': aurora, 'reach': reach, 'rail': railyard}
+def bank(c): # Dry Gulch Bank: a grand frontier bank front at golden hour
+    frontier(c); c.cv = np.clip(c.cv * np.array([1.08, 1.0, .92], np.float32), 0, 1); im, d = c.im(); d.rectangle([c.w * .36, c.h * .28, c.w * .64, c.h * .72], fill=255); d.polygon([(c.w * .34, c.h * .28), (c.w * .5, c.h * .14), (c.w * .66, c.h * .28)], fill=255); c.paint(im, (92, 64, 44), 1.0); pil, pd = c.im(); [pd.rectangle([c.w * (.38 + i * .045), c.h * .34, c.w * (.38 + i * .045) + 16, c.h * .72], fill=255) for i in range(6)]; c.paint(pil, (214, 196, 160), .9); sg, sd = c.im(); sd.rectangle([c.w * .42, c.h * .2, c.w * .58, c.h * .26], fill=255); c.paint(sg, (255, 214, 120), .95, 1, 8, 1.2); bloom(c, .7, 18, .45)
+NEW_AREAS = {'bank': bank, 'gulch': ghosttown, 'thorn': thorn, 'aurora': aurora, 'reach': reach, 'rail': railyard}
 AREAS.update(NEW_AREAS)
 def run_new(pub):
     gi = os.path.join(pub, 'guide/img'); os.makedirs(gi, exist_ok=True)

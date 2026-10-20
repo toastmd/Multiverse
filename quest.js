@@ -3,14 +3,14 @@
 const D = require('./lib');
 
 const iname = (id) => (D.W.items[id] || {}).name || id, mname = (id) => (D.W.mobs[id] || {}).name || id;
-const need = (o) => (o[0] === 'kill' || o[0] === 'get' ? o[2] : 1);
+const need = (o) => (o[0] === 'kill' || o[0] === 'get' || o[0] === 'rob' ? o[2] : 1);
 D.objText = (o) => o[0] === 'kill' ? `Kill ${mname(o[1])} x${o[2]}` : o[0] === 'get' ? `Bring ${iname(o[1])} x${o[2]}`
-  : o[0] === 'visit' ? `Visit ${(D.rooms.get(o[1]) || {}).name || o[1]}` : `Talk to ${(D.Q.NPCS[o[1]] || {}).name || o[1]}`;
+  : o[0] === 'visit' ? `Visit ${(D.rooms.get(o[1]) || {}).name || o[1]}` : o[0] === 'rob' ? `Rob ${o[2]} people at the bank (rob <person>)` : o[0] === 'vault' ? 'Unlock and loot the bank vault' : o[0] === 'tutorial' ? 'Finish the newbie tutorial' : `Talk to ${(D.Q.NPCS[o[1]] || {}).name || o[1]}`;
 D.qNeed = need;
 D.qDef = (id) => D.Q.QUESTS.find((q) => q.id === id);
 D.qCur = (p, q, i) => { const o = q.obj[i]; return o[0] === 'get' ? Math.min(o[2], D.itemCount(p, o[1])) : Math.min(need(o), (p.quests[q.id].prog[i]) || 0); };
 D.qReady = (p, q) => q.obj.every((o, i) => D.qCur(p, q, i) >= need(o));
-D.qState = (p, q) => p.qdone.has(q.id) ? 'done' : p.quests[q.id] ? (D.qReady(p, q) ? 'ready' : 'active') : (p.level >= q.min && (!q.after || p.qdone.has(q.after)) ? 'avail' : 'locked');
+D.qState = (p, q) => p.qdone.has(q.id) && !q.repeat ? 'done' : p.quests[q.id] ? (D.qReady(p, q) ? 'ready' : 'active') : (p.level >= q.min && (!q.after || p.qdone.has(q.after)) ? 'avail' : 'locked');
 
 D.qEvent = (p, type, key) => { // progress kill/visit/talk objectives
   for (const q of D.Q.QUESTS) {
@@ -27,8 +27,8 @@ D.qEvent = (p, type, key) => { // progress kill/visit/talk objectives
 D.qXp = (p, q) => Math.round(q.rew.xp * (1 + 0.1 * (p.remort || 0))); // remorts need more XP, so quest XP grows with them
 D.qComplete = (p, q) => {
   for (const o of q.obj) if (o[0] === 'get') D.itemTake(p, o[1], o[2]);
-  if (p.qdone.has(q.id)) { delete p.quests[q.id]; return; } // a quest can only be completed (and rewarded) once
-  const first = true; delete p.quests[q.id]; p.qdone.add(q.id);
+  const first = !p.qdone.has(q.id); if (!first && !q.repeat) { delete p.quests[q.id]; return; } // a quest is rewarded once, unless it is repeatable (then only the quest points are once)
+  delete p.quests[q.id]; p.qdone.add(q.id);
   const r = q.rew, xp = D.qXp(p, q), parts = [];
   if (first && r.qp) { p.qp += r.qp; parts.push(`${r.qp} quest point${r.qp > 1 ? 's' : ''}`); } // quest points are awarded once per quest
   if (r.gold) { p.gold += r.gold; parts.push(`${r.gold} credits`); }

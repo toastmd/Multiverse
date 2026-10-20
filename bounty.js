@@ -23,6 +23,6 @@ function claim(m, killer, mates) { // called from Monster.die for a bounty targe
   D.announce(`${killer.name}${n > 1 ? ' and their team' : ''} collected the bounty on ${m.name}: +${b.bp} bounty point${b.bp > 1 ? 's' : ''} and ${b.reward} credits (posted by ${b.poster})!`, 'bounty');
 }
 const list = () => active.map((b) => ({ name: b.mob.name, level: b.mob.level, where: where(b), poster: b.poster, reward: b.reward, bp: b.bp, mins: Math.max(1, Math.ceil((b.until - Date.now()) / 60000)) }));
-function start() { first = setTimeout(() => post(), 60000); timer = setInterval(() => { if (active.length < MAX && Math.random() < 0.4) post(); }, 90000); }
+function start() { first = setTimeout(() => post(), 2 * 60000); timer = setInterval(() => post(), 15 * 60000); } // one new bounty every 15 minutes (the first after 2)
 function stop() { clearTimeout(first); clearInterval(timer); for (const b of active) clearTimeout(b.timer); active.length = 0; }
 module.exports = { start, stop, post, claim, list };

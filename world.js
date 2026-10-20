@@ -26,6 +26,10 @@ const items = {
   cyberdeck: { name: 'cyberdeck', ids: ['deck'], type: 'weapon', dmg: [1, 4], long: 'A scuffed deck wired to a datajack. It also makes a decent club.' },
   dclaws:  { name: 'dragon claws', short: 'dragon claws', ids: ['claws', 'dclaws'], type: 'weapon', dmg: [3, 8], long: 'Curved talons that grow where your fingernails used to be.' },
   parm:    { name: 'plasma arm', ids: ['arm', 'parm'], type: 'weapon', dmg: [3, 8], long: 'A forearm cannon that doubles as a club.' },
+  cards:   { name: 'marked cards', short: 'marked cards', ids: ['cards', 'deck'], type: 'weapon', dmg: [3, 8], long: 'A deck of razor-edged cards. Nobody ever finds the ace.' },
+  cutlass: { name: 'rusty cutlass', ids: ['cutlass'], type: 'weapon', dmg: [3, 8], long: 'A curved blade that has seen a lot of salt water.' },
+  scalpel: { name: 'surgical scalpel', ids: ['scalpel'], type: 'weapon', dmg: [3, 8], long: 'A gleaming scalpel with a monofilament edge.' },
+  sixgun:  { name: 'worn six-shooter', ids: ['sixgun', 'revolver', 'gun'], type: 'weapon', dmg: [3, 8], long: 'A six-shooter with a lot of notches.' },
   fclaws:  { name: 'feral claws', short: 'feral claws', ids: ['claws', 'fclaws'], type: 'weapon', dmg: [3, 8], long: 'Claws that appear whenever you will them to.' },
   // gathered materials and crafted goods
   herb:    { name: 'wild herb', ids: ['herb'], type: 'material', long: 'A bundle of aromatic leaves.' },
@@ -106,7 +110,7 @@ const res = { 'forest/path': { herb: 3 }, 'forest/clearing': { herb: 4 }, 'fores
 for (const [p, r] of Object.entries(res)) rooms[p].res = r;
 rooms['town/smithy'].forge = true; rooms['town/smithy'].long += ' The forge is still hot enough to work metal.';
 
-delete require.cache[require.resolve('./areas')]; require('./areas')(items, mobs, rooms); delete require.cache[require.resolve('./newareas')]; require('./newareas')(items, mobs, rooms); delete require.cache[require.resolve('./legends')]; require('./legends')(items, mobs); delete require.cache[require.resolve('./retheme')]; require('./retheme')(items, mobs, rooms); // // levels 8-40, shops, temple
+delete require.cache[require.resolve('./areas')]; require('./areas')(items, mobs, rooms); delete require.cache[require.resolve('./newareas')]; require('./newareas')(items, mobs, rooms); delete require.cache[require.resolve('./modern')]; require('./modern')(items, mobs, rooms); delete require.cache[require.resolve('./legends')]; require('./legends')(items, mobs); delete require.cache[require.resolve('./retheme')]; require('./retheme')(items, mobs, rooms); // // levels 8-40, shops, temple
 
 delete require.cache[require.resolve('./custom')]; require('./custom')(rooms, mobs, items); // areas made with the grid builder
 

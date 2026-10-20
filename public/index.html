@@ -66,15 +66,15 @@ form{border-top:1px solid var(--line);background:var(--panel);padding:10px 22px}
 .guidelink{display:block;text-align:center;padding:7px 8px;border:1px solid var(--line);border-radius:4px;color:var(--sea);font-size:13px;text-decoration:none}.guidelink:hover{border-color:var(--sea)}
 .notify{color:#8cefff;font-style:italic;opacity:.85}
 aside.left{padding:0;overflow:hidden}.lscroll{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
-aside.left #gos{flex:none;height:210px;border-top:1px solid var(--line);padding:8px 14px;font-size:13px;line-height:1.35;background:var(--bg2);max-width:none}aside.left #gos div{max-width:none}
+aside #gos{flex:none;height:210px;border-top:1px solid var(--line);padding:8px 14px;font-size:13px;line-height:1.35;background:var(--bg2);max-width:none}aside #gos div{max-width:none}
 #kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}#kgrid label{display:flex;flex-direction:column;font-size:11px;color:var(--dim);gap:2px}#kgrid input{width:100%;box-sizing:border-box;font:inherit;font-size:13px;padding:4px;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:4px}#kpd summary{cursor:pointer;margin:6px 0}#kreset{margin:2px 0 6px}
 #bwin{position:fixed;z-index:41;left:calc(50% - 300px);top:60px;width:600px;max-width:96vw;max-height:84vh;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 40px #000c;display:flex;flex-direction:column}#bwin[hidden]{display:none}
 #bbar{cursor:move;padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:600;user-select:none}#bx,#bref{cursor:pointer;padding:0 4px}#bbody{overflow:auto;padding:8px 12px}#bnote{padding:6px 12px 10px;color:var(--dim)}
 #bbody table{width:100%;border-collapse:collapse;font-size:14px}#bbody th{color:var(--dim);font-weight:600;text-align:left;font-size:12px;padding:3px 6px}#bbody td{padding:5px 6px;border-top:1px solid var(--line)}#bbody td.n{text-align:right}#bbody tr.me td{background:#ffffff14;font-weight:600}#bbody tr.g1 td:first-child{color:#ffd24a}
 #wwin{position:fixed;z-index:40;left:calc(50% - 290px);top:80px;width:580px;max-width:96vw;max-height:82vh;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 40px #000c;display:flex;flex-direction:column}#wwin[hidden]{display:none}
 #wbar{cursor:move;padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:600;user-select:none}#wx{cursor:pointer}
-#wbody{overflow:auto;padding:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:10px}.wc{background:#0008;border:1px solid var(--line);border-radius:8px;overflow:hidden;text-align:center;font-size:13px}.wc img{display:block;width:100%;aspect-ratio:5/6;object-fit:cover;background:#111}.wc b{display:block;padding:5px 4px 0}.wc small{display:block;padding:0 4px 7px;color:var(--dim)}
-.miss{color:var(--dim)} .social{color:#d6a8ff;font-style:italic} .team{color:#8fe0c0} .hlline{background:#4a3a0040;border-left:3px solid #e9b44c;padding-left:6px}
+#wbody{overflow:auto;padding:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:10px}.wc{background:#0008;border:1px solid var(--line);border-radius:8px;overflow:hidden;text-align:center;font-size:13px}.wc img{display:block;width:100%;aspect-ratio:5/6;object-fit:cover;background:#111}.wc b{display:block;padding:5px 4px 0}.wc .pre{color:var(--lamp);font-style:normal;font-size:12px;display:block}.wc .ttl{color:var(--sea);font-style:italic}.wc small{display:block;padding:0 4px 7px;color:var(--dim)}
+.auction{color:#e9b44c;font-weight:600} html[data-theme=white] .auction{color:#946400} .miss{color:var(--dim)} .social{color:#d6a8ff;font-style:italic} .team{color:#8fe0c0} .hlline{background:#4a3a0040;border-left:3px solid #e9b44c;padding-left:6px}
 .trrow{display:grid;grid-template-columns:auto 1fr 1fr auto auto;gap:4px;margin:4px 0;align-items:center}.trrow input[type=text]{width:100%;box-sizing:border-box;font:inherit;font-size:13px;padding:4px;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:4px}.trrow button{padding:2px 7px}#trd summary,#kpd summary{cursor:pointer;margin:6px 0}
 #tutw{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-start;justify-content:center;padding-top:70px;background:#0005;pointer-events:none}#tutw[hidden]{display:none}
 #tutd{pointer-events:auto;width:min(580px,94vw);max-height:84vh;overflow:auto;background:var(--panel);border:1px solid #e9b44c;border-radius:12px;box-shadow:0 18px 60px #000}
@@ -94,6 +94,13 @@ html[data-theme=futuristic] body{font-family:"Segoe UI","Trebuchet MS",system-ui
 html[data-theme=fantasy]{--btn:#1c3324;--bg:#0c1710;--bg2:#08120b;--panel:#142419;--line:#3d5c40;--text:#f1ead2;--dim:#9aac8c;--sea:#7fe3c0;--lamp:#e8c15a;--ember:#dd7d3a;--hp:#7ed25b}
 html[data-theme=fantasy] body{background-image:radial-gradient(ellipse at top,#1d3524,transparent 70%)}html[data-theme=fantasy] h1,html[data-theme=fantasy] .rname,html[data-theme=fantasy] #tuth,html[data-theme=fantasy] #bbar{font-family:Georgia,"Palatino Linotype",serif;font-style:italic;color:var(--lamp)}html[data-theme=fantasy] aside{border-color:#3d5c40}
 .yt{margin:6px 0;max-width:300px}.yt .ytb{position:relative;cursor:pointer;border-radius:6px;overflow:hidden;background:#000;aspect-ratio:16/9}.yt img,.yt iframe{width:100%;height:100%;display:block;border:0}.yt .ytp{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;color:#fff;text-shadow:0 2px 12px #000}.yt small{color:var(--dim)}
+aside.right{padding:0;overflow:hidden}.rscroll{flex:1;min-height:0;overflow:auto;padding:68px 14px 14px;display:flex;flex-direction:column;gap:12px}
+#cog{position:fixed;top:10px;right:14px;z-index:42;width:50px;height:50px;border-radius:50%;font-size:32px;line-height:1;padding:0;display:grid;place-items:center;background:var(--panel);border:2px solid var(--lamp);color:var(--lamp);box-shadow:0 0 16px color-mix(in srgb,var(--lamp) 60%,transparent);cursor:pointer;transition:transform .35s,background .2s}
+#cog:hover,#cog[aria-expanded=true]{transform:rotate(60deg);background:var(--lamp);color:var(--bg)}
+#settings{position:fixed;top:68px;right:14px;z-index:41;width:min(390px,94vw);max-height:calc(100vh - 88px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 14px 44px #000a;display:flex;flex-direction:column;gap:8px}#settings[hidden]{display:none}
+body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:pointer;margin:6px 0}#mud label{padding-left:10px}#stt{flex:1;min-width:0}
+.quick button{padding:6px 2px;font-size:13px;white-space:nowrap}#roompic{display:flex;flex-direction:column;gap:4px}#roompic .rpf{aspect-ratio:16/9;background:var(--bg2);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center}#roompic img{width:100%;height:100%;object-fit:cover;display:block}
+.weather{color:#9fd0ff;font-style:italic} html[data-theme=white] .weather{color:#2a5f93} #roompic .rpf{position:relative} #wxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;background:transparent;border:0}
 </style>
 </head>
 <body>
@@ -102,15 +109,50 @@ html[data-theme=fantasy] body{background-image:radial-gradient(ellipse at top,#1
   <input id="ln" placeholder="Character name" autocomplete="username" maxlength="12" required>
   <input id="lp" type="password" placeholder="Password" autocomplete="current-password" required>
   <select id="lc" aria-label="Class (new characters only)"></select><p id="ld"></p>
-  <select id="lg" aria-label="Gender (new characters only)"><option value="male">Male</option><option value="female">Female</option><option value="nonbinary" selected>Nonbinary</option></select>
+  <select id="lg" aria-label="Gender (new characters only)"><option value="male">Male</option><option value="female">Female</option><option value="nonbinary" selected>Other</option></select>
   <div id="err" role="alert"></div><button>Jack in</button>
 </form></div>
 <div id="app">
 <aside class="left"><div class="lscroll">
-  <div class="who"><h1 id="nm">MULTIVERSE MUD</h1><span><small id="lv"></small> <button id="cog" type="button" title="Settings: font, size, keypad, triggers" aria-label="Settings">⚙</button></span></div>
-  <div id="settings" hidden>
+  <div class="who"><h1 id="nm">MULTIVERSE MUD</h1><small id="lv"></small></div>
+  
+  <div><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div></div>
+  <div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div>
+  <div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div>
+  <div class="chips" id="chips"></div>
+  <button id="qbtn" type="button" aria-expanded="false" title="Open the quest window (Q)">Quests <span id="qn">0</span></button>
+  <div class="cap"><span id="wp"></span><span id="ac"></span></div>
+  <div class="cap"><span id="lk"></span><button id="snd" type="button" title="Toggle sound effects" style="padding:1px 8px;font-size:12px">sound: on</button></div>
+  <div class="quick"><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button data-c="inventory">pack</button><button data-c="score">score</button><button data-c="flee">flee</button><button data-c="who">who</button><button data-c="spells">spells</button><button data-c="tradeskills">tradeskills</button><button data-c="commands">commands</button></div>
+  <div id="book" aria-label="Spellbook"></div>
+  <div class="pad" title="Alt+arrows to walk, PageUp/PageDown for up/down">
+    <span></span><button data-c="n">north</button><button data-c="u">up</button>
+    <button data-c="w">west</button><button data-c="look">look</button><button data-c="e">east</button>
+    <span></span><button data-c="s">south</button><button data-c="d">down</button>
+  </div>
+  <a class="guidelink" href="/guide/" target="_blank" rel="noopener">📖 Player's Guide: classes, spells, map, tradeskills</a>
+  
+</div><div id="gos" aria-label="Gossip channel (type /g message)"><div><b>GOSSIP CHANNEL</b> type /g message, or gossip off</div></div></aside>
+<main><div id="out" aria-live="polite"></div><form id="f"><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
+<aside class="right"><div class="rscroll">
+  <canvas id="map" width="680" height="560" aria-label="Map of explored rooms"></canvas>
+  <div class="cap"><span id="area"></span><span id="legend"></span></div>
+  <div id="roompic"><div class="rpf"><img id="rpimg" alt="Picture of the current room"><canvas id="wxc" width="640" height="360" aria-hidden="true"></canvas></div><div class="cap"><span id="rpname">Room picture</span><span id="rpnote"></span></div></div>
+  <canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas>
+  <div class="cap"><span id="pname">You</span><span id="pnote"></span></div>
+  <div id="portrait" aria-label="Portrait"></div>
+</div></aside>
+</div>
+<div id="qwin" hidden role="dialog" aria-label="Quest window"><div id="qbar"><b>Quests</b><small id="qcount"></small><span class="sp"></span><button id="qclose" type="button" aria-label="Close quest window">✕</button></div><div id="qbody"></div></div>
+<script src="portrait.js"></script>
+<button id="cog" type="button" title="Settings: theme, volume, fonts, gossip window, keypad, triggers" aria-label="Settings" aria-expanded="false">&#9881;</button>
+<div id="settings" hidden>
     <label>Theme <select id="sth"><option value="black">Black</option><option value="white">White</option><option value="darkgrey">Dark grey</option><option value="darkblue">Dark blue</option><option value="oldwest">Old West</option><option value="futuristic">Futuristic</option><option value="fantasy">Fantasy</option></select></label>
     <label><span>Volume</span> <input id="sv" type="range" min="0" max="100" step="5" aria-label="Sound volume"> <output id="svo"></output></label>
+    <label><span>Gossip text size</span> <input id="sgf" type="range" min="11" max="24" step="1" aria-label="Gossip text size"> <output id="sgfo"></output></label>
+    <label>Gossip window <select id="sgs"><option value="left">Left side, bottom</option><option value="right">Right side, bottom</option></select></label>
+    <details id="mud"><summary>Mute announcements</summary><label><span>Bounty announcements</span> <input type="checkbox" data-m="bounty"></label><label><span>Player level-ups</span> <input type="checkbox" data-m="levels"></label><label><span>Quest completions</span> <input type="checkbox" data-m="quests"></label><label><span>Weather events</span> <input type="checkbox" data-m="weather"></label></details>
+    <label><span>Your title</span> <input id="stt" type="text" maxlength="40" placeholder="for example: the Unlucky"> <button id="stb" type="button">Set</button></label>
     <label>Font <select id="sf"><option value="serif">Serif (Iowan/Georgia)</option><option value="sans">Sans-serif (system)</option><option value="mono">Monospace (Menlo)</option><option value="type">Typewriter (Courier)</option><option value="rounded">Rounded (Trebuchet)</option><option value="wide">Wide (Verdana)</option></select></label>
     <label>Size <input id="ss" type="range" min="12" max="30" step="1"> <output id="so"></output></label>
     <label><span>Show GIFs in gossip</span> <input id="sg" type="checkbox"></label>
@@ -120,33 +162,6 @@ html[data-theme=fantasy] body{background-image:radial-gradient(ellipse at top,#1
     <button id="tutopen" type="button">Show the newbie tutorial</button>
     <details id="kpd"><summary>Edit keypad keys (saved to your character)</summary><div id="kgrid"></div><button id="kreset" type="button">Reset to defaults</button><small>Type a command for each key; separate several with ; (for example: look;score). Works with Num Lock on whenever the command line is empty. Also: the keypad command.</small></details>
   </div>
-  <div><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div></div>
-  <div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div>
-  <div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div>
-  <div class="chips" id="chips"></div>
-  <button id="qbtn" type="button" aria-expanded="false" title="Open the quest window (Q)">Quests <span id="qn">0</span></button>
-  <div class="cap"><span id="wp"></span><span id="ac"></span></div>
-  <div class="cap"><span id="lk"></span><button id="snd" type="button" title="Toggle sound effects" style="padding:1px 8px;font-size:12px">sound: on</button></div>
-  <div id="book" aria-label="Spellbook"></div>
-  <div class="pad" title="Alt+arrows to walk, PageUp/PageDown for up/down">
-    <span></span><button data-c="n">north</button><button data-c="u">up</button>
-    <button data-c="w">west</button><button data-c="look">look</button><button data-c="e">east</button>
-    <span></span><button data-c="s">south</button><button data-c="d">down</button>
-  </div>
-  <a class="guidelink" href="/guide/" target="_blank" rel="noopener">📖 Player's Guide: classes, spells, map, tradeskills</a>
-  <div class="quick"><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button data-c="inventory">pack</button><button data-c="score">score</button><button data-c="flee">flee</button><button data-c="who">who</button></div>
-</div><div id="gos" aria-label="Gossip channel (type /g message)"><div><b>GOSSIP CHANNEL</b> type /g message, or gossip off</div></div></aside>
-<main><div id="out" aria-live="polite"></div><form id="f"><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
-<aside class="right">
-  <canvas id="map" width="680" height="560" aria-label="Map of explored rooms"></canvas>
-  <div class="cap"><span id="area"></span><span id="legend"></span></div>
-  <canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas>
-  <div class="cap"><span id="pname">You</span><span id="pnote"></span></div>
-  <div id="portrait" aria-label="Portrait"></div>
-</aside>
-</div>
-<div id="qwin" hidden role="dialog" aria-label="Quest window"><div id="qbar"><b>Quests</b><small id="qcount"></small><span class="sp"></span><button id="qclose" type="button" aria-label="Close quest window">✕</button></div><div id="qbody"></div></div>
-<script src="portrait.js"></script>
 <div id="tutw" hidden><div id="tutd" role="dialog" aria-labelledby="tutt"><div id="tuth"><span id="tutt"></span><span><button id="tutmin" class="tbtn" type="button" title="Shrink or expand">&#9602;</button> <button id="tutx" class="tbtn" type="button" title="Exit the tutorial">Exit tutorial &#10005;</button></span></div><div id="tutb"></div><div id="tutf"><button id="tutback" class="tbtn" type="button">Back</button><span id="tdots"></span><button id="tutnext" class="tbtn pri" type="button">Next</button></div></div></div>
 <div id="bwin" hidden><div id="bbar"><span>Top 10 achievements <small id="bcount"></small></span><span><span id="bref" title="Refresh" role="button">&#8635;</span> <span id="bx" title="Close" role="button" aria-label="Close">&#10005;</span></span></div><div id="bbody"></div><small id="bnote">Score = level x100 + quests completed x250 + tradeskill levels raised x40 + bounty points x40. A remort counts as 40 levels.</small></div>
 <div id="wwin" hidden><div id="wbar"><span>Who is online <small id="wcount"></small></span><span id="wx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="wbody"></div></div>
@@ -176,20 +191,20 @@ function trCheck(text,cls){ if(/^(gossip|say|tell|shout|cmd|chat|team|social)$/.
     t.cmd.replace(/\$(\d)/g,(_,n)=>g[+n]||'').split(';').map(x=>x.trim()).filter(Boolean).slice(0,6).forEach(x=>{ add('> '+x+'  (trigger)','cmd'); send({t:'cmd',line:x}); }); }); }
 // ---- newbie tutorial: clickable dialog steps with a progress checklist (progress is saved on the server) ----
 let TUT={off:true,step:0,done:{}}; const TS=[
- {t:'Welcome to MULTIVERSE MUD',b:'<p>Fantasy realms, sci-fi worlds and Old West towns all meet here, at <b>Ashfall Junction</b>. This short tour shows you what to do first.</p><p>Click the buttons to try each action, then press <b>Next</b>. You can <b>Exit tutorial</b> at any time (type <code>tutorial</code> to bring it back).</p>',a:[]},
+ {t:'Welcome to MULTIVERSE MUD',b:'<p>Fantasy realms, sci-fi worlds and Old West towns all meet here, at <b>Ashfall Junction</b>. This short tour shows you what to do first.</p><p>Finish the whole tour to complete the quest <b>Welcome to the Multiverse</b> (quest points, credits, stims and XP). Click the buttons to try each action, then press <b>Next</b>. You can <b>Exit tutorial</b> at any time (type <code>tutorial</code> to bring it back).</p>',a:[]},
  {t:'1. Look around',b:'<p>The big center column is the game. Each room has a description and a cyan list of <b>exits</b>. Move with the compass buttons on the left or by typing <code>n</code>, <code>s</code>, <code>e</code>, <code>w</code>.</p>',a:[{l:'Look around',c:'look',k:'look'}]},
  {t:'2. Your character',b:'<p>Your green health bar, mana and Luck are on the left, with your spells below. Check your full sheet and your abilities.</p>',a:[{l:'Show my stats',c:'score',k:'score'},{l:'Show my abilities',c:'spells',k:'spells'}]},
  {t:'3. Free healing',b:'<p>The glowing fountain in Ashfall Square restores <b>all</b> your health and mana, free, any time. Use it whenever you are hurt.</p>',a:[{l:'Go to the square',c:'travel square'},{l:'Drink from the fountain',c:'drink fountain',k:'fountain'}]},
  {t:'4. Contracts (quests)',b:'<p>Contracts are the fastest way to level. <b>Fixer Torv</b> at the Adventurers Guild keeps the board. Walk there, read the board and talk to him.</p>',a:[{l:'Take me to the Guild',c:'travel guild',k:'travel'},{l:'Read the board',c:'board',k:'board'},{l:'Talk to Torv',c:'talk torv',k:'talk'}]},
  {t:'5. Accept a contract',b:'<p>Take your first contract. Press <b>Q</b> (when the command line is empty) for the quest window, which tracks your progress.</p>',a:[{l:'Accept First Steps',c:'accept q_first',k:'accept'},{l:'Show my quests',c:'quests',k:'quests'}]},
  {t:'6. Gear up',b:'<p>Brann\'s Smithy has a free rack of starter gear. Pick it up, then <code>wield</code> a weapon and <code>wear</code> armor.</p>',a:[{l:'Take me to the Smithy',c:'travel smithy'},{l:'Pick up everything',c:'get all'},{l:'See my pack',c:'inventory'}]},
- {t:'7. Shops',b:'<p>Shops buy and sell. <code>list</code> shows the wares, <code>buy &lt;item&gt;</code> purchases, <code>sell &lt;item&gt;</code> sells. Credits come from kills and contracts.</p>',a:[{l:'Take me to Market Row',c:'travel market'},{l:'List the wares',c:'list',k:'list'}]},
+ {t:'7. Shops',b:'<p>Shops buy and sell. <code>list</code> shows the wares, <code>buy &lt;item&gt;</code> purchases, <code>sell &lt;item&gt;</code> sells. Anywhere, <code>rsell</code> sells all your unworn gear (10% fee), and <code>auction</code> lets other players bid on it. Credits come from kills, contracts and bounties.</p>',a:[{l:'Take me to Market Row',c:'travel market'},{l:'List the wares',c:'list',k:'list'}]},
  {t:'8. Your first fight',b:'<p>Leave through the North Gate into the Whisperwood. Attack with <code>kill &lt;name&gt;</code> (try a rat). <code>flee</code> escapes, and <code>autoflee on</code> does it for you at 30% health.</p>',a:[{l:'Go to the Whisperwood',c:'travel forest'},{l:'Attack a rat',c:'kill rat',k:'kill'},{l:'Turn on autoflee',c:'autoflee on'}]},
  {t:'9. Recover and recall',b:'<p>Hurt? <code>recall</code> takes you straight back to the fountain. Dying is not the end, but your pride will suffer: a random NPC will taunt you in front of everyone.</p>',a:[{l:'Recall to Ashfall',c:'recall',k:'recall'}]},
  {t:'10. Friends and fun',b:'<p><code>gossip</code> talks to everyone (add <code>;word</code> for a GIF). <code>team invite &lt;player&gt;</code> shares XP and credits on kills, and <code>tc</code> is team chat. Feelings like <code>smile</code> and <code>dance</code> are free.</p>',a:[{l:'Say hello',c:'gossip Hello everyone!',k:'gossip'},{l:'Smile',c:'smile'},{l:'Dance',c:'dance'},{l:'Team help',c:'team',k:'team'}]},
  {t:'11. Tradeskills',b:'<p>Anyone can learn the free tradeskills: foraging, mining, fishing, smithing, brewing, cooking and salvaging. Gather and craft to earn credits and powerful gear.</p>',a:[{l:'Show tradeskills',c:'tradeskills',k:'tradeskills'},{l:'Learn foraging',c:'learn foraging',k:'learn'}]},
  {t:'12. Make it yours',b:'<p>The <b>&#9881;</b> settings panel has fonts, editable keypad keys and <b>triggers</b>. Pick a <b>theme</b> and <b>volume</b> there too. Type <code>bounties</code> for wanted monsters worth credits and bounty points. Use <code>alias</code> for shortcuts, <code>gag on</code> to hide combat misses, and <b>L</b> for the top 10 leaderboard.</p>',a:[{l:'Open settings',ui:'#cog'},{l:'Open the leaderboard',ui:'#topbtn'}]},
- {t:'You are ready!',b:'<p>That is the basics. The <b>Player\'s Guide</b> has every class, spell, area and boss. Reopen this tour any time with <code>tutorial</code>. Good luck out there!</p>',a:[{l:'Open the Player\'s Guide',href:'/guide/'},{l:'Finish tutorial',fin:1}]}];
+ {t:'You are ready!',b:'<p>That is the basics. Press <b>Finish</b> to complete your first quest. The <b>Player\'s Guide</b> has every class, spell, area and boss. Reopen this tour any time with <code>tutorial</code>. Good luck out there!</p>',a:[{l:'Open the Player\'s Guide',href:'/guide/'},{l:'Finish tutorial',fin:1}]}];
 function tutRender(){ const s=TS[TUT.step]||TS[0], d=TUT.done||{}; $('#tutt').textContent=s.t;
   $('#tutb').innerHTML=s.b+'<div class="tact">'+s.a.map((a,i)=>'<button type="button" class="tbtn'+(a.k&&d[a.k]?' done':'')+(a.fin?' pri':'')+'" data-i="'+i+'">'+(a.k&&d[a.k]?'&#10003; ':'')+a.l+'</button>').join('')+'</div>';
   $('#tdots').innerHTML=TS.map((x,i)=>'<i data-s="'+i+'" class="'+(i===TUT.step?'on':(x.a.length&&x.a.every(a=>!a.k||d[a.k])&&x.a.some(a=>a.k)?'ok':''))+'" title="'+wesc(x.t)+'"></i>').join('');
@@ -197,10 +212,11 @@ function tutRender(){ const s=TS[TUT.step]||TS[0], d=TUT.done||{}; $('#tutt').te
 function tutMsg(m){ TUT={off:!!m.off,step:m.step!==undefined?m.step:TUT.step,done:m.done||TUT.done}; const w=$('#tutw');
   if(m.open){ w.hidden=false; $('#tutd').classList.remove('min'); } if(TUT.off){ w.hidden=true; return; } if(!w.hidden) tutRender(); }
 function tutGo(n){ TUT.step=Math.max(0,Math.min(TS.length-1,n)); send({t:'tut',step:TUT.step}); tutRender(); }
+function tutFinish(){ $('#tutw').hidden=true; send({t:'tut',finish:true}); } // finishing completes the Welcome to the Multiverse quest
 function tutExit(){ $('#tutw').hidden=true; TUT.off=true; send({t:'tut',off:true}); }
-$('#tutnext').onclick=()=>{ if(TUT.step>=TS.length-1) tutExit(); else tutGo(TUT.step+1); }; $('#tutback').onclick=()=>tutGo(TUT.step-1); $('#tutx').onclick=tutExit; $('#tutmin').onclick=()=>$('#tutd').classList.toggle('min');
+$('#tutnext').onclick=()=>{ if(TUT.step>=TS.length-1) tutFinish(); else tutGo(TUT.step+1); }; $('#tutback').onclick=()=>tutGo(TUT.step-1); $('#tutx').onclick=tutExit; $('#tutmin').onclick=()=>$('#tutd').classList.toggle('min');
 $('#tdots').onclick=e=>{ if(e.target.dataset.s!==undefined) tutGo(+e.target.dataset.s); }; $('#tutopen').onclick=()=>{ send({t:'tut',off:false,open:true}); $('#settings').hidden=true; };
-$('#tutb').onclick=e=>{ const b=e.target.closest('button[data-i]'); if(!b) return; const a=TS[TUT.step].a[+b.dataset.i]; if(a.c){ add('> '+a.c,'cmd'); send({t:'cmd',line:a.c}); } else if(a.ui){ const el=$(a.ui); if(el) el.click(); } else if(a.href) window.open(a.href,'_blank'); else if(a.fin) tutExit(); };
+$('#tutb').onclick=e=>{ const b=e.target.closest('button[data-i]'); if(!b) return; const a=TS[TUT.step].a[+b.dataset.i]; if(a.c){ add('> '+a.c,'cmd'); send({t:'cmd',line:a.c}); } else if(a.ui){ const el=$(a.ui); if(el) el.click(); } else if(a.href) window.open(a.href,'_blank'); else if(a.fin) tutFinish(); };
 function boardShow(m){ const w=$('#bwin'); w.hidden=false; $('#bcount').textContent=m.total+' players';
   const row=(r,me)=>'<tr class="'+(me?'me ':'')+(r.rank===1?'g1':'')+'"><td>'+(r.rank===1?'\u2605 ':'')+r.rank+'</td><td>'+wesc(r.name)+(r.bot?' (bot)':'')+(r.on?' \u2022':'')+'</td><td>'+(r.rm?'R'+r.rm+' ':'')+'L'+r.lv+' '+wesc(r.cn)+'</td><td class="n">'+r.q+'</td><td class="n">+'+r.t+'</td><td class="n">'+(r.b||0)+'</td><td class="n"><b>'+r.score.toLocaleString()+'</b></td></tr>';
   $('#bbody').innerHTML='<table><tr><th>#</th><th>Player</th><th>Class</th><th class="n">Quests</th><th class="n">Skills</th><th class="n">Bounty</th><th class="n">Score</th></tr>'+m.list.map(r=>row(r,m.me&&r.name===m.me.name)).join('')+(m.me&&m.me.rank>10?'<tr><td colspan="7" style="text-align:center;color:var(--dim)">\u2026</td></tr>'+row(m.me,true):'')+'</table>'; }
@@ -213,7 +229,7 @@ function boardShow(m){ const w=$('#bwin'); w.hidden=false; $('#bcount').textCont
 function addYt(m){ if(prefs.yt===false||!/^[\w-]{11}$/.test(m.id||'')) return; const g=$('#gos'),d=document.createElement('div'); d.className='yt'; const b=document.createElement('div'); b.className='ytb'; b.title='Click to play'; const i=document.createElement('img'); i.src='https://i.ytimg.com/vi/'+m.id+'/mqdefault.jpg'; i.alt='YouTube video'; i.loading='lazy'; i.referrerPolicy='no-referrer'; i.onload=()=>{ g.scrollTop=g.scrollHeight; };
   const pl=document.createElement('div'); pl.className='ytp'; pl.textContent='\u25B6'; b.append(i,pl); b.onclick=()=>{ const f=document.createElement('iframe'); f.src='https://www.youtube-nocookie.com/embed/'+m.id+'?autoplay=1&rel=0'; f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin'; b.replaceChildren(f); b.style.cursor='default'; b.onclick=null; };
   const s=document.createElement('small'); s.textContent=(m.from?m.from+' shared a video':'Shared video'); d.append(b,s); g.appendChild(d); while(g.childElementCount>120) g.children[1].remove(); g.scrollTop=g.scrollHeight; }
-function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; $('#wbody').innerHTML=list.map(p=>'<div class="wc"><img alt="" loading="lazy" src="'+genSrc(p.cls,p.g)+'" onerror="this.style.visibility=\'hidden\'"><b>'+wesc(p.name)+(p.bot?' (bot)':'')+'</b><small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+'</small></div>').join(''); }
+function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; $('#wbody').innerHTML=list.map(p=>'<div class="wc"><img alt="" loading="lazy" src="'+genSrc(p.cls,p.g)+'" onerror="this.style.visibility=\'hidden\'"><b>'+(p.pre?'<em class="pre">'+wesc(p.pre)+'</em> ':'')+wesc(p.name)+(p.bot?' (bot)':'')+'</b>'+(p.title?'<small class="ttl">'+wesc(p.title)+'</small>':'')+'<small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+' \u00b7 '+wesc(p.gl||p.g)+'</small></div>').join(''); }
 (function(){ const w=$('#wwin'),bar=$('#wbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_wwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
   $('#wx').onclick=()=>{ w.hidden=true; }; let d=null; bar.onpointerdown=e=>{ if(e.target.id==='wx') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
   bar.onpointermove=e=>{ if(!d) return; w.style.left=Math.max(0,Math.min(innerWidth-120,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-60,e.clientY-d.dy))+'px'; };
@@ -225,10 +241,12 @@ function showPortrait(name,img){
 }
 // ---- display preferences: font, size, keypad (remembered in this browser) ----
 const FONTS={serif:'"Iowan Old Style",Palatino,Georgia,serif',sans:'-apple-system,"Helvetica Neue",Arial,sans-serif',mono:'ui-monospace,"SF Mono",Menlo,monospace',type:'"Courier New",Courier,monospace',rounded:'"Trebuchet MS",Verdana,sans-serif',wide:'Verdana,Geneva,sans-serif'};
-let prefs={font:'serif',size:17,keypad:false,gifs:true,yt:true,theme:'black',vol:70}; try{ Object.assign(prefs,JSON.parse(localStorage.getItem('sp_prefs')||'{}')); }catch(e){}
-function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; }
+let prefs={font:'serif',size:17,keypad:false,gifs:true,yt:true,theme:'black',vol:70,gfs:13,gside:'left'}; try{ Object.assign(prefs,JSON.parse(localStorage.getItem('sp_prefs')||'{}')); }catch(e){}
+function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; $('#sgf').value=prefs.gfs; $('#sgfo').textContent=prefs.gfs+'px'; $('#sgs').value=prefs.gside; const g=$('#gos'); g.style.fontSize=prefs.gfs+'px'; const dest=document.querySelector(prefs.gside==='right'?'aside.right':'aside.left'); if(dest&&g.parentElement!==dest){ dest.appendChild(g); g.scrollTop=g.scrollHeight; } }
 function savePrefs(){ try{ localStorage.setItem('sp_prefs',JSON.stringify(prefs)); }catch(e){} applyPrefs(); }
-$('#cog').onclick=()=>{ const s=$('#settings'); s.hidden=!s.hidden; };
+$('#cog').onclick=()=>{ const s=$('#settings'); s.hidden=!s.hidden; $('#cog').setAttribute('aria-expanded',String(!s.hidden)); }; document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('#settings').hidden){ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); } });
+$('#sgf').oninput=e=>{ prefs.gfs=+e.target.value; savePrefs(); }; $('#sgs').onchange=e=>{ prefs.gside=e.target.value; savePrefs(); };
+$('#mud').onchange=e=>{ const k=e.target.dataset&&e.target.dataset.m; if(k) send({t:'mute',key:k,on:e.target.checked}); }; $('#stb').onclick=()=>send({t:'title',text:$('#stt').value}); $('#stt').onkeydown=e=>{ e.stopPropagation(); if(e.key==='Enter') send({t:'title',text:$('#stt').value}); };
 $('#sf').onchange=e=>{ prefs.font=e.target.value; savePrefs(); }; $('#ss').oninput=e=>{ prefs.size=+e.target.value; savePrefs(); }; $('#sth').onchange=e=>{ prefs.theme=e.target.value; savePrefs(); }; $('#sy').onchange=e=>{ prefs.yt=e.target.checked; savePrefs(); }; $('#sv').oninput=e=>{ prefs.vol=+e.target.value; savePrefs(); }; $('#sv').onchange=()=>play('skill'); $('#sg').onchange=e=>{ prefs.gifs=e.target.checked; savePrefs(); }; $('#sk').onchange=e=>send({t:'kp',on:e.target.checked});
 applyPrefs();
 // ---- keypad: the key map lives in your character (server side), so it follows you to any browser ----
@@ -254,10 +272,12 @@ function add(m,c='text'){
 }
 function handle(m){
   if(m.t==='text'){ add(m.m,m.c); trCheck(m.m,m.c); }
-  else if(m.t==='ok'){ $('#login').style.display='none'; $('#in').focus(); }
+  else if(m.t==='mutes'){ document.querySelectorAll('#mud input[data-m]').forEach(i=>{ i.checked=!!(m.mute||{})[i.dataset.m]; }); if(document.activeElement!==$('#stt')) $('#stt').value=m.title||''; }
+  else if(m.t==='ok'){ document.body.classList.add('in'); $('#login').style.display='none'; $('#in').focus(); }
   else if(m.t==='err') $('#err').textContent=m.m;
   else if(m.t==='stats') stats(m);
-  else if(m.t==='map'){ map=m; drawMap(); }
+  else if(m.t==='map'){ map=m; drawMap(); roomPic(); setWx(m.wx); }
+  else if(m.t==='wx') setWx(m.k);
   else if(m.t==='fight') onFight(m);
   else if(m.t==='classes') classes(m.list);
   else if(m.t==='portrait') showPortrait(m.name,m.img);
@@ -339,6 +359,26 @@ const TIMG={}, TPAT={};
 function tex(g,k){ k=TERRAIN[k]?k:'concrete'; if(!TIMG[k]){ const i=new Image(); i.onload=()=>{ drawMap(); }; i.src='img/terrain/'+k+'.jpg'; TIMG[k]=i; }
   const im=TIMG[k]; if(im.complete&&im.naturalWidth){ if(!TPAT[k]){ const p=g.createPattern(im,'repeat'); try{ p.setTransform(new DOMMatrix().scale(.42)); }catch(e){} TPAT[k]=p; } return TPAT[k]; }
   return TEX[k]||(TEX[k]=g.createPattern(mkTex(k),'repeat')); }
+// ---- weather overlay on the room picture: rain, snow, dust devil, tornado, electrical storm and EMP (the server decides; `mute weather on` turns it off) ----
+const wxc=$('#wxc'), wg=wxc.getContext('2d'); let WX='', wxRaf=0, wxP=[], wxFlash=0, wxBolt=null, wxT=0;
+function setWx(k){ k=k||''; if(k===WX) return; WX=k; wxP=[]; wxFlash=0; wxBolt=null; wxc.style.display=WX?'block':'none'; if(WX&&!wxRaf) wxRaf=requestAnimationFrame(wxFrame); else if(!WX) wg.clearRect(0,0,wxc.width,wxc.height); }
+function wxFrame(){ wxRaf=0; if(!WX) return; const W=wxc.width, H=wxc.height, R=Math.random; wg.clearRect(0,0,W,H); wxT++;
+  if(WX==='rain'||WX==='storm'){ while(wxP.length<(WX==='storm'?200:130)) wxP.push({x:R()*W,y:R()*H,v:12+R()*10}); wg.fillStyle='rgba(20,30,50,.2)'; wg.fillRect(0,0,W,H); wg.strokeStyle='rgba(185,210,255,.6)'; wg.lineWidth=1.5; wg.beginPath(); for(const d of wxP){ wg.moveTo(d.x,d.y); wg.lineTo(d.x-4,d.y+16); d.y+=d.v; d.x-=1.6; if(d.y>H){ d.y=-10; d.x=R()*W+20; } } wg.stroke();
+    if(WX==='storm'){ if(!wxFlash&&R()<.014){ wxFlash=1; let x=W*(.15+R()*.7), y=0; wxBolt=[[x,y]]; while(y<H*(.55+R()*.35)){ x+=(R()-.5)*60; y+=22+R()*26; wxBolt.push([x,y]); } }
+      if(wxFlash>0){ wg.fillStyle='rgba(235,240,255,'+(wxFlash*.5)+')'; wg.fillRect(0,0,W,H); wg.strokeStyle='rgba(255,255,255,'+wxFlash+')'; wg.shadowColor='#8cf'; wg.shadowBlur=14; wg.lineWidth=3; wg.beginPath(); wxBolt.forEach(([a,b],i)=>i?wg.lineTo(a,b):wg.moveTo(a,b)); wg.stroke(); wg.shadowBlur=0; wxFlash-=.07; } } }
+  else if(WX==='snow'){ while(wxP.length<90) wxP.push({x:R()*W,y:R()*H,r:1+R()*2.6,v:.8+R()*1.6,ph:R()*6}); wg.fillStyle='rgba(255,255,255,.88)'; for(const f of wxP){ f.ph+=.03; f.x+=Math.sin(f.ph)*.7; f.y+=f.v; if(f.y>H){ f.y=-5; f.x=R()*W; } wg.beginPath(); wg.arc(f.x,f.y,f.r,0,7); wg.fill(); } }
+  else if(WX==='dust'){ wg.fillStyle='rgba(200,150,80,.17)'; wg.fillRect(0,0,W,H); while(wxP.length<70) wxP.push({x:R()*W,y:R()*H,v:4+R()*6,l:6+R()*16}); wg.strokeStyle='rgba(222,180,115,.55)'; wg.lineWidth=1.5; wg.beginPath(); for(const d of wxP){ wg.moveTo(d.x,d.y); wg.lineTo(d.x-d.l,d.y+Math.sin(wxT*.1+d.x)*2); d.x+=d.v; if(d.x>W+20){ d.x=-20; d.y=R()*H; } } wg.stroke();
+    const cx=((wxT*1.3)%(W+240))-120; wg.fillStyle='rgba(215,170,105,.7)'; for(let i=0;i<46;i++){ const a=wxT*.22+i*.55, r=4+i*1.7; wg.fillRect(cx+Math.cos(a)*r*.8+(i*.4),H*.92-i*5.2+Math.sin(a)*4,3,3); } }
+  else if(WX==='tornado'){ wg.fillStyle='rgba(30,32,42,.42)'; wg.fillRect(0,0,W,H); const cx=W*.5+Math.sin(wxT*.012)*W*.22; const gr=wg.createLinearGradient(0,0,0,H); gr.addColorStop(0,'rgba(60,62,74,.9)'); gr.addColorStop(1,'rgba(110,100,92,.9)'); wg.fillStyle=gr; wg.beginPath(); wg.moveTo(cx-W*.26,0); wg.lineTo(cx+W*.26,0); wg.lineTo(cx+16+Math.sin(wxT*.05)*6,H); wg.lineTo(cx-16+Math.sin(wxT*.05)*6,H); wg.closePath(); wg.fill();
+    wg.strokeStyle='rgba(20,20,26,.5)'; wg.lineWidth=2; for(let i=0;i<9;i++){ const y=i*H/9+((wxT*3)%(H/9)), w=W*.26*(1-y/H)+16; wg.beginPath(); wg.ellipse(cx+Math.sin(wxT*.05)*6*(y/H),y,w,5,0,0,7); wg.stroke(); }
+    wg.fillStyle='rgba(235,225,205,.85)'; for(let i=0;i<22;i++){ const a=wxT*.15+i*.9, y=(i*47+wxT*4)%H, w=(W*.26*(1-y/H)+16)*(.8+.5*Math.sin(i)); wg.fillRect(cx+Math.cos(a)*w,y+Math.sin(a)*4,3,3); } }
+  else if(WX==='emp'){ wg.fillStyle='rgba(0,40,60,'+(.1+R()*.1)+')'; wg.fillRect(0,0,W,H); const r=(wxT*4)%360; wg.lineWidth=3; for(let k=0;k<3;k++){ const rr=(r+k*120)%360; wg.strokeStyle='rgba(120,235,255,'+(.8*(1-rr/360))+')'; wg.beginPath(); wg.arc(W/2,H/2,rr*1.3,0,7); wg.stroke(); }
+    wg.fillStyle='rgba(130,230,255,.16)'; for(let i=0;i<4;i++) wg.fillRect(0,R()*H,W,3+R()*9); if(R()<.08){ wg.fillStyle='rgba(255,255,255,.18)'; wg.fillRect(0,0,W,H); } }
+  wxRaf=requestAnimationFrame(wxFrame); }
+let rpKey=null; // the static room picture under the map: img/rooms/<room id with / as ->.jpg, falling back to the area's picture
+function roomPic(){ if(!map||!map.me||rpKey===map.me) return; rpKey=map.me; const img=$('#rpimg'); img.style.visibility='visible'; $('#rpname').textContent=map.rn||''; $('#rpnote').textContent='';
+  const area=()=>{ img.onerror=()=>{ img.onerror=null; img.style.visibility='hidden'; }; img.src='guide/img/area-'+(map.ra||'town')+'.jpg'; $('#rpnote').textContent='area picture'; };
+  if(map.rp){ img.onerror=area; img.src='img/rooms/'+map.rp; } else area(); }
 function drawMap(){
   const c=$('#map'),g=c.getContext('2d'),W=c.width,H=c.height,S=108; g.clearRect(0,0,W,H);
   if(!map) return; $('#area').textContent=map.area+(map.z&&map.z<20?` · level ${map.z}`:'');
@@ -364,6 +404,7 @@ setInterval(()=>{ if(map) drawMap(); },160); // animates the you-are-here glow
 $('#legend').innerHTML=Object.keys(TERRAIN).map(k=>`<i class="sw" style="background:url(img/terrain/${k}.jpg) center/cover"></i>${TERRAIN[k]}`).join('')+'<span style="margin-left:8px">● others</span>';
 
 // ---------- combat arena ----------
+const MIC={}; function mobImg(f){ if(!f) return null; let i=MIC[f]; if(!i){ i=new Image(); i.src='img/mob/'+f; MIC[f]=i; } return i.complete&&i.naturalWidth?i:null; } // monster pictures for the combat view
 function onFight(m){
   const now=performance.now(), sp=m.spell;
   if(m.heal!==undefined||m.buff){ if(!fight) return; const side=m.a.id===fight.L.id?'L':'R'; fight.t=now;
@@ -388,7 +429,7 @@ function frame(now){
     if(f.hurt&&f.hurt.side===s&&now>=f.hurt.t&&now-f.hurt.t<300){ x+=Math.sin(now/18)*7; g.fillStyle='rgba(229,96,63,.18)'; g.fillRect(pos[s]-100,20,200,H*.76); }
     if(u.hp<=0){ a=.35; rot=s==='L'?-1.2:1.2; }
     g.fillStyle='rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(pos[s],H*.78,70,14,0,0,7); g.fill();
-    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); g.restore();
+    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); const im=mobImg(u.mp); if(im){ const bw=190, bh=190; g.beginPath(); g.roundRect(-bw/2,-bh+24,bw,bh,16); g.clip(); const r=Math.min(im.naturalWidth,im.naturalHeight), sx=(im.naturalWidth-r)/2, sy=(im.naturalHeight-r)*.2; g.drawImage(im,sx,sy,r,r,-bw/2,-bh+24,bw,bh); } else { g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); } g.restore(); if(im){ g.save(); g.globalAlpha=a; g.strokeStyle='#e9b44c'; g.lineWidth=3; g.beginPath(); g.roundRect(x-95,y-190+24,190,190,16); g.stroke(); g.restore(); }
     g.fillStyle='#e6dfcb'; g.font='600 26px "Iowan Old Style",Georgia,serif'; g.fillText(`${u.name}  ·  lvl ${u.lvl}`,pos[s],42);
     const bw=250,r=Math.max(0,u.d/u.max); g.fillStyle='#0a1115'; g.fillRect(pos[s]-bw/2,56,bw,22); g.fillStyle=hpColor(r); g.fillRect(pos[s]-bw/2,56,bw*r,22);
     g.strokeStyle='#777'; g.lineWidth=2; g.strokeRect(pos[s]-bw/2,56,bw,22);

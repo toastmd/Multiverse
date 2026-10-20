@@ -1,13 +1,13 @@
 'use strict';
 // MULTIVERSE MUD server. No npm packages needed: HTTP static files + a small WebSocket implementation.
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
-const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'); D.bridge = bridge; D.bounty = bounty;
+const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'), auction = require('./auction'); D.blackjack = require('./blackjack'); D.deaths = require('./deaths'); const weather = require('./weather'); D.bridge = bridge; D.bounty = bounty; D.auction = auction;
 const PORT = +process.env.PORT || 4000, HOST = process.env.HOST || '0.0.0.0';
 const PUB = path.join(__dirname, 'public'), DATA = path.join(__dirname, 'data', 'players');
 fs.mkdirSync(DATA, { recursive: true });
 
 D.loadWorld(); D.start();
-D.portraitFor = (id) => { if (!/^[a-z0-9_]+$/.test(id)) return null; for (const ext of ['jpg', 'svg']) if (fs.existsSync(path.join(PUB, 'img', 'npc', `${id}.${ext}`))) return `/img/npc/${id}.${ext}`; return null; }; // generated portraits first, old SVGs as a fallback
+D.portraitFor = (id) => { if (!/^[a-z0-9_]+$/.test(id)) return null; if (id.startsWith('mob_')) { const f = D.mobPic(id.slice(4)); return f ? `/img/mob/${f}` : null; } for (const ext of ['jpg', 'svg']) if (fs.existsSync(path.join(PUB, 'img', 'npc', `${id}.${ext}`))) return `/img/npc/${id}.${ext}`; return null; }; // generated portraits first, old SVGs as a fallback
 
 // ---- grid area builder API (builder.html). Protected by a key that is printed in the server log. ----
 const CUSTOM = path.join(__dirname, 'data', 'custom'); fs.mkdirSync(CUSTOM, { recursive: true });
@@ -75,6 +75,13 @@ D.leaderboard = (force) => {
   const out = [...rows.values()].map(({ name, rec, live }) => { const k = D.K.CLASSES[rec.cls] || { name: '?' }; return { name, cls: rec.cls, cn: k.name, g: rec.gender || 'nonbinary', rm: rec.remort || 0, lv: rec.level || 1, bot: !!(live && live.isBot), on: !!live, ...ach(rec) }; }).sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
   out.forEach((r, i) => { r.rank = i + 1; }); boardCache = { at: Date.now(), rows: out }; return out;
 };
+D.creditOffline = (name, o) => { // add credits or an item to a saved character who is not online (auction proceeds and returned items)
+  try { const f = file(name); if (!fs.existsSync(f)) return false; const r = JSON.parse(fs.readFileSync(f, 'utf8')); if (o.gold) r.gold = (r.gold || 0) + o.gold; if (o.bag) { r.bag = r.bag || {}; r.bag[o.bag] = (r.bag[o.bag] || 0) + 1; } fs.writeFileSync(f, JSON.stringify(r)); return true; } catch (e) { D.log('creditOffline', e.message); return false; }
+};
+let mobPics = {}, mobAt = 0; // monster pictures in public/img/mob/<mob id>.jpg are shown in the combat view (rescanned every 30 seconds)
+D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || ''; };
+let picMap = {}, picAt = 0; // which rooms have a picture in public/img/rooms (rescanned every 30 seconds, so you can drop images in while the game runs)
+D.roomPic = (id) => { if (Date.now() - picAt > 30000) { picAt = Date.now(); try { picMap = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'rooms')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { picMap = {}; } } return picMap[id.replace('/', '-')] || ''; };
 const hash = (pw, salt) => crypto.scryptSync(pw, salt, 32).toString('hex');
 
 D.savePlayer = (p) => {
@@ -82,7 +89,7 @@ D.savePlayer = (p) => {
   fs.writeFileSync(file(p.name), JSON.stringify({ ...p.rec, ...p.toRec() }));
 };
 function drop(p, silent) { // disconnect cleanup; silent when the same player simply reconnects
-  if (!p || p.gone) return; p.gone = true; if (p.team) D.teamLeave(p, 'disconnected'); D.savePlayer(p); if (!silent && !p.isBot) D.presence(p, 'out');
+  if (!p || p.gone) return; p.gone = true; if (p.team) D.teamLeave(p, 'disconnected'); try { auction.onDrop(p); } catch (e) { D.log('auction', e.message); } D.savePlayer(p); if (!silent && !p.isBot) D.presence(p, 'out');
   if (p.env) p.env.tell(`${p.name} fades from the world.`, p, 'sys');
   D.players.delete(p.name); p.destroy(); D.pushMaps();
 }
@@ -104,7 +111,7 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendTut(true); p.send({ t: 'sound', k: 'login' });
+  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p);
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
@@ -146,6 +153,8 @@ function ws(req, socket) {
         else if (m.t === 'cmd' && c.player) D.command(c.player, String(m.line || '').slice(0, 300));
         else if (m.t === 'kp' && c.player) D.kp(c.player, m);
         else if (m.t === 'tr' && c.player) D.setTriggers(c.player, m);
+        else if (m.t === 'mute' && c.player) D.setMute(c.player, m);
+        else if (m.t === 'title' && c.player) D.setTitle(c.player, String(m.text || ''));
         else if (m.t === 'tut' && c.player) D.tutMsg(c.player, m);
       } catch (e) { D.log('command error', e.stack); }
     }
@@ -161,14 +170,15 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
-server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); });
+server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;
 function halt(why) {
   if (halting) return; halting = true; clearTimeout(stopTimer); D.log(`shutting down: ${why}`); let saved = 0, failed = 0;
+  try { auction.halt(); } catch (e) { D.log('auction halt', e.message); }
   for (const p of [...D.players.values()]) { if (p.isBot) continue; try { p.msg('*** The game is shutting down. Your character has been saved. Goodbye! ***', 'hurt'); D.savePlayer(p); saved++; } catch (e) { failed++; D.log('save failed for', p.name, e.message); } }
   try { bots.save(); } catch (e) { D.log('bot save failed', e.message); }
-  try { bridge.stop(); github.stop(); bounty.stop(); } catch (e) { /* stopping anyway */ }
+  try { bridge.stop(); github.stop(); bounty.stop(); weather.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
   D.log(`saved ${saved} player${saved === 1 ? '' : 's'}${failed ? `, ${failed} FAILED` : ''}; goodbye`);
   setTimeout(() => { for (const p of D.players.values()) try { p.conn && p.conn.close(); } catch (e) { /* closing anyway */ } try { server.close(); } catch (e) { /* closing anyway */ } setTimeout(() => process.exit(failed ? 1 : 0), 300); }, 500);
 }

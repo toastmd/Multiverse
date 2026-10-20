@@ -23,6 +23,10 @@ const CLASSES = {
 Object.assign(CLASSES, {
   dragon:       { name: 'Dragon',       icon: '🐉', remort: true, pwr: 1.4, hpl: 15, mpl: 10, rg: 3, str: 4, dex: 0, con: 3, kit: 'dclaws', desc: 'An awakened wyrm in human shape. Breath weapons, scales and sheer draconic power. (Remort class)' },
   android:      { name: 'Android',      icon: '🤖', remort: true, pwr: 1.4, hpl: 12, mpl: 11, rg: 3, str: 1, dex: 3, con: 1, kit: 'parm',   desc: 'A self-aware combat frame. Precision weapons, nanite repair and overcharged systems. (Remort class)' },
+  gambler:      { name: 'Gambler',      icon: '\u{1F0CF}', remort: true, pwr: 1.4, hpl: 12, mpl: 10, rg: 3, str: 0, dex: 4, con: 1, kit: 'cards',   desc: 'A card sharp who bets everything on luck, loaded dice and a hidden ace. Big crits, tricks and a royal flush. (Remort class)' },
+  ripperdoc:    { name: 'Ripperdoc',    icon: '\u{1FA7A}', remort: true, pwr: 1.4, hpl: 13, mpl: 11, rg: 3, str: 1, dex: 2, con: 2, kit: 'scalpel', desc: 'A back-alley cyber-surgeon: scalpels, grafts and stims. Cuts, heals and rebuilds, often in the same breath. (Remort class)' },
+  outlaw:       { name: 'Outlaw',       icon: '\u{1F920}', remort: true, pwr: 1.4, hpl: 14, mpl: 8,  rg: 2, str: 3, dex: 3, con: 2, kit: 'sixgun',  desc: 'A wanted gunfighter with a price on their head: quick draws, lassos, dynamite and one last stand. (Remort class)' },
+  pirate:       { name: 'Pirate',       icon: '\u2620\uFE0F', remort: true, pwr: 1.4, hpl: 14, mpl: 8, rg: 2, str: 3, dex: 3, con: 2, kit: 'cutlass', desc: 'A sea-raider with a cutlass, a ship\'s cannon and a very loud parrot. Boarding parties, broadsides and plunder. (Remort class)' },
   shapeshifter: { name: 'Shapeshifter', icon: '🐺', remort: true, pwr: 1.4, hpl: 14, mpl: 9,  rg: 2, str: 3, dex: 3, con: 2, kit: 'fclaws', desc: 'A changer who wears beast forms like coats. Claws, packs, regeneration and mist. (Remort class)' },
 });
 
@@ -246,4 +250,46 @@ const RECIPES = [
 
 const ORD = ['Botany', 'Mining', 'Fishing', 'Crafting']; SPELLS.scavenger.sort((a, b) => ORD.indexOf(a.school) - ORD.indexOf(b.school) || a.lvl - b.lvl);
 
+// ---- remort classes added later: Gambler, Ripperdoc, Outlaw ----
+const SP = (k, n, lvl, mp, kind, i, c, d, o) => ({ k, n, lvl, mp, kind, i, c, d, ...o });
+SPELLS.gambler = [SP('card_flick', 'Card Flick', 1, 4, 'dmg', '\u{1F0CF}', '#ff4f6b', 'A razor-edged playing card thrown at speed.', { dmg: [8, 13] }),
+  SP('loaded_dice', 'Loaded Dice', 2, 8, 'dmg', '\u{1F3B2}', '#ffffff', 'Weighted dice that crack a skull and stun.', { dmg: [7, 11], stun: 1 }),
+  SP('lucky_streak', 'Lucky Streak', 4, 10, 'buff', '\u{1F340}', '#7be0a0', 'Everything lands your way.', { ticks: 14, crit: 0.2, atk: 4 }),
+  SP('double_down', 'Double Down', 6, 12, 'dmg', '\u{2660}\uFE0F', '#cfd8dc', 'Two cards, two hits.', { dmg: [10, 16], hits: 2 }),
+  SP('ace_in_the_sleeve', 'Ace in the Sleeve', 8, 16, 'dmg', '\u{1F0A1}', '#ffd27f', 'A hidden ace for a nasty surprise.', { dmg: [20, 30] }),
+  SP('bluff', 'Bluff', 10, 16, 'buff', '\u{1F60F}', '#9fb8ff', 'They are no longer sure where you are.', { ticks: 14, ac: 6, evade: 0.15 }),
+  SP('wild_card', 'Wild Card', 15, 40, 'dmg', '\u{1F0CF}', '#ff4fd8', 'Anything can happen, and it hurts.', { dmg: [14, 56] }),
+  SP('house_enforcer', 'House Enforcer', 22, 60, 'summon', '\u{1F574}\uFE0F', '#cfd8dc', 'The house sends muscle.', { ticks: 12, sdmg: [18, 28], sname: 'House enforcer' }),
+  SP('all_in', 'All In', 30, 80, 'dmg', '\u{1F4B0}', '#ffd34a', 'Everything on one hand.', { dmg: [170, 220], cd: 8 }),
+  SP('royal_flush', 'Royal Flush', 40, 130, 'dmg', '\u{1F451}', '#ff3b3b', 'Five cards, five wounds.', { dmg: [48, 62], hits: 5, cd: 10 })];
+SPELLS.ripperdoc = [SP('scalpel_slash', 'Scalpel Slash', 1, 4, 'dmg', '\u{1F52A}', '#cfd8dc', 'A quick, precise cut.', { dmg: [8, 13] }),
+  SP('stim_shot', 'Stim Shot', 2, 8, 'heal', '\u{1F489}', '#7be0a0', 'A syringe of something good.', { heal: [26, 36] }),
+  SP('cyber_graft', 'Cyber Graft', 4, 12, 'buff', '\u{1F9BE}', '#7fd6ff', 'Bolt on a little extra.', { ticks: 16, ac: 6, atk: 3 }),
+  SP('bonesaw', 'Bonesaw', 6, 14, 'dmg', '\u{1FA9A}', '#e5603f', 'Three fast, ugly cuts.', { dmg: [6, 10], hits: 3 }),
+  SP('nano_suture', 'Nano Suture', 8, 16, 'heal', '\u{1F9EC}', '#9fe0a0', 'Nanites stitch you shut.', { heal: [44, 64] }),
+  SP('adrenal_rush', 'Adrenal Rush', 10, 18, 'buff', '\u{26A1}', '#ffe66b', 'Pure adrenaline.', { ticks: 14, atk: 8, crit: 0.15, heal: [30, 50] }),
+  SP('organ_harvest', 'Organ Harvest', 15, 45, 'dmg', '\u{1FAC0}', '#ff4f4f', 'Take something vital, bleed them for it.', { dmg: [26, 38], dot: { dmg: [8, 12], ticks: 5 } }),
+  SP('chrome_overload', 'Chrome Overload', 22, 65, 'dmg', '\u{1F50C}', '#7fd6ff', 'Every implant at once, shocking everyone near.', { dmg: [40, 56], aoe: 1, stun: 1 }),
+  SP('revival_protocol', 'Revival Protocol', 30, 90, 'heal', '\u{1F691}', '#7be0a0', 'Clear! Bring yourself back from the edge.', { heal: [220, 300], cd: 8 }),
+  SP('surgical_strike', 'Surgical Strike', 40, 130, 'dmg', '\u{1F3AF}', '#ff3b3b', 'One perfect incision.', { dmg: [220, 280], crit: 0.4, cd: 10 })];
+SPELLS.outlaw = [SP('pistol_whip', 'Pistol Whip', 1, 4, 'dmg', '\u{1F52B}', '#cfd8dc', 'Hard, fast and rude.', { dmg: [8, 13] }),
+  SP('smoke_out', 'Smoke Out', 2, 8, 'dmg', '\u{1F32B}\uFE0F', '#b0bec5', 'Choking smoke that stuns everyone near.', { dmg: [7, 11], aoe: 1, stun: 1 }),
+  SP('quick_draw', 'Quick Draw', 4, 12, 'dmg', '\u{1F4A5}', '#ffb347', 'Faster than you can blink.', { dmg: [8, 12], hits: 2 }),
+  SP('outlaws_luck', "Outlaw's Luck", 6, 12, 'buff', '\u{1F340}', '#7be0a0', 'The law keeps missing.', { ticks: 14, ac: 5, evade: 0.15, atk: 3 }),
+  SP('lasso', 'Lasso', 8, 14, 'dmg', '\u{1FA22}', '#d2a679', 'Rope them in and hold them still.', { dmg: [14, 20], stun: 1 }),
+  SP('dynamite_toss', 'Dynamite Toss', 10, 18, 'dmg', '\u{1F9E8}', '#ff5a36', 'Light it, throw it, run.', { dmg: [16, 22], aoe: 1 }),
+  SP('bounty_hunt', 'Bounty Hunt', 15, 40, 'dmg', '\u{1F3AF}', '#e5603f', 'Brutal on wounded targets.', { dmg: [30, 46], exec: 1 }),
+  SP('jailbreak', 'Jailbreak', 22, 60, 'buff', '\u{1F513}', '#ffd27f', 'Break out stronger than before.', { ticks: 14, atk: 14, ac: 8, heal: [60, 90] }),
+  SP('gunfight_at_noon', 'Gunfight at Noon', 30, 80, 'dmg', '\u{1F305}', '#ff7a1a', 'High noon, one shot.', { dmg: [170, 220], crit: 0.3, cd: 8 }),
+  SP('last_stand', 'Last Stand', 40, 130, 'dmg', '\u{1F480}', '#ff3b3b', 'Six shots, no regrets.', { dmg: [36, 48], hits: 6, cd: 10 })];
+SPELLS.pirate = [SP('cutlass_slash', 'Cutlass Slash', 1, 4, 'dmg', '\u{1F5E1}\uFE0F', '#cfd8dc', 'A quick, salty slash.', { dmg: [8, 13] }),
+  SP('swig_of_grog', 'Swig of Grog', 2, 8, 'heal', '\u{1F37A}', '#d2a679', 'Rum fixes everything. Temporarily.', { heal: [24, 34] }),
+  SP('cannon_shot', 'Cannon Shot', 4, 12, 'dmg', '\u{1F4A5}', '#ff8a3c', 'A ship\'s cannonball to the chest.', { dmg: [14, 20] }),
+  SP('parrot_attack', 'Parrot Attack', 6, 14, 'summon', '\u{1F99C}', '#7be0a0', 'Your parrot goes for the eyes.', { ticks: 12, sdmg: [10, 16], sname: 'Parrot' }),
+  SP('keelhaul', 'Keelhaul', 8, 16, 'dmg', '\u2693', '#7fd6ff', 'Dragged under the hull, stunned and soaked.', { dmg: [14, 20], stun: 1 }),
+  SP('yo_ho_ho', 'Yo Ho Ho!', 10, 18, 'buff', '\u{1F3F4}\u200D\u2620\uFE0F', '#ffd27f', 'A rousing shanty that heals and empowers.', { ticks: 14, atk: 8, crit: 0.15, heal: [30, 50] }),
+  SP('broadside', 'Broadside', 15, 50, 'dmg', '\u{1F6A2}', '#ff5a36', 'Every cannon at once.', { dmg: [26, 36], aoe: 1 }),
+  SP('boarding_party', 'Boarding Party', 22, 65, 'summon', '\u{1F3F4}', '#cfd8dc', 'Your crew swarms over the rail.', { ticks: 12, sdmg: [20, 30], sname: 'Boarding party' }),
+  SP('plunder', 'Plunder', 30, 80, 'dmg', '\u{1F4B0}', '#ffd34a', 'Take everything that is not nailed down.', { dmg: [170, 220], crit: 0.3, cd: 8 }),
+  SP('krakens_wrath', "Kraken's Wrath", 40, 140, 'dmg', '\u{1F419}', '#9a8cff', 'The deep answers your call.', { dmg: [190, 250], aoe: 1, stun: 1, cd: 10 })];
 module.exports = { CLASSES, SPELLS, RECIPES };

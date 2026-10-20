@@ -142,4 +142,18 @@ module.exports = (items, mobs, rooms) => {
     m: ['Signal Tower', 'A tall tower of black iron with lanterns of every color. Imp conductors flip the signals while steam wraiths whistle in the wind.', ['imp_conductor', 'steam_wraith']],
     n: ['Hellmouth Tunnel', 'A tunnel mouth ringed with fangs of black stone, rails curving into the fire within. A thunder of wheels rises from the dark, and the Brimstone Express comes thundering out.', ['brimstone_express']],
   }, ['ember/basalt_steps', 'ember/smoking_crater', 'ember/obsidian_field']);
+
+  // ============ 6. Dry Gulch Bank (Old West, levels 15-17): stick up the customers, kill the manager, take his key, crack the vault ============
+  item('vaultkey', 'bank vault key', 'key', { value: 0, long: 'A heavy brass key with a bank crest. It opens the Dry Gulch bank vault. Type `unlock vault` next to the vault door.' });
+  mob('bank_guard', 'bank guard', '\u{1F46E}', 16, { ids: ['bank', 'guard'] }); mob('bank_manager', 'Bank Manager Ebenezer Crane', '\u{1F9D0}', 17, { boss: 1, ids: ['ebenezer', 'crane', 'manager', 'bank'], drops: [['vaultkey', 1]] });
+  const still = (id, name, icon, lv, gold) => { mob(id, name, icon, lv, { ids: name.split(' ') }); Object.assign(mobs[id], { aggro: false, robbable: { gold }, hp: Math.round(mobs[id].hp * 0.5), xp: Math.round(mobs[id].xp * 0.3) }); }; // stationary people you can `rob`
+  still('bank_teller', 'bank teller', '\u{1F9D1}', 8, [250, 600]); still('wealthy_customer', 'wealthy customer', '\u{1F911}', 10, [700, 1500]); still('bank_clerk', 'bank clerk', '\u{1F9D1}', 8, [350, 800]);
+  build('bank', 'bank', 25, 0, 0, ['a b c', '. d e', '. f .'], {
+    a: ['Bank Lobby', 'Marble floors, brass lamps and a high ceiling. Tellers and wealthy customers stand frozen behind velvet ropes while armed guards watch the door. A sign reads: DRY GULCH SAVINGS & TRUST. DEPOSITS INSURED BY THE SHERIFF.', ['bank_guard', 'bank_guard', 'bank_teller', 'wealthy_customer']],
+    b: ['Teller Cages', 'A row of brass-barred cages, each with a nervous clerk and a ledger. Cash drawers rattle with every breath. Try `rob teller` if you are feeling bold.', ['bank_teller', 'bank_clerk', 'bank_teller']],
+    c: ["Manager's Office", 'A mahogany desk, a leather chair and a safe behind a painting. Bank Manager Ebenezer Crane sits here guarding the vault key on a chain around his neck. To the south, the vault door.', ['bank_manager']],
+    d: ['Vault Corridor', 'A narrow tiled corridor ending in a round steel door the size of a wagon wheel: the vault. Guards pace in front of it. The door needs the manager\'s brass key (`unlock vault`).', ['bank_guard', 'bank_guard']],
+    e: ['The Vault', 'A cold steel room lined with strongboxes, stacked bills and bars of gold. The sum on hand changes every day. Type `loot vault` to fill your sacks.', [], { locked: true, vault: true }],
+    f: ['Counting Room', 'Long tables, green lamps and adding machines. Clerks count piles of cash with sweaty hands, and a guard stands in the corner.', ['bank_clerk', 'bank_clerk', 'bank_guard']],
+  }, ['road/abandoned_inn', 'road/hanging_tree', 'road/toll_bridge']);
 };

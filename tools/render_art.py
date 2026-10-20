@@ -20,6 +20,12 @@ if __name__ == '__main__':
     if what in ('scenes', 'all'):
         from render import scenes; scenes.run(PUB)
     if what == 'newart':
-        from render import portraits, scenes; portraits.run(PUB, only={'whitlock', 'sylwen', 'okoro', 'marrow', 'cobb'}); scenes.run_new(PUB)
+        from render import portraits, scenes; portraits.run(PUB, only={'slick', 'whitlock', 'sylwen', 'okoro', 'marrow', 'cobb'}); scenes.run_new(PUB)
+    if what == 'modern':
+        from render import portraits; portraits.run(PUB, only={'dale', 'wanda', 'gary'})
+        for key, spec, seed in (('mm_man', dict(gender='male', hair='brown', acc=['stubble'], accent='orange', accent2='cyan', outfit=(60, 110, 90), skin=2, theme='modern'), 811), ('mm_woman', dict(gender='female', hair='red', acc=['glasses'], accent='pink', accent2='cyan', outfit=(150, 60, 70), skin=1, theme='modern'), 823)):
+            os.makedirs(os.path.join(PUB, 'img/mob'), exist_ok=True); portraits.render(spec, seed, os.path.join(PUB, 'img/mob', key + '.jpg'))
+    if what == 'remort':
+        from render import portraits; portraits.run(PUB, only={f'{k}-{g}' for k in ('gambler', 'ripperdoc', 'outlaw', 'pirate') for g in 'mfn'})
     if what in ('icons', 'all'):
         from render import icons; icons.run(PUB)

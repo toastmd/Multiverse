@@ -3,7 +3,7 @@
 // Keyed by room id; applied by retheme.js. Edit and use the `update` command to reload.
 const D = {
   // ---------------- Ashfall Junction: an Old West boom town where the roads between worlds meet ----------------
-  'town/square': "Dust, boardwalks and false-front buildings ring a cracked stone fountain whose glowing water heals any traveler (type `drink fountain`). A shimmering arch of pale light stands at the far end, where travelers step in from other worlds. Piano music drifts from the saloon.",
+  'town/square': "Dust, boardwalks and false-front buildings ring a cracked stone fountain whose glowing water heals any traveler (type `drink fountain`). A shimmering arch of pale light stands at the far end, where travelers step in from other worlds (step up through it to reach the Modern district). Piano music drifts from the saloon.",
   'town/gate': "A palisade of sharpened logs frames the north gate, with a deputy in a dusty duster leaning on a rifle. Past it the trail climbs into the whispering trees of the Whisperwood. A sign reads: LEAVE YOUR TROUBLES, OR BRING THEM IN.",
   'town/market': "Market Row is a boardwalk of striped awnings and barrels. The apothecary sells stims, cells and herbal salves from crates, and a hand-lettered sign promises remedies from three different worlds. Mules doze in the shade.",
   'town/inn': "The Silver Spur Saloon has swinging doors, a long scarred bar and a tinny piano nobody dares stop. Cowhands, spacefarers and robed wizards share one table without comment. Rest here, and ask the barkeep for a drink (`list`).",

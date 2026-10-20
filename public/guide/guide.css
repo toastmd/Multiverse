@@ -53,3 +53,5 @@ footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:v
 .agrp[class*=g-]{margin:22px 0;padding:4px 16px 14px;border-left:4px solid var(--g1);background:linear-gradient(90deg,var(--gbg),transparent 45%);border-radius:0 10px 10px 0}
 .gtag{display:inline-block;padding:2px 10px;margin:0 4px 0 0;border-radius:12px;border:1px solid var(--g1);color:var(--g1);font:600 12px var(--gf)}
 .chips a[class*=g-]{border-color:var(--g1);color:var(--g1);font-family:var(--gf)}.genrekey{margin:8px 0}
+
+.g-modern{--g1:#5ab0ff;--g2:#1c3b5c;--gbg:#0d1a28;--gf:"Helvetica Neue",Arial,system-ui,sans-serif}.g-modern h2{letter-spacing:.04em}.area.g-modern{border-style:solid}

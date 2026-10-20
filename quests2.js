@@ -1,8 +1,12 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    dale: N('Dale the Attendant', 'modern/g1s', 'Welcome to QuikStop. Hot dogs are two for one, if you do not ask how long they have been rolling.', 'A tired gas station attendant in a faded vest, with a name tag, a mop and a lifetime of stories.'),
+    wanda: N('Wanda the Park Manager', 'modern/tof', 'Rent is due, the raccoons are loose and the Landlord is in a mood. What do you want, hon?', 'A sharp-eyed trailer park manager with reading glasses on a chain, a clipboard and a flyswatter she has used as a weapon.'),
+    gary: N('Mall Cop Gary', 'modern/cus', 'Gary, Multi-Mart Security. This is a store, not a battlefield, but I will take the help.', 'A mall security guard in a too-small uniform, a flashlight on his belt, who takes his job a little too seriously.'),
+    slick: N('Slick Sam', 'road/abandoned_inn', 'Psst. You look like someone who appreciates a good opportunity.', 'A grinning, well-dressed fixer with a scarred cheek, who always sits with his back to the wall. He plans jobs, and takes a cut.'),
     whitlock: N('Sheriff Whitlock', 'gulch/e', 'Welcome to Tombstone Gulch, stranger. Watch your back, and your spurs.', 'The last lawman of the Gulch, a grizzled sheriff with a tin star and tired eyes. He still posts wanted notices for people who died fifty years ago.'),
     sylwen: N('Warden Sylwen', 'thorn/c', 'The Moonwell welcomes you, mortal. Do not eat anything you are offered.', 'A tall fey warden with silver hair and a cloak of living leaves. She is polite, ancient and never quite blinks.'),
     okoro: N('Lt. Okoro', 'aurora/d', 'Another survivor? Or another hungry mouth. Sit, sit.', 'The last officer of the Aurora, her uniform patched with salvage and her left arm a bright chrome prosthetic.'),
@@ -10,6 +14,13 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     cobb: N('Stationmaster Cobb', 'rail/d', 'Next train is never. Can I interest you in a timetable?', 'A weary stationmaster in a soot-black waistcoat, with a pocketwatch that runs backwards and a ledger of every soul that boarded.'),
   };
   const QUESTS = [
+    Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_mod0', 'Coupon Collector', 'dale', 10, 'Customers drop crumpled coupons when they get beaten up. The store pays a bonus for them. Bring me three crumpled coupons.', [['get', 'coupon', 3]], { gold: 350, items: ['burger', 'cola'] }),
+    Q('q_mod1', 'Park Pests', 'wanda', 11, 'The raccoons have taken over the dumpsters again. Deal with six of them before they steal the whole park.', [['kill', 'raccoon', 6]], { gold: 500, items: ['firstaid', 'hotdog'] }),
+    Q('q_mod2', 'The Landlord', 'wanda', 14, 'Earl Boudreaux has not paid rent since the last decade, and now he sits in a golden lawn chair like a king. Evict him.', [['kill', 'trailer_king', 1]], { gold: 1500, items: ['strong', 'strong', 'firstaid'] }, 'q_mod1'),
+    Q('q_mod3', 'Cart Roundup', 'gary', 12, 'The shopping carts have gone feral and chase customers through the parking lot. Round up six of them. With force.', [['kill', 'rogue_cart', 6]], { gold: 600, items: ['energy', 'firstaid'] }),
+    Q('q_mod4', 'Black Friday Doug', 'gary', 15, 'Store Manager Doug has lost it. He has locked himself in his office with a price gun and a headset. Get in there and stop him.', [['kill', 'mm_manager', 1]], { gold: 1800, items: ['greater', 'mana2', 'firstaid'] }, 'q_mod3'),
+    Q('q_bank', 'Bank Robbery', 'slick', 15, 'The Dry Gulch bank is ripe. Hold up three people inside (rob teller), kill the Bank Manager, who carries the vault key, then unlock the vault and loot it. The vault holds a different sum every time, and I will happily plan the job again whenever you like.', [['rob', 'any', 3], ['kill', 'bank_manager', 1], ['vault', 'loot']], { gold: 1500, items: ['superior'] }),
     Q('q_gulch0', 'Badges for the Sheriff', 'whitlock', 10, 'The ghosts of my old deputies carry their badges. Bring me three tarnished ghost badges so I can lay them to rest.', [['get', 'ghostbadge', 3]], { gold: 300, items: ['strong'] }),
     Q('q_gulch1', 'Quiet Boot Hill', 'whitlock', 11, 'The outlaw ghosts of Boot Hill walk the streets again. Put six of them back in the ground.', [['kill', 'ghost_outlaw', 6]], { gold: 450, items: ['strong', 'strong'] }),
     Q('q_gulch2', 'Ghost Marshal Dalton', 'whitlock', 13, 'Dalton was the best lawman this town ever had. Now he haunts the bank vault and shoots anyone who enters. End his watch, gently if you can.', [['kill', 'dalton', 1]], { gold: 1200, items: ['greater', 'mana2'] }, 'q_gulch1'),
@@ -27,6 +38,10 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    dale: ['{name} did not look both ways. Classic.', 'I have seen a lot of things at this counter, and {name} dying is one of them.', 'Two hot dogs for {name}. On the house, in memory.'],
+    wanda: ['{name} is down. That is a lot of paperwork, hon.', 'Rule 4: no dying in the park, {name}.', 'Somebody tell {name} the deposit is not refundable.'],
+    gary: ['{name} is down. Code blue in aisle nine.', 'I told {name} to wait for backup. Nobody ever waits for backup.', 'Please clear the area. {name} is having a moment.'],
+    slick: ['{name} got caught. Amateurs do that.', 'Never rob a bank on an empty stomach, {name}.', '{name} fell. I will take their cut.'],
     whitlock: ['{name} is down. Never saw a man draw so slow.', 'Rest easy, {name}. The Gulch has plenty of room.', 'Another one for Boot Hill, and it is {name}.'],
     sylwen: ['{name} fell as mortals do: suddenly and noisily.', 'The court will gossip about {name} for a century.', 'Mortals. So brief. So {name}.'],
     okoro: ['{name} is down. Add it to the casualty list.', 'Stay frosty, {name}. Oh, too late.', 'Another body for the airlock, and it is {name}.'],
@@ -50,5 +65,6 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     watcher: ['The void notes {name}. It is not impressed.', 'I saw {name} fall, a hundred times.', '{name} returns to the nothing. Briefly.', 'Another thread cut, {name}.'],
     _: ['{name} is dead. How embarrassing.', '{name} fell. The multiverse yawned.', 'Moment of silence for {name}. A short one.', 'Someone fetch a bucket for {name}.', '{name} died the way {name} lived: loudly.', 'That was quick, {name}.', 'Even the pigeons saw {name} go.', 'Rookie mistake, {name}.', '{name}, the floor is not a safe place to nap.', 'Do not worry, {name}. The dead have excellent gossip.', 'Respawn is coming, {name}. Dignity is not.', 'I would say rest in peace, {name}, but I know you.'],
   };
+  QUESTS.find((q) => q.id === 'q_tutorial').rew.xp = 150; QUESTS.find((q) => q.id === 'q_bank').repeat = true; // the tutorial pays a flat 150 XP; the bank job can be repeated (quest points only once)
   return { NPCS, QUESTS, TAUNTS };
 };

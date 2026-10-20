@@ -18,7 +18,7 @@ ${h2('Room index')}<p>The five newer areas (Tombstone Gulch, Thornwild Court, St
   const monsOf = (a) => [...new Set(CATALOG.filter((r) => r.area === a).flatMap((r) => r.def.mobs || []))].map((id) => D.W.mobs[id]).filter(Boolean);
   const npcsOf = (a) => Object.values(D.Q.NPCS).filter((n) => ROOM[n.room] && ROOM[n.room].area === a);
   emit('areas', 'Areas', 'Eleven regions across three genres (Old West, fantasy and sci-fi), from the safe frontier town to the Abyss. Each shows its level range, terrain, monsters, resources and how to get there.', `
-<p class="genrekey"><span class="gtag g-west">Old West</span><span class="gtag g-fantasy">Fantasy</span><span class="gtag g-scifi">Sci-fi</span> Each area is styled for its genre.</p>
+<p class="genrekey"><span class="gtag g-west">Old West</span><span class="gtag g-fantasy">Fantasy</span><span class="gtag g-scifi">Sci-fi</span><span class="gtag g-modern">Modern</span> Each area is styled for its genre.</p>
 <div class="chips">${ORDER.map((a) => `<a class="g-${GENRE[a]}" href="#${a}">${AREAS[a][0]}</a>`).join('')}</div>
 ${ORDER.map((a) => { const rs = CATALOG.filter((r) => r.area === a), ms = monsOf(a), lv = ms.map((m) => m.level), terr = {}; for (const r of rs) terr[r.terrain] = (terr[r.terrain] || 0) + 1;
     const res = {}; for (const r of rs) for (const [k, n] of Object.entries(r.def.res || {})) res[k] = (res[k] || 0) + n; const zs = [...new Set(rs.map((r) => r.z))].sort((x, y) => y - x);
@@ -39,4 +39,25 @@ ${ORDER.map((a) => { const rs = CATALOG.filter((r) => r.area === a), ms = monsOf
 ${h2('The NPCs')}<div class="cards">${Object.entries(D.Q.NPCS).map(([id, n]) => { const r = ROOM[n.room]; return card(`<img src="../img/npc/${id}.jpg" alt="${esc(n.name)}" loading="lazy">`, esc(n.name), `<p class="m">${esc(n.long)}</p><p class="m">${pill(r ? r.name : n.room, 'b')} ${`<span class="gtag g-${r ? GENRE[r.area] : 'west'}">${r ? AREAS[r.area][0] : ''}</span>`}</p><p class="m">${QS.filter((q) => q.giver === id).map((q) => esc(q.name)).join(' · ')}</p>`); }).join('')}</div>
 ${h2('All contracts')}<p>Contract XP grows with the contract's level: about one level's worth of XP at that level, times 2.5 for boss contracts, 1 for kill contracts, 0.7 for fetch contracts, 0.5 for visit and talk contracts, plus 25% for follow-ups. Each remort adds 10%. Quest points are separate and awarded once per contract.</p>${table(['Quest', 'Giver', 'Min level', 'Requirements', 'Reward', 'Quest points', 'Needs first'], QS.map((q) => [`<b>${esc(q.name)}</b>`, esc(D.Q.NPCS[q.giver].name), q.min, esc(reqText(q)), `${num(q.rew.xp)} XP, ${num(q.rew.gold || 0)}c${(q.rew.items || []).length ? ', ' + q.rew.items.map(nm).join(', ') : ''}`, q.rew.qp, q.after ? esc(QS.find((x) => x.id === q.after).name) : '-']), { filter: 'quests' })}
 <p>All ${QS.length} quests together are worth <b>${QS.reduce((s, q) => s + q.rew.qp, 0)}</b> quest points.</p>`);
+
+  // ---------------- directions: routes from Ashfall Square to every area and its notable places ----------------
+  const LET = { north: 'n', south: 's', east: 'e', west: 'w', up: 'u', down: 'd' };
+  const steps = (path) => { const r = route(path); return r === 'you start here' ? [] : r.split(', '); };
+  const words = (st) => { if (!st.length) return 'You are already there'; const out = []; for (let i = 0; i < st.length;) { let j = i; while (j < st.length && st[j] === st[i]) j++; out.push(j - i > 1 ? `${j - i} x ${st[i]}` : st[i]); i = j; } return out.join(', '); };
+  const swalk = (st) => { const out = []; for (let i = 0; i < st.length;) { let j = i; while (j < st.length && st[j] === st[i]) j++; out.push((j - i > 1 ? j - i : '') + LET[st[i]]); i = j; } return out.join(','); };
+  const dir = (path) => { const st = steps(path); return [words(st), st.length ? `<code>speedwalk ${swalk(st)}</code>` : '', st.length]; };
+  const KIND = (r) => { const d = r.def, k = []; if (d.shop || d.clinic) k.push(d.exchange ? 'shop (best for materials)' : 'shop'); if (d.camp) k.push('safe camp'); if (d.healer) k.push('healer'); if (d.forge) k.push('forge'); if (d.rebirth) k.push('remort hall'); if (d.inn) k.push('inn'); if (d.saloon) k.push('saloon and blackjack');
+    for (const id of d.mobs || []) { const m = D.W.mobs[id]; if (m && m.boss && !k.includes('boss: ' + m.name)) k.push('boss: ' + m.name); } if (d.vault) k.push('bank vault'); return k; };
+  const HUB = ['town/adventurers_guild', 'town/smithy', 'town/market', 'town/armory', 'town/inn', 'town/temple', 'town/clinic', 'town/implant_lab', 'town/salvage_exchange', 'town/hall_of_rebirth', 'town/gate', 'town/eastgate', 'town/quarry'];
+  const sections = ORDER.map((a) => {
+    const rs = CATALOG.filter((r) => r.area === a), pick = (a === 'town' ? HUB.map((p) => ROOM[p]).filter(Boolean).map((r) => rs.find((x) => x.path === r.path) || r) : rs.filter((r) => KIND(r).length)), en = rs.map((r) => [r.path, steps(r.path).length]).sort((x, y) => x[1] - y[1])[0][0];
+    const [w, c, n] = dir(en), lv = AREAS[a][1];
+    const place = (r) => { const [pw, pc, pn] = dir(r.path); const kinds = a === 'town' ? [] : KIND(r); return [`<b>${esc(r.name)}</b>${kinds.length ? '<br><small>' + esc(kinds.join(', ')) + '</small>' : ''}`, esc(pw), pc, String(pn)]; };
+    return `<section class="area g-${GENRE[a]}" id="${a}"><h2>${AREAS[a][0]}</h2><p>${pill(lv, 'a')} ${pill(n ? n + ' steps' : 'you start here', 'b')}</p>${a === 'town' ? '<p>Ashfall Square is where every new character starts, and <code>recall</code> brings you back from anywhere.</p>' : `<div class="facts"><div><b>Entrance (${esc(rs.find((r) => r.path === en).name)})</b>${esc(w)}</div><div><b>Speedwalk</b>${c}</div></div>`}
+${table(['Place', 'Directions from Ashfall Square', 'Speedwalk', 'Steps'], pick.slice(0, 40).map(place))}</section>`;
+  }).join('');
+  emit('directions', 'Directions', 'Routes from Ashfall Square to every area and its shops, camps and bosses, with ready-to-paste speedwalk commands.', `
+<p>Every route starts in <b>Ashfall Square</b> (where you begin, and where <code>recall</code> takes you). Directions are in words, and as a <b>speedwalk</b> command you can paste into the game: it walks the whole route one step at a time (<code>3n</code> means three steps north). It stops if you cannot go that way or a fight starts, and typing anything else cancels it. Monsters live along many routes, so check the level range first. For town landmarks, <code>travel &lt;place&gt;</code> walks safe rooms only.</p>
+<div class="chips">${ORDER.map((a) => `<a class="g-${GENRE[a]}" href="#${a}">${AREAS[a][0]}</a>`).join('')}</div>
+${sections}`);
 };

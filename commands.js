@@ -2,7 +2,7 @@
 const D = require('./lib'); require('./magic'); require('./quest'); require('./trade');
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
-const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'equipment', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'equipment', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', sw: 'speedwalk', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -17,7 +17,9 @@ const health = (o) => { const r = o.hp / o.maxhp; return r > 0.9 ? 'in perfect h
 function go(p, d) {
   const to = p.env.exits[d]; if (!to) return p.msg('You cannot go that way.');
   if (p.enemy) return p.msg('You are fighting! Try to flee.', 'hurt');
+  if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
+  if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
   p.env.tell(`${p.name} leaves ${DIRS[d]}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
 }
 
@@ -272,7 +274,7 @@ const C = {
       if (!worn.has(it)) goods += sellPrice(p, it);
     }
     const list = (o) => Object.entries(o).map(([name, c]) => `${c} ${name}`).join(', ') || 'none', w = p.equip.weapon;
-    p.msg(`${p.name}: ${p.remort ? `Remort ${p.remort} ` : ''}${p.gender} ${k.name}${p.wiz ? ' (wizard)' : ''}`, 'rname');
+    p.msg(`${[D.preTitle(p), p.name].filter(Boolean).join(' ')}${p.title ? ', ' + p.title : ''}: ${p.remort ? `Remort ${p.remort} ` : ''}${D.genderLabel(p.gender)} ${k.name}${p.wiz ? ' (wizard)' : ''}`, 'rname');
     const need = p.xpNeed(p.level);
     p.msg(p.level < 40 ? `Level ${p.level}. Experience ${n(p.xp)} of ${n(need)}: ${n(Math.max(0, need - p.xp))} more XP for level ${p.level + 1}.`
       : `Level 40 (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
@@ -292,9 +294,12 @@ const C = {
     t.msg(`${p.name} tells you: ${m[2]}`, 'chat'); p.msg(`You tell ${t.name}: ${m[2]}`, 'chat');
   },
   shout(p, a) { if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
-  who(p) {
-    p.send({ t: 'who', list: [...D.players.values()].map((o) => ({ name: o.name, cls: o.cls, cn: o.klass().name, g: o.gender, lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon })) });
-    p.msg('Online: ' + [...D.players.values()].map((o) => `${o.name} (${o.remort ? `Remort ${o.remort}, ` : ''}L${o.level} ${o.klass().name}, ${o.gender[0].toUpperCase()})`).join(', ')); },
+  who(p) { // one player per line: name, title, class and gender
+    const all = [...D.players.values()];
+    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon })) });
+    p.msg(`Players online (${all.length}):`, 'rname');
+    for (const o of all) p.msg(`${[D.preTitle(o), o.name].filter(Boolean).join(' ')} | ${o.title || 'no title'} | ${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level}) | ${D.genderLabel(o.gender)}${o.isBot ? ' | bot' : ''}`, 'sys');
+  },
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
     p.send({ t: 'board', list: top, me, total: all.length }); if (a.trim() === 'window') return;
@@ -336,6 +341,72 @@ const C = {
     if (!l.length) return p.msg('No bounties are posted right now. The quest givers post new ones every so often.', 'sys');
     l.forEach((b, i) => p.msg(`  ${i + 1}. ${b.name} (level ${b.level}) at ${b.where}: ${b.reward} credits + ${b.bp} bounty point${b.bp > 1 ? 's' : ''}, posted by ${b.poster}, ${b.mins} min left`, 'quest'));
   },
+  // ---- bank robbery: rob stationary people, kill the manager for the vault key, unlock and loot the vault ----
+  rob(p, a) {
+    const arg = a.trim(); if (!arg) return p.msg('Rob whom? (rob teller, rob customer, rob vault)'); if (/^(the )?vault$/i.test(arg)) return C.loot(p, 'vault');
+    const people = p.env.inv.filter((o) => o.isLiving && o.def && o.def.robbable), t = find(people, arg);
+    if (!t) return p.msg(people.length ? 'Nobody here by that name to rob.' : 'There is nobody worth robbing here. Try the bank in Dry Gulch, east of the Rattlesnake Saloon.');
+    if (Date.now() - (t.robbedAt || 0) < 300000) return p.msg(`${cap(t.the())} has nothing left. You already cleaned them out.`);
+    const odds = 0.7 + (p.cls === 'thief' ? 0.15 : p.cls === 'gunslinger' ? 0.1 : 0);
+    if (Math.random() > odds) { p.msg(`${cap(t.the())} screams and slaps the alarm! Bank guards come running!`, 'hurt'); if (p.env.inv.filter((o) => o.mobId === 'bank_guard').length < 5) { const g = D.cloneMob('bank_guard'); g.move(p.env); g.engage && g.engage(p); p.env.tell('A bank guard bursts in with his gun drawn!', p, 'combat2'); } return; }
+    const got = D.rnd(...t.def.robbable.gold); p.gold += got; t.robbedAt = Date.now(); p.msg(`You stick up ${t.the()} and take ${got} credits. They tremble and say nothing.`, 'win'); p.env.tell(`${p.name} sticks up ${t.the()}!`, p, 'combat2'); D.qEvent(p, 'rob', 'any');
+  },
+  unlock(p, a) {
+    const arg = a.trim().toLowerCase(); if (arg && !/^(the )?(vault|door)$/.test(arg)) return p.msg('Unlock what? (unlock vault)');
+    const vr = [p.env, ...Object.values(p.env.exits).map((x) => D.rooms.get(x))].find((r) => r && r.def.vault); if (!vr) return p.msg('There is no vault door here.'); if (vr.unlocked) return p.msg('The vault is already open.');
+    if (!D.itemCount(p, 'vaultkey')) return p.msg('The vault door is locked tight. You need the bank vault key, which the Bank Manager carries.');
+    D.itemTake(p, 'vaultkey', 1); vr.unlocked = true; vr.vaultGold = D.rnd(3500, 9500); clearTimeout(vr.relock); // the vault holds a different sum every time
+    vr.relock = setTimeout(() => { vr.unlocked = false; vr.vaultGold = 0; vr.tell('The vault door swings shut and the bolts slam home.', [], 'sys'); }, 300000);
+    p.msg('You turn the heavy brass key. With a groan of steel, the vault door swings open!', 'win'); p.env.tell(`${p.name} unlocks the vault door with a brass key.`, p, 'win');
+  },
+  loot(p, a) {
+    if (!/^(the )?vault$/i.test(a.trim())) return p.msg('Loot what? (loot vault)'); const r = p.env; if (!r.def.vault) return p.msg('There is no vault here. The bank vault is in Dry Gulch.');
+    if (!r.unlocked) return p.msg('The vault is locked.'); if (!r.vaultGold) return p.msg('The vault has been cleaned out. Come back after the next job.');
+    const total = r.vaultGold; r.vaultGold = 0; const mates = D.teamHere(p), n = mates.length, share = 1 + 0.1 * (n - 1);
+    for (const m of mates) { const got = Math.round(total * share / n); m.gold += got; m.msg(`*** You load your sacks with ${got} credits from the vault! ***`, 'win'); D.qEvent(m, 'vault', 'loot'); }
+    D.announce(`${p.name}${n > 1 ? ' and their team' : ''} cracked the Dry Gulch bank vault and escaped with ${total} credits!`, 'robbery');
+  },
+  // ---- remote sell: all unworn weapons and armor, from anywhere, for 90% of the shop price (10% finder's fee) ----
+  rsell(p, a) {
+    const sellable = (d) => d && (d.type === 'weapon' || d.type === 'armor') && !d.legend && priceOf(p, d) > 0, rows = [];
+    for (const it of p.inv) if (!worn(p, it) && sellable(it.def)) rows.push({ name: it.name, price: priceOf(p, it.def), it });
+    for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (sellable(d)) rows.push({ name: `${d.name}${c > 1 ? ' x' + c : ''}`, price: priceOf(p, d) * c, id }); }
+    if (!rows.length) return p.msg('You have no unworn weapons or armor to sell. (Legendary items are never sold by rsell.)', 'sys');
+    const gross = rows.reduce((s, r) => s + r.price, 0), fee = Math.floor(gross * 0.1), net = gross - fee;
+    if (a.trim().toLowerCase() === 'list') { rows.slice(0, 30).forEach((r) => p.msg(`  ${r.name.padEnd(28)} ${r.price}c`, 'sys')); if (rows.length > 30) p.msg(`  ...and ${rows.length - 30} more`, 'sys'); return p.msg(`rsell would sell ${rows.length} stack${rows.length > 1 ? 's' : ''} for ${gross} credits, minus a 10% finder's fee of ${fee}: you would receive ${net}. Type \`rsell\` to do it.`, 'win'); }
+    for (const r of rows) { if (r.it) r.it.destroy(); else delete p.bag[r.id]; }
+    p.gold += net; p.msg(`You sell ${rows.length} stack${rows.length > 1 ? 's' : ''} of unworn gear remotely for ${gross} credits. Finder's fee (10%): ${fee}. You receive ${net} credits. (Worn and legendary items are never sold.)`, 'win');
+  },
+  auction(p, a) { D.auction.cmd(p, a); }, bid(p, a) { D.auction.bid(p, a); }, auctions(p) { D.auction.status(p); },
+  title(p, a) { // set your own title, shown on the who list (the special pre-title for admins cannot be copied)
+    a = a.trim(); if (!a) return p.msg(p.title ? `Your title: ${p.title}. Change it with \`title <text>\` (up to 40 characters) or \`title clear\`.` : 'You have no title. Set one with `title <text>` (up to 40 characters), for example: title the Unlucky.', 'sys');
+    if (/^(clear|none|off)$/i.test(a)) return D.setTitle(p, ''); if (!D.cleanTitle(a)) return p.msg('That title is not allowed.'); D.setTitle(p, a);
+  },
+  mute(p, a) { // mute bounty, level-up and quest-completion announcements
+    const NAMES = { bounty: 'bounty announcements', levels: 'level-up announcements', quests: 'quest completion announcements', weather: 'weather events' }, KEY = { bounty: 'bounty', bounties: 'bounty', level: 'levels', levels: 'levels', quest: 'quests', quests: 'quests', weather: 'weather' };
+    const [w, v] = a.trim().toLowerCase().split(/\s+/), k = KEY[w];
+    if (!k) { p.msg('Muted announcements (mute <bounties|levels|quests|weather> [on|off]):', 'rname'); return Object.entries(NAMES).forEach(([key, label]) => p.msg(`  ${label}: ${p.mute[key] ? 'MUTED' : 'shown'}`, 'sys')); }
+    const on = v === 'on' ? true : v === 'off' ? false : !p.mute[k]; D.setMute(p, { key: k, on }); p.msg(`${NAMES[k]}: ${on ? 'muted' : 'shown'}.`, 'win');
+  },
+  blackjack(p, a) { const w = a.trim().toLowerCase(); if (w === 'hit') return D.blackjack.hit(p); if (w === 'stand') return D.blackjack.stand(p); if (w === 'rules') return p.msg('Blackjack: a game costs 1000 credits. Get closer to 21 than the dealer without going over. Dealer stands on 17. Win pays 1:1, blackjack pays 3:2, a tie returns your stake. Play at any saloon.', 'sys'); D.blackjack.play(p); },
+  speedwalk(p, a) { // speedwalk n,n,e,e,d : walk a whole route (counts like 3n work; up to 60 steps)
+    const arg = a.trim(); if (/^(stop|cancel)$/i.test(arg)) { if (p.swTok) { p.swTok = null; return p.msg('Speedwalk stopped.', 'sys'); } return p.msg('You are not speedwalking.', 'sys'); }
+    const MAP = { n: 'n', north: 'n', s: 's', south: 's', e: 'e', east: 'e', w: 'w', west: 'w', u: 'u', up: 'u', d: 'd', down: 'd' }, steps = []; let bad = !arg;
+    for (const t of arg.toLowerCase().split(/[\s,;]+/).filter(Boolean)) { const m = t.match(/^(\d{1,2})?([a-z]+?)(\d{1,2})?$/); if (!m || !MAP[m[2]]) { bad = true; break; } for (let i = 0; i < (+m[1] || +m[3] || 1); i++) steps.push(MAP[m[2]]); }
+    if (bad || !steps.length || steps.length > 60) return p.msg('Usage: speedwalk n,n,n,e,e,e,d  (directions n s e w u d, counts like 3n, at most 60 steps). `speedwalk stop` cancels. The Directions page of the guide lists ready-made routes.', 'sys');
+    if (p.enemy) return p.msg('You cannot speedwalk while fighting.', 'hurt'); const tok = {}; let i = 0; p.swTok = tok;
+    p.msg(`Speedwalking ${steps.join(',')} (${steps.length} step${steps.length > 1 ? 's' : ''}). Type speedwalk stop to cancel.`, 'sys');
+    const step = () => {
+      if (p.swTok !== tok || p.gone) return; if (p.enemy) { p.swTok = null; return p.msg(`Speedwalk interrupted by a fight after ${i} step${i === 1 ? '' : 's'}.`, 'hurt'); }
+      if (i >= steps.length) { p.swTok = null; return p.msg('Speedwalk complete.', 'win'); }
+      const before = p.env; p.swRunning = true; try { D.command(p, steps[i]); } finally { p.swRunning = false; }
+      if (p.env === before) { p.swTok = null; return p.msg(`Speedwalk stopped at step ${i + 1} (${steps[i]}): you could not go that way.`, 'hurt'); } i++; D.callOut(step, 250);
+    };
+    step();
+  },
+  commands(p, a) { require('./cmdlist')(p, a); },
+  deaths(p, a) { D.deaths.cmd(p, a); },
+  weather(p, a) { require('./weather').cmd(p, a); },
   gag(p, a) { a = a.trim().toLowerCase(); if (a === 'on' || a === 'off') p.gag = a === 'on'; p.msg(`Combat gag is ${p.gag ? 'ON: misses and fumbles are hidden' : 'OFF'}. Use: gag on | gag off`, p.gag ? 'win' : 'sys'); },
   socials(p) { p.msg('Feelings: ' + SOCIALS.list().join(', ') + '. Use one alone (smile) or aim it at someone (smile bob).', 'social'); },
   triggers(p) { p.msg(p.triggers.length ? 'Your triggers (set them in settings or with `trigger add <text> => <command>`):\n' + p.triggers.map((t, i) => `  ${i + 1}. ${t.on ? '[on] ' : '[off]'} when you see "${t.pat}" ${t.cmd ? 'run: ' + t.cmd : ''}${t.hl ? ' (highlight)' : ''}`).join('\n') : 'You have no triggers. Add one in settings, or: trigger add <text> => <command>   e.g. trigger add You are hungry => eat bread', 'sys'); },
@@ -374,10 +445,10 @@ const C = {
     D.kp(p, m[1] === 'on' ? { on: true } : m[1] === 'off' ? { on: false } : m[1] === 'reset' ? { reset: true } : { name: m[1], cmd: m[2] });
   },
   gender(p, a) {
-    const g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${p.gender}. Change it with: gender male | female | nonbinary`);
-    if (!['male', 'female', 'nonbinary'].includes(g)) return p.msg('Choose male, female or nonbinary.'); p.gender = g; p.recalc(); p.sendStats(); p.msg(`You are now ${g}.`, 'sys');
+    let g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${D.genderLabel(p.gender)}. Change it with: gender male | female | other`);
+    if (g === 'other') g = 'nonbinary'; if (!['male', 'female', 'nonbinary'].includes(g)) return p.msg('Choose male, female or other.'); p.gender = g; p.recalc(); p.sendStats(); p.msg(`You are now ${D.genderLabel(g)}.`, 'sys');
   },
-  help(p) { p.msg('Move: n s e w u d. Look: look [thing]. Fight: kill <mob>, flee. Items: get, drop, wield, wear, remove, quaff, inventory, equipment. Guide: the player guide website is at /guide/ on this server. Travel: recall (back to the starting square). Gear for gathering: tools (bound fishing pole, mining pick and more), bag (bag of holding). Tradeskills: tradeskills, learn, forage, mine, fish, smith, brew, cook, salvage. Character: autoflee on|off, alias / unalias, keypad, gender, class, remort (at the Hall of Rebirth, level 40). Quests: talk <npc>, accept <quest>, quests, board, abandon. Gossip: gossip <msg>, gossip on|off|history. Chrome: list/install/uninstall at the clinic, cyber. Luck: luck, push. Shops: list, buy [n] <item>, sell <item|all>, value <item>. Temple: pray. Magic: spells, cast <spell> [target] (or just type the spell name), class, craft (Prospector). Social: say, tell, shout, who, bounties, socials (smile, cheer, dance...), team, tc, gag on|off, triggers, tutorial, travel, leaderboard (top 10), gossip (add ;word for a GIF), notify on|off (login notices). Other: score, rest (at the inn), save, quit.' + (p.wiz ? ' Wizard: update, goto <room>, clone <item>, discord [test], github [sync], twitter [test], shutdown confirm|cancel.' : '')); },
+  help(p) { p.msg('Move: n s e w u d. Look: look [thing]. Fight: kill <mob>, flee. Items: get, drop, wield, wear, remove, quaff, inventory, equipment. Guide: the player guide website is at /guide/ on this server. Travel: recall (back to the starting square). Gear for gathering: tools (bound fishing pole, mining pick and more), bag (bag of holding). Tradeskills: tradeskills, learn, forage, mine, fish, smith, brew, cook, salvage. Character: autoflee on|off, alias / unalias, keypad, gender, class, remort (at the Hall of Rebirth, level 40). Quests: talk <npc>, accept <quest>, quests, board, abandon. Gossip: gossip <msg>, gossip on|off|history. Chrome: list/install/uninstall at the clinic, cyber. Luck: luck, push. Shops: list, buy [n] <item>, sell <item|all>, value <item>. Temple: pray. Magic: spells, cast <spell> [target] (or just type the spell name), class, craft (Prospector). Move: speedwalk n,n,e (sw), travel. Lists: commands, deaths, weather. Social: say, tell, shout, who, title, mute, blackjack (at saloons), bounties, rsell (remote sell), auction / bid / auctions, rob and unlock and loot (bank jobs), socials (smile, cheer, dance...), team, tc, gag on|off, triggers, tutorial, travel, leaderboard (top 10), gossip (add ;word for a GIF), notify on|off (login notices). Other: score, rest (at the inn), save, quit.' + (p.wiz ? ' Wizard: update, goto <room>, clone <item>, discord [test], github [sync], twitter [test], shutdown confirm|cancel.' : '')); },
   save(p) { D.savePlayer(p); p.msg('Saved.', 'sys'); },
   quit(p) { D.savePlayer(p); p.msg('Farewell, traveler.', 'sys'); p.send({ t: 'quit' }); if (p.conn) p.conn.close(); },
   // ---- wizard commands ----
@@ -404,6 +475,7 @@ const route = (from, to) => { // shortest walk that stays on safe rooms until th
   return null;
 };
 const TUTV = { look: 'look', score: 'score', spells: 'spells', board: 'board', talk: 'talk', buy: 'buy', wield: 'wield', wear: 'wield', recall: 'recall', gossip: 'gossip', team: 'team', learn: 'learn', travel: 'travel', quests: 'quests', tradeskills: 'tradeskills', list: 'list' };
+D.commandNames = () => Object.keys(C).filter((k) => k !== 'huh'); // used by the `commands` listing
 const KPN = { Numpad0: '0', Numpad1: '1', Numpad2: '2', Numpad3: '3', Numpad4: '4', Numpad5: '5', Numpad6: '6', Numpad7: '7', Numpad8: '8', Numpad9: '9', NumpadAdd: '+', NumpadSubtract: '-', NumpadMultiply: '*', NumpadDivide: '/', NumpadDecimal: '.', NumpadEnter: 'enter' };
 const KPCODE = Object.fromEntries([...Object.entries(KPN).map(([c, n]) => [n, c]), ['plus', 'NumpadAdd'], ['add', 'NumpadAdd'], ['minus', 'NumpadSubtract'], ['star', 'NumpadMultiply'], ['times', 'NumpadMultiply'], ['slash', 'NumpadDivide'], ['dot', 'NumpadDecimal'], ['decimal', 'NumpadDecimal'], ['return', 'NumpadEnter']]);
 D.kp = (p, m) => { // keypad settings, saved in the player's profile; used by the browser client and the keypad command
@@ -418,6 +490,8 @@ const runAlias = (p, name, rest) => { // player aliases: "alias g get all" then 
 D.command = (p, line) => {
   const m = line.trim().match(/^(\S+)\s*(.*)$/); if (!m) return;
   let v = m[1].toLowerCase(), a = m[2];
+  if (p.swTok && !p.swRunning && v !== 'speedwalk' && v !== 'sw') { p.swTok = null; p.msg('Speedwalk cancelled.', 'sys'); } // typing anything else interrupts a speedwalk
+  if (p.bj && (v === 'hit' || v === 'stand')) return D.blackjack[v](p); // answering the dealer in a blackjack hand
   if (v[0] === "'") { a = line.trim().slice(1); v = 'say'; }
   if (p.aliases && Object.hasOwn(p.aliases, v)) return runAlias(p, v, a);
   v = ALIAS[v] || v;

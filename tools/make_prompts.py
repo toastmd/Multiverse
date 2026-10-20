@@ -8,6 +8,7 @@ L = ['# MULTIVERSE MUD art prompts', '', f'{len(items)} images. Generate each in
      f'Negative prompt for every image: `{NEG}`', '', 'Tips: use the same style words and one seed or style reference per group (portraits, landscapes) so the set looks consistent. Make terrain textures seamless/tileable. Portraits should be tall (5:6), banners very wide (4:1), landscapes 5:2.', '']
 kind = None
 for key, k, files, size, prompt in items:
+    if k == 'room': continue  # room pictures are supplied by you: see ROOM_IMAGES.md
     if k != kind: kind = k; L += ['', f'## {k.title()} ({size[0]}x{size[1]})', '']
     L.append(f'- `{key}`: {prompt}')
-open(os.path.join(root, 'ART_PROMPTS.md'), 'w', encoding='utf-8').write('\n'.join(L) + '\n'); print(len(items), 'prompts written to ART_PROMPTS.md')
+open(os.path.join(root, 'ART_PROMPTS.md'), 'w', encoding='utf-8').write('\n'.join(L) + '\n'); print(sum(1 for i in items if i[1] != 'room'), 'prompts written to ART_PROMPTS.md (room pictures are supplied by you)')

@@ -12,9 +12,9 @@ const FIX = [[/once the service road for a corporate green belt and now/g, "once
   [/A rusted radio mast stands nearby, its antenna wrapped in vines, still blinking a single faint red light\./g, 'A ruined watchtower stands nearby, its spire wrapped in vines, a single faint red lantern still burning.'], [/sharp as razor wire/g, 'sharp as razors'], [/Old corporate fencing/g, 'Old iron fencing'], [/the Reserve's safe ground/g, "the forest's safe ground"],
   [/the hum of failing machinery, as if the crypt had been wired into the throne/g, 'the hum of failing wards, as if the crypt were bound to the throne'], [/old cables trail out of the stone/g, 'old roots trail out of the stone'], [/an old corporate runoff channel/g, 'an old drainage channel'],
   [/strands of colored wire/g, 'strands of colored thread'], [/its deck patched with scrap/g, 'its deck patched with planks'], [/tire tracks/g, 'cart tracks'], [/neon-lit stalls/g, 'lantern-lit stalls'], [/the bones of vehicles and men/g, 'the bones of wagons and men'],
-  [/glinting like chrome/g, 'glinting like polished steel'], [/Old corporate insignias/g, 'Old heraldic crests'], [/Screens flicker with static/g, 'Candles flicker without wind'], [/\bsprawl\b/gi, 'kingdom'], [/\bcorporate\b/gi, 'old'], [/\bneon\b/gi, 'lantern'], [/\bchrome\b/gi, 'steel']];
+  [/glinting like chrome/g, 'glinting like polished steel'], [/Old corporate insignias/g, 'Old heraldic crests'], [/Screens flicker with static/g, 'Candles flicker without wind'], [/Cracked asphalt shows through the needles, and rusted sensor posts lean at odd angles\./g, 'Old cobblestones show through the needles, and weathered waystones lean at odd angles.'], [/old machine oil/g, 'old woodsmoke'], [/burnt plastic/g, 'burnt pitch'], [/old concrete/g, 'old flagstones'], [/\bsprawl\b/gi, 'kingdom'], [/\bcorporate\b/gi, 'old'], [/\bneon\b/gi, 'lantern'], [/\bchrome\b/gi, 'steel']];
 module.exports = (items, mobs, rooms) => {
-  for (const [id, r] of Object.entries(rooms)) { if (DESCS[id]) r.long = DESCS[id]; else if (r.long) for (const [re, to] of FIX) r.long = r.long.replace(re, to); if (NEW_NAMES[id]) r.name = NEW_NAMES[id]; }
+  for (const [id, r] of Object.entries(rooms)) { if (DESCS[id]) r.long = DESCS[id]; else if (r.long && r.area !== 'modern') for (const [re, to] of FIX) r.long = r.long.replace(re, to); if (NEW_NAMES[id]) r.name = NEW_NAMES[id]; }
   for (const [id, nm] of Object.entries(MOBS)) { const m = mobs[id]; if (!m) continue; m.ids = [...new Set([...(m.ids || [id]), ...m.name.toLowerCase().split(/[ -]+/), ...nm.toLowerCase().split(/[ -]+/)])]; m.name = nm; }
   // saloons: the hub's Silver Spur, Dry Gulch's Rattlesnake and the mines' Lucky Strike all serve food and drink
   const drink = (id, name, long, o) => { items[id] = { name, ids: [id, ...name.split(' ')], type: 'potion', long, ...o }; };
@@ -22,5 +22,6 @@ module.exports = (items, mobs, rooms) => {
   drink('sarsaparilla', 'sarsaparilla', 'A cold, sweet bottle of sarsaparilla that clears the head.', { mana: 60, value: 30 });
   drink('steak', 'saloon steak dinner', 'A thick steak with beans and cornbread, still sizzling.', { heal: 260, value: 70 });
   drink('chili', 'miners chili', 'A tin cup of thick, fiery miners chili.', { heal: 170, value: 45 });
+  for (const id of ['town/inn', 'road/abandoned_inn', 'mines/foremans_office', 'gulch/c', 'rail/c']) if (rooms[id]) { rooms[id].saloon = true; rooms[id].long += ' A blackjack table waits in the corner: type `blackjack` (1000 credits a game).'; }
   for (const [id, stock] of [['town/inn', ['whiskey', 'sarsaparilla', 'steak']], ['road/abandoned_inn', ['whiskey', 'sarsaparilla', 'steak']], ['mines/foremans_office', ['whiskey', 'sarsaparilla', 'chili']]]) if (rooms[id]) rooms[id].shop = { stock };
 };

@@ -1,0 +1,8 @@
+// Writes ROOM_IMAGES.md and tools/rooms.json: every room with the file name its picture should have in public/img/rooms/.
+// Usage: node tools/list_rooms.js     (re-run after adding rooms)
+const fs = require('fs'), path = require('path'), D = require('../lib'); D.loadWorld();
+const rows = [...D.rooms.values()].map((r) => ({ id: r.path, key: r.path.replace('/', '-'), name: r.name, area: (D.AREA_LABEL[r.area] || r.area) })).sort((a, b) => a.id.localeCompare(b.id));
+fs.writeFileSync(path.join(__dirname, 'rooms.json'), JSON.stringify(rows, null, 1));
+const md = ['# Room pictures', '', `The game shows a static picture under the map for the room you are in. Put one image per room in \`public/img/rooms/\`, named exactly as below (JPEG, 16:9 works best, for example 800x450). Rooms without a picture show their area's picture instead.`, '',
+  'Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.', '', `${rows.length} rooms:`, '', '| Room | Area | File name (public/img/rooms/) |', '|---|---|---|', ...rows.map((r) => `| ${r.name} | ${r.area} | \`${r.key}.jpg\` |`), ''].join('\n');
+fs.writeFileSync(path.join(__dirname, '..', 'ROOM_IMAGES.md'), md); console.log(`${rows.length} rooms listed in ROOM_IMAGES.md`); process.exit(0);

@@ -169,6 +169,7 @@ class Monster extends Living {
     if (killer.isPlayer) for (const m of mates) { const got = Math.round(g * share / n * (1 + 0.02 * m.cyberVal('charm'))); m.gold += got; m.msg(n > 1 ? `You loot ${got} credits (your share of the team's loot).` : `You loot ${got} credits.`, 'items'); } // Charm implants improve loot
     killer.enemy = null; for (const m of mates) { if (m.enemy === this) m.enemy = null; if (m.gainXp) m.gainXp(Math.max(1, Math.round(this.xp * share / n))); }
     if (killer.isPlayer) { for (const m of mates) { D.qEvent(m, 'kill', this.mobId); D.tutEvent(m, 'kill'); } if (this.def.boss) { D.gossip(`${killer.name} has slain ${this.name}!`); D.tweet(`${killer.name} has slain ${this.name}!`, 'boss'); } }
+    if (this.bounty && D.bounty) D.bounty.claim(this, killer, mates);
     const room = this.env; this.destroy(); D.callOut(() => room.reset(), 20000);
   }
 }
@@ -176,7 +177,7 @@ class Monster extends Living {
 class Player extends Living {
   constructor(name, cls = 'barbarian') {
     super(); this.isPlayer = true; this.name = name; this.short = name; this.ids = [name.toLowerCase()];
-    this.cls = D.K.CLASSES[cls] ? cls : 'barbarian'; this.gender = 'nonbinary'; this.gag = false; this.triggers = []; this.tut = { off: false, seen: false, step: 0, done: {} }; this.team = null; this.autoflee = false; this.aliases = {}; this.kpOn = false; this.kpMap = { ...KP_DEFAULT }; this.notify = true; this.skills = {}; this.bag = {}; this.bagMode = 'loot'; this.tools = {}; this.remort = 0; this.luck = 3; this.cyber = []; this.xp = 0; this.gold = 25; this.quests = {}; this.qdone = new Set(); this.qp = 0; this.gos = true; this.visited = new Set(); this.wiz = false; this.send = () => {};
+    this.cls = D.K.CLASSES[cls] ? cls : 'barbarian'; this.gender = 'nonbinary'; this.bounty = 0; this.bounties = 0; this.gag = false; this.triggers = []; this.tut = { off: false, seen: false, step: 0, done: {} }; this.team = null; this.autoflee = false; this.aliases = {}; this.kpOn = false; this.kpMap = { ...KP_DEFAULT }; this.notify = true; this.skills = {}; this.bag = {}; this.bagMode = 'loot'; this.tools = {}; this.remort = 0; this.luck = 3; this.cyber = []; this.xp = 0; this.gold = 25; this.quests = {}; this.qdone = new Set(); this.qp = 0; this.gos = true; this.visited = new Set(); this.wiz = false; this.send = () => {};
     this.recalc(); this.hp = this.maxhp; this.mp = this.maxmp; D.ensureKit(this);
   }
   klass() { return D.K.CLASSES[this.cls] || D.K.CLASSES.barbarian; }
@@ -242,11 +243,11 @@ class Player extends Living {
     this.sendStats(); if (Object.keys(this.quests).length && (this.qt = (this.qt || 0) + 1) % 3 === 0) this.sendQuests();
   }
   toRec() {
-    return { gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, aliases: this.aliases, kpOn: this.kpOn, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
+    return { bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, aliases: this.aliases, kpOn: this.kpOn, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
       inv: this.inv.map((i) => i.itemId), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId]) };
   }
   load(rec) {
-    Object.assign(this, { gag: !!rec.gag, autoflee: !!rec.autoflee, kpOn: !!rec.kpOn, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
+    Object.assign(this, { bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, kpOn: !!rec.kpOn, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
     this.aliases = {}; for (const [k, v] of Object.entries(rec.aliases || {})) if (/^[a-z][a-z0-9_]{0,11}$/.test(k) && typeof v === 'string' && v.length <= 200) this.aliases[k] = v;
     this.triggers = D.cleanTriggers(rec.triggers); const tu = rec.tut || {}; this.tut = { off: !!tu.off, seen: !!tu.seen, step: Math.max(0, Math.min(30, tu.step | 0)), done: Object.fromEntries(Object.keys(tu.done || {}).filter((k) => /^[a-z]{2,12}$/.test(k)).map((k) => [k, 1])) };
     this.kpMap = { ...KP_DEFAULT }; for (const [k, v] of Object.entries(rec.kpMap || {})) if (k in KP_DEFAULT && typeof v === 'string') this.kpMap[k] = v.slice(0, 100);
@@ -294,7 +295,7 @@ D.itemTake = (p, id, n) => { // take n from the pack first, then the bag; all or
   return true;
 };
 D.legendFound = (p, mob, id) => { // a boss gave up its unique item: tell the finder and the whole MUD
-  const d = D.W.items[id]; D.give(p, id, 'normal'); p.msg(`*** LEGENDARY FIND: ${d.name}! It is worth ${d.value.toLocaleString('en-US')} credits to a buyer. ***`, 'win'); p.send({ t: 'sound', k: 'quest' });
+  const d = D.W.items[id]; D.give(p, id, 'normal'); p.msg(`*** LEGENDARY FIND: ${d.name}! It is worth ${d.value.toLocaleString('en-US')} credits to a buyer. ***`, 'win'); for (const o of D.players.values()) o.send({ t: 'sound', k: 'legend' }); // everyone hears a legendary find
   D.announce(`\u2605 ${p.name} has discovered the legendary ${d.name}, taken from ${mob.the()}!`, 'legend');
 };
 D.tweet = (text, kind) => { try { require('./tweet').post(text, kind); } catch (e) { D.log('tweet:', e.message); } }; // X/Twitter posting (see tweet.js)

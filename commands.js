@@ -2,7 +2,7 @@
 const D = require('./lib'); require('./magic'); require('./quest'); require('./trade');
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
-const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'equipment', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'equipment', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -170,15 +170,18 @@ const C = {
     a = a.trim(); if (a === 'off') { p.gos = false; return p.msg('Gossip channel off.', 'sys'); } if (a === 'on') { p.gos = true; return p.msg('Gossip channel on.', 'sys'); }
     if (a === 'history') { p.msg('Recent gossip:', 'rname'); return D.gosLog.slice(-15).forEach((l) => p.msg('[gossip] ' + l, 'gossip')); }
     if (!a) return p.msg('Gossip what? (gossip <message>, gossip on|off|history)'); if (p.gos === false) return p.msg('Turn the channel on first: gossip on');
+    const YT = /(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^\s&]*&)*v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})[^\s]*/i; let yt = null; const ym = a.match(YT); // a YouTube link in gossip shows the video to everyone
+    if (ym) { const wait = (p.ytAt || 0) + 10000 - Date.now(); if (wait > 0) return p.msg(`Videos need a short breather: try again in ${Math.ceil(wait / 1000)}s.`, 'sys'); p.ytAt = Date.now(); yt = ym[1]; a = a.replace(ym[0], '[YouTube video]').trim(); }
+    const gos = (text, o) => D.gossip(text, { ...o, yt, msg: yt ? `${o.msg !== undefined ? o.msg : text} https://youtu.be/${yt}` : o.msg });
     const G = require('./giphy'), { msg, q } = G.parse(a); // "gossip hi ;wave" adds a GIPHY GIF for "wave"
-    if (q === null) return D.gossip(`${p.name} gossips: ${a}`, { from: p.name, msg: a });
+    if (q === null) return gos(`${p.name} gossips: ${a}`, { from: p.name, msg: a });
     if (!q) return p.msg('Add a search after the semicolon, e.g. gossip ;hi  or  gossip good game ;applause');
-    if (!G.enabled()) { p.msg('GIFs are not set up on this server yet (the owner needs a GIPHY_API_KEY). Sending your words only.', 'sys'); return msg ? D.gossip(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
+    if (!G.enabled()) { p.msg('GIFs are not set up on this server yet (the owner needs a GIPHY_API_KEY). Sending your words only.', 'sys'); return msg ? gos(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
     const wait = (p.gifAt || 0) + G.cooldown() - Date.now(); if (wait > 0) return p.msg(`GIFs need a short breather: try again in ${Math.ceil(wait / 1000)}s.`, 'sys'); p.gifAt = Date.now();
     return G.search(q).then((g) => {
       const said = msg ? `${p.name} gossips: ${msg}  ;${q}` : `${p.name} gossips a GIF: ${q}`;
-      if (!g) { p.msg(`GIPHY found nothing for "${q}".`, 'sys'); return msg ? D.gossip(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
-      D.gossip(said, { from: p.name, msg: `${msg ? msg + ' ' : ''}${g.url}`, gif: { url: g.url, title: g.title, q } });
+      if (!g) { p.msg(`GIPHY found nothing for "${q}".`, 'sys'); return msg ? gos(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
+      gos(said, { from: p.name, msg: `${msg ? msg + ' ' : ''}${g.url}`, gif: { url: g.url, title: g.title, q } });
     }).catch((e) => { D.log('giphy failed:', e.message); p.msg('GIPHY did not answer. Try again in a moment.', 'sys'); });
   },
   clinicList(p) {
@@ -280,7 +283,7 @@ const C = {
     p.msg(`Combat: attack ${p.atkPool()}d6, defense ${p.defPool()}d6 (a 5 or 6 is a hit), armor class ${p.ac()}, weapon ${w ? `${w.name} (${w.def.dmg[0]}-${w.def.dmg[1]})` : 'bare hands'}.`, 'sys');
     p.msg(`Chrome: ${p.cyber.map((id) => D.W.items[id].name).join(', ') || 'none'}.`, 'sys');
     p.msg(`Tradeskills: ${Object.entries(p.skills).map(([id, k]) => `${D.T.SKILLS[id].name} ${k.lvl}`).join(', ') || 'none learned (type `tradeskills`)'}.`, 'sys');
-    p.msg(`Contracts: ${Object.keys(p.quests).length} active, ${p.qdone.size}/${D.Q.QUESTS.length} done. Quest points ${p.qp}/${D.qpTotal()}. Pack ${p.inv.length}/${p.cap()} items. Bag of holding ${D.bagUsed(p)}/${D.bagCap(p)}.`, 'sys');
+    p.msg(`Contracts: ${Object.keys(p.quests).length} active, ${p.qdone.size}/${D.Q.QUESTS.length} done. Quest points ${p.qp}/${D.qpTotal()}. Bounty points ${p.bounty || 0}. Pack ${p.inv.length}/${p.cap()} items. Bag of holding ${D.bagUsed(p)}/${D.bagCap(p)}.`, 'sys');
   },
   say(p, a) { if (!a) return p.msg('Say what?'); p.msg(`You say: ${a}`, 'say'); p.env.tell(`${p.name} says: ${a}`, p, 'say'); },
   tell(p, a) {
@@ -295,8 +298,8 @@ const C = {
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
     p.send({ t: 'board', list: top, me, total: all.length }); if (a.trim() === 'window') return;
-    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40; a remort counts as 40 levels):', 'rname');
-    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
+    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40, plus bounty points x40; a remort counts as 40 levels):', 'rname');
+    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  bounty ${String(r.b).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
     if (me && me.rank > 10) p.msg(`You are ranked #${me.rank} of ${all.length} with ${me.score} points.`, 'sys');
   },
   // ---- teams: kills split XP and credits between teammates standing in the same room (+10% for each extra member, up to 5 players) ----
@@ -327,6 +330,12 @@ const C = {
     p.msg('Team commands: team, team invite <player>, team accept, team decline, team leave, team kick <player>, team lead <player>. Chat: tc <message>.', 'sys');
   },
   tc(p, a) { if (!p.team) return p.msg('You are not on a team. See `team`.'); if (!a.trim()) return p.msg('Team chat what? tc <message>'); D.teamMsg(p.team, `[team] ${p.name}: ${a.trim()}`); },
+  bounties(p, a) { // the wanted list; wizards can post one with `bounties post`
+    if (a.trim() === 'post' && p.wiz) { const b = D.bounty.post(true); return p.msg(b ? 'Bounty posted.' : 'Could not post a bounty (three already active, or no suitable target).', 'sys'); }
+    const l = D.bounty.list(); p.msg(`Bounty points: ${p.bounty || 0} (${p.bounties || 0} collected). Kill a wanted monster for instant credits and bounty points, which count toward the leaderboard.`, 'rname');
+    if (!l.length) return p.msg('No bounties are posted right now. The quest givers post new ones every so often.', 'sys');
+    l.forEach((b, i) => p.msg(`  ${i + 1}. ${b.name} (level ${b.level}) at ${b.where}: ${b.reward} credits + ${b.bp} bounty point${b.bp > 1 ? 's' : ''}, posted by ${b.poster}, ${b.mins} min left`, 'quest'));
+  },
   gag(p, a) { a = a.trim().toLowerCase(); if (a === 'on' || a === 'off') p.gag = a === 'on'; p.msg(`Combat gag is ${p.gag ? 'ON: misses and fumbles are hidden' : 'OFF'}. Use: gag on | gag off`, p.gag ? 'win' : 'sys'); },
   socials(p) { p.msg('Feelings: ' + SOCIALS.list().join(', ') + '. Use one alone (smile) or aim it at someone (smile bob).', 'social'); },
   triggers(p) { p.msg(p.triggers.length ? 'Your triggers (set them in settings or with `trigger add <text> => <command>`):\n' + p.triggers.map((t, i) => `  ${i + 1}. ${t.on ? '[on] ' : '[off]'} when you see "${t.pat}" ${t.cmd ? 'run: ' + t.cmd : ''}${t.hl ? ' (highlight)' : ''}`).join('\n') : 'You have no triggers. Add one in settings, or: trigger add <text> => <command>   e.g. trigger add You are hungry => eat bread', 'sys'); },
@@ -368,7 +377,7 @@ const C = {
     const g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${p.gender}. Change it with: gender male | female | nonbinary`);
     if (!['male', 'female', 'nonbinary'].includes(g)) return p.msg('Choose male, female or nonbinary.'); p.gender = g; p.recalc(); p.sendStats(); p.msg(`You are now ${g}.`, 'sys');
   },
-  help(p) { p.msg('Move: n s e w u d. Look: look [thing]. Fight: kill <mob>, flee. Items: get, drop, wield, wear, remove, quaff, inventory, equipment. Guide: the player guide website is at /guide/ on this server. Travel: recall (back to the starting square). Gear for gathering: tools (bound fishing pole, mining pick and more), bag (bag of holding). Tradeskills: tradeskills, learn, forage, mine, fish, smith, brew, cook, salvage. Character: autoflee on|off, alias / unalias, keypad, gender, class, remort (at the Hall of Rebirth, level 40). Quests: talk <npc>, accept <quest>, quests, board, abandon. Gossip: gossip <msg>, gossip on|off|history. Chrome: list/install/uninstall at the clinic, cyber. Luck: luck, push. Shops: list, buy [n] <item>, sell <item|all>, value <item>. Temple: pray. Magic: spells, cast <spell> [target] (or just type the spell name), class, craft (Prospector). Social: say, tell, shout, who, socials (smile, cheer, dance...), team, tc, gag on|off, triggers, tutorial, travel, leaderboard (top 10), gossip (add ;word for a GIF), notify on|off (login notices). Other: score, rest (at the inn), save, quit.' + (p.wiz ? ' Wizard: update, goto <room>, clone <item>, discord [test], github [sync], twitter [test], shutdown confirm|cancel.' : '')); },
+  help(p) { p.msg('Move: n s e w u d. Look: look [thing]. Fight: kill <mob>, flee. Items: get, drop, wield, wear, remove, quaff, inventory, equipment. Guide: the player guide website is at /guide/ on this server. Travel: recall (back to the starting square). Gear for gathering: tools (bound fishing pole, mining pick and more), bag (bag of holding). Tradeskills: tradeskills, learn, forage, mine, fish, smith, brew, cook, salvage. Character: autoflee on|off, alias / unalias, keypad, gender, class, remort (at the Hall of Rebirth, level 40). Quests: talk <npc>, accept <quest>, quests, board, abandon. Gossip: gossip <msg>, gossip on|off|history. Chrome: list/install/uninstall at the clinic, cyber. Luck: luck, push. Shops: list, buy [n] <item>, sell <item|all>, value <item>. Temple: pray. Magic: spells, cast <spell> [target] (or just type the spell name), class, craft (Prospector). Social: say, tell, shout, who, bounties, socials (smile, cheer, dance...), team, tc, gag on|off, triggers, tutorial, travel, leaderboard (top 10), gossip (add ;word for a GIF), notify on|off (login notices). Other: score, rest (at the inn), save, quit.' + (p.wiz ? ' Wizard: update, goto <room>, clone <item>, discord [test], github [sync], twitter [test], shutdown confirm|cancel.' : '')); },
   save(p) { D.savePlayer(p); p.msg('Saved.', 'sys'); },
   quit(p) { D.savePlayer(p); p.msg('Farewell, traveler.', 'sys'); p.send({ t: 'quit' }); if (p.conn) p.conn.close(); },
   // ---- wizard commands ----

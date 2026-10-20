@@ -1,7 +1,7 @@
 'use strict';
 // MULTIVERSE MUD server. No npm packages needed: HTTP static files + a small WebSocket implementation.
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
-const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'); D.bridge = bridge;
+const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'); D.bridge = bridge; D.bounty = bounty;
 const PORT = +process.env.PORT || 4000, HOST = process.env.HOST || '0.0.0.0';
 const PUB = path.join(__dirname, 'public'), DATA = path.join(__dirname, 'data', 'players');
 fs.mkdirSync(DATA, { recursive: true });
@@ -66,7 +66,7 @@ function api(req, res) {
 }
 const file = (name) => path.join(DATA, name.toLowerCase() + '.json');
 // ---- achievements leaderboard: level (a remort counts as 40 more levels), quests completed and tradeskill levels raised ----
-const ach = (r) => { const lvl = (r.remort || 0) * 40 + (r.level || 1), q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); return { lvl, q, t, score: lvl * 100 + q * 250 + t * 40 }; };
+const ach = (r) => { const lvl = (r.remort || 0) * 40 + (r.level || 1), q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); const b = r.bounty || 0; return { lvl, q, t, b, score: lvl * 100 + q * 250 + t * 40 + b * 40 }; };
 let boardCache = { at: 0, rows: [] };
 D.leaderboard = (force) => {
   if (!force && Date.now() - boardCache.at < 15000) return boardCache.rows; const rows = new Map();
@@ -104,7 +104,7 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendTut(true);
+  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendTut(true); p.send({ t: 'sound', k: 'login' });
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
@@ -161,14 +161,14 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
-server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); });
+server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;
 function halt(why) {
   if (halting) return; halting = true; clearTimeout(stopTimer); D.log(`shutting down: ${why}`); let saved = 0, failed = 0;
   for (const p of [...D.players.values()]) { if (p.isBot) continue; try { p.msg('*** The game is shutting down. Your character has been saved. Goodbye! ***', 'hurt'); D.savePlayer(p); saved++; } catch (e) { failed++; D.log('save failed for', p.name, e.message); } }
   try { bots.save(); } catch (e) { D.log('bot save failed', e.message); }
-  try { bridge.stop(); github.stop(); } catch (e) { /* stopping anyway */ }
+  try { bridge.stop(); github.stop(); bounty.stop(); } catch (e) { /* stopping anyway */ }
   D.log(`saved ${saved} player${saved === 1 ? '' : 's'}${failed ? `, ${failed} FAILED` : ''}; goodbye`);
   setTimeout(() => { for (const p of D.players.values()) try { p.conn && p.conn.close(); } catch (e) { /* closing anyway */ } try { server.close(); } catch (e) { /* closing anyway */ } setTimeout(() => process.exit(failed ? 1 : 0), 300); }, 500);
 }

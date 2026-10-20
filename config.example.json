@@ -8,9 +8,20 @@
     "presence": false
   },
   "twitter": {
-    "apiKey": "", "apiSecret": "", "accessToken": "", "accessSecret": "",
-    "events": ["legend", "boss", "remort", "milestone"],
-    "hashtags": ["#game", "#Multiverse"],
+    "apiKey": "",
+    "apiSecret": "",
+    "accessToken": "",
+    "accessSecret": "",
+    "events": [
+      "legend",
+      "boss",
+      "remort",
+      "milestone"
+    ],
+    "hashtags": [
+      "#game",
+      "#Multiverse"
+    ],
     "minIntervalSeconds": 60,
     "dryRun": false
   },
@@ -27,5 +38,8 @@
     "debounceSeconds": 20,
     "authorName": "MULTIVERSE MUD",
     "authorEmail": "mud@users.noreply.github.com"
+  },
+  "pixabay": {
+    "apiKey": ""
   }
 }

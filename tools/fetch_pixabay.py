@@ -32,13 +32,16 @@ def api(key, q, orient, cache):
             if e.code == 429: time.sleep(20 * (attempt + 1)); continue
             raise
     raise SystemExit('Pixabay rate limit: wait a minute and run again (cached answers are reused).')
+def cfgkey(): # data/config.json -> pixabay.apiKey
+    try: return json.load(open(os.path.join(os.path.dirname(__file__), '..', 'data', 'config.json'))).get('pixabay', {}).get('apiKey')
+    except Exception: return None
 def main():
     a = sys.argv[1:]; flag = lambda n, d=None: (a[a.index(n) + 1] if n in a and a.index(n) + 1 < len(a) else d)
     if not a or a[0].startswith('--'): sys.exit(__doc__)
     out = a[0]; want = flag('--set', 'west'); pool = {k: v for s in (SETS if want == 'all' else [want]) for k, v in SETS[s].items()} if want in SETS or want == 'all' else sys.exit(f'Unknown set. Choose: {", ".join(SETS)}, all')
     if flag('--keys'): pool = {k: v for s in SETS.values() for k, v in s.items() if k in flag('--keys').split(',')}
     if '--list' in a: sys.exit('\n'.join(f'{k}: {q} ({o})' for k, (q, o) in pool.items()))
-    key = flag('--key') or os.environ.get('PIXABAY_API_KEY') or sys.exit('Set PIXABAY_API_KEY (a free key from pixabay.com/api/docs) or pass --key.')
+    key = flag('--key') or os.environ.get('PIXABAY_API_KEY') or cfgkey() or sys.exit('Set PIXABAY_API_KEY, add pixabay.apiKey to data/config.json, or pass --key (a free key from pixabay.com/api/docs).')
     os.makedirs(out, exist_ok=True); cache = os.path.join(out, '.cache'); os.makedirs(cache, exist_ok=True); credits = []; rows = []
     for name, (q, orient) in pool.items():
         dest = os.path.join(out, name + '.jpg')

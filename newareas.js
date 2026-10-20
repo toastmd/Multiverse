@@ -22,7 +22,7 @@ module.exports = (items, mobs, rooms) => {
     rows.forEach((row, y) => row.forEach((k, x) => { if (k === '.') return; const d = defs[k]; if (!d) throw new Error(`${id}: no room ${k}`); const path = `${id}/${k}`; at[`${x},${y}`] = path;
       rooms[path] = { name: d[0], area, x: x0 + x, y: y0 + y, z, long: d[1], exits: {}, mobs: d[2] || [], ...(d[3] || {}) }; }));
     for (const [pos, path] of Object.entries(at)) { const [x, y] = pos.split(',').map(Number); if (at[`${x + 1},${y}`]) link(path, 'e', at[`${x + 1},${y}`]); if (at[`${x},${y + 1}`]) link(path, 's', at[`${x},${y + 1}`]); }
-    const anchor = anchors.find((a) => rooms[a]); const dir = (entryDir ? [entryDir] : ['n', 'e', 's', 'w', 'u', 'd']).find((d) => !rooms[anchor].exits[d]); if (!dir) throw new Error(`${id}: no free exit on ${anchor}`);
+    const anchor = anchors.find((a) => rooms[a]); const dir = (entryDir ? [entryDir] : ['n', 'e', 's', 'w', 'u', 'd']).find((d) => !rooms[anchor].exits[d] && !rooms[`${id}/a`].exits[OPP[d]]); // the way back into the area must not overwrite one of its own exits if (!dir) throw new Error(`${id}: no free exit on ${anchor}`);
     link(anchor, dir, `${id}/a`); return `${id}/a`;
   };
 
@@ -32,7 +32,7 @@ module.exports = (items, mobs, rooms) => {
   gear('gulchhat', 'Ten-Gallon Hat', 'head', 11, 420, 'A broad, sweat-stained hat.'); gear('spurboots', 'Silver Spur Boots', 'feet', 11, 380, 'Polished boots with jingling spurs.');
   mob('ghost_outlaw', 'ghost outlaw', '\u{1F47B}', 10, { ids: ['ghost', 'outlaw'], trophy: 'ghostbadge' }); mob('dust_devil', 'dust devil', '\u{1F32A}\uFE0F', 11, { ids: ['dust', 'devil'] }); mob('skeleton_deputy', 'skeleton deputy', '\u{1F480}', 12, { ids: ['skeleton', 'deputy'], trophy: 'ghostbadge' });
   mob('bone_rattler', 'bone rattler', '\u{1F40D}', 12, { ids: ['bone', 'rattler', 'snake'] }); mob('dalton', 'Ghost Marshal Dalton', '\u{1F920}', 14, { boss: 1, ids: ['dalton', 'marshal', 'ghost'], trophy: 'ghostbadge' });
-  build('gulch', 'gulch', 20, 0, 0, ['a b c d e', '. f g h .', 'i j k . l', 'm . n . o'], {
+  build('gulch', 'gulch', 20, 0, 0, ['a b c d e', '. f g h l', 'i j k . o', 'm . n . .'], {
     a: ['Gulch Gate', 'A sagging arch of bleached timber marks the way into Tombstone Gulch. A weathered signpost reads POP. 0 (MOSTLY), and dust devils spin in the street beyond.', ['dust_devil']],
     b: ['Main Street', 'A wide dirt street lined with sagging false-front buildings. Faded signs and shuttered windows watch as pale shapes in dusters drift between the hitching posts.', ['ghost_outlaw', 'ghost_outlaw']],
     c: ['Silver Dollar Saloon', 'Batwing doors, a long mahogany bar and a piano that plays itself on cold nights. The barkeep is the one living soul in the Gulch and sells drinks to anyone with coin. A safe place to rest.', [], { safe: true, camp: true, shop: { stock: ['whiskey', 'sarsaparilla', 'steak'] } }],

@@ -46,6 +46,7 @@ D.gosLog = [];
 D.gossip = (text, o = {}) => { // o.from + o.msg: a player's own words (shown under their name in Discord). o.source 'discord': came from Discord, so never send it back.
   D.gosLog.push(text); if (D.gosLog.length > 30) D.gosLog.shift(); for (const p of D.players.values()) if (p.gos !== false) p.msg('[gossip] ' + text, 'gossip');
   if (o.gif) for (const p of D.players.values()) if (p.gos !== false) p.send({ t: 'gif', url: o.gif.url, alt: o.gif.title, q: o.gif.q });
+  if (o.yt) for (const p of D.players.values()) if (p.gos !== false) p.send({ t: 'yt', id: o.yt, from: o.from });
   if (o.from && D.onGossip) D.onGossip(o.from, o.msg !== undefined ? o.msg : text); // bots answer players here
   if (D.bridge && !o.source) D.bridge.out(o.msg !== undefined ? o.msg : text, o.from);
 };

@@ -42,3 +42,14 @@ details.faq{background:var(--panel);border:1px solid var(--line);border-radius:8
 footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font:13px sans-serif}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}#nav{display:none;position:fixed;top:57px;left:0;width:280px;z-index:45;background:#07040d;height:calc(100vh - 57px);border-right:1px solid var(--line)}#nav.open{display:block}#menu{display:block}.logo small{display:none}main{padding:0 14px 50px}.ht h1{font-size:26px}.hero img{height:210px}.banner2{flex-direction:column}.banner2 img,.ahead img{width:100%}.ahead{flex-direction:column;align-items:stretch}}
 .cimg img[src*="icon-"]{object-fit:contain;padding:12px;background:#0e0a18}.banner2 img[src*="icon-"]{object-fit:contain;background:#0e0a18;padding:8px}.cimg img[src*="npc/"]{object-position:top}.cards.small .cimg img[src*="terrain-"]{object-fit:cover}
+
+/* area genres: Old West, fantasy and sci-fi sections get their own palette, heading font and decoration */
+.g-west{--g1:#e0a45f;--g2:#6b4423;--gbg:#2a1a0e;--gf:Rockwell,"Courier New",Georgia,serif}.g-fantasy{--g1:#ecc65c;--g2:#2e6b45;--gbg:#0f2217;--gf:Georgia,"Palatino Linotype",serif}.g-scifi{--g1:#2fe9ff;--g2:#0b3a55;--gbg:#06121c;--gf:"Segoe UI","Trebuchet MS",system-ui,sans-serif}
+.area[class*=g-]{background:linear-gradient(135deg,var(--gbg),var(--panel) 65%);border-color:var(--g2);border-left:5px solid var(--g1)}
+.area[class*=g-] h2,.agrp[class*=g-] h2{color:var(--g1);font-family:var(--gf)}
+.g-west h2{letter-spacing:.06em;text-transform:uppercase}.area.g-west{border-style:dashed;border-left-style:solid}
+.g-fantasy h2{font-style:italic}.g-fantasy h2::after{content:" \2766";opacity:.7}
+.g-scifi h2{letter-spacing:.12em;text-transform:uppercase;text-shadow:0 0 14px color-mix(in srgb,var(--g1) 55%,transparent)}.area.g-scifi{box-shadow:inset 0 0 44px #00e5ff10}
+.agrp[class*=g-]{margin:22px 0;padding:4px 16px 14px;border-left:4px solid var(--g1);background:linear-gradient(90deg,var(--gbg),transparent 45%);border-radius:0 10px 10px 0}
+.gtag{display:inline-block;padding:2px 10px;margin:0 4px 0 0;border-radius:12px;border:1px solid var(--g1);color:var(--g1);font:600 12px var(--gf)}
+.chips a[class*=g-]{border-color:var(--g1);color:var(--g1);font-family:var(--gf)}.genrekey{margin:8px 0}

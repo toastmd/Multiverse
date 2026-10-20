@@ -1,7 +1,7 @@
 'use strict';
 // Guide pages: Magic and Skills, Items.
 module.exports = (L) => {
-  const { D, esc, nm, cap, num, writeImg, art, table, pill, h2, card, imgTag, emit, route, ROOM, CATALOG, AREAS } = L;
+  const { GENRE, D, esc, nm, cap, num, writeImg, art, table, pill, h2, card, imgTag, emit, route, ROOM, CATALOG, AREAS } = L;
   const K = D.K.CLASSES, SP = D.K.SPELLS, T = D.T, ROM = ['I', 'II', 'III', 'IV', 'V'];
   const KINDN = { dmg: 'Damage', heal: 'Heal', buff: 'Buff', summon: 'Summon', escape: 'Escape', gather: 'Gathering', craft: 'Crafting' };
   const power = (s) => { const b = [];
@@ -71,6 +71,6 @@ ${table(['Item', 'Restores', 'Buff', 'Value', 'Sold at', 'Made by'], pots.map(([
   // ---------------- shops ----------------
   const shops = Object.values(ROOM).filter((r) => r.def.shop || r.def.clinic);
   emit('shops', 'Shops', 'Where to buy and sell. Directions start from Ashfall Square.', `
-${table(['Shop', 'Area', 'From the square', 'Sells'], shops.map((r) => { const st = (r.def.shop || r.def.clinic).stock; return [`<b>${r.name}</b>${r.def.exchange ? ' ' + pill('best for materials', 'b') : ''}`, AREAS[r.area][0], r.area === 'town' ? route(r.path) : 'far from Ashfall', st.map((i) => `${nm(i)} (${num(D.W.items[i].value)}c)`).join(', ')]; }), { filter: 'shops' })}
+${table(['Shop', 'Area', 'From the square', 'Sells'], shops.map((r) => { const st = (r.def.shop || r.def.clinic).stock; return [`<b>${r.name}</b>${r.def.exchange ? ' ' + pill('best for materials', 'b') : ''}`, `<span class="gtag g-${GENRE[r.area]}">${AREAS[r.area][0]}</span>`, r.area === 'town' ? route(r.path) : 'far from Ashfall', st.map((i) => `${nm(i)} (${num(D.W.items[i].value)}c)`).join(', ')]; }), { filter: 'shops' })}
 <p>Every shop buys your loot. Prices when selling are 40% of an item's value (60% for materials at the Salvage Exchange). The <b>Dawn Clinic</b> heals for free up to level 15. The inn lets you <code>rest</code>.</p>`);
 };

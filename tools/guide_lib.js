@@ -32,6 +32,7 @@ const AREAS = { // display name, level band blurb, short description
   rail: ['Brimstone Rail Yard', 'Levels 32 to 36 · Old West', 'A hellish railroad depot past the Basalt Steps, with the Brimstone Saloon Car and Stationmaster Cobb. Coal demons, imp conductors and the Brimstone Express itself.'],
 };
 const AREA_COL = { town: '#ffd34a', forest: '#4fe36a', crypt: '#a66bff', marsh: '#19e3b8', road: '#ff9a3c', mines: '#c47a4a', dunes: '#ff5a7a', frost: '#7fd6ff', ember: '#ff4a1f', citadel: '#d8d8ff', abyss: '#ff4fd8', gulch: '#d9a066', thorn: '#c58bff', aurora: '#ff6a6a', reach: '#3fd0e0', rail: '#ff7a2f' };
+const GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', thorn: 'fantasy', reach: 'fantasy', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi' }; // each area's genre styles its section of the guide
 const ORDER = Object.keys(AREAS), TERR = ['grass', 'dirt', 'stone', 'concrete', 'metal'];
 
 // route text from the starting square: "north, north, east"
@@ -102,4 +103,4 @@ const rooms0 = CATALOG.filter((r) => r.z === 0), roomsU = CATALOG.filter((r) => 
 
 const pages = {};
 const emit = (id, title, intro, body) => { pages[id] = page(id, title, intro, body); };
-module.exports = { D, art, PORT, CATALOG, ROOM, esc, nm, cap, num, writeImg, AREAS, ORDER, TERR, route, NAV, BLURB, THEME, page, table, pill, h2, card, imgTag, mapSvg, LEGEND, rooms0, roomsU, pages, emit, OUT, IMG, featuresOf };
+module.exports = { GENRE, D, art, PORT, CATALOG, ROOM, esc, nm, cap, num, writeImg, AREAS, ORDER, TERR, route, NAV, BLURB, THEME, page, table, pill, h2, card, imgTag, mapSvg, LEGEND, rooms0, roomsU, pages, emit, OUT, IMG, featuresOf };

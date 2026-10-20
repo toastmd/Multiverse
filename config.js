@@ -24,6 +24,7 @@ module.exports = () => {
       hashtags: list(e.TWITTER_HASHTAGS || (f.twitter || {}).hashtags, ['#game', '#Multiverse']).map((t) => '#' + String(t).replace(/^#/, '')),
       minIntervalSeconds: Math.max(5, +(e.TWITTER_MIN_SECONDS || (f.twitter || {}).minIntervalSeconds || 60)), dryRun: bool(e.TWITTER_DRY_RUN, bool((f.twitter || {}).dryRun, false)), apiBase: e.TWITTER_API_BASE || (f.twitter || {}).apiBase || 'https://api.x.com',
     },
+    pixabay: { apiKey: e.PIXABAY_API_KEY || (f.pixabay || {}).apiKey || '' }, // used by tools/fetch_pixabay.py
     giphy: {
       apiKey: e.GIPHY_API_KEY || (f.giphy || {}).apiKey || '',          // free key from developers.giphy.com
       rating: e.GIPHY_RATING || (f.giphy || {}).rating || 'pg',         // g, pg, pg-13 or r

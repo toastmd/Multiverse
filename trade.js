@@ -20,7 +20,7 @@ D.tradeSkills = (p, arg) => {
   if (id) { // details for one skill
     const s = S[id], k = p.skills[id]; p.msg(`${s.icon} ${s.name}${k ? `: level ${k.lvl}/${D.T.MAX}, ${k.xp}/${need(k.lvl)} xp` : ': not learned (type `learn ' + id + '`)'}`, 'rname'); p.msg(s.desc, 'text');
     if (s.kind === 'gather') { p.msg(`Command: ${s.verb}. Works in rooms with ${s.nodeName}. Finds:`, 'sys'); for (const l of s.loot) p.msg(`  ${nm(l.id)}${l.min > 1 ? ` (from skill level ${l.min})` : ''}`, k && k.lvl >= l.min ? 'spell' : 'sys'); }
-    else if (s.kind === 'salvage') p.msg('Command: salvage <weapon or armor in your pack>. Worn items are never salvaged.', 'sys');
+    else if (s.kind === 'salvage') p.msg('Command: salvage <item> or salvage all (everything unworn, not kept and not legendary).', 'sys');
     else { p.msg(`Command: ${s.verb} <recipe>. Recipes:`, 'sys'); for (const r of s.recipes) if (D.W.items[r.out]) p.msg(`  ${k && k.lvl >= r.lvl ? '✔' : '🔒'} lvl ${String(r.lvl).padStart(2)}  ${r.k}: ${listOf(r.need)} -> ${nm(r.out)}`, k && k.lvl >= r.lvl ? 'spell' : 'sys'); }
     return;
   }
@@ -92,18 +92,29 @@ D.tradeCraft = (p, id, arg) => {
   D.toolUse(p, id); D.skillGain(p, id, Math.round((8 + Math.floor(r.lvl * 0.6)) * (1 + 0.1 * t)));
 };
 
-D.salvage = (p, arg) => {
+D.salvage = (p, arg) => { // salvage <item> | salvage all (everything unworn, not kept and not legendary)
   if (!gate(p, 'salvaging')) return; const k = p.skills.salvaging, worn = new Set(Object.values(p.equip)), t = D.toolTier(p, 'salvaging');
-  const gear = p.inv.filter((i) => (i.type === 'weapon' || i.type === 'armor') && !worn.has(i)), bagGear = Object.keys(p.bag).filter((i) => ['weapon', 'armor'].includes(D.W.items[i].type));
-  if (!arg.trim()) return p.msg(gear.length || bagGear.length ? 'Salvage which? ' + [...gear.map((i) => i.name), ...bagGear.map((i) => `${nm(i)} (bag x${p.bag[i]})`)].join(', ') : 'You have no unworn weapons or armor (pack or bag) to salvage.');
-  const w = arg.trim().toLowerCase(), it = gear.find((i) => i.isId(w)); let itemId, def;
-  if (it) { itemId = it.itemId; def = it.def; } else { itemId = bagGear.find((i) => { const d = D.W.items[i], n = d.name.toLowerCase(); return n === w || n.split(' ').includes(w) || (d.ids || []).includes(w); }); def = itemId && D.W.items[itemId]; }
-  if (!itemId) return p.msg("You don't have that (worn items can't be salvaged).");
-  const m = itemId.match(/^(iron|steel|mithril|runed|adamant|dragon|void)(sword|mail|helm|shield|boots)$/), out = {};
-  if (m) for (const [mat, n] of Object.entries(SALV[m[1]])) out[mat] = Math.max(1, Math.round(n * PIECE_F[m[2]])); else out.ore = Math.max(1, Math.floor((def.value || 0) / 60));
-  const first = Object.keys(out)[0]; out[first] += Math.floor(k.lvl / 15) + (p.cls === 'scavenger' ? 1 : 0) + Math.floor(t / 2);
-  const dbl = Math.random() < 0.05 * t; if (dbl) for (const key of Object.keys(out)) out[key] *= 2;
-  if (it) it.destroy(); else { p.bag[itemId]--; if (p.bag[itemId] <= 0) delete p.bag[itemId]; }
-  for (const [mat, n] of Object.entries(out)) for (let i = 0; i < n; i++) D.give(p, mat, 'loot');
-  p.msg(`♻️ You break down ${def.name} and recover ${listOf(out)}${dbl ? ' (double, thanks to your crowbar!)' : ''}.`, 'win'); D.toolUse(p, 'salvaging'); D.skillGain(p, 'salvaging', Math.round((5 + (m ? TIER_ORDER.indexOf(m[1]) * 3 : 0)) * (1 + 0.1 * t)));
+  const gear = p.inv.filter((i) => (i.type === 'weapon' || i.type === 'armor') && !worn.has(i) && !i.kept), bagGear = Object.keys(p.bag).filter((i) => ['weapon', 'armor'].includes(D.W.items[i].type) && !p.keepBag[i]);
+  const one = (it, itemId, def, quiet) => {
+    const m = itemId.match(/^(iron|steel|mithril|runed|adamant|dragon|void)(sword|mail|helm|shield|boots)$/), out = {};
+    if (m) for (const [mat, n] of Object.entries(SALV[m[1]])) out[mat] = Math.max(1, Math.round(n * PIECE_F[m[2]])); else out.ore = Math.max(1, Math.floor((def.value || 0) / 60));
+    const first = Object.keys(out)[0]; out[first] += Math.floor(k.lvl / 15) + (p.cls === 'scavenger' ? 1 : 0) + Math.floor(t / 2);
+    const dbl = Math.random() < 0.05 * t; if (dbl) for (const key of Object.keys(out)) out[key] *= 2;
+    if (it) it.destroy(); else { p.bag[itemId]--; if (p.bag[itemId] <= 0) delete p.bag[itemId]; }
+    for (const [mat, n] of Object.entries(out)) for (let i = 0; i < n; i++) D.give(p, mat, 'loot');
+    if (!quiet) p.msg(` You break down ${def.name} and recover ${listOf(out)}${dbl ? ' (double, thanks to your crowbar!)' : ''}.`, 'win'); D.toolUse(p, 'salvaging'); D.skillGain(p, 'salvaging', Math.round((5 + (m ? TIER_ORDER.indexOf(m[1]) * 3 : 0)) * (1 + 0.1 * t)));
+    return out;
+  };
+  const a = arg.trim().toLowerCase();
+  if (!a) return p.msg(gear.length || bagGear.length ? 'Salvage which? ' + [...gear.map((i) => i.name), ...bagGear.map((i) => `${nm(i)} (bag x${p.bag[i]})`)].join(', ') + '. (`salvage all` breaks down everything unworn, not marked `keep` and not legendary.)' : 'You have no unworn, unkept weapons or armor (pack or bag) to salvage.');
+  if (a === 'all') {
+    const list = gear.filter((i) => !i.def.legend), bl = bagGear.filter((i) => !D.W.items[i].legend); if (!list.length && !bl.length) return p.msg('Nothing to salvage: worn, kept and legendary items are skipped.', 'sys');
+    const total = {}; let n = 0, mark = 0; const add = (out) => { for (const [mat, c] of Object.entries(out)) total[mat] = (total[mat] || 0) + c; n++; };
+    for (const it of list) add(one(it, it.itemId, it.def, true)); for (const id of bl) while (p.bag[id] > 0 && mark++ < 500) add(one(null, id, D.W.items[id], true));
+    return p.msg(` You break down ${n} item${n === 1 ? '' : 's'} and recover ${listOf(total)}.`, 'win');
+  }
+  const it = gear.find((i) => i.isId(a)); let itemId, def;
+  if (it) { itemId = it.itemId; def = it.def; } else { itemId = bagGear.find((i) => { const d = D.W.items[i], n = d.name.toLowerCase(); return n === a || n.split(' ').includes(a) || (d.ids || []).includes(a); }); def = itemId && D.W.items[itemId]; }
+  if (!itemId) return p.msg(p.inv.some((i) => i.kept && i.isId(a)) ? 'That is marked to keep. Type `unkeep` first.' : "You don't have that (worn items can't be salvaged).");
+  one(it, itemId, def, false);
 };

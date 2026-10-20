@@ -38,10 +38,11 @@ function bid(p, arg) {
   cur.bid = { name: p.name, amount: want }; cur.history.push(cur.bid); call(`${p.name} bids ${money(want)} credits! The latest bid is ${money(want)}. Do I hear ${money(want + INC)}?`); arm(cur);
 }
 function takeFromPlayer(p, q) { // returns the item definition id, removing one copy from the pack or bag
-  const match = (o) => o.isId(q) || o.name.toLowerCase().includes(q), it = p.inv.find((o) => match(o) && !Object.values(p.equip).includes(o));
+  const match = (o) => o.isId(q) || o.name.toLowerCase().includes(q), it = p.inv.find((o) => match(o) && !Object.values(p.equip).includes(o) && !o.kept);
   if (it) { if (!TYPES.includes(it.type)) return { err: 'Only equipment and treasure can be auctioned.' }; const id = it.itemId; it.destroy(); return { id }; }
   const bagId = Object.keys(p.bag).find((id) => { const d = D.W.items[id]; return d && TYPES.includes(d.type) && (id === q || (d.ids || []).includes(q) || d.name.toLowerCase().includes(q)); });
   if (bagId) { p.bag[bagId]--; if (p.bag[bagId] <= 0) delete p.bag[bagId]; return { id: bagId }; }
+  if (p.inv.some((o) => match(o) && o.kept)) return { err: 'That is marked to keep. Type `unkeep` first.' };
   if (p.inv.some(match)) return { err: 'Unequip it first, or it is not equipment or treasure.' }; return { err: "You don't have that." };
 }
 function status(p) {

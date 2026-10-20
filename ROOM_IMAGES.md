@@ -1,6 +1,6 @@
 # Room pictures
 
-The game shows a static picture under the map for the room you are in. Put one image per room in `public/img/rooms/`, named exactly as below (JPEG, 16:9 works best, for example 800x450). Rooms without a picture show their area's picture instead.
+The game shows a static picture under the map for the room you are in. Put one image per room in `public/img/rooms/`, named exactly as below (JPEG, 16:9 works best, for example 800x450). Rooms without a picture of their own show their area's default picture (`public/img/areas/<area id>.jpg`: Whisperwood, Barrow Crypts, Sunken Marsh, Redrock Trail, Silverado Mines, Sunscorch Dunes, Frostpeak, Ember Wastes, Shattered Citadel, The Abyss, Tombstone Gulch and Starship Aurora have one), and areas without either show the guide's area art.
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 

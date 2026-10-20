@@ -2,7 +2,7 @@
 const D = require('./lib'); require('./magic'); require('./quest'); require('./trade');
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
-const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'equipment', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', sw: 'speedwalk', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', sw: 'speedwalk', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -11,6 +11,15 @@ const sellPrice = (p, i) => priceOf(p, i.def);
 const BOUND = /^(bag|holding|bag of holding|tools?|fishing pole|pole|mining pick|herbalist|sickle|hammer|alembic|skillet|crowbar)$/i;
 const bagFind = (p, w) => { w = w.toLowerCase(); return Object.keys(p.bag).find((id) => { const d = D.W.items[id], n = d.name.toLowerCase(); return id === w || n === w || n.split(' ').includes(w) || (d.ids || []).includes(w); }); };
 const worn = (p, it) => Object.values(p.equip).includes(it);
+const scoreData = (p) => { // everything the graphical score window shows
+  const k = p.klass(), w = p.equip.weapon, worn = new Set(Object.values(p.equip)), mats = {}; let goods = 0;
+  for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) continue; if (d.type === 'material') mats[d.name] = (mats[d.name] || 0) + c; goods += priceOf(p, d) * c; }
+  for (const it of p.inv) { if (it.type === 'material') mats[it.name] = (mats[it.name] || 0) + 1; if (!worn.has(it)) goods += sellPrice(p, it); }
+  return { name: p.name, pre: D.preTitle(p), title: p.title || '', cls: k.name, ic: k.icon, ck: p.cls, gl: D.genderLabel(p.gender), rm: p.remort || 0, wiz: !!p.wiz, pic: D.playerPic(p), level: p.level, xp: p.xp, lo: p.level > 1 ? p.xpNeed(p.level - 1) : 0, hi: p.xpNeed(p.level),
+    hp: p.hp, mhp: p.maxhp, mp: p.mp, mmp: p.maxmp, stam: p.cls === 'scavenger', luck: p.luck, mluck: p.maxLuck(), aura: p.aura(), attrs: p.attrs(), atk: p.atkPool(), def: p.defPool(), ac: p.ac(), wpn: w ? { n: w.name, a: w.def.dmg[0], b: w.def.dmg[1] } : null,
+    gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
+    skills: Object.entries(p.skills).map(([id, s]) => ({ n: D.T.SKILLS[id].name, i: D.T.SKILLS[id].icon || '', l: s.lvl })), chrome: p.cyber.map((id) => D.W.items[id].name), mats, equip: Object.fromEntries(Object.entries(p.equip).map(([sl, i]) => [sl, i.name])) };
+};
 const label = (p, it) => it.short + (worn(p, it) ? (it.type === 'weapon' ? ' (wielded)' : ' (worn)') : '');
 const health = (o) => { const r = o.hp / o.maxhp; return r > 0.9 ? 'in perfect health' : r > 0.6 ? 'lightly wounded' : r > 0.3 ? 'badly hurt' : 'near death'; };
 
@@ -25,15 +34,19 @@ function go(p, d) {
 
 const C = {
   look(p, a) {
-    if (!a) return p.env.look(p);
+    if (!a) return p.env.look(p, true);
     const t = find(p.env.inv, a.replace(/^at\s+/, '')) || find(p.inv, a.replace(/^at\s+/, ''));
     if (!t) return p.msg("You don't see that here.");
     p.msg(t.long); if (t.isLiving) p.msg(`${cap(t.the())} is ${health(t)}.`);
   },
   go: (p, a) => go(p, FULL[a] || a),
   kill(p, a) {
-    const t = find(p.env.inv.filter((o) => o.isLiving && o !== p), a);
-    if (!a) return p.msg('Kill what?'); if (!t) return p.msg('No such target here.');
+    let t;
+    if (!a.trim()) { // autokill on: a bare `kill` attacks the first monster in the room
+      if (!p.autokill) return p.msg('Kill what? (Type `autokill on` and a bare `kill` attacks the first monster in the room.)');
+      t = p.env.inv.find((o) => o.isLiving && !o.isPlayer && o.hp > 0); if (!t) return p.msg('There is nothing here to kill.');
+    } else t = find(p.env.inv.filter((o) => o.isLiving && o !== p), a);
+    if (!t) return p.msg('No such target here.');
     if (t.isPlayer) return p.msg('Player combat is disabled.'); if (!p.engage(t)) return p.msg('The innkeeper glares. No fighting here.');
     p.sendPortrait(t.name, 'mob_' + t.mobId); p.msg(`You attack ${t.the()}!`, 'combat'); p.env.tell(`${p.name} attacks ${t.the()}!`, p, 'combat2'); if (!t.enemy) t.engage(p); p.fight(t);
   },
@@ -53,13 +66,75 @@ const C = {
     if (worn(p, it)) { for (const k of Object.keys(p.equip)) if (p.equip[k] === it) delete p.equip[k]; }
     it.move(p.env); p.msg(`You drop ${it.short}.`);
   },
-  inventory(p) { p.msg(`Credits: ${p.gold}. Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} (type \`bag\`).`, 'sys'); p.msg(p.inv.length ? 'You carry: ' + p.inv.map((i) => label(p, i)).join(', ') + '.' : 'You carry nothing.'); },
-  equipment(p) { const e = Object.entries(p.equip); p.msg(e.length ? e.map(([s, i]) => `${s}: ${i.name}`).join(', ') + ` (armor class ${p.ac()})` : 'You are wearing nothing.'); p.msg('Bound tools: ' + Object.entries(D.T.TOOLS).map(([id, tl]) => `${tl.name} Mk ${['I', 'II', 'III', 'IV', 'V'][D.toolTier(p, tl.skill) - 1]}`).join(', ') + '. Type `tools` for details.', 'sys'); },
+  inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
+    const SL = [['weapon', 'Weapon (wielded)'], ['head', 'Head'], ['body', 'Body'], ['shield', 'Shield'], ['feet', 'Feet']];
+    p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
+    for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.def.dmg[0]}-${it.def.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
+    for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
+    const pack = p.inv.filter((i) => !worn(p, i)), groups = new Map(); for (const it of pack) { const key = it.itemId + (it.kept ? '*' : ''); const g = groups.get(key) || { it, n: 0 }; g.n++; groups.set(key, g); }
+    p.msg(`Pack (${pack.length} carried, ${p.inv.length}/${p.cap()} with what you wear):`, 'rname'); p.msg(groups.size ? '  ' + [...groups.values()].map((g) => `${g.it.short}${g.n > 1 ? ' x' + g.n : ''}${g.it.kept ? ' [kept]' : ''}`).join(', ') + '.' : '  nothing.', 'items');
+    p.msg(`Credits: ${p.gold}. Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} (type \`bag\`). Tools: type \`tools\`. [kept] items are protected from sell and salvage (\`keep\`, \`unkeep\`).`, 'sys');
+  },
+  keep(p, a) { // keep <item>: protect it from sell, rsell, salvage and auction; keep (no argument) lists what is kept
+    const q = a.trim().toLowerCase(), bagMatch = (id) => { const d = D.W.items[id], n = d.name.toLowerCase(); return n === q || n.includes(q) || (d.ids || []).includes(q); };
+    if (!q || q === 'list') { const k = p.inv.filter((i) => i.kept).map((i) => i.short), b = Object.keys(p.keepBag).filter((id) => D.W.items[id]).map((id) => D.W.items[id].name + ' (bag)'); return p.msg(k.length || b.length ? `Marked to keep (never sold or salvaged): ${[...k, ...b].join(', ')}.` : 'Nothing is marked to keep. Type `keep <item>` to protect an item from sell and salvage.', 'sys'); }
+    const it = p.inv.find((i) => i.isId(q) && !i.kept && !worn(p, i)) || p.inv.find((i) => i.isId(q) && !i.kept); if (it) { it.kept = true; return p.msg(`You mark ${it.short} to keep. It will not be sold, salvaged or auctioned until you \`unkeep\` it.`, 'win'); }
+    const id = Object.keys(p.bag).find((i) => D.W.items[i] && bagMatch(i) && !p.keepBag[i]); if (id) { p.keepBag[id] = 1; return p.msg(`You mark all your ${D.W.items[id].name} in the bag to keep.`, 'win'); }
+    p.msg(p.inv.some((i) => i.isId(q) && i.kept) ? 'That is already marked to keep.' : "You don't have that.");
+  },
+  unkeep(p, a) { // unkeep <item> | unkeep all
+    const q = a.trim().toLowerCase(); if (!q) return p.msg('Unkeep what? Type `keep` to see what is marked.');
+    if (q === 'all') { let n = 0; for (const i of p.inv) if (i.kept) { i.kept = false; n++; } n += Object.keys(p.keepBag).length; p.keepBag = {}; return p.msg(n ? `${n} item${n === 1 ? '' : 's'} can be sold or salvaged again.` : 'Nothing was marked to keep.', 'sys'); }
+    const it = p.inv.find((i) => i.isId(q) && i.kept); if (it) { it.kept = false; return p.msg(`${cap(it.short)} can be sold or salvaged again.`, 'sys'); }
+    const id = Object.keys(p.keepBag).find((i) => { const d = D.W.items[i]; return d && (d.name.toLowerCase().includes(q) || (d.ids || []).includes(q)); }); if (id) { delete p.keepBag[id]; return p.msg(`Your ${D.W.items[id].name} in the bag can be sold or salvaged again.`, 'sys'); }
+    p.msg("You aren't keeping that.");
+  },
+  autokill(p, a) { // autokill on | off: a bare `kill` attacks the first monster in the room
+    const v = a.trim().toLowerCase(); if (v === 'on') p.autokill = true; else if (v === 'off') p.autokill = false; else if (v) return p.msg('Usage: autokill on | autokill off');
+    p.msg(v ? (p.autokill ? 'Autokill is ON: typing `kill` by itself attacks the first monster in the room.' : 'Autokill is OFF: `kill` needs a target again.') : `Autokill is ${p.autokill ? 'ON' : 'OFF'}. Type \`autokill on\` or \`autokill off\`.`, 'sys');
+  },
+  check(p, a) { // check <item>: weapon class or armor class of a piece of equipment
+    const q = a.trim().toLowerCase(); if (!q) return p.msg('Check what? Type `check <item>` to see a weapon\'s weapon class or an armor\'s armor class.');
+    const inst = p.inv.find((i) => i.isId(q)) || p.env.inv.find((o) => !o.isLiving && !o.isNpc && o.isId && o.isId(q)); let def = inst && inst.def, name = inst && inst.name;
+    if (!def) { const id = Object.keys(p.bag).find((i) => { const d = D.W.items[i]; return d && (d.name.toLowerCase().includes(q) || (d.ids || []).includes(q)); }); if (id) { def = D.W.items[id]; name = def.name; } }
+    if (!def) return p.msg("You don't have that, and it isn't here.");
+    if (def.type !== 'weapon' && def.type !== 'armor') return p.msg("This isn't a piece of equipment.");
+    const lvl = def.lvl || 1, need = lvl > p.level ? ` You need level ${lvl} to use it (you are level ${p.level}).` : ` Requires level ${lvl}.`, using = inst && Object.values(p.equip).includes(inst), bonus = def.bonus ? ` Bonus: ${[def.bonus.pool ? `+${def.bonus.pool} attack dice` : '', def.bonus.dmg ? `+${def.bonus.dmg} damage` : ''].filter(Boolean).join(', ')}.` : '', f1 = (n) => (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/, '');
+    if (def.type === 'weapon') {
+      const avg = (def.dmg[0] + def.dmg[1]) / 2, cur = p.equip.weapon, ca = cur && cur.def ? (cur.def.dmg[0] + cur.def.dmg[1]) / 2 : 0;
+      p.msg(`${cap(name)}: weapon class ${def.dmg[0]}-${def.dmg[1]} damage (average ${avg}).${need}${bonus}${using ? ' You are wielding it.' : cur ? ` Compared with your ${cur.name} (${cur.def.dmg[0]}-${cur.def.dmg[1]}): ${f1(avg - ca)} average damage.` : ' You are wielding nothing.'}`, 'items');
+    } else {
+      const slot = def.slot || 'body', cur = p.equip[slot];
+      p.msg(`${cap(name)}: armor class ${def.ac || 0}, worn on the ${slot}.${need}${bonus}${using ? ' You are wearing it.' : cur ? ` Compared with your ${cur.name} (armor ${cur.def.ac || 0}): ${f1((def.ac || 0) - (cur.def.ac || 0))} armor class.` : ` Nothing is worn on your ${slot}.`}`, 'items');
+    }
+  },
+  brief(p, a) { // brief on | brief off: moving shows only the room name and exits
+    const v = a.trim().toLowerCase(); if (v === 'on') p.brief = true; else if (v === 'off') p.brief = false; else if (v) return p.msg('Usage: brief on | brief off');
+    p.msg(v ? (p.brief ? 'Brief mode is ON: moving shows only the room name and exits. Type `look` for the full description.' : 'Brief mode is OFF: you see full room descriptions again.') : `Brief mode is ${p.brief ? 'ON' : 'OFF'}. Type \`brief on\` or \`brief off\`.`, 'sys');
+  },
+  email(p, a) { // email <address> | email clear | email hide | email show
+    const v = a.trim(); if (!v) return p.msg(p.email ? `Your email is ${p.email}, ${p.emailHidden ? 'hidden from finger' : 'shown to anyone who fingers you'}. \`email clear\` removes it, \`email hide\` or \`email show\` controls finger.` : 'You have no email set. Type `email you@example.com`. Anyone can see it with `finger <you>` unless you type `email hide`.');
+    if (/^clear$/i.test(v)) return D.setEmail(p, ''); if (/^hide$/i.test(v)) return D.hideEmail(p, true); if (/^show$/i.test(v)) return D.hideEmail(p, false); D.setEmail(p, v);
+  },
+  finger(p, a) { // finger <name>: name, level, picture and email (if they set one and did not hide it)
+    const q = (a.trim() || p.name).toLowerCase(), all = [...D.players.values()], on = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
+    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, bot: !!on.isBot };
+    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, seen: r.seen || 0 }; }
+    const seen = d.online ? 'online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
+    p.msg(`Finger: ${[d.pre, d.name].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); p.send({ t: 'finger', d });
+  },
   wield(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`); p.equip.weapon = it; p.msg(`You wield ${it.short}.`); },
   wear(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`); p.equip[it.slot] = it; p.msg(`You wear ${it.short}.`); },
   remove(p, a) { const e = Object.entries(p.equip).find(([, i]) => i.isId(a || '')); if (!e) return p.msg('You are not using that.'); delete p.equip[e[0]]; p.msg(`You remove ${e[1].short}.`); },
   quaff(p, a) {
-    const it = find(p.inv.filter((i) => i.type === 'potion'), a || 'potion'); if (!it) return p.msg('You have nothing to drink.');
+    let it;
+    if (!a.trim()) { // eat / quaff / the HEAL button with no item: the healing item that fits best (pack first, then the bag)
+      const need = p.maxhp - p.hp; if (need <= 0) return p.msg('You are already at full health.');
+      const cands = [...p.inv.filter((i) => i.type === 'potion' && (i.def.heal || 0) > 0).map((i) => ({ h: i.def.heal, it: i })), ...Object.keys(p.bag).filter((id) => D.W.items[id] && D.W.items[id].type === 'potion' && (D.W.items[id].heal || 0) > 0 && p.bag[id] > 0).map((id) => ({ h: D.W.items[id].heal, id }))];
+      if (!cands.length) return p.msg('You have nothing to eat or drink that heals.');
+      const fit = cands.filter((c) => c.h >= need).sort((x, y) => x.h - y.h)[0] || cands.sort((x, y) => y.h - x.h)[0];
+      if (fit.it) it = fit.it; else { p.bag[fit.id]--; if (p.bag[fit.id] <= 0) delete p.bag[fit.id]; it = D.cloneItem(fit.id); }
+    } else { it = find(p.inv.filter((i) => i.type === 'potion'), a); if (!it) return p.msg('You have nothing to drink.'); }
     const h = Math.min(it.def.heal || 0, p.maxhp - p.hp), m = Math.min(it.def.mana || 0, p.maxmp - p.mp); p.hp += h; p.mp += m;
     p.msg(`You quaff ${it.short}${h ? ` and recover ${h} hit points` : ''}${m ? ` and ${m} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}` : ''}.`, 'win'); it.destroy();
     if (it.def.buff) { p.addFx({ k: 'buff', n: it.name, ...it.def.buff, src: p }); p.msg(`The ${it.name} gives you a boost for a while.`, 'win'); }
@@ -81,12 +156,12 @@ const C = {
   },
   sell(p, a) {
     if (!p.env.def.shop) return p.msg('Nobody here will buy your things.');
-    const arg = a.trim(), sellable = (i) => !worn(p, i) && sellPrice(p, i) > 0, whole = arg === 'all' || arg === 'materials';
-    const items = arg === 'all' ? p.inv.filter((i) => sellable(i) && i.type !== 'potion') : arg === 'materials' ? p.inv.filter((i) => i.type === 'material') : whole ? [] : [find(p.inv, arg)];
+    const arg = a.trim(), sellable = (i) => !worn(p, i) && !i.kept && sellPrice(p, i) > 0, whole = arg === 'all' || arg === 'materials';
+    const items = arg === 'all' ? p.inv.filter((i) => sellable(i) && i.type !== 'potion') : arg === 'materials' ? p.inv.filter((i) => i.type === 'material' && !i.kept) : whole ? [] : [find(p.inv, arg)];
     let total = 0, n = 0;
     if (!whole && !items[0]) return p.msg(BOUND.test(arg) ? 'Your bag of holding and tools are bound to you: they cannot be dropped or sold.' : "You don't have that.");
-    for (const it of items) { if (worn(p, it)) { p.msg('Unequip that first.'); continue; } const pr = sellPrice(p, it); if (!pr) { p.msg(`The shopkeeper has no interest in ${it.short}.`); continue; } total += pr; n++; it.destroy(); }
-    if (whole) for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) { delete p.bag[id]; continue; } if ((arg === 'materials' && d.type !== 'material') || d.type === 'potion') continue; const pr = priceOf(p, d); if (pr > 0) { total += pr * c; n += c; delete p.bag[id]; } } // the bag sells too
+    for (const it of items) { if (worn(p, it)) { p.msg('Unequip that first.'); continue; } if (it.kept) { p.msg(`${cap(it.short)} is marked to keep. Type \`unkeep\` first.`); continue; } const pr = sellPrice(p, it); if (!pr) { p.msg(`The shopkeeper has no interest in ${it.short}.`); continue; } total += pr; n++; it.destroy(); }
+    if (whole) for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) { delete p.bag[id]; continue; } if ((arg === 'materials' && d.type !== 'material') || d.type === 'potion' || p.keepBag[id]) continue; const pr = priceOf(p, d); if (pr > 0) { total += pr * c; n += c; delete p.bag[id]; } } // the bag sells too
     if (whole && !n) return p.msg(arg === 'materials' ? 'You have no gathered materials to sell (pack or bag).' : 'Nothing worth selling.');
     if (n) { p.gold += total; p.msg(`You sell ${n} item${n > 1 ? 's' : ''} for ${total} credits.${p.env.def.exchange ? ' (The Exchange pays 60% for materials.)' : ''}`, 'win'); }
   },
@@ -265,7 +340,11 @@ const C = {
   },
   class(p) { const k = p.klass(); p.msg(`${k.icon} ${k.name}: ${k.desc}`, 'rname'); p.msg(`Level ${p.level}. HP ${p.hp}/${p.maxhp}, ${p.cls === 'scavenger' ? 'stamina' : 'mana'} ${p.mp}/${p.maxmp}. Type 'spells' for your abilities.`); },
   rest(p) { if (!p.env.def.inn) return p.msg('You can only rest properly at the inn.'); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck(); p.msg('You sit by the fire and rest. You feel renewed.', 'win'); },
-  score(p) {
+  score(p, a) { // a graphical character sheet (the client opens a window); `score text` prints the text version
+    if (a.trim().toLowerCase() === 'text') return C.scoretext(p);
+    p.send({ t: 'score', d: scoreData(p) }); p.msg('Your character sheet is open. (Type `score text` for the text version.)', 'sys');
+  },
+  scoretext(p) {
     const n = (v) => Math.round(v).toLocaleString('en-US'), k = p.klass(), at = p.attrs(), worn = new Set(Object.values(p.equip));
     const mats = {}, cons = {}; let goods = 0;
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) continue; if (d.type === 'material') mats[d.name] = (mats[d.name] || 0) + c; goods += priceOf(p, d) * c; } // the bag counts too
@@ -296,7 +375,7 @@ const C = {
   shout(p, a) { if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
   who(p) { // one player per line: name, title, class and gender
     const all = [...D.players.values()];
-    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon })) });
+    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon, pic: D.playerPic(o) })) });
     p.msg(`Players online (${all.length}):`, 'rname');
     for (const o of all) p.msg(`${[D.preTitle(o), o.name].filter(Boolean).join(' ')} | ${o.title || 'no title'} | ${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level}) | ${D.genderLabel(o.gender)}${o.isBot ? ' | bot' : ''}`, 'sys');
   },
@@ -369,8 +448,8 @@ const C = {
   // ---- remote sell: all unworn weapons and armor, from anywhere, for 90% of the shop price (10% finder's fee) ----
   rsell(p, a) {
     const sellable = (d) => d && (d.type === 'weapon' || d.type === 'armor') && !d.legend && priceOf(p, d) > 0, rows = [];
-    for (const it of p.inv) if (!worn(p, it) && sellable(it.def)) rows.push({ name: it.name, price: priceOf(p, it.def), it });
-    for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (sellable(d)) rows.push({ name: `${d.name}${c > 1 ? ' x' + c : ''}`, price: priceOf(p, d) * c, id }); }
+    for (const it of p.inv) if (!worn(p, it) && !it.kept && sellable(it.def)) rows.push({ name: it.name, price: priceOf(p, it.def), it });
+    for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (sellable(d) && !p.keepBag[id]) rows.push({ name: `${d.name}${c > 1 ? ' x' + c : ''}`, price: priceOf(p, d) * c, id }); }
     if (!rows.length) return p.msg('You have no unworn weapons or armor to sell. (Legendary items are never sold by rsell.)', 'sys');
     const gross = rows.reduce((s, r) => s + r.price, 0), fee = Math.floor(gross * 0.1), net = gross - fee;
     if (a.trim().toLowerCase() === 'list') { rows.slice(0, 30).forEach((r) => p.msg(`  ${r.name.padEnd(28)} ${r.price}c`, 'sys')); if (rows.length > 30) p.msg(`  ...and ${rows.length - 30} more`, 'sys'); return p.msg(`rsell would sell ${rows.length} stack${rows.length > 1 ? 's' : ''} for ${gross} credits, minus a 10% finder's fee of ${fee}: you would receive ${net}. Type \`rsell\` to do it.`, 'win'); }
@@ -448,7 +527,19 @@ const C = {
     let g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${D.genderLabel(p.gender)}. Change it with: gender male | female | other`);
     if (g === 'other') g = 'nonbinary'; if (!['male', 'female', 'nonbinary'].includes(g)) return p.msg('Choose male, female or other.'); p.gender = g; p.recalc(); p.sendStats(); p.msg(`You are now ${D.genderLabel(g)}.`, 'sys');
   },
-  help(p) { p.msg('Move: n s e w u d. Look: look [thing]. Fight: kill <mob>, flee. Items: get, drop, wield, wear, remove, quaff, inventory, equipment. Guide: the player guide website is at /guide/ on this server. Travel: recall (back to the starting square). Gear for gathering: tools (bound fishing pole, mining pick and more), bag (bag of holding). Tradeskills: tradeskills, learn, forage, mine, fish, smith, brew, cook, salvage. Character: autoflee on|off, alias / unalias, keypad, gender, class, remort (at the Hall of Rebirth, level 40). Quests: talk <npc>, accept <quest>, quests, board, abandon. Gossip: gossip <msg>, gossip on|off|history. Chrome: list/install/uninstall at the clinic, cyber. Luck: luck, push. Shops: list, buy [n] <item>, sell <item|all>, value <item>. Temple: pray. Magic: spells, cast <spell> [target] (or just type the spell name), class, craft (Prospector). Move: speedwalk n,n,e (sw), travel. Lists: commands, deaths, weather. Social: say, tell, shout, who, title, mute, blackjack (at saloons), bounties, rsell (remote sell), auction / bid / auctions, rob and unlock and loot (bank jobs), socials (smile, cheer, dance...), team, tc, gag on|off, triggers, tutorial, travel, leaderboard (top 10), gossip (add ;word for a GIF), notify on|off (login notices). Other: score, rest (at the inn), save, quit.' + (p.wiz ? ' Wizard: update, goto <room>, clone <item>, discord [test], github [sync], twitter [test], shutdown confirm|cancel.' : '')); },
+  help(p, a) { // help | help <command> | help <class ability>
+    const q = (a || '').trim().toLowerCase().split(/\s+/)[0] || '';
+    if (!q) { p.msg('Move: n s e w u d, speedwalk n,n,e (sw), travel. Look: look [thing], check <item>. Fight: kill <mob> (autokill on), flee, cast. Items: get, drop, wield, wear, remove, quaff/eat, inventory (eq), keep, unkeep, salvage all. Shops: list, buy, sell. Talk: say, tell, gossip, team. Misc: brief, finger, email, deaths, weather, score, commands.', 'sys'); return p.msg('Type `help <command>` for detailed help on any command (for example `help kill` or `help eq`), `help <ability>` for a class ability, and `commands` for the full list. The Player\'s Guide website has everything in detail.', 'win'); }
+    const { H, WIZ } = require('./helpdocs'), DIRW = { n: 1, s: 1, e: 1, w: 1, u: 1, d: 1, north: 1, south: 1, east: 1, west: 1, up: 1, down: 1 }, name = ALIAS[q] || (DIRW[q] ? 'go' : q), doc = H[name];
+    if (doc && (!WIZ.has(name) || p.wiz)) {
+      const als = Object.entries(ALIAS).filter(([, v]) => v === name).map(([k]) => k); p.msg(`HELP: ${name}${als.length ? `   (also: ${als.join(', ')})` : ''}`, 'rname'); p.msg(`Usage: ${doc[0]}`, 'items'); p.msg(doc[1]);
+      if (doc[2].length) p.msg('Examples: ' + doc[2].join('   |   '), 'sys'); if (doc[3].length) p.msg('See also: ' + doc[3].join(', '), 'sys'); return;
+    }
+    const w = (a || '').trim().toLowerCase(), sp = D.spellsOf(p).find((s) => s.k === w || s.n.toLowerCase() === w) || D.spellsOf(p).find((s) => s.n.toLowerCase().startsWith(w));
+    if (sp) return p.msg(`${sp.n}: level ${sp.lvl} ${p.klass().name} ability, ${sp.mp} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}${sp.cd ? `, ${sp.cd} round cooldown` : ''}. ${sp.d} Use it with \`cast ${sp.n.toLowerCase()}\` or just type its name.${sp.lvl > p.level ? ` (You unlock it at level ${sp.lvl}.)` : ''}`, 'win');
+    if (require('./socials').SOC[q]) return p.msg(`${cap(q)} is a social (a feeling). Type \`${q}\` alone, or aim it: \`${q} <player>\`. \`socials\` lists them all.`, 'sys');
+    p.msg(`There is no help for "${(a || '').trim()}". Type \`commands\` to see everything you can use.`);
+  },
   save(p) { D.savePlayer(p); p.msg('Saved.', 'sys'); },
   quit(p) { D.savePlayer(p); p.msg('Farewell, traveler.', 'sys'); p.send({ t: 'quit' }); if (p.conn) p.conn.close(); },
   // ---- wizard commands ----

@@ -6,7 +6,7 @@ const PORT = +process.env.PORT || 4000, HOST = process.env.HOST || '0.0.0.0';
 const PUB = path.join(__dirname, 'public'), DATA = path.join(__dirname, 'data', 'players');
 fs.mkdirSync(DATA, { recursive: true });
 
-D.loadWorld(); D.start();
+D.loadWorld(); { const rm = Number(require('./config')().resetMinutes); if (rm > 0) D.resetEvery = rm * 60000; } D.start();
 D.portraitFor = (id) => { if (!/^[a-z0-9_]+$/.test(id)) return null; if (id.startsWith('mob_')) { const f = D.mobPic(id.slice(4)); return f ? `/img/mob/${f}` : null; } for (const ext of ['jpg', 'svg']) if (fs.existsSync(path.join(PUB, 'img', 'npc', `${id}.${ext}`))) return `/img/npc/${id}.${ext}`; return null; }; // generated portraits first, old SVGs as a fallback
 
 // ---- grid area builder API (builder.html). Protected by a key that is printed in the server log. ----
@@ -78,6 +78,11 @@ D.leaderboard = (force) => {
 D.creditOffline = (name, o) => { // add credits or an item to a saved character who is not online (auction proceeds and returned items)
   try { const f = file(name); if (!fs.existsSync(f)) return false; const r = JSON.parse(fs.readFileSync(f, 'utf8')); if (o.gold) r.gold = (r.gold || 0) + o.gold; if (o.bag) { r.bag = r.bag || {}; r.bag[o.bag] = (r.bag[o.bag] || 0) + 1; } fs.writeFileSync(f, JSON.stringify(r)); return true; } catch (e) { D.log('creditOffline', e.message); return false; }
 };
+let areaPics = {}, areaAt = 0; // default room picture per area: public/img/areas/<area id>.jpg
+D.areaPic = (area) => { if (Date.now() - areaAt > 30000) { areaAt = Date.now(); try { areaPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'areas')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { areaPics = {}; } } return areaPics[area === 'cit' ? 'citadel' : area] || ''; };
+let people = {}, peopleAt = 0; // custom pictures for particular players (public/img/people/<name>.jpg, e.g. zeph.jpg); everyone else gets the class + gender portrait
+D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || 'n'}.jpg`; };
+D.fingerRec = (name) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, name.toLowerCase() + '.json'), 'utf8')); } catch (e) { return null; } };
 let mobPics = {}, mobAt = 0; // monster pictures in public/img/mob/<mob id>.jpg are shown in the combat view (rescanned every 30 seconds)
 D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || ''; };
 let picMap = {}, picAt = 0; // which rooms have a picture in public/img/rooms (rescanned every 30 seconds, so you can drop images in while the game runs)
@@ -155,6 +160,8 @@ function ws(req, socket) {
         else if (m.t === 'tr' && c.player) D.setTriggers(c.player, m);
         else if (m.t === 'mute' && c.player) D.setMute(c.player, m);
         else if (m.t === 'title' && c.player) D.setTitle(c.player, String(m.text || ''));
+        else if (m.t === 'email' && c.player) D.setEmail(c.player, String(m.text || ''));
+        else if (m.t === 'emailhide' && c.player) D.hideEmail(c.player, !!m.hide);
         else if (m.t === 'tut' && c.player) D.tutMsg(c.player, m);
       } catch (e) { D.log('command error', e.stack); }
     }

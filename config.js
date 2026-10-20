@@ -41,6 +41,7 @@ module.exports = () => {
       authorName: e.GITHUB_AUTHOR_NAME || g.authorName || 'MULTIVERSE MUD',
       authorEmail: e.GITHUB_AUTHOR_EMAIL || g.authorEmail || 'mud@users.noreply.github.com',
       apiBase: e.GITHUB_API_BASE || g.apiBase || 'https://api.github.com',
+      assignee: e.GITHUB_ASSIGNEE || g.assignee || '',                  // who idea and bug reports are assigned to (default: the repository owner)
     },
   };
 };

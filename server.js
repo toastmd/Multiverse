@@ -1,7 +1,7 @@
 'use strict';
 // MULTIVERSE MUD server. No npm packages needed: HTTP static files + a small WebSocket implementation.
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
-const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'), auction = require('./auction'); D.blackjack = require('./blackjack'); D.deaths = require('./deaths'); const weather = require('./weather'); D.bridge = bridge; D.bounty = bounty; D.auction = auction;
+const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'), auction = require('./auction'); D.blackjack = require('./blackjack'); D.deaths = require('./deaths'); const weather = require('./weather'); const reports = require('./reports'); D.bridge = bridge; D.bounty = bounty; D.auction = auction;
 const PORT = +process.env.PORT || 4000, HOST = process.env.HOST || '0.0.0.0';
 const PUB = path.join(__dirname, 'public'), DATA = path.join(__dirname, 'data', 'players');
 fs.mkdirSync(DATA, { recursive: true });
@@ -184,7 +184,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Last-Modified': lm.toUTCString() }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
-server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); });
+server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;
 function halt(why) {
@@ -192,7 +192,7 @@ function halt(why) {
   try { auction.halt(); } catch (e) { D.log('auction halt', e.message); }
   for (const p of [...D.players.values()]) { if (p.isBot) continue; try { p.msg('*** The game is shutting down. Your character has been saved. Goodbye! ***', 'hurt'); D.savePlayer(p); saved++; } catch (e) { failed++; D.log('save failed for', p.name, e.message); } }
   try { bots.save(); } catch (e) { D.log('bot save failed', e.message); }
-  try { bridge.stop(); github.stop(); bounty.stop(); weather.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
+  try { bridge.stop(); github.stop(); bounty.stop(); weather.stop(); reports.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
   D.log(`saved ${saved} player${saved === 1 ? '' : 's'}${failed ? `, ${failed} FAILED` : ''}; goodbye`);
   setTimeout(() => { for (const p of D.players.values()) try { p.conn && p.conn.close(); } catch (e) { /* closing anyway */ } try { server.close(); } catch (e) { /* closing anyway */ } setTimeout(() => process.exit(failed ? 1 : 0), 300); }, 500);
 }

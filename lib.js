@@ -33,10 +33,10 @@ class Room extends GameObject {
     for (const [id, n] of Object.entries(D.Q.NPCS)) if (n.room === this.path && !this.inv.some((o) => o.npcId === id)) new Npc(id, n).move(this);
   }
   fx(evt) { for (const o of this.inv) if (o.isPlayer) o.send({ t: 'fight', ...evt }); }
-  look(p, full) { // brief mode (`brief on`) shows only the room name and exits when you move; an explicit `look` (full) shows everything
+  look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
     p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text');
     const ex = Object.keys(this.exits).map((d) => DIRS[d]).join(', ');
-    p.msg(p.brief && !full ? `Exits: ${ex || 'none'}.` : `Exits: ${ex || 'none'}. Ground: ${this.terrain}.`, 'exits'); if (p.brief && !full) return;
+    p.msg(`Exits: ${ex || 'none'}. Ground: ${this.terrain}.`, 'exits');
     const things = this.inv.filter((o) => !o.isLiving && !o.isNpc).map((o) => o.short);
     if (things.length) p.msg('You see: ' + things.join(', ') + '.', 'items');
     const nodes = Object.entries(this.nodes).filter(([, n]) => n > 0).map(([r, n]) => `${r} x${n}`);
@@ -218,7 +218,7 @@ class Player extends Living {
   sendSpells() {
     this.send({ t: 'spells', cls: this.klass().name, level: this.level, list: (D.K.SPELLS[this.cls] || []).map(({ k, n, lvl, mp, i, c, d, school }) => ({ k, n, lvl, mp, i, c, d, school })) });
   }
-  msg(m, c = 'text') { if (c === 'miss' && this.gag) return; this.send({ t: 'text', m, c }); } // `gag on` hides misses and fumbles
+  msg(m, c = 'text') { if (c === 'miss' && this.gag) return; (this.recent || (this.recent = [])).push(String(m).slice(0, 200)); if (this.recent.length > 14) this.recent.shift(); this.send({ t: 'text', m, c }); } // recent: the last lines this player saw, attached to bug reports // `gag on` hides misses and fumbles
   gainXp(n) {
     this.xp += n; this.msg(`You gain ${n} experience.`, 'sys');
     while (this.level < 40 && this.xp >= this.xpNeed(this.level)) { this.level++; this.recalc(); D.announce(`${this.name} has gained a level and is now level ${this.level}!`, this.level % 10 === 0 ? 'milestone' : 'level'); this.hp = this.maxhp; this.mp = this.maxmp; this.luck = this.maxLuck(); this.send({ t: 'sound', k: 'levelup' }); this.msg(`*** You reach level ${this.level}! You feel stronger. ***`, 'win');

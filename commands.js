@@ -20,6 +20,17 @@ const scoreData = (p) => { // everything the graphical score window shows
     gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
     skills: Object.entries(p.skills).map(([id, s]) => ({ n: D.T.SKILLS[id].name, i: D.T.SKILLS[id].icon || '', l: s.lvl })), chrome: p.cyber.map((id) => D.W.items[id].name), mats, equip: Object.fromEntries(Object.entries(p.equip).map(([sl, i]) => [sl, i.name])) };
 };
+const questCard = (p, q) => { // one quest as the pop-up shows it
+  const st = D.qState(p, q), g = D.Q.NPCS[q.giver], r = D.rooms.get(g.room), pre = q.after && !p.qdone.has(q.after) ? ((D.qDef(q.after) || {}).name || '') : '';
+  return { id: q.id, name: q.name, lvl: q.min, text: q.text, st, xp: D.qXp(p, q), gold: q.rew.gold || 0, qp: q.rew.qp || 0, items: (q.rew.items || []).map((id) => (D.W.items[id] ? D.W.items[id].name : id)), reqs: q.obj.map((o, i) => ({ t: D.objText(o), cur: st === 'active' || st === 'ready' ? D.qCur(p, q, i) : 0, need: D.qNeed(o) })), giver: g.name, gid: q.giver, where: r ? r.name : '', here: p.env.inv.some((o) => o.npcId === q.giver), after: pre, rep: !!q.repeat };
+};
+D.sendOffer = (p) => { // the quest pop-up: from `talk <npc>` (that NPC's quests) or `board` (every quest open to you). Accept buttons send `accept <id>`; it refreshes after each one.
+  const o = p.offer; if (!o) return; let quests, title, who, hi = '', pic = '';
+  if (o.kind === 'npc') { const n = p.env.inv.find((x) => x.isNpc && x.npcId === o.npc); if (!n) { p.offer = null; return p.send({ t: 'offer', close: 1 }); } quests = D.Q.QUESTS.filter((q) => q.giver === o.npc && D.qState(p, q) !== 'done'); title = n.name; who = n.name; hi = n.def.hi || ''; pic = (D.portraitFor && D.portraitFor(o.npc)) || ''; }
+  else { quests = D.Q.QUESTS.filter((q) => D.qState(p, q) === 'avail'); title = 'Contract board'; who = "Adventurers' Guild contracts"; hi = 'Every contract open to you right now. Talk to the giver to hand a finished one in.'; }
+  if (!quests.length) { p.offer = null; return p.send({ t: 'offer', close: 1 }); }
+  p.send({ t: 'offer', title, who, hi, pic, board: o.kind === 'board', quests: quests.map((q) => questCard(p, q)) });
+};
 const label = (p, it) => it.short + (worn(p, it) ? (it.type === 'weapon' ? ' (wielded)' : ' (worn)') : '');
 const health = (o) => { const r = o.hp / o.maxhp; return r > 0.9 ? 'in perfect health' : r > 0.6 ? 'lightly wounded' : r > 0.3 ? 'badly hurt' : 'near death'; };
 
@@ -108,9 +119,11 @@ const C = {
       p.msg(`${cap(name)}: armor class ${def.ac || 0}, worn on the ${slot}.${need}${bonus}${using ? ' You are wearing it.' : cur ? ` Compared with your ${cur.name} (armor ${cur.def.ac || 0}): ${f1((def.ac || 0) - (cur.def.ac || 0))} armor class.` : ` Nothing is worn on your ${slot}.`}`, 'items');
     }
   },
+  idea(p, a) { require('./reports').submit(p, 'idea', a); },
+  bug(p, a) { require('./reports').submit(p, 'bug', a); },
   brief(p, a) { // brief on | brief off: moving shows only the room name and exits
     const v = a.trim().toLowerCase(); if (v === 'on') p.brief = true; else if (v === 'off') p.brief = false; else if (v) return p.msg('Usage: brief on | brief off');
-    p.msg(v ? (p.brief ? 'Brief mode is ON: moving shows only the room name and exits. Type `look` for the full description.' : 'Brief mode is OFF: you see full room descriptions again.') : `Brief mode is ${p.brief ? 'ON' : 'OFF'}. Type \`brief on\` or \`brief off\`.`, 'sys');
+    p.msg(v ? (p.brief ? 'Brief mode is ON: moving leaves out the long room description (the room name, exits, items, resources and who is here still show). Type `look` for the full description.' : 'Brief mode is OFF: you see full room descriptions again.') : `Brief mode is ${p.brief ? 'ON' : 'OFF'}. Type \`brief on\` or \`brief off\`.`, 'sys');
   },
   email(p, a) { // email <address> | email clear | email hide | email show
     const v = a.trim(); if (!v) return p.msg(p.email ? `Your email is ${p.email}, ${p.emailHidden ? 'hidden from finger' : 'shown to anyone who fingers you'}. \`email clear\` removes it, \`email hide\` or \`email show\` controls finger.` : 'You have no email set. Type `email you@example.com`. Anyone can see it with `finger <you>` unless you type `email hide`.');
@@ -222,12 +235,13 @@ const C = {
       else if (st === 'avail') { p.msg(`Quest available: ${q.name} (level ${q.min}, ${D.qXp(p, q)} XP, ${q.rew.qp} quest point${q.rew.qp > 1 ? 's' : ''})  [accept ${q.id}]`, 'quest'); p.msg(`  "${q.text}"`, 'say'); any = true; }
     }
     if (!any) p.msg('"I have nothing more for you right now."', 'say');
+    p.offer = { kind: 'npc', npc: n.npcId }; D.sendOffer(p); // a pop-up with an Accept button for each quest
   },
   accept(p, a) {
     const key = a.trim().toLowerCase(), q = D.Q.QUESTS.find((x) => p.env.inv.some((o) => o.npcId === x.giver) && (x.id === key || x.id === 'q_' + key || x.name.toLowerCase().startsWith(key)));
     if (!key || !q) return p.msg("Nobody here offers that. Try `talk <person>` to see what they have.");
     const st = D.qState(p, q); if (st !== 'avail') return p.msg(st === 'done' ? 'You have already done that.' : st === 'locked' ? 'You are not ready for that quest yet.' : 'You already accepted it.');
-    p.quests[q.id] = { prog: [] }; p.msg(`Quest accepted: ${q.name}`, 'win'); for (const o of q.obj) p.msg(`  - ${D.objText(o)}`, 'quest'); p.sendQuests();
+    p.quests[q.id] = { prog: [] }; p.msg(`Quest accepted: ${q.name}`, 'win'); for (const o of q.obj) p.msg(`  - ${D.objText(o)}`, 'quest'); p.sendQuests(); D.sendOffer(p);
   },
   quests(p, a) {
     if (/^all|board$/.test(a.trim())) return C.board(p, '');
@@ -238,6 +252,7 @@ const C = {
     p.msg('Open quests for you (quest points in brackets):', 'rname'); let n = 0;
     for (const q of D.Q.QUESTS) if (D.qState(p, q) === 'avail') { n++; const g = D.Q.NPCS[q.giver], r = D.rooms.get(g.room); p.msg(`  ${q.name} (level ${q.min}, ${D.qXp(p, q)} XP, ${q.rew.qp} QP): ${g.name}, ${r ? r.name : g.room}`, 'quest'); }
     if (!n) p.msg('  Nothing right now. Reach a higher level or finish your current quests.', 'sys');
+    p.offer = { kind: 'board' }; D.sendOffer(p); // the same list as a pop-up (Accept works for quests whose giver is in this room)
   },
   abandon(p, a) {
     const q = D.Q.QUESTS.find((x) => p.quests[x.id] && (x.id === a.trim() || x.id === 'q_' + a.trim() || x.name.toLowerCase().startsWith(a.trim().toLowerCase())));
@@ -397,7 +412,7 @@ const C = {
     if (sub === 'invite') {
       const o = who(arg); if (!arg) return p.msg('Invite whom? team invite <player>'); if (!o) return p.msg('No such player online.'); if (o === p) return p.msg('You cannot invite yourself.'); if (o.team) return p.msg(`${o.name} is already on a team.`);
       if (t && t.leader !== p.name) return p.msg('Only the team leader can invite.'); if (t && t.members.length >= 5) return p.msg('Your team is full (5 players).');
-      D.invites = D.invites || new Map(); D.invites.set(o.name, { from: p.name, at: Date.now() }); p.msg(`You invite ${o.name} to your team.`, 'team'); return o.msg(`${p.name} invites you to join their team. Type \`team accept\` (or \`team decline\`) within 90 seconds.`, 'team');
+      D.invites = D.invites || new Map(); D.invites.set(o.name, { from: p.name, at: Date.now() }); p.msg(`You invite ${o.name} to your team.`, 'team'); o.send({ t: 'invite', from: p.name, secs: 90, size: t ? t.members.length : 1 }); return o.msg(`${p.name} invites you to join their team. Click Accept in the pop-up, or type \`team accept\` (or \`team decline\`) within 90 seconds.`, 'team');
     }
     if (sub === 'accept' || sub === 'join') {
       const inv = D.invites && D.invites.get(p.name); if (!inv || Date.now() - inv.at > 90000) return p.msg('You have no pending team invitation.'); D.invites.delete(p.name);
@@ -529,7 +544,7 @@ const C = {
   },
   help(p, a) { // help | help <command> | help <class ability>
     const q = (a || '').trim().toLowerCase().split(/\s+/)[0] || '';
-    if (!q) { p.msg('Move: n s e w u d, speedwalk n,n,e (sw), travel. Look: look [thing], check <item>. Fight: kill <mob> (autokill on), flee, cast. Items: get, drop, wield, wear, remove, quaff/eat, inventory (eq), keep, unkeep, salvage all. Shops: list, buy, sell. Talk: say, tell, gossip, team. Misc: brief, finger, email, deaths, weather, score, commands.', 'sys'); return p.msg('Type `help <command>` for detailed help on any command (for example `help kill` or `help eq`), `help <ability>` for a class ability, and `commands` for the full list. The Player\'s Guide website has everything in detail.', 'win'); }
+    if (!q) { p.msg('Move: n s e w u d, speedwalk n,n,e (sw), travel. Look: look [thing], check <item>. Fight: kill <mob> (autokill on), flee, cast. Items: get, drop, wield, wear, remove, quaff/eat, inventory (eq), keep, unkeep, salvage all. Shops: list, buy, sell. Talk: say, tell, gossip, team. Misc: brief, finger, email, idea, bug, deaths, weather, score, commands.', 'sys'); return p.msg('Type `help <command>` for detailed help on any command (for example `help kill` or `help eq`), `help <ability>` for a class ability, and `commands` for the full list. The Player\'s Guide website has everything in detail.', 'win'); }
     const { H, WIZ } = require('./helpdocs'), DIRW = { n: 1, s: 1, e: 1, w: 1, u: 1, d: 1, north: 1, south: 1, east: 1, west: 1, up: 1, down: 1 }, name = ALIAS[q] || (DIRW[q] ? 'go' : q), doc = H[name];
     if (doc && (!WIZ.has(name) || p.wiz)) {
       const als = Object.entries(ALIAS).filter(([, v]) => v === name).map(([k]) => k); p.msg(`HELP: ${name}${als.length ? `   (also: ${als.join(', ')})` : ''}`, 'rname'); p.msg(`Usage: ${doc[0]}`, 'items'); p.msg(doc[1]);

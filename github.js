@@ -87,4 +87,16 @@ function start() {
   try { if (pending() > 0) touch('Startup sync'); } catch (e) { log('check failed:', e.message); }
 }
 const status = () => ({ configured: on(), repo: cfg && cfg.repo, branch: cfg && cfg.branch, lastSync: st.lastSync, lastCommit: st.lastCommit, lastFiles: st.lastFiles, pending: on() ? pending() : 0, running, lastError });
-module.exports = { start, touch, sync, status, configure, scan, wanted, stop: () => { clearInterval(tick); clearTimeout(deb); } };
+// ---- player reports (see reports.js): a markdown file in ideas/ or bugs/ and an issue assigned to the repository owner ----
+const enabled = () => { if (!cfg) configure(); return on(); };
+async function putFile(p, content, message) { // create one file with the Contents API (ideas/ and bugs/ are not part of the code sync, which never deletes files it did not upload)
+  await head(); const R = `/repos/${cfg.repo}`, j = await gh('PUT', `${R}/contents/${p.split('/').map(encodeURIComponent).join('/')}`, { message, content: Buffer.from(content, 'utf8').toString('base64'), branch: cfg.branch, committer: { name: cfg.authorName, email: cfg.authorEmail } });
+  return (j.content && j.content.html_url) || `https://github.com/${cfg.repo}/blob/${cfg.branch}/${p}`;
+}
+async function createIssue({ title, body, labels }) { // an issue assigned to cfg.assignee (default: the repository owner); an unknown assignee is retried without one
+  const R = `/repos/${cfg.repo}`, who = cfg.assignee || cfg.repo.split('/')[0]; let j;
+  try { j = await gh('POST', `${R}/issues`, { title, body, labels, assignees: [who] }); }
+  catch (e) { if (e.status !== 422) throw e; j = await gh('POST', `${R}/issues`, { title, body, labels }); }
+  return j.html_url;
+}
+module.exports = { enabled, putFile, createIssue, start, touch, sync, status, configure, scan, wanted, stop: () => { clearInterval(tick); clearTimeout(deb); } };

@@ -119,6 +119,11 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 .enh{border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--bg2);min-height:78px} .enh h6{margin:0 0 7px;font-size:12px;letter-spacing:.18em;color:var(--lamp);font-weight:700} #enone{font-size:12px;color:var(--dim)} #enone[hidden]{display:none}
 .enh-i{margin:0 0 7px}.enl{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}.enl small{color:var(--dim);font-size:11px}.enb{height:12px;border:1px solid var(--line);border-radius:6px;background:#0008;overflow:hidden;margin-top:2px}.enb i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#2a8f6a,#19e3ff);transition:width 2s linear,background .6s}.enh-i.bad .enb i{background:linear-gradient(90deg,#8a2a2a,#e5603f)}.enh-i.bad .enl span{color:var(--ember)}
 .sethd{display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--lamp)} #setx{padding:0 9px;font-size:15px;line-height:22px;cursor:pointer}
+#owin,#iwin{position:fixed;z-index:46;background:var(--panel);border:1px solid var(--lamp);border-radius:10px;box-shadow:0 12px 40px #000c;display:flex;flex-direction:column}#owin[hidden],#iwin[hidden]{display:none}#owin{left:calc(50% - 290px);top:64px;width:580px;max-width:96vw;max-height:88vh}#iwin{left:calc(50% - 170px);top:140px;width:340px;max-width:96vw;box-shadow:0 0 0 2px #ff9a3c55,0 12px 40px #000c}
+#obody{overflow:auto;padding:12px 14px}#ibody{padding:14px;text-align:center}#ibody p{margin:0 0 8px}.oh{display:flex;gap:12px;align-items:center;margin:0 0 10px}.oh img{width:76px;aspect-ratio:5/6;object-fit:cover;border-radius:8px;border:2px solid var(--lamp);background:#111}.oh p{margin:4px 0 0;color:var(--dim);font-style:italic}.oall{margin:0 0 10px}
+.oq{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 10px;background:#0006}.oq.st-avail{border-color:#3f9a3a}.oq.st-ready{border-color:var(--lamp)}.oq.st-locked{opacity:.65}.oqh{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.oqh b{font-size:16px}.oqh .lv{font-size:12px;border:1px solid var(--line);border-radius:9px;padding:0 8px;color:var(--sea);white-space:nowrap}
+.oqt{margin:5px 0;color:var(--text);font-style:italic}.oqr{margin:4px 0 6px;padding-left:20px;font-size:14px}.oqr b{color:var(--hp)}.oqw{font-size:13px;color:var(--ember);margin:0 0 8px}.oqa{display:flex;justify-content:flex-end;align-items:center;gap:8px}.onote{font-size:13px;color:var(--dim)}
+.oacc,.odec{padding:6px 18px;font-size:14px;border-radius:5px;cursor:pointer;font-weight:600}.oacc{border:1px solid #3f9a3a;background:#12301a;color:#a8f0a0}.oacc:hover{background:#1b4a28}.oacc:disabled{opacity:.6;cursor:default}.odec{border:1px solid var(--line);background:var(--bg2);color:var(--text);margin-left:8px}.iact{margin-top:10px}html[data-theme=white] .oacc{background:#dff5dc;color:#1b5a1a}
 </style>
 </head>
 <body>
@@ -182,6 +187,8 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
   </div>
 <div id="tutw" hidden><div id="tutd" role="dialog" aria-labelledby="tutt"><div id="tuth"><span id="tutt"></span><span><button id="tutmin" class="tbtn" type="button" title="Shrink or expand">&#9602;</button> <button id="tutx" class="tbtn" type="button" title="Exit the tutorial">Exit tutorial &#10005;</button></span></div><div id="tutb"></div><div id="tutf"><button id="tutback" class="tbtn" type="button">Back</button><span id="tdots"></span><button id="tutnext" class="tbtn pri" type="button">Next</button></div></div></div>
 <div id="bwin" hidden><div id="bbar"><span>Top 10 achievements <small id="bcount"></small></span><span><span id="bref" title="Refresh" role="button">&#8635;</span> <span id="bx" title="Close" role="button" aria-label="Close">&#10005;</span></span></div><div id="bbody"></div><small id="bnote">Score = level x100 + quests completed x250 + tradeskill levels raised x40 + bounty points x40. A remort counts as 40 levels.</small></div>
+<div id="owin" hidden role="dialog" aria-label="Quests"><div class="sbar" id="obar"><span id="otitle">Quests</span><span data-x="1" id="ox" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="obody"></div></div>
+<div id="iwin" hidden role="alertdialog" aria-label="Team invitation"><div class="sbar" id="ibar"><span>Team invitation</span></div><div id="ibody"></div></div>
 <div id="swin" hidden role="dialog" aria-label="Character sheet"><div class="sbar" id="sbar"><span>Character sheet</span><span data-x="1" id="sx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="sbody"></div></div>
 <div id="fwin" hidden role="dialog" aria-label="Finger"><div class="sbar" id="fbar"><span>Finger</span><span data-x="1" id="fx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="fbody"></div></div>
 <div id="wwin" hidden><div id="wbar"><span>Who is online <small id="wcount"></small></span><span id="wx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="wbody"></div></div>
@@ -255,7 +262,7 @@ function dragWin(w,bar,key){ let pos={}; try{ pos=JSON.parse(localStorage.getIte
   bar.onpointermove=e=>{ if(!d) return; w.style.left=Math.max(0,Math.min(innerWidth-100,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-40,e.clientY-d.dy))+'px'; };
   bar.onpointerup=()=>{ if(!d) return; d=null; try{ localStorage.setItem(key,JSON.stringify({x:parseInt(w.style.left),y:parseInt(w.style.top)})); }catch(e){} }; }
 dragWin($('#swin'),$('#sbar'),'sp_swin'); dragWin($('#fwin'),$('#fbar'),'sp_fwin'); $('#sx').onclick=()=>{ $('#swin').hidden=true; }; $('#fx').onclick=()=>{ $('#fwin').hidden=true; };
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') for(const id of ['#swin','#fwin']) if(!$(id).hidden) $(id).hidden=true; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') for(const id of ['#swin','#fwin','#owin','#iwin']) if(!$(id).hidden) $(id).hidden=true; });
 $('#wbody').addEventListener('click',e=>{ const c=e.target.closest('.wc'); if(c&&c.dataset.n) send({t:'cmd',line:'finger '+c.dataset.n}); });
 out.addEventListener('click',e=>{ if(e.target.closest('a')) return; const sel=window.getSelection&&String(window.getSelection()); if(sel) return; $('#in').focus(); }); // clicking the text window puts you on the command line
 const bar=(pct,col,label)=>'<div class="bar"><i style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+col+'"></i><span>'+wesc(label)+'</span></div>';
@@ -276,6 +283,25 @@ function scoreShow(d){ const dice=(n,c)=>{ let h=''; for(let i=0;i<Math.min(n,18
   h+='<div class="sc-card sc-wide"><h5>Chrome and materials</h5><div class="chips">'+(d.chrome.length?d.chrome.map(c=>'<span>\u2699\uFE0F '+wesc(c)+'</span>').join(''):'<span>no chrome</span>')+'</div><div class="chips">'+(mats.length?mats.map(([n,c])=>'<span>'+c+' '+wesc(n)+'</span>').join(''):'<span>no materials</span>')+'</div></div>';
   $('#sbody').innerHTML=h; $('#swin').hidden=false; }
 function fingerShow(d){ $('#fbody').innerHTML='<img alt="" src="'+wesc(d.pic)+'" onerror="this.style.visibility=\'hidden\'">'+(d.pre?'<em class="sc-pre">'+wesc(d.pre)+'</em>':'')+'<h3>'+wesc(d.name)+(d.bot?' (bot)':'')+'</h3>'+(d.title?'<small>'+wesc(d.title)+'</small>':'')+'<small>'+d.ic+' '+(d.rm?'Remort '+d.rm+' \u00b7 ':'')+'Level '+d.lv+' '+wesc(d.cn)+' \u00b7 '+wesc(d.gl)+'</small><small>'+(d.online?'\u25CF online now':d.seen?'last seen '+new Date(d.seen).toISOString().slice(0,16).replace('T',' ')+' UTC':'not online')+'</small><p style="margin:10px 0 0">'+(d.email?'\u2709 <a class="lnk" href="mailto:'+wesc(d.email)+'">'+wesc(d.email)+'</a>':'<small>'+(d.hid?'Email hidden':'No email given')+'</small>')+'</p>'; $('#fwin').hidden=false; }
+dragWin($('#owin'),$('#obar'),'sp_owin'); dragWin($('#iwin'),$('#ibar'),'sp_iwin'); $('#ox').onclick=()=>{ $('#owin').hidden=true; };
+function offerShow(d){ // the quest pop-up (from `talk` or `board`): click Accept instead of typing accept
+  const win=$('#owin'), body=$('#obody'), keep=body.scrollTop; if(d.close){ win.hidden=true; return; } $('#otitle').textContent=d.title;
+  const av=d.quests.filter(q=>q.st==='avail'&&q.here);
+  let h='<div class="oh">'+(d.pic?'<img alt="" src="'+wesc(d.pic)+'" onerror="this.style.display=\'none\'">':'')+'<div><b>'+wesc(d.who)+'</b>'+(d.hi?'<p>\u201c'+wesc(d.hi)+'\u201d</p>':'')+'</div></div>';
+  if(av.length>1) h+='<div class="oall"><button type="button" class="oacc" data-all="'+av.map(q=>wesc(q.id)).join(',')+'">Accept all '+av.length+' quests</button></div>';
+  for(const q of d.quests){ const rew=[nf(q.xp)+' XP']; if(q.gold) rew.push(nf(q.gold)+' credits'); if(q.qp) rew.push(q.qp+' quest point'+(q.qp>1?'s':'')); if(q.items.length) rew.push(q.items.map(wesc).join(', '));
+    const prog=q.st==='active'||q.st==='ready'; let act='';
+    if(q.st==='avail') act=q.here?'<button type="button" class="oacc" data-id="'+wesc(q.id)+'">Accept</button>':'<span class="onote">Talk to '+wesc(q.giver)+' ('+wesc(q.where)+') to accept</span>';
+    else if(q.st==='active') act='<span class="onote">\u2713 Accepted: in progress</span>'; else if(q.st==='ready') act='<button type="button" class="oacc" data-talk="'+wesc(q.gid)+'">Hand in</button>';
+    else act='<span class="onote">'+(q.after?'Finish \u201c'+wesc(q.after)+'\u201d first':'Reach level '+q.lvl)+'</span>';
+    h+='<div class="oq st-'+q.st+'"><div class="oqh"><b>'+wesc(q.name)+(q.rep?' \u21bb':'')+'</b><span class="lv">level '+q.lvl+'</span></div>'+(d.board?'<div class="onote">'+wesc(q.giver)+' \u00b7 '+wesc(q.where)+'</div>':'')+'<p class="oqt">\u201c'+wesc(q.text)+'\u201d</p><ul class="oqr">'+q.reqs.map(r=>'<li>'+wesc(r.t)+(prog?' <b>'+r.cur+'/'+r.need+'</b>':'')+'</li>').join('')+'</ul><div class="oqw">Reward: '+rew.join(' \u00b7 ')+'</div><div class="oqa">'+act+'</div></div>'; }
+  body.innerHTML=h; win.hidden=false; body.scrollTop=keep; }
+$('#obody').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b||b.disabled) return;
+  if(b.dataset.id){ b.disabled=true; b.textContent='Accepting...'; send({t:'cmd',line:'accept '+b.dataset.id}); }
+  else if(b.dataset.all){ b.disabled=true; b.textContent='Accepting...'; b.dataset.all.split(',').forEach((id,i)=>setTimeout(()=>send({t:'cmd',line:'accept '+id}),i*300)); }
+  else if(b.dataset.talk){ send({t:'cmd',line:'talk '+b.dataset.talk}); } });
+let invT=0; function inviteShow(d){ clearTimeout(invT); $('#ibody').innerHTML='<p><b>'+wesc(d.from)+'</b> invites you to join their team'+(d.size>1?' ('+d.size+' members)':'')+'.</p><p class="onote">Teams share the XP and credits from kills in the same room. This invitation runs out in '+d.secs+' seconds.</p><div class="iact"><button type="button" class="oacc" data-c="team accept">Accept</button><button type="button" class="odec" data-c="team decline">Decline</button></div>'; $('#iwin').hidden=false; invT=setTimeout(()=>{ $('#iwin').hidden=true; },d.secs*1000); }
+$('#ibody').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return; send({t:'cmd',line:b.dataset.c}); $('#iwin').hidden=true; clearTimeout(invT); });
 function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; $('#wbody').innerHTML=list.map(p=>'<div class="wc" data-n="'+wesc(p.name)+'" title="Click to finger '+wesc(p.name)+'"><img alt="" loading="lazy" src="'+wesc(p.pic||genSrc(p.cls,p.g))+'" onerror="this.style.visibility=\'hidden\'"><b>'+(p.pre?'<em class="pre">'+wesc(p.pre)+'</em> ':'')+wesc(p.name)+(p.bot?' (bot)':'')+'</b>'+(p.title?'<small class="ttl">'+wesc(p.title)+'</small>':'')+'<small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+' \u00b7 '+wesc(p.gl||p.g)+'</small></div>').join(''); }
 (function(){ const w=$('#wwin'),bar=$('#wbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_wwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
   $('#wx').onclick=()=>{ w.hidden=true; }; let d=null; bar.onpointerdown=e=>{ if(e.target.id==='wx') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
@@ -341,6 +367,8 @@ function handle(m){
   else if(m.t==='who') whoShow(m.list);
   else if(m.t==='score') scoreShow(m.d);
   else if(m.t==='finger') fingerShow(m.d);
+  else if(m.t==='offer') offerShow(m);
+  else if(m.t==='invite') inviteShow(m);
   else if(m.t==='board') boardShow(m);
   else if(m.t==='triggers'){ TR=m.list||[]; trRender(); }
   else if(m.t==='tut') tutMsg(m);

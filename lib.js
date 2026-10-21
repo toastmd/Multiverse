@@ -4,13 +4,13 @@ const { GameObject } = D;
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
-const DIRS = { n: 'north', s: 'south', e: 'east', w: 'west', u: 'up', d: 'down' };
+const DIRS = { n: 'north', s: 'south', e: 'east', w: 'west', u: 'up', d: 'down', ne: 'northeast', nw: 'northwest', se: 'southeast', sw: 'southwest', in: 'in', out: 'out' }; // `in` and `out` are for doorways; `out` also leaves a dead-end room by its only exit
 const NOBODY = { id: 0, name: 'something', enemy: null, msg() {}, the() { return 'something'; }, info() { return { id: 0, name: '?', hp: 0, max: 1, lvl: 1, k: 'p', icon: '' }; } };
 const art = (n) => (/^[aeiou]/i.test(n) ? 'an ' : 'a ') + n;
 // Dice pools: roll n six-sided dice; a 5 or 6 is a "hit". More than half ones with no hits is a fumble.
 const roll = (n) => { n = Math.max(1, Math.round(n)); let h = 0, ones = 0; for (let i = 0; i < n; i++) { const d = rnd(1, 6); if (d >= 5) h++; else if (d === 1) ones++; } return { h, f: h === 0 && ones * 2 > n }; };
 const KP_DEFAULT = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
-D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
+D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
 const need = (lvl) => lvl * lvl * 50; // xp required to leave this level
 const VERBS = [[0.05, 'scratch', 'scratches', ' lightly'], [0.15, 'hit', 'hits', ''], [0.3, 'hit', 'hits', ' hard'],
   [0.5, 'smash', 'smashes', ''], [9, 'devastate', 'devastates', '']];
@@ -247,7 +247,7 @@ class Player extends Living {
   }
   toRec() {
     return { autokill: this.autokill, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, aliases: this.aliases, kpOn: this.kpOn, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
-      inv: this.inv.map((i) => i.itemId), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId]) };
+      inv: this.inv.map((i) => i.itemId), ups: this.inv.map((i) => i.up || 0), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId, this.inv.indexOf(i)]) };
   }
   load(rec) {
     Object.assign(this, { title: D.cleanTitle(rec.title), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, kpOn: !!rec.kpOn, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
@@ -258,11 +258,14 @@ class Player extends Living {
     this.tools = {}; for (const [id, t] of Object.entries(rec.tools || {})) if (D.T && D.T.TOOLS[id]) this.tools[id] = { uses: Math.max(0, t.uses | 0) }; D.ensureKit(this);
     for (const id of rec.inv || []) if (D.W.items[id]) D.cloneItem(id).move(this);
     for (const [id, n] of Object.entries(rec.keep || {})) { let c = n | 0; for (const it of this.inv) if (c > 0 && it.itemId === id) { it.kept = true; c--; } } // items marked with `keep`
-    for (const [slot, id] of rec.equip || []) { const it = this.inv.find((i) => i.itemId === id && !Object.values(this.equip).includes(i)); if (it) this.equip[slot] = it; }
+    (rec.ups || []).forEach((u, i) => { if (u && this.inv[i]) { this.inv[i].up = Math.min(10, u | 0); D.applyUp(this.inv[i]); } }); // weapon upgrades
+    for (const [slot, id, idx] of rec.equip || []) { const used = Object.values(this.equip), it = (this.inv[idx] && this.inv[idx].itemId === id && !used.includes(this.inv[idx]) ? this.inv[idx] : null) || this.inv.find((i) => i.itemId === id && !used.includes(i)); if (it) this.equip[slot] = it; }
   }
 }
 
 // ---- factories, map payloads, world loader ----
+D.upDmg = (it, up) => { const l = it.def.lvl || 1; return [it.def.dmg[0] + up * Math.max(1, Math.round(l * 0.2)), it.def.dmg[1] + up * Math.max(1, Math.round(l * 0.32))]; }; // each upgrade adds damage in proportion to the weapon's level
+D.applyUp = (it) => { const up = it.up || 0; it.dmg = up ? D.upDmg(it, up) : it.def.dmg; it.name = up ? `${it.def.name} +${up}` : it.def.name; it.short = (it.def.short || art(it.def.name)) + (up ? ` +${up}` : ''); };
 D.cloneItem = (id) => new Item(id, D.W.items[id]);
 D.cloneMob = (id) => new Monster(id, D.W.mobs[id]);
 D.loadWorld = () => { // also used by the wizard `update` command to hot-reload world.js and classes.js

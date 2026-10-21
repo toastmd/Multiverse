@@ -9,22 +9,22 @@ const SPECS = [
   { name: 'Rook', cls: 'barbarian', gender: 'male', lines: ['Smash first, ask questions never.', 'My chrome is heavier than your savings.', 'Zeph, you owe me a stim.', 'Who is buying drinks at the Silver Spur Saloon?', 'The Brimstone Express nearly ran me over. Nearly.', 'Nothing beats a good hammer and a bad idea.', 'The Gulch ghosts are all hat and no aim.', 'Fighting dragons is easy. Paying for repairs is hard.', 'I would hug someone but my arms are made of steel.', 'My armor is mostly dents at this point.', 'Need a tank? I am a tank. A very loud tank.', 'Anyone know why the pixies keep stealing my left boot?', 'Boss kills split nicely when you team up. Try it.', 'Whiskey for courage, sarsaparilla for sense.', 'Last night I punched a mutated crewman. He apologized. Weird.', 'Does anyone else hear a train in the Ember Wastes?', 'Do not drink from the Dreaming Pool. Long story.', 'Hey Zeph, race you to the next boss!', 'If you see a siren, cover your ears. Or your wallet.', 'The leaderboard is mine by next week. Watch me.', 'If it bleeds, I can hit it. If it does not bleed, I will hit it harder.', 'A good fight and a bad pun, that is all I need.'] },
 ];
 const NAMES = SPECS.map((s) => s.name);
-const HUNT = [[1, 'forest/path'], [4, 'forest/clearing'], [7, 'forest/deep'], [9, 'crypt/hall'], [13, 'crypt/entry'], [15, 'marsh/edge'], [18, 'marsh/reeds'], [20, 'road/mile1'], [22, 'mines/shaft'], [25, 'dunes/sands'], [28, 'dunes/ruins'],
-  [30, 'frost/pass'], [34, 'frost/cave'], [37, 'ember/ash'], [39, 'ember/temple'], [40, 'cit/gate']]; // minimum level for each hunting ground (kept conservative so the bots rarely die)
+const HOME = 'grounds'; // the bots live and fight only in the Proving Grounds, so the rest of the world is left to the players
+const HUNT = [[1, 'grounds/f1'], [4, 'grounds/f2'], [8, 'grounds/f3'], [11, 'grounds/f4'], [14, 'grounds/f5'], [18, 'grounds/f6'], [24, 'grounds/f7'], [28, 'grounds/f8'], [33, 'grounds/f9'], [37, 'grounds/f10']]; // minimum level for each training pen (kept conservative so the bots rarely die)
 const TIERS = ['iron', 'steel', 'mithril', 'runed', 'adamant', 'dragon'], PIECES = [['sword', 'weapon'], ['mail', 'body'], ['helm', 'head'], ['shield', 'shield'], ['boots', 'feet']];
 const SHOP_MIN = { dunes: 24, frost: 32, road: 24 }; // minimum level before a bot will travel to shops in those areas
 const bots = []; let saver = null, ticker = null;
 
 let walker = null; // the bot currently being thought about (route planning avoids boss rooms the bot cannot handle)
 const bossBlocks = (id) => walker && D.rooms.get(id).inv.some((o) => o.def && o.def.boss && o.level + 10 > walker.level);
-function nextStep(from, to) { // breadth-first search; returns the first direction to take
+function nextStep(from, to) { // breadth-first search (inside the Proving Grounds only); returns the first direction to take
   if (from === to) return null; const first = { [from]: null }, queue = [from];
-  while (queue.length) { const c = queue.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { if (n in first || !D.rooms.get(n) || (n !== to && bossBlocks(n))) continue; first[n] = first[c] || d; if (n === to) return first[n]; queue.push(n); } }
+  while (queue.length) { const c = queue.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { if (n in first || !D.rooms.get(n) || D.rooms.get(n).area !== HOME || (n !== to && bossBlocks(n))) continue; first[n] = first[c] || d; if (n === to) return first[n]; queue.push(n); } }
   return null;
 }
 const nearest = (from, test) => { // closest room (by exits) that satisfies test
   const seen = new Set([from]), queue = [from];
-  while (queue.length) { const c = queue.shift(), r = D.rooms.get(c); if (test(r)) return c; for (const n of Object.values(r.exits)) if (!seen.has(n) && D.rooms.get(n)) { seen.add(n); queue.push(n); } }
+  while (queue.length) { const c = queue.shift(), r = D.rooms.get(c); if (test(r)) return c; for (const n of Object.values(r.exits)) if (!seen.has(n) && D.rooms.get(n) && D.rooms.get(n).area === HOME) { seen.add(n); queue.push(n); } }
   return null;
 };
 const value = (def) => (def.dmg ? (def.dmg[0] + def.dmg[1]) / 2 : def.ac || 0);
@@ -34,7 +34,7 @@ function spawn(spec, saved) {
   if (saved) p.load(saved); else { const k = D.cloneItem(p.klass().kit); k.move(p); p.equip.weapon = k; D.cloneItem('potion').move(p); D.cloneItem('potion').move(p); }
   p.recalc(); if (!saved) { p.hp = p.maxhp; p.mp = p.maxmp; }
   p.bagMode = 'overflow'; // bots wear what they find, so loot stays in the pack until it is full
-  D.players.set(spec.name, p); const room = D.rooms.get((saved && saved.room) || D.W.start) || D.rooms.get(D.W.start);
+  D.players.set(spec.name, p); const room = D.rooms.get('grounds/yard') || D.rooms.get(D.W.start);
   p.enter(room, true); room.tell(`${p.name} enters the world.`, p, 'sys');
   const bot = { p, spec, tick: 0, nextChat: Date.now() + 60000 + Math.random() * 240000, plan: null, avoid: {}, seenDeaths: 0 }; bots.push(bot); return bot;
 }
@@ -59,8 +59,14 @@ function shopPlan(p, bot) { // find a potion restock or the best affordable upgr
   return null;
 }
 
+function sendHome(bot) { // bots never leave the Proving Grounds: after a death (which respawns them in town) or a restart they walk straight back
+  const p = bot.p, room = D.rooms.get('grounds/yard'); if (!room) return; if (p.env) p.env.tell(`${p.name} heads back to the Proving Grounds.`, p, 'sys'); p.enemy = null; p.enter(room, true); room.tell(`${p.name} arrives.`, p, 'sys');
+  if (!p.equip.body) { for (const id of ['cap', 'jerkin', 'shield', 'boots']) if (D.W.items[id]) D.cloneItem(id).move(p); autoEquip(p); }
+}
 function think(bot) {
   const p = bot.p, now = Date.now(); if (!p.env) return; bot.tick++; walker = p;
+  if (D.rooms.get('grounds/yard') && p.env.area !== HOME) return sendHome(bot);
+  if (!p.enemy && Math.random() < 0.4) return; // bots take their time: they only act on about 60% of their turns when not fighting
   const foes = p.env.inv.filter((o) => o.isLiving && !o.isPlayer);
   if (p.enemy) { // ---- combat ----
     if (p.hp < p.maxhp * 0.5) {
@@ -169,7 +175,7 @@ function save() {
 function start() {
   let saved = {}; try { saved = JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch (e) { /* first run */ }
   for (const s of SPECS) spawn(s, saved[s.name]);
-  D.onGossip = onGossip; ticker = setInterval(() => { for (const b of bots) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 5000);
+  D.onGossip = onGossip; ticker = setInterval(() => { for (const b of bots) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 9000);
   saver = setInterval(save, 60000); D.log(`bots online: ${NAMES.join(', ')}`);
 }
 function stop() { D.onGossip = null; clearInterval(ticker); clearInterval(saver); for (const b of bots) { D.players.delete(b.spec.name); b.p.destroy(); } bots.length = 0; }

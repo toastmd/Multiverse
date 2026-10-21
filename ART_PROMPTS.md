@@ -1,6 +1,6 @@
 # MULTIVERSE MUD art prompts
 
-441 images. Generate each in any text-to-image tool (Midjourney, DALL-E, Stable Diffusion, Flux...), save it as `<key>.png` or `.jpg` (for example `player-magician-f.jpg`), put all files in one folder, then run:
+443 images. Generate each in any text-to-image tool (Midjourney, DALL-E, Stable Diffusion, Flux...), save it as `<key>.png` or `.jpg` (for example `player-magician-f.jpg`), put all files in one folder, then run:
 
     python3 tools/import_art.py path/to/folder
 
@@ -85,6 +85,8 @@ Tips: use the same style words and one seed or style reference per group (portra
 - `npc-ulf`: Head-and-shoulders portrait of a frost-bitten mountain hermit, male person with white hair, wearing a hooded cloak, full beard, wraparound visor, cyan accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
 - `npc-sael`: Head-and-shoulders portrait of a ember-wastes fire-caller, female person with red hair, brass goggles, ember-like glowing hair, orange accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
 - `npc-voss`: Head-and-shoulders portrait of a battle-scarred citadel soldier, female person with brown hair, work helmet, facial scar, cyan accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
+- `npc-quill`: Head-and-shoulders portrait of a sunburned paleontologist in a hat with a field notebook, female person with brown hair, wide-brim hat, round glasses, green accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
+- `npc-aldric`: Head-and-shoulders portrait of a gaunt hunter-priest in a black coat with silver stakes, male person with black hair, stubble, facial scar, gold accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
 - `npc-dale`: Head-and-shoulders portrait of a tired gas station attendant, male person with brown hair, stubble, orange accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
 - `npc-wanda`: Head-and-shoulders portrait of a sharp trailer park manager with glasses on a chain, female person with auburn hair, round glasses, pink accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed
 - `npc-gary`: Head-and-shoulders portrait of a overzealous mall security guard, male person with black hair, stubble, cyan accent light, gritty multiverse setting, photorealistic, real photograph, natural skin texture, 85mm lens, shallow depth of field, cinematic lighting, highly detailed

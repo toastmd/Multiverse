@@ -110,7 +110,7 @@ const res = { 'forest/path': { herb: 3 }, 'forest/clearing': { herb: 4 }, 'fores
 for (const [p, r] of Object.entries(res)) rooms[p].res = r;
 rooms['town/smithy'].forge = true; rooms['town/smithy'].long += ' The forge is still hot enough to work metal.';
 
-delete require.cache[require.resolve('./areas')]; require('./areas')(items, mobs, rooms); delete require.cache[require.resolve('./newareas')]; require('./newareas')(items, mobs, rooms); delete require.cache[require.resolve('./modern')]; require('./modern')(items, mobs, rooms); delete require.cache[require.resolve('./legends')]; require('./legends')(items, mobs); delete require.cache[require.resolve('./retheme')]; require('./retheme')(items, mobs, rooms); // // levels 8-40, shops, temple
+delete require.cache[require.resolve('./areas')]; require('./areas')(items, mobs, rooms); delete require.cache[require.resolve('./newareas')]; require('./newareas')(items, mobs, rooms); delete require.cache[require.resolve('./modern')]; require('./modern')(items, mobs, rooms); delete require.cache[require.resolve('./newworld')]; const newworld = require('./newworld')(items, mobs, rooms); delete require.cache[require.resolve('./legends')]; require('./legends')(items, mobs); delete require.cache[require.resolve('./retheme')]; require('./retheme')(items, mobs, rooms); newworld.post(); // // levels 8-40, shops, temple
 
 delete require.cache[require.resolve('./custom')]; require('./custom')(rooms, mobs, items); // areas made with the grid builder
 

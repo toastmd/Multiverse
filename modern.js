@@ -2,7 +2,7 @@
 // The Modern district: reached by stepping up through the arch in Ashfall Square. Multi-Mart (a big-box store with departments), Westfield Shopping Center,
 // Sunset Acres Trailer Park, fast food and two gas stations with restrooms. Levels 10-16. Modern gear, soda, hamburgers and hot dogs.
 module.exports = (items, mobs, rooms) => {
-  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u' }, link = (a, d, b) => { rooms[a].exits[d] = b; rooms[b].exits[OPP[d]] = a; };
+  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u', ne: 'sw', sw: 'ne', nw: 'se', se: 'nw', in: 'out', out: 'in' }, link = (a, d, b) => { rooms[a].exits[d] = b; rooms[b].exits[OPP[d]] = a; };
   const item = (id, name, type, o) => { items[id] = { name, ids: [id, ...name.toLowerCase().replace(/[^a-z ]/g, '').split(' ').filter((w) => w.length > 2)], type, long: `${name}.`, ...o }; };
   const gear = (id, name, slot, lv, value, long) => { if (slot === 'weapon') item(id, name, 'weapon', { dmg: [Math.round(lv * 2.4), Math.round(lv * 4)], lvl: lv, value, long }); else item(id, name, 'armor', { slot, ac: Math.max(2, Math.round(lv * { body: 0.55, head: 0.3, shield: 0.35, feet: 0.25 }[slot])), lvl: lv, value, long }); };
   const food = (id, name, o, long) => item(id, name, 'potion', { ...o, long });

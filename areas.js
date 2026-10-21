@@ -2,7 +2,7 @@
 // Content for levels 8-40: gear tiers, potions, shops, the Temple of the Dawn, and eight new areas.
 // Called from world.js (hot-reloadable with `update`). Monster stats are generated from level.
 module.exports = (items, mobs, rooms) => {
-  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u' };
+  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u', ne: 'sw', sw: 'ne', nw: 'se', se: 'nw', in: 'out', out: 'in' };
   const R = (id, area, x, y, z, name, long, mob = [], extra = {}) => { rooms[id] = { name, area, x, y, z, long, exits: {}, mobs: mob, ...extra }; };
   const L = (a, d, b) => { rooms[a].exits[d] = b; rooms[b].exits[OPP[d]] = a; };
 

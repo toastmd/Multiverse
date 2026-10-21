@@ -756,6 +756,84 @@
   "area": "Frostpeak Station (Sci-fi)"
  },
  {
+  "id": "grounds/f1",
+  "key": "grounds-f1",
+  "name": "Rat Run",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f10",
+  "key": "grounds-f10",
+  "name": "Void Ring",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f2",
+  "key": "grounds-f2",
+  "name": "Bone Yard",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f3",
+  "key": "grounds-f3",
+  "name": "Reed Pit",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f4",
+  "key": "grounds-f4",
+  "name": "Spider Hollow",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f5",
+  "key": "grounds-f5",
+  "name": "Golem Court",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f6",
+  "key": "grounds-f6",
+  "name": "Sand Ring",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f7",
+  "key": "grounds-f7",
+  "name": "Frozen Pen",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f8",
+  "key": "grounds-f8",
+  "name": "Ember Pen",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/f9",
+  "key": "grounds-f9",
+  "name": "Cinder Court",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/gate",
+  "key": "grounds-gate",
+  "name": "Proving Grounds Gate",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/mid",
+  "key": "grounds-mid",
+  "name": "The Turn",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
+  "id": "grounds/yard",
+  "key": "grounds-yard",
+  "name": "Training Yard",
+  "area": "The Proving Grounds (Bots)"
+ },
+ {
   "id": "gulch/a",
   "key": "gulch-a",
   "name": "Gulch Gate",
@@ -844,6 +922,156 @@
   "key": "gulch-o",
   "name": "The Vault",
   "area": "Tombstone Gulch (Old West)"
+ },
+ {
+  "id": "hollow/ball",
+  "key": "hollow-ball",
+  "name": "Crimson Ballroom",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/bog",
+  "key": "hollow-bog",
+  "name": "Witches' Bog",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/bridge",
+  "key": "hollow-bridge",
+  "name": "Bone Bridge",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/cauldron",
+  "key": "hollow-cauldron",
+  "name": "The Great Cauldron",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/cellar",
+  "key": "hollow-cellar",
+  "name": "Wine Cellar",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/chains",
+  "key": "hollow-chains",
+  "name": "Hall of Chains",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/chapel",
+  "key": "hollow-chapel",
+  "name": "Hunters' Chapel",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/circle",
+  "key": "hollow-circle",
+  "name": "Coven Circle",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/clear",
+  "key": "hollow-clear",
+  "name": "Silver Clearing",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/cross",
+  "key": "hollow-cross",
+  "name": "Cursed Crossroads",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/crypt",
+  "key": "hollow-crypt",
+  "name": "The Count's Crypt",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/den",
+  "key": "hollow-den",
+  "name": "The Alpha's Den",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/fire",
+  "key": "hollow-fire",
+  "name": "Court of Fire",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/gateway",
+  "key": "hollow-gateway",
+  "name": "Brimstone Gate",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/glade",
+  "key": "hollow-glade",
+  "name": "Moonlit Glade",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/hall",
+  "key": "hollow-hall",
+  "name": "Blood Hall",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/hunter",
+  "key": "hollow-hunter",
+  "name": "Hunters' Ruins",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/hut",
+  "key": "hollow-hut",
+  "name": "Hag's Cottage",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/lib",
+  "key": "hollow-lib",
+  "name": "Forbidden Library",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/manorgate",
+  "key": "hollow-manorgate",
+  "name": "Manor Gate",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/pit",
+  "key": "hollow-pit",
+  "name": "The Hellmouth",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/road",
+  "key": "hollow-road",
+  "name": "Moonless Road",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/square",
+  "key": "hollow-square",
+  "name": "Hollowmoor Square",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/tower",
+  "key": "hollow-tower",
+  "name": "Bat Tower",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "hollow/woods1",
+  "key": "hollow-woods1",
+  "name": "Howling Woods",
+  "area": "Nightfall Hollow (Fantasy)"
  },
  {
   "id": "marsh/den",
@@ -1318,6 +1546,126 @@
   "key": "modern-tpr3",
   "name": "Sunset Acres: East Row",
   "area": "Modern District (Modern)"
+ },
+ {
+  "id": "prime/amber",
+  "key": "prime-amber",
+  "name": "Amber Hollow",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/arena",
+  "key": "prime-arena",
+  "name": "The Tyrant's Arena",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/cyc",
+  "key": "prime-cyc",
+  "name": "Cycad Grove",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/fern",
+  "key": "prime-fern",
+  "name": "Fern Forest",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/gorge",
+  "key": "prime-gorge",
+  "name": "Allosaurus Gorge",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/herd",
+  "key": "prime-herd",
+  "name": "Triceratops Plains",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/lagoon",
+  "key": "prime-lagoon",
+  "name": "Dino Lagoon",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/landing",
+  "key": "prime-landing",
+  "name": "Portal Landing",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/mud",
+  "key": "prime-mud",
+  "name": "Mudflats",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/nest",
+  "key": "prime-nest",
+  "name": "Raptor Nest",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/pass",
+  "key": "prime-pass",
+  "name": "Bone Pass",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/ridge1",
+  "key": "prime-ridge1",
+  "name": "Pteranodon Ridge",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/ridge2",
+  "key": "prime-ridge2",
+  "name": "Skyward Cliffs",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/ridge3",
+  "key": "prime-ridge3",
+  "name": "The Eyrie",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/river",
+  "key": "prime-river",
+  "name": "Roaring River",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/shallows",
+  "key": "prime-shallows",
+  "name": "Spinosaur Shallows",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/swamp",
+  "key": "prime-swamp",
+  "name": "Fern Swamp",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/tar",
+  "key": "prime-tar",
+  "name": "Tar Pits",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/trail",
+  "key": "prime-trail",
+  "name": "Primeval Trail",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prime/valley",
+  "key": "prime-valley",
+  "name": "Stegosaur Valley",
+  "area": "The Primeval Rift (Prehistoric)"
  },
  {
   "id": "rail/a",

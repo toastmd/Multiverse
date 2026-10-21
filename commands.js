@@ -2,12 +2,13 @@
 const D = require('./lib'); require('./magic'); require('./quest'); require('./trade');
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
-const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', sw: 'speedwalk', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
 const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (def.legend ? 1 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
-const sellPrice = (p, i) => priceOf(p, i.def);
+const UPMAX = 10, upCost = (def, up) => Math.round((1000 + 300 * (def.lvl || 1)) * 1.75 ** up), upSpent = (i) => { let n = 0; for (let k = 0; k < (i.up || 0); k++) n += upCost(i.def, k); return n; }; // weapon upgrades: +1 to +10, each costs 1.75x the last
+const sellPrice = (p, i) => priceOf(p, i.def) + Math.round(0.35 * upSpent(i)); // a shop pays back 35% of what you spent on upgrades
 const BOUND = /^(bag|holding|bag of holding|tools?|fishing pole|pole|mining pick|herbalist|sickle|hammer|alembic|skillet|crowbar)$/i;
 const bagFind = (p, w) => { w = w.toLowerCase(); return Object.keys(p.bag).find((id) => { const d = D.W.items[id], n = d.name.toLowerCase(); return id === w || n === w || n.split(' ').includes(w) || (d.ids || []).includes(w); }); };
 const worn = (p, it) => Object.values(p.equip).includes(it);
@@ -34,8 +35,23 @@ D.sendOffer = (p) => { // the quest pop-up: from `talk <npc>` (that NPC's quests
 const label = (p, it) => it.short + (worn(p, it) ? (it.type === 'weapon' ? ' (wielded)' : ' (worn)') : '');
 const health = (o) => { const r = o.hp / o.maxhp; return r > 0.9 ? 'in perfect health' : r > 0.6 ? 'lightly wounded' : r > 0.3 ? 'badly hurt' : 'near death'; };
 
+function walkSteps(p, steps, label) { // walks single steps one at a time; typing another command, a fight or a blocked exit stops it (speedwalk and the map's click-to-run use this)
+  if (p.enemy) return p.msg('You cannot run while fighting.', 'hurt'); const tok = {}; let i = 0; p.swTok = tok;
+  p.msg(`${label} (${steps.length} step${steps.length > 1 ? 's' : ''}). Type speedwalk stop to cancel.`, 'sys');
+  const step = () => {
+    if (p.swTok !== tok || p.gone) return; if (p.enemy) { p.swTok = null; return p.msg(`Interrupted by a fight after ${i} step${i === 1 ? '' : 's'}.`, 'hurt'); }
+    if (i >= steps.length) { p.swTok = null; return p.msg('You arrive.', 'win'); }
+    const before = p.env; p.swRunning = true; try { D.command(p, steps[i]); } finally { p.swRunning = false; }
+    if (p.env === before) { p.swTok = null; return p.msg(`Stopped at step ${i + 1} (${steps[i]}): you could not go that way.`, 'hurt'); } i++; D.callOut(step, 250);
+  };
+  step();
+}
+D.pathDirs = (from, to) => { // the list of single directions from one room to another (locked doors and portals are not used), or null
+  const prev = { [from]: null }, q = [from]; while (q.length) { const c = q.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { const r = D.rooms.get(n); if (!r || n in prev || (r.def.locked && !r.unlocked)) continue; prev[n] = [c, d]; if (n === to) { const out = []; let k = n; while (prev[k]) { out.unshift(prev[k][1]); k = prev[k][0]; } return out; } q.push(n); } } return null;
+};
 function go(p, d) {
-  const to = p.env.exits[d]; if (!to) return p.msg('You cannot go that way.');
+  let to = p.env.exits[d]; if (!to && d === 'out') { const ex = Object.entries(p.env.exits); if (ex.length === 1) [d, to] = ex[0]; } // `out` leaves a room that has only one way out
+  if (!to) return p.msg(d === 'out' ? 'There is no single way out of here: pick a direction.' : 'You cannot go that way.');
   if (p.enemy) return p.msg('You are fighting! Try to flee.', 'hurt');
   if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
@@ -80,7 +96,7 @@ const C = {
   inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
     const SL = [['weapon', 'Weapon (wielded)'], ['head', 'Head'], ['body', 'Body'], ['shield', 'Shield'], ['feet', 'Feet']];
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
-    for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.def.dmg[0]}-${it.def.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
+    for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.dmg[0]}-${it.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
     const pack = p.inv.filter((i) => !worn(p, i)), groups = new Map(); for (const it of pack) { const key = it.itemId + (it.kept ? '*' : ''); const g = groups.get(key) || { it, n: 0 }; g.n++; groups.set(key, g); }
     p.msg(`Pack (${pack.length} carried, ${p.inv.length}/${p.cap()} with what you wear):`, 'rname'); p.msg(groups.size ? '  ' + [...groups.values()].map((g) => `${g.it.short}${g.n > 1 ? ' x' + g.n : ''}${g.it.kept ? ' [kept]' : ''}`).join(', ') + '.' : '  nothing.', 'items');
@@ -112,8 +128,8 @@ const C = {
     if (def.type !== 'weapon' && def.type !== 'armor') return p.msg("This isn't a piece of equipment.");
     const lvl = def.lvl || 1, need = lvl > p.level ? ` You need level ${lvl} to use it (you are level ${p.level}).` : ` Requires level ${lvl}.`, using = inst && Object.values(p.equip).includes(inst), bonus = def.bonus ? ` Bonus: ${[def.bonus.pool ? `+${def.bonus.pool} attack dice` : '', def.bonus.dmg ? `+${def.bonus.dmg} damage` : ''].filter(Boolean).join(', ')}.` : '', f1 = (n) => (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/, '');
     if (def.type === 'weapon') {
-      const avg = (def.dmg[0] + def.dmg[1]) / 2, cur = p.equip.weapon, ca = cur && cur.def ? (cur.def.dmg[0] + cur.def.dmg[1]) / 2 : 0;
-      p.msg(`${cap(name)}: weapon class ${def.dmg[0]}-${def.dmg[1]} damage (average ${avg}).${need}${bonus}${using ? ' You are wielding it.' : cur ? ` Compared with your ${cur.name} (${cur.def.dmg[0]}-${cur.def.dmg[1]}): ${f1(avg - ca)} average damage.` : ' You are wielding nothing.'}`, 'items');
+      const dm = (inst && inst.dmg) || def.dmg, avg = (dm[0] + dm[1]) / 2, cur = p.equip.weapon, ca = cur ? (cur.dmg[0] + cur.dmg[1]) / 2 : 0, up = inst && inst.up ? ` Upgraded +${inst.up} of ${UPMAX}.` : '';
+      p.msg(`${cap(name)}: weapon class ${dm[0]}-${dm[1]} damage (average ${avg}).${up}${need}${bonus}${using ? ' You are wielding it.' : cur ? ` Compared with your ${cur.name} (${cur.dmg[0]}-${cur.dmg[1]}): ${f1(avg - ca)} average damage.` : ' You are wielding nothing.'}`, 'items');
     } else {
       const slot = def.slot || 'body', cur = p.equip[slot];
       p.msg(`${cap(name)}: armor class ${def.ac || 0}, worn on the ${slot}.${need}${bonus}${using ? ' You are wearing it.' : cur ? ` Compared with your ${cur.name} (armor ${cur.def.ac || 0}): ${f1((def.ac || 0) - (cur.def.ac || 0))} armor class.` : ` Nothing is worn on your ${slot}.`}`, 'items');
@@ -143,14 +159,39 @@ const C = {
     let it;
     if (!a.trim()) { // eat / quaff / the HEAL button with no item: the healing item that fits best (pack first, then the bag)
       const need = p.maxhp - p.hp; if (need <= 0) return p.msg('You are already at full health.');
-      const cands = [...p.inv.filter((i) => i.type === 'potion' && (i.def.heal || 0) > 0).map((i) => ({ h: i.def.heal, it: i })), ...Object.keys(p.bag).filter((id) => D.W.items[id] && D.W.items[id].type === 'potion' && (D.W.items[id].heal || 0) > 0 && p.bag[id] > 0).map((id) => ({ h: D.W.items[id].heal, id }))];
-      if (!cands.length) return p.msg('You have nothing to eat or drink that heals.');
+      const cands = [...p.inv.filter((i) => i.type === 'potion' && !i.def.smoke && (i.def.heal || 0) > 0).map((i) => ({ h: i.def.heal, it: i })), ...Object.keys(p.bag).filter((id) => D.W.items[id] && D.W.items[id].type === 'potion' && !D.W.items[id].smoke && (D.W.items[id].heal || 0) > 0 && p.bag[id] > 0).map((id) => ({ h: D.W.items[id].heal, id }))];
+      if (!cands.length) return p.msg(p.inv.some((i) => i.def.smoke) ? 'You have nothing to eat or drink that heals, but you do have cigarillos: type `smoke`.' : 'You have nothing to eat or drink that heals.');
       const fit = cands.filter((c) => c.h >= need).sort((x, y) => x.h - y.h)[0] || cands.sort((x, y) => y.h - x.h)[0];
       if (fit.it) it = fit.it; else { p.bag[fit.id]--; if (p.bag[fit.id] <= 0) delete p.bag[fit.id]; it = D.cloneItem(fit.id); }
-    } else { it = find(p.inv.filter((i) => i.type === 'potion'), a); if (!it) return p.msg('You have nothing to drink.'); }
+    } else { it = find(p.inv.filter((i) => i.type === 'potion'), a); if (!it) return p.msg('You have nothing to drink.'); if (it.def.smoke) return C.smoke(p, a); }
     const h = Math.min(it.def.heal || 0, p.maxhp - p.hp), m = Math.min(it.def.mana || 0, p.maxmp - p.mp); p.hp += h; p.mp += m;
     p.msg(`You quaff ${it.short}${h ? ` and recover ${h} hit points` : ''}${m ? ` and ${m} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}` : ''}.`, 'win'); it.destroy();
     if (it.def.buff) { p.addFx({ k: 'buff', n: it.name, ...it.def.buff, src: p }); p.msg(`The ${it.name} gives you a boost for a while.`, 'win'); }
+  },
+  smoke(p, a) { // smoke [item]: light a cigarillo (dropped by Old West bosses) to heal
+    const q = a.trim().toLowerCase(), pool = p.inv.filter((i) => i.def.smoke); let it = q ? find(pool, q) : pool[0];
+    if (!it) { const id = Object.keys(p.bag).find((i) => D.W.items[i] && D.W.items[i].smoke && p.bag[i] > 0 && (!q || (D.W.items[i].ids || []).includes(q))); if (id) { p.bag[id]--; if (p.bag[id] <= 0) delete p.bag[id]; it = D.cloneItem(id); } }
+    if (!it) return p.msg('You have nothing to smoke. The bosses of the Old West sometimes carry cigarillos.');
+    if (p.hp >= p.maxhp) { if (!pool.includes(it)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); } return p.msg('You are in perfect health. Save it for later.'); }
+    const h = Math.min(it.def.heal || 0, p.maxhp - p.hp); p.hp += h; it.destroy(); p.msg(`You light ${it.short} and take a long, slow drag. Smoke curls into the air, the aches fade and you recover ${h} hit points. (Ironic, we know.)`, 'win'); p.env.tell(`${p.name} lights a cigarillo and exhales a thin cloud of smoke.`, p);
+  },
+  enter(p, a) { // enter portal / enter <doorway object>
+    for (const o of p.env.inv) if (o.actions && o.actions.enter && o.actions.enter(p, a, o)) return;
+    p.msg(p.env.inv.some((o) => o.actions && o.actions.enter) ? 'Enter what?' : 'There is nothing here to enter.');
+  },
+  upgrade(p, a) { // upgrade [weapon] [confirm]: +1 damage tier per upgrade, at a forge, for a lot of credits
+    const args = a.trim().split(/\s+/).filter(Boolean), confirm = args.length && args[args.length - 1].toLowerCase() === 'confirm', q = (confirm ? args.slice(0, -1) : args).join(' ').toLowerCase();
+    const it = q ? p.inv.find((i) => i.type === 'weapon' && i.isId(q)) : p.equip.weapon; if (!it) return p.msg(q ? "You don't have that weapon." : 'You are not wielding a weapon. `upgrade <weapon>` names one from your pack.');
+    const up = it.up || 0; if (up >= UPMAX) return p.msg(`${cap(it.name)} is fully upgraded (+${UPMAX}).`, 'sys');
+    const cost = upCost(it.def, up), nd = D.upDmg(it, up + 1), now = it.dmg;
+    if (!p.env.def.forge) return p.msg(`Upgrades are done at a forge (Brann's Smithy, south of Ashfall Square). ${cap(it.name)} would cost ${cost.toLocaleString('en-US')} credits to go from +${up} to +${up + 1} (damage ${now[0]}-${now[1]} to ${nd[0]}-${nd[1]}).`, 'sys');
+    if (!confirm) return p.msg(`Upgrade ${it.name} from +${up} to +${up + 1}? Damage ${now[0]}-${now[1]} becomes ${nd[0]}-${nd[1]} for ${cost.toLocaleString('en-US')} credits (you have ${p.gold.toLocaleString('en-US')}; each upgrade costs 1.75 times the last, up to +${UPMAX}). Type \`upgrade ${q ? q + ' ' : ''}confirm\` to do it.`, 'sys');
+    if (p.gold < cost) return p.msg(`You need ${cost.toLocaleString('en-US')} credits for that upgrade and you have ${p.gold.toLocaleString('en-US')}.`, 'hurt');
+    p.gold -= cost; it.up = up + 1; D.applyUp(it); p.msg(`Brann's hammer rings, and the blade comes back brighter. ${cap(it.name)}: damage ${it.dmg[0]}-${it.dmg[1]}. (${cost.toLocaleString('en-US')} credits.)`, 'win'); p.sendStats && p.sendStats();
+  },
+  runto(p, a) { // runto <room id>: used by the map (click a room to run there)
+    const to = a.trim(), dest = D.rooms.get(to); if (!dest) return p.msg('No such room.'); if (to === p.env.path) return p.msg('You are already here.', 'sys'); if (dest.area !== p.env.area) return p.msg('That room is in another area. Use the exits, `travel` or `recall`.', 'sys'); if (p.visited && p.visited.has && !p.visited.has(to)) return p.msg('You have not explored that room yet.', 'sys');
+    const steps = D.pathDirs(p.env.path, to); if (!steps) return p.msg('You cannot find a way there from here.'); if (steps.length > 80) return p.msg('That is too far to run in one go.'); walkSteps(p, steps, `Running to ${dest.name}`);
   },
   list(p) {
     if (p.env.def.clinic) return C.clinicList(p);
@@ -392,7 +433,7 @@ const C = {
     const all = [...D.players.values()];
     p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon, pic: D.playerPic(o) })) });
     p.msg(`Players online (${all.length}):`, 'rname');
-    for (const o of all) p.msg(`${[D.preTitle(o), o.name].filter(Boolean).join(' ')} | ${o.title || 'no title'} | ${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level}) | ${D.genderLabel(o.gender)}${o.isBot ? ' | bot' : ''}`, 'sys');
+    for (const o of all) p.msg([[D.preTitle(o), o.name].filter(Boolean).join(' '), o.title || '', `${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level})`, D.genderLabel(o.gender), o.isBot ? 'bot' : ''].filter(Boolean).join(' | '), 'sys');
   },
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
@@ -483,20 +524,12 @@ const C = {
     const on = v === 'on' ? true : v === 'off' ? false : !p.mute[k]; D.setMute(p, { key: k, on }); p.msg(`${NAMES[k]}: ${on ? 'muted' : 'shown'}.`, 'win');
   },
   blackjack(p, a) { const w = a.trim().toLowerCase(); if (w === 'hit') return D.blackjack.hit(p); if (w === 'stand') return D.blackjack.stand(p); if (w === 'rules') return p.msg('Blackjack: a game costs 1000 credits. Get closer to 21 than the dealer without going over. Dealer stands on 17. Win pays 1:1, blackjack pays 3:2, a tie returns your stake. Play at any saloon.', 'sys'); D.blackjack.play(p); },
-  speedwalk(p, a) { // speedwalk n,n,e,e,d : walk a whole route (counts like 3n work; up to 60 steps)
+  speedwalk(p, a) { // speedwalk n,n,e,e,d : walk a whole route (counts like 3n work; up to 60 steps; also ne nw se sw in out)
     const arg = a.trim(); if (/^(stop|cancel)$/i.test(arg)) { if (p.swTok) { p.swTok = null; return p.msg('Speedwalk stopped.', 'sys'); } return p.msg('You are not speedwalking.', 'sys'); }
-    const MAP = { n: 'n', north: 'n', s: 's', south: 's', e: 'e', east: 'e', w: 'w', west: 'w', u: 'u', up: 'u', d: 'd', down: 'd' }, steps = []; let bad = !arg;
+    const MAP = { n: 'n', north: 'n', s: 's', south: 's', e: 'e', east: 'e', w: 'w', west: 'w', u: 'u', up: 'u', d: 'd', down: 'd', ne: 'ne', northeast: 'ne', nw: 'nw', northwest: 'nw', se: 'se', southeast: 'se', sw: 'sw', southwest: 'sw', in: 'in', out: 'out' }, steps = []; let bad = !arg;
     for (const t of arg.toLowerCase().split(/[\s,;]+/).filter(Boolean)) { const m = t.match(/^(\d{1,2})?([a-z]+?)(\d{1,2})?$/); if (!m || !MAP[m[2]]) { bad = true; break; } for (let i = 0; i < (+m[1] || +m[3] || 1); i++) steps.push(MAP[m[2]]); }
-    if (bad || !steps.length || steps.length > 60) return p.msg('Usage: speedwalk n,n,n,e,e,e,d  (directions n s e w u d, counts like 3n, at most 60 steps). `speedwalk stop` cancels. The Directions page of the guide lists ready-made routes.', 'sys');
-    if (p.enemy) return p.msg('You cannot speedwalk while fighting.', 'hurt'); const tok = {}; let i = 0; p.swTok = tok;
-    p.msg(`Speedwalking ${steps.join(',')} (${steps.length} step${steps.length > 1 ? 's' : ''}). Type speedwalk stop to cancel.`, 'sys');
-    const step = () => {
-      if (p.swTok !== tok || p.gone) return; if (p.enemy) { p.swTok = null; return p.msg(`Speedwalk interrupted by a fight after ${i} step${i === 1 ? '' : 's'}.`, 'hurt'); }
-      if (i >= steps.length) { p.swTok = null; return p.msg('Speedwalk complete.', 'win'); }
-      const before = p.env; p.swRunning = true; try { D.command(p, steps[i]); } finally { p.swRunning = false; }
-      if (p.env === before) { p.swTok = null; return p.msg(`Speedwalk stopped at step ${i + 1} (${steps[i]}): you could not go that way.`, 'hurt'); } i++; D.callOut(step, 250);
-    };
-    step();
+    if (bad || !steps.length || steps.length > 60) return p.msg('Usage: speedwalk n,n,n,e,e,e,d  (directions n s e w u d ne nw se sw in out, counts like 3n, at most 60 steps). `speedwalk stop` cancels. The Directions page of the guide lists ready-made routes.', 'sys');
+    walkSteps(p, steps, `Speedwalking ${steps.join(',')}`);
   },
   commands(p, a) { require('./cmdlist')(p, a); },
   deaths(p, a) { D.deaths.cmd(p, a); },
@@ -596,7 +629,7 @@ const runAlias = (p, name, rest) => { // player aliases: "alias g get all" then 
 D.command = (p, line) => {
   const m = line.trim().match(/^(\S+)\s*(.*)$/); if (!m) return;
   let v = m[1].toLowerCase(), a = m[2];
-  if (p.swTok && !p.swRunning && v !== 'speedwalk' && v !== 'sw') { p.swTok = null; p.msg('Speedwalk cancelled.', 'sys'); } // typing anything else interrupts a speedwalk
+  if (p.swTok && !p.swRunning && v !== 'speedwalk' && v !== 'run') { p.swTok = null; p.msg('Speedwalk cancelled.', 'sys'); } // typing anything else interrupts a speedwalk
   if (p.bj && (v === 'hit' || v === 'stand')) return D.blackjack[v](p); // answering the dealer in a blackjack hand
   if (v[0] === "'") { a = line.trim().slice(1); v = 'say'; }
   if (p.aliases && Object.hasOwn(p.aliases, v)) return runAlias(p, v, a);

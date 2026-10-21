@@ -9,7 +9,7 @@
 :root{--btn:#151515;--bg2:#050505;--bg:#000;--panel:#080808;--line:#262626;--text:#e8e4d8;--dim:#8a8a8a;--sea:#19e3ff;--lamp:#ff9a3c;--ember:#e5603f;--hp:#78c46a}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text);font:16px/1.5 "Iowan Old Style",Palatino,Georgia,serif}
-#app{display:grid;grid-template-columns:320px minmax(0,1fr) 360px;grid-template-rows:minmax(0,1fr);height:100vh;height:100dvh}
+#app{display:grid;grid-template-columns:320px minmax(0,1fr) 430px;grid-template-rows:minmax(0,1fr);height:100vh;height:100dvh}
 aside{min-height:0;padding:14px;border-right:1px solid var(--line);background:var(--panel);overflow:auto;display:flex;flex-direction:column;gap:12px}
 h1{margin:0;font-size:22px;font-weight:600;letter-spacing:.01em}
 .who{display:flex;justify-content:space-between;align-items:baseline}
@@ -19,7 +19,7 @@ h1{margin:0;font-size:22px;font-weight:600;letter-spacing:.01em}
 .bar span{position:absolute;inset:0;text-align:center;font:600 11px/15px ui-monospace,"SF Mono",Menlo,monospace;text-shadow:0 1px 2px #000}
 canvas{width:100%;display:block;background:#000;border:1px solid var(--line);border-radius:3px}
 .cap{color:var(--dim);font-size:13px;display:flex;justify-content:space-between}
-.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 button{background:var(--btn);color:var(--text);border:1px solid var(--line);border-radius:3px;padding:6px 0;font:inherit;cursor:pointer}
 button:hover{border-color:var(--sea)} button:focus-visible,input:focus-visible{outline:2px solid var(--lamp);outline-offset:1px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:14px}
@@ -98,10 +98,10 @@ aside.right{padding:0;overflow:hidden}.rscroll{flex:1;min-height:0;overflow:auto
 #cog{position:fixed;top:10px;right:14px;z-index:42;width:50px;height:50px;border-radius:50%;font-size:32px;line-height:1;padding:0;display:grid;place-items:center;background:var(--panel);border:2px solid var(--lamp);color:var(--lamp);box-shadow:0 0 16px color-mix(in srgb,var(--lamp) 60%,transparent);cursor:pointer;transition:transform .35s,background .2s}
 #cog:hover,#cog[aria-expanded=true]{transform:rotate(60deg);background:var(--lamp);color:var(--bg)}
 #settings{position:fixed;top:68px;right:14px;z-index:41;width:min(390px,94vw);max-height:calc(100vh - 88px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 14px 44px #000a;display:flex;flex-direction:column;gap:8px}#settings[hidden]{display:none}
-body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:pointer;margin:6px 0}#mud label{padding-left:10px}#stt{flex:1;min-width:0}
+body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #winmenu{display:none}#mud summary{cursor:pointer;margin:6px 0}#mud label{padding-left:10px}#stt{flex:1;min-width:0}
 .quick button{padding:6px 2px;font-size:13px;white-space:nowrap}#roompic{display:flex;flex-direction:column;gap:4px}#roompic .rpf{aspect-ratio:16/9;background:var(--bg2);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center}#roompic img{width:100%;height:100%;object-fit:cover;display:block}
 .weather{color:#9fd0ff;font-style:italic} html[data-theme=white] .weather{color:#2a5f93} #roompic .rpf{position:relative} #wxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;background:transparent;border:0}
-.lnk{color:var(--sea);text-decoration:underline;cursor:pointer;word-break:break-all} #qwin{position:static!important;left:auto!important;top:auto!important;width:auto;max-height:none;margin:12px 0 4px;box-shadow:none;z-index:auto} #qbar{cursor:default;touch-action:auto} #qbody{max-height:230px;overflow-y:auto;padding:8px 10px}
+.lnk{color:var(--sea);text-decoration:underline;cursor:pointer;word-break:break-all} #qwin:not(.wfloat){position:static!important;left:auto!important;top:auto!important}#qwin{width:auto;max-height:none;margin:12px 0 4px;box-shadow:none;z-index:auto} #qbar{cursor:default;touch-action:auto} #qbody{max-height:230px;overflow-y:auto;padding:8px 10px}
 #swin,#fwin{position:fixed;z-index:45;left:calc(50% - 320px);top:56px;width:640px;max-width:96vw;max-height:90vh;background:var(--panel);border:1px solid var(--lamp);border-radius:10px;box-shadow:0 12px 40px #000c;display:flex;flex-direction:column}#swin[hidden],#fwin[hidden]{display:none}#fwin{width:330px;left:calc(50% - 165px);top:120px}
 .sbar{cursor:move;padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:600;user-select:none;color:var(--lamp)}.sbar span[data-x]{cursor:pointer;color:var(--text)}
 #sbody{overflow:auto;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}#fbody{padding:14px;text-align:center}.wc{cursor:pointer}
@@ -124,6 +124,14 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 .oq{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 10px;background:#0006}.oq.st-avail{border-color:#3f9a3a}.oq.st-ready{border-color:var(--lamp)}.oq.st-locked{opacity:.65}.oqh{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.oqh b{font-size:16px}.oqh .lv{font-size:12px;border:1px solid var(--line);border-radius:9px;padding:0 8px;color:var(--sea);white-space:nowrap}
 .oqt{margin:5px 0;color:var(--text);font-style:italic}.oqr{margin:4px 0 6px;padding-left:20px;font-size:14px}.oqr b{color:var(--hp)}.oqw{font-size:13px;color:var(--ember);margin:0 0 8px}.oqa{display:flex;justify-content:flex-end;align-items:center;gap:8px}.onote{font-size:13px;color:var(--dim)}
 .oacc,.odec{padding:6px 18px;font-size:14px;border-radius:5px;cursor:pointer;font-weight:600}.oacc{border:1px solid #3f9a3a;background:#12301a;color:#a8f0a0}.oacc:hover{background:#1b4a28}.oacc:disabled{opacity:.6;cursor:default}.odec{border:1px solid var(--line);background:var(--bg2);color:var(--text);margin-left:8px}.iact{margin-top:10px}html[data-theme=white] .oacc{background:#dff5dc;color:#1b5a1a}
+.pad button{padding:6px 0;font-size:13px}
+#winbtn{position:fixed;top:10px;right:76px;z-index:42;height:50px;padding:0 14px;border-radius:25px;background:var(--panel);border:2px solid var(--lamp);color:var(--lamp);font-size:14px;font-weight:600;cursor:pointer}
+#winmenu{position:fixed;top:66px;right:76px;z-index:47;width:260px;max-height:80vh;overflow:auto;background:var(--panel);border:1px solid var(--lamp);border-radius:8px;box-shadow:0 12px 40px #000c;padding:10px 12px;font-size:14px}#winmenu[hidden]{display:none}#winmenu h6{margin:8px 0 4px;font-size:11px;letter-spacing:.12em;color:var(--lamp)}#winmenu label{display:flex;justify-content:space-between;align-items:center;padding:3px 0}#winmenu button{margin:2px 4px 2px 0;padding:4px 10px;font-size:13px}
+.win{position:relative}.wbar{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:2px 4px 2px 8px;margin:0 0 4px;background:var(--bg2);border:1px solid var(--line);border-radius:4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);cursor:grab;user-select:none;touch-action:none}.wbar .wx{padding:0 7px;font-size:12px;line-height:18px;border-radius:3px;cursor:pointer}
+.wfloat{position:fixed;background:var(--panel);border:1px solid var(--lamp);border-radius:8px;box-shadow:0 10px 32px #000b;padding:6px;overflow:auto;margin:0}.wfloat .wbar{cursor:grabbing}.quick>.wbar,.pad>.wbar{grid-column:1/-1}.wclosed,body:not(.in) .wfloat,body:not(.in) #toast,body:not(.in) #mtip{display:none!important}.wrz{display:none;position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 55%,var(--lamp) 55%,var(--lamp) 62%,transparent 62%,transparent 75%,var(--lamp) 75%,var(--lamp) 82%,transparent 82%)}.wfloat .wrz{display:block}
+.win canvas,.win #portrait,.win #roompic{max-width:100%}#qwin.wfloat{width:340px}.enh>h6{display:none}.wfloat#gos{background:var(--bg2)}
+#toast{position:fixed;top:78px;left:50%;transform:translate(-50%,-10px);z-index:60;background:#12301a;border:1px solid #3f9a3a;color:#a8f0a0;padding:8px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;font-weight:600}#toast.on{opacity:1;transform:translate(-50%,0)}
+#mtip{position:fixed;z-index:70;pointer-events:none;background:#000d;border:1px solid var(--lamp);color:#fff;padding:5px 10px;border-radius:5px;font-size:13px;max-width:260px}#mtip small{display:block;color:var(--dim)}#mtip[hidden]{display:none}#map.hot{cursor:pointer}
 </style>
 </head>
 <body>
@@ -145,17 +153,13 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
   <div class="cap"><span id="lk"></span><button id="snd" type="button" title="Toggle sound effects" style="padding:1px 8px;font-size:12px">sound: on</button></div>
   <div class="quick"><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button data-c="inventory">pack</button><button data-c="score">score</button><button data-c="flee">flee</button><button data-c="who">who</button><button data-c="spells">spells</button><button data-c="tradeskills">tradeskills</button><button data-c="commands">commands</button></div>
   <div id="book" aria-label="Spellbook"></div>
-  <div class="pad" title="Alt+arrows to walk, PageUp/PageDown for up/down">
-    <span></span><button data-c="n">north</button><button data-c="u">up</button>
-    <button data-c="w">west</button><button data-c="look">look</button><button data-c="e">east</button>
-    <span></span><button data-c="s">south</button><button data-c="d">down</button>
-  </div>
+  <div class="pad" title="Alt+arrows to walk, PageUp/PageDown for up/down"><button data-c="nw" title="northwest">NW</button><button data-c="n">north</button><button data-c="ne" title="northeast">NE</button><button data-c="u">up</button><button data-c="w">west</button><button data-c="look">look</button><button data-c="e">east</button><button data-c="d">down</button><button data-c="sw" title="southwest">SW</button><button data-c="s">south</button><button data-c="se" title="southeast">SE</button><button data-c="out" title="out: leave a building or doorway">out</button></div>
   <a class="guidelink" href="/guide/" target="_blank" rel="noopener">📖 Player's Guide: classes, spells, map, tradeskills</a>
   <div id="qwin" hidden role="dialog" aria-label="Quest window"><div id="qbar"><b>Quests</b><small id="qcount"></small><span class="sp"></span><button id="qclose" type="button" aria-label="Close quest window">✕</button></div><div id="qbody"></div></div>
   
 </div><div id="gos" aria-label="Gossip channel (type /g message)"><div><b>GOSSIP CHANNEL</b> type /g message, or gossip off</div></div></aside>
 <main><div id="out" aria-live="polite"></div><form id="f"><div id="vitals"><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div><div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div><div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div></div>
-  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
+  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button><button type="button" id="recallbtn" data-c="recall" title="Recall: return to Ashfall Square (sends: recall)">&#8962; recall</button></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
 <aside class="right"><div class="rscroll">
   <canvas id="map" width="680" height="560" aria-label="Map of explored rooms"></canvas>
   <div class="cap"><span id="area"></span><span id="legend"></span></div>
@@ -167,8 +171,9 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 </div>
 
 <script src="portrait.js"></script>
+<button id="winbtn" type="button" title="Windows: show, hide and rearrange" aria-expanded="false">&#9635; Windows</button><div id="winmenu" hidden></div><div id="toast" role="status"></div><div id="mtip" hidden></div>
 <button id="cog" type="button" title="Settings: theme, volume, fonts, gossip window, keypad, triggers" aria-label="Settings" aria-expanded="false">&#9881;</button>
-<div id="settings" hidden><div class="sethd"><b>Settings</b><small id="ver" style="color:var(--dim)"></small><button id="setx" type="button" aria-label="Close settings" title="Close">&#10005;</button></div>
+<div id="settings" hidden><div class="sethd"><b>Settings</b><small id="ver" style="color:var(--dim)"></small><button id="setsave" data-x="1" type="button" title="Save your settings and close this panel">Save</button></div>
     <label>Theme <select id="sth"><option value="black">Black</option><option value="white">White</option><option value="darkgrey">Dark grey</option><option value="darkblue">Dark blue</option><option value="oldwest">Old West</option><option value="futuristic">Futuristic</option><option value="fantasy">Fantasy</option></select></label>
     <label><span>Volume</span> <input id="sv" type="range" min="0" max="100" step="5" aria-label="Sound volume"> <output id="svo"></output></label>
     <label><span>Gossip text size</span> <input id="sgf" type="range" min="11" max="24" step="1" aria-label="Gossip text size"> <output id="sgfo"></output></label>
@@ -188,7 +193,7 @@ body:not(.in) #cog,body:not(.in) #settings{display:none}#mud summary{cursor:poin
 <div id="tutw" hidden><div id="tutd" role="dialog" aria-labelledby="tutt"><div id="tuth"><span id="tutt"></span><span><button id="tutmin" class="tbtn" type="button" title="Shrink or expand">&#9602;</button> <button id="tutx" class="tbtn" type="button" title="Exit the tutorial">Exit tutorial &#10005;</button></span></div><div id="tutb"></div><div id="tutf"><button id="tutback" class="tbtn" type="button">Back</button><span id="tdots"></span><button id="tutnext" class="tbtn pri" type="button">Next</button></div></div></div>
 <div id="bwin" hidden><div id="bbar"><span>Top 10 achievements <small id="bcount"></small></span><span><span id="bref" title="Refresh" role="button">&#8635;</span> <span id="bx" title="Close" role="button" aria-label="Close">&#10005;</span></span></div><div id="bbody"></div><small id="bnote">Score = level x100 + quests completed x250 + tradeskill levels raised x40 + bounty points x40. A remort counts as 40 levels.</small></div>
 <div id="owin" hidden role="dialog" aria-label="Quests"><div class="sbar" id="obar"><span id="otitle">Quests</span><span data-x="1" id="ox" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="obody"></div></div>
-<div id="iwin" hidden role="alertdialog" aria-label="Team invitation"><div class="sbar" id="ibar"><span>Team invitation</span></div><div id="ibody"></div></div>
+<div id="iwin" hidden role="alertdialog" aria-label="Team invitation"><div class="sbar" id="ibar"><span>Team invitation</span><span data-x="1" id="ix" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="ibody"></div></div>
 <div id="swin" hidden role="dialog" aria-label="Character sheet"><div class="sbar" id="sbar"><span>Character sheet</span><span data-x="1" id="sx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="sbody"></div></div>
 <div id="fwin" hidden role="dialog" aria-label="Finger"><div class="sbar" id="fbar"><span>Finger</span><span data-x="1" id="fx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="fbody"></div></div>
 <div id="wwin" hidden><div id="wbar"><span>Who is online <small id="wcount"></small></span><span id="wx" title="Close" role="button" aria-label="Close">&#10005;</span></div><div id="wbody"></div></div>
@@ -247,11 +252,11 @@ $('#tutb').onclick=e=>{ const b=e.target.closest('button[data-i]'); if(!b) retur
 function boardShow(m){ const w=$('#bwin'); w.hidden=false; $('#bcount').textContent=m.total+' players';
   const row=(r,me)=>'<tr class="'+(me?'me ':'')+(r.rank===1?'g1':'')+'"><td>'+(r.rank===1?'\u2605 ':'')+r.rank+'</td><td>'+wesc(r.name)+(r.bot?' (bot)':'')+(r.on?' \u2022':'')+'</td><td>'+(r.rm?'R'+r.rm+' ':'')+'L'+r.lv+' '+wesc(r.cn)+'</td><td class="n">'+r.q+'</td><td class="n">+'+r.t+'</td><td class="n">'+(r.b||0)+'</td><td class="n"><b>'+r.score.toLocaleString()+'</b></td></tr>';
   $('#bbody').innerHTML='<table><tr><th>#</th><th>Player</th><th>Class</th><th class="n">Quests</th><th class="n">Skills</th><th class="n">Bounty</th><th class="n">Score</th></tr>'+m.list.map(r=>row(r,m.me&&r.name===m.me.name)).join('')+(m.me&&m.me.rank>10?'<tr><td colspan="7" style="text-align:center;color:var(--dim)">\u2026</td></tr>'+row(m.me,true):'')+'</table>'; }
-(function(){ const w=$('#bwin'),bar=$('#bbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_bwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
+(function(){ const w=$('#bwin'),bar=$('#bbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_bwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.right='auto'; w.style.bottom='auto'; w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
   const ask=()=>send({t:'cmd',line:'leaderboard window'}); $('#bx').onclick=()=>{ w.hidden=true; }; $('#bref').onclick=ask; $('#topbtn').onclick=()=>{ if(w.hidden) ask(); else w.hidden=true; };
   document.addEventListener('keydown',e=>{ if((e.key==='l'||e.key==='L')&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); if(w.hidden) ask(); else w.hidden=true; } });
   setInterval(()=>{ if(!w.hidden) ask(); },30000); let d=null; bar.onpointerdown=e=>{ if(e.target.id==='bx'||e.target.id==='bref') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
-  bar.onpointermove=e=>{ if(!d) return; w.style.left=Math.max(0,Math.min(innerWidth-120,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-60,e.clientY-d.dy))+'px'; };
+  bar.onpointermove=e=>{ if(!d) return; w.style.right='auto'; w.style.bottom='auto'; w.style.left=Math.max(0,Math.min(innerWidth-120,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-60,e.clientY-d.dy))+'px'; };
   bar.onpointerup=()=>{ if(!d) return; d=null; const r=w.getBoundingClientRect(); try{ localStorage.setItem('sp_bwin',JSON.stringify({x:r.left,y:r.top})); }catch(e){} }; })();
 function addYt(m){ if(prefs.yt===false||!/^[\w-]{11}$/.test(m.id||'')) return; const g=$('#gos'),d=document.createElement('div'); d.className='yt'; const b=document.createElement('div'); b.className='ytb'; b.title='Click to play'; const i=document.createElement('img'); i.src='https://i.ytimg.com/vi/'+m.id+'/mqdefault.jpg'; i.alt='YouTube video'; i.loading='lazy'; i.referrerPolicy='no-referrer'; i.onload=()=>{ g.scrollTop=g.scrollHeight; };
   const pl=document.createElement('div'); pl.className='ytp'; pl.textContent='\u25B6'; b.append(i,pl); b.onclick=()=>{ const f=document.createElement('iframe'); f.src='https://www.youtube-nocookie.com/embed/'+m.id+'?autoplay=1&rel=0'; f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin'; b.replaceChildren(f); b.style.cursor='default'; b.onclick=null; };
@@ -262,7 +267,7 @@ function dragWin(w,bar,key){ let pos={}; try{ pos=JSON.parse(localStorage.getIte
   bar.onpointermove=e=>{ if(!d) return; w.style.left=Math.max(0,Math.min(innerWidth-100,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-40,e.clientY-d.dy))+'px'; };
   bar.onpointerup=()=>{ if(!d) return; d=null; try{ localStorage.setItem(key,JSON.stringify({x:parseInt(w.style.left),y:parseInt(w.style.top)})); }catch(e){} }; }
 dragWin($('#swin'),$('#sbar'),'sp_swin'); dragWin($('#fwin'),$('#fbar'),'sp_fwin'); $('#sx').onclick=()=>{ $('#swin').hidden=true; }; $('#fx').onclick=()=>{ $('#fwin').hidden=true; };
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') for(const id of ['#swin','#fwin','#owin','#iwin']) if(!$(id).hidden) $(id).hidden=true; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') for(const id of ['#swin','#fwin','#owin','#iwin','#winmenu']) if(!$(id).hidden) $(id).hidden=true; });
 $('#wbody').addEventListener('click',e=>{ const c=e.target.closest('.wc'); if(c&&c.dataset.n) send({t:'cmd',line:'finger '+c.dataset.n}); });
 out.addEventListener('click',e=>{ if(e.target.closest('a')) return; const sel=window.getSelection&&String(window.getSelection()); if(sel) return; $('#in').focus(); }); // clicking the text window puts you on the command line
 const bar=(pct,col,label)=>'<div class="bar"><i style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+col+'"></i><span>'+wesc(label)+'</span></div>';
@@ -302,6 +307,41 @@ $('#obody').addEventListener('click',e=>{ const b=e.target.closest('button'); if
   else if(b.dataset.talk){ send({t:'cmd',line:'talk '+b.dataset.talk}); } });
 let invT=0; function inviteShow(d){ clearTimeout(invT); $('#ibody').innerHTML='<p><b>'+wesc(d.from)+'</b> invites you to join their team'+(d.size>1?' ('+d.size+' members)':'')+'.</p><p class="onote">Teams share the XP and credits from kills in the same room. This invitation runs out in '+d.secs+' seconds.</p><div class="iact"><button type="button" class="oacc" data-c="team accept">Accept</button><button type="button" class="odec" data-c="team decline">Decline</button></div>'; $('#iwin').hidden=false; invT=setTimeout(()=>{ $('#iwin').hidden=true; },d.secs*1000); }
 $('#ibody').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return; send({t:'cmd',line:b.dataset.c}); $('#iwin').hidden=true; clearTimeout(invT); });
+function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(e._t); e._t=setTimeout(()=>e.classList.remove('on'),1800); }
+$('#ix').onclick=()=>{ $('#iwin').hidden=true; clearTimeout(invT); }; dragWin($('#settings'),$('.sethd'),'sp_set');
+$('#qk').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(b){ send({t:'cmd',line:b.dataset.c}); $('#in').focus(); } });
+// ---------- map: hover a room for its name, click a room to run there ----------
+const MAPS=108; function mapHit(e){ if(!map) return null; const c=$('#map'), r=c.getBoundingClientRect(), sx=c.width/r.width, sy=c.height/r.height, mx=(e.clientX-r.left)*sx, my=(e.clientY-r.top)*sy, cur=map.rooms.find(q=>q.p===map.me); if(!cur) return null;
+  for(const q of map.rooms){ const x=c.width/2+(q.x-cur.x)*MAPS, y=c.height/2+(q.y-cur.y)*MAPS; if(Math.abs(mx-x)<=34&&Math.abs(my-y)<=34) return q; } return null; }
+$('#map').addEventListener('mousemove',e=>{ const q=mapHit(e), t=$('#mtip'), c=$('#map'); if(!q){ t.hidden=true; c.classList.remove('hot'); return; } const here=q.p===map.me; t.innerHTML=''; const b=document.createElement('b'); b.textContent=q.n; t.appendChild(b); const sm=document.createElement('small'); sm.textContent=(TERRAIN[q.t]||'')+(here?' \u00b7 you are here':' \u00b7 click to run here'); t.appendChild(sm); t.hidden=false; t.style.left=Math.min(innerWidth-270,e.clientX+14)+'px'; t.style.top=(e.clientY+14)+'px'; c.classList.toggle('hot',!here); });
+$('#map').addEventListener('mouseleave',()=>{ $('#mtip').hidden=true; $('#map').classList.remove('hot'); });
+$('#map').addEventListener('click',e=>{ const q=mapHit(e); if(q&&q.p!==map.me) send({t:'cmd',line:'runto '+q.p}); });
+// ---------- floating windows: drag any window by its title bar, close it with the X, bring it back from the Windows menu ----------
+const WMK='sp_wm'; let wm={}; try{ wm=JSON.parse(localStorage.getItem(WMK)||'{}'); }catch(e){} const wmSave=()=>{ try{ localStorage.setItem(WMK,JSON.stringify(wm)); }catch(e){} }, WINS=[]; let wmZ=60;
+const wmClamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+function wmFloat(w,x,y){ const r=w.el.getBoundingClientRect(), st=wm[w.id]=wm[w.id]||{}; if(!st.f){ st.f=1; st.w=Math.round(r.width); w.el.classList.add('wfloat'); w.el.style.position='fixed'; w.el.style.width=st.w+'px'; w.el.style.zIndex=++wmZ; if(w.o.h){ st.h=Math.round(r.height); w.el.style.height=st.h+'px'; } }
+  st.x=wmClamp(x,0,innerWidth-80); st.y=wmClamp(y,0,innerHeight-40); w.el.style.left=st.x+'px'; w.el.style.top=st.y+'px'; }
+function wmApply(w){ const st=wm[w.id]||{}; if(st.f){ w.el.classList.add('wfloat'); Object.assign(w.el.style,{position:'fixed',width:st.w+'px',left:wmClamp(st.x,0,innerWidth-80)+'px',top:wmClamp(st.y,0,innerHeight-40)+'px',zIndex:String(++wmZ)}); if(w.o.h&&st.h) w.el.style.height=st.h+'px'; } if(w.o.q) return; w.el.classList.toggle('wclosed',!!st.c); }
+function wmIsOpen(w){ return w.o.q?!w.el.hidden:!(wm[w.id]&&wm[w.id].c); }
+function wmSet(w,open){ if(w.o.q){ qtoggle(open); } else { const st=wm[w.id]=wm[w.id]||{}; st.c=open?0:1; w.el.classList.toggle('wclosed',!open); wmSave(); } wmMenu(); }
+function wmDef(id,title,el,o={}){ const w={id,title,el,o}; WINS.push(w); el.classList.add('win'); let bar=o.bar;
+  if(!bar){ bar=document.createElement('div'); bar.className='wbar'; bar.innerHTML='<span class="wt"></span><button type="button" class="wx" aria-label="Close window">\u2715</button>'; bar.querySelector('.wt').textContent=title; bar.querySelector('.wx').title='Close this window (bring it back from the Windows menu)'; bar.querySelector('.wx').onclick=()=>wmSet(w,false); el.insertBefore(bar,el.firstChild); }
+  const rz=document.createElement('div'); rz.className='wrz'; rz.title='Drag to resize'; el.appendChild(rz); let drag=null, rs=null;
+  bar.addEventListener('pointerdown',e=>{ if(e.target.closest('button')) return; const r=el.getBoundingClientRect(); drag={dx:e.clientX-r.left,dy:e.clientY-r.top}; try{ bar.setPointerCapture(e.pointerId); }catch(x){} el.style.zIndex=++wmZ; });
+  bar.addEventListener('pointermove',e=>{ if(drag) wmFloat(w,e.clientX-drag.dx,e.clientY-drag.dy); }); bar.addEventListener('pointerup',()=>{ if(drag){ drag=null; wmSave(); } });
+  el.addEventListener('pointerdown',()=>{ if(wm[id]&&wm[id].f) el.style.zIndex=++wmZ; });
+  rz.addEventListener('pointerdown',e=>{ const r=el.getBoundingClientRect(); rs={x:e.clientX,y:e.clientY,w:r.width,h:r.height}; try{ rz.setPointerCapture(e.pointerId); }catch(x){} e.stopPropagation(); });
+  rz.addEventListener('pointermove',e=>{ if(!rs) return; const st=wm[id]; st.w=wmClamp(Math.round(rs.w+e.clientX-rs.x),200,1100); el.style.width=st.w+'px'; if(o.h){ st.h=wmClamp(Math.round(rs.h+e.clientY-rs.y),90,900); el.style.height=st.h+'px'; } }); rz.addEventListener('pointerup',()=>{ if(rs){ rs=null; wmSave(); } });
+  wmApply(w); return w; }
+const group=(id,els)=>{ const wrap=document.createElement('div'); wrap.id=id; els[0].parentNode.insertBefore(wrap,els[0]); for(const e of els) wrap.appendChild(e); return wrap; };
+wmDef('char','Character',group('w-char',[$('.scw'),$('#qbtn'),...[...document.querySelectorAll('.lscroll > .cap')].slice(0,2)]));
+wmDef('enh','Enhancements',$('.enh')); wmDef('quick','Quick buttons',$('.quick')); wmDef('spells','Spells',group('w-book',[$('#book')])); wmDef('pad','Movement',$('.pad'));
+wmDef('quests','Quests',$('#qwin'),{bar:$('#qbar'),q:1,h:1});
+wmDef('map','Map',group('w-map',[$('#map'),$('#map').nextElementSibling])); wmDef('room','Room picture',$('#roompic')); wmDef('combat','Combat',group('w-combat',[$('#arena'),$('#arena').nextElementSibling])); wmDef('portrait','Portrait',group('w-portrait',[$('#portrait')]),{h:1}); wmDef('gossip','Gossip',$('#gos'),{h:1});
+function wmMenu(){ const m=$('#winmenu'); m.innerHTML='<h6>WINDOWS (tick to show)</h6>'; for(const w of WINS){ const l=document.createElement('label'), sp=document.createElement('span'), cb=document.createElement('input'); sp.textContent=w.title; cb.type='checkbox'; cb.checked=wmIsOpen(w); cb.onchange=()=>wmSet(w,cb.checked); l.append(sp,cb); m.appendChild(l); }
+  const h=document.createElement('h6'); h.textContent='OPEN'; m.appendChild(h); for(const [t,fn] of [['Who',()=>send({t:'cmd',line:'who'})],['Top 10',()=>$('#topbtn').click()],['Character sheet',()=>send({t:'cmd',line:'score'})],['Tutorial',()=>send({t:'cmd',line:'tutorial'})],['Settings',()=>$('#cog').click()]]){ const b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=()=>{ $('#winmenu').hidden=true; $('#winbtn').setAttribute('aria-expanded','false'); fn(); }; m.appendChild(b); }
+  const r=document.createElement('button'); r.type='button'; r.textContent='Reset window layout'; r.style.marginTop='8px'; r.onclick=()=>{ try{ localStorage.removeItem(WMK); localStorage.removeItem('sp_swin'); localStorage.removeItem('sp_fwin'); localStorage.removeItem('sp_owin'); localStorage.removeItem('sp_iwin'); localStorage.removeItem('sp_set'); }catch(e){} location.reload(); }; m.appendChild(r); }
+$('#winbtn').onclick=()=>{ wmMenu(); const m=$('#winmenu'); m.hidden=!m.hidden; $('#winbtn').setAttribute('aria-expanded',String(!m.hidden)); };
 function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; $('#wbody').innerHTML=list.map(p=>'<div class="wc" data-n="'+wesc(p.name)+'" title="Click to finger '+wesc(p.name)+'"><img alt="" loading="lazy" src="'+wesc(p.pic||genSrc(p.cls,p.g))+'" onerror="this.style.visibility=\'hidden\'"><b>'+(p.pre?'<em class="pre">'+wesc(p.pre)+'</em> ':'')+wesc(p.name)+(p.bot?' (bot)':'')+'</b>'+(p.title?'<small class="ttl">'+wesc(p.title)+'</small>':'')+'<small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+' \u00b7 '+wesc(p.gl||p.g)+'</small></div>').join(''); }
 (function(){ const w=$('#wwin'),bar=$('#wbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_wwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
   $('#wx').onclick=()=>{ w.hidden=true; }; let d=null; bar.onpointerdown=e=>{ if(e.target.id==='wx') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
@@ -318,7 +358,7 @@ let prefs={font:'serif',size:17,keypad:false,gifs:true,yt:true,theme:'black',vol
 function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; $('#sgf').value=prefs.gfs; $('#sgfo').textContent=prefs.gfs+'px'; $('#sgs').value=prefs.gside; const g=$('#gos'); g.style.fontSize=prefs.gfs+'px'; const dest=document.querySelector(prefs.gside==='right'?'aside.right':'aside.left'); if(dest&&g.parentElement!==dest){ dest.appendChild(g); g.scrollTop=g.scrollHeight; } }
 function savePrefs(){ try{ localStorage.setItem('sp_prefs',JSON.stringify(prefs)); }catch(e){} applyPrefs(); }
 $('#healbtn').onclick=()=>{ send({t:'cmd',line:'eat'}); $('#in').focus(); }; // the HEAL quick key sends: eat
-$('#ver').textContent='build '+BUILD; $('#setx').onclick=()=>{ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); };
+$('#ver').textContent='build '+BUILD; $('#setsave').onclick=()=>{ savePrefs(); toast('\u2713 Settings saved'); $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); }; // settings save themselves as you change them: this button just confirms it
 $('#cog').onclick=()=>{ const s=$('#settings'); s.hidden=!s.hidden; $('#cog').setAttribute('aria-expanded',String(!s.hidden)); }; document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('#settings').hidden){ $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); } });
 $('#sgf').oninput=e=>{ prefs.gfs=+e.target.value; savePrefs(); }; $('#sgs').onchange=e=>{ prefs.gside=e.target.value; savePrefs(); };
 $('#mud').onchange=e=>{ const k=e.target.dataset&&e.target.dataset.m; if(k) send({t:'mute',key:k,on:e.target.checked}); }; $('#stb').onclick=()=>send({t:'title',text:$('#stt').value}); $('#seb').onclick=()=>send({t:'email',text:$('#sem').value}); $('#sem').onkeydown=e=>{ e.stopPropagation(); if(e.key==='Enter') send({t:'email',text:$('#sem').value}); }; $('#seh').onchange=e=>send({t:'emailhide',hide:e.target.checked});
@@ -390,7 +430,7 @@ function stats(s){
 // ---- quest window: only accepted quests, with what each needs to finish (draggable, remembers its place) ----
 const QW=$('#qwin'); let qlist=[], qpos={x:null,y:null,open:false}; try{ Object.assign(qpos,JSON.parse(localStorage.getItem('sp_qwin')||'{}')); }catch(e){}
 function qsave(){ try{ localStorage.setItem('sp_qwin',JSON.stringify(qpos)); }catch(e){} }
-function qplace(){ const w=QW.offsetWidth||400; let x=qpos.x==null?Math.max(10,innerWidth-w-380):qpos.x, y=qpos.y==null?70:qpos.y; x=Math.max(0,Math.min(innerWidth-w,x)); y=Math.max(0,Math.min(innerHeight-50,y)); QW.style.left=x+'px'; QW.style.top=y+'px'; }
+function qplace(){ if(1) return; /* the quest window is placed by the floating-window manager */ const w=QW.offsetWidth||400; let x=qpos.x==null?Math.max(10,innerWidth-w-380):qpos.x, y=qpos.y==null?70:qpos.y; x=Math.max(0,Math.min(innerWidth-w,x)); y=Math.max(0,Math.min(innerHeight-50,y)); QW.style.left=x+'px'; QW.style.top=y+'px'; }
 function qtoggle(open){ qpos.open=open===undefined?!qpos.open:open; QW.hidden=!qpos.open; if(qpos.open) qplace(); $('#qbtn').setAttribute('aria-expanded',String(qpos.open)); qsave(); }
 const el=(t,c,x)=>{ const e=document.createElement(t); if(c) e.className=c; if(x!==undefined) e.textContent=x; return e; };
 function qrender(){
@@ -431,7 +471,7 @@ function book(m){
 }
 
 // ---------- map: terrain textures, paths, and a you-are-here marker ----------
-const V={n:[0,-1],s:[0,1],e:[1,0],w:[-1,0]}, TERRAIN={grass:'Grass',dirt:'Dirt',stone:'Stone',concrete:'Concrete',metal:'Metal'}, TEX={}; let myIcon='🧙';
+const V={n:[0,-1],s:[0,1],e:[1,0],w:[-1,0],ne:[1,-1],nw:[-1,-1],se:[1,1],sw:[-1,1]}, TERRAIN={grass:'Grass',dirt:'Dirt',stone:'Stone',concrete:'Concrete',metal:'Metal'}, TEX={}; let myIcon='🧙';
 function mkTex(kind){ // procedurally drawn 64px tiles, no image files needed
   const c=document.createElement('canvas'); c.width=c.height=64; const g=c.getContext('2d'); let seed=kind.charCodeAt(0)*977+kind.length; const R=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
   if(kind==='grass'){ g.fillStyle='#2f6d2a'; g.fillRect(0,0,64,64); g.lineWidth=1.4; for(let i=0;i<300;i++){ const x=R()*64,y=R()*64,h=4+R()*8; g.strokeStyle=['#1f4f1d','#3f8f35','#58b048','#2a5f26'][i%4]; g.beginPath(); g.moveTo(x,y); g.quadraticCurveTo(x+(R()-.5)*4,y-h*.6,x+(R()-.5)*7,y-h); g.stroke(); } }

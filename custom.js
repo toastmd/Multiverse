@@ -1,7 +1,7 @@
 'use strict';
 // Loads areas created with the grid builder (data/custom/*.json) into the world. Called from world.js on every (re)load.
 const fs = require('fs'), path = require('path');
-const DIR = path.join(__dirname, 'data', 'custom'), OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u' };
+const DIR = path.join(__dirname, 'data', 'custom'), OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u', ne: 'sw', sw: 'ne', nw: 'se', se: 'nw', in: 'out', out: 'in' };
 
 const genMob = (id, m) => { // same stat curve as the built-in monsters
   const lv = Math.max(1, Math.min(40, +m.level || 1)), b = m.boss ? 1 : 0, k = b ? 1.5 : 1;

@@ -1,8 +1,10 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    quill: N('Dr. Mara Quill', 'prime/landing', 'You came through the portal? Marvelous, and also very unwise. Welcome to the Primeval Rift. Please do not feed anything.', 'A sunburned paleontologist in a battered hat with a field notebook, a tranquilizer rifle she is bad with and a delighted, slightly unhinged smile.'),
+    aldric: N('Father Aldric', 'hollow/chapel', 'Welcome to the last light in Nightfall Hollow, child. Pray you never need what we keep in the cellar.', 'A gaunt hunter-priest in a patched black coat, silver stakes at his belt, with tired, steady eyes that have seen everything the Hollow can do.'),
     dale: N('Dale the Attendant', 'modern/g1s', 'Welcome to QuikStop. Hot dogs are two for one, if you do not ask how long they have been rolling.', 'A tired gas station attendant in a faded vest, with a name tag, a mop and a lifetime of stories.'),
     wanda: N('Wanda the Park Manager', 'modern/tof', 'Rent is due, the raccoons are loose and the Landlord is in a mood. What do you want, hon?', 'A sharp-eyed trailer park manager with reading glasses on a chain, a clipboard and a flyswatter she has used as a weapon.'),
     gary: N('Mall Cop Gary', 'modern/cus', 'Gary, Multi-Mart Security. This is a store, not a battlefield, but I will take the help.', 'A mall security guard in a too-small uniform, a flashlight on his belt, who takes his job a little too seriously.'),
@@ -15,6 +17,14 @@ module.exports = ({ N, Q, BOSS_QP }) => {
   };
   const QUESTS = [
     Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_prime0', 'Raptor Cull', 'quill', 21, 'The raptor packs are getting bolder and my tents are getting shorter. Cull six of them before they learn to open the cages.', [['kill', 'raptor', 6]], { gold: 1200, items: ['jerky', 'strong'] }),
+    Q('q_prime1', 'Horn and Hide', 'quill', 23, 'I need three triceratops dealt with. Their herds block the river crossing and they do not negotiate.', [['kill', 'trike', 3]], { gold: 1800, items: ['greater', 'firstaid'] }),
+    Q('q_prime2', 'Tyrant of the Rift', 'quill', 26, 'Rex the Tyrant rules the arena at the end of the Bone Pass. He has eaten four of my assistants. Please make it five fewer.', [['kill', 'tyrant_rex', 1]], { gold: 5000, items: ['greater', 'greater', 'amber'] }, 'q_prime1'),
+    Q('q_hollow0', 'Thin the Thralls', 'aldric', 33, 'The Count\'s thralls fill the village at night. Put six of them to rest before they reach the chapel door.', [['kill', 'vampire_thrall', 6]], { gold: 3500, items: ['holywater', 'strong'] }),
+    Q('q_hollow1', 'Silver Moon', 'aldric', 34, 'The wolves of the Hollow are men by day. At night they are not. Bring six of them down with silver.', [['kill', 'werewolf', 6]], { gold: 4000, items: ['holywater', 'greater'] }),
+    Q('q_hollow2', 'Burn the Coven', 'aldric', 34, 'The witches at the crossroads sell curses by the pound. Burn out four hedge witches and two of the coven witches who teach them.', [['kill', 'hedge_witch', 4], ['kill', 'coven_witch', 2]], { gold: 4500, items: ['holywater', 'mana3'] }),
+    Q('q_hollow3', 'The Count', 'aldric', 36, 'Count Vladislav Morrow sleeps in the crypt under his manor. Drive a silver stake through him, if you are brave enough to go in.', [['kill', 'vampire_count', 1]], { gold: 8000, items: ['holywater', 'holywater', 'greater'] }, 'q_hollow0'),
+    Q('q_hollow4', 'Malphas', 'aldric', 38, 'Beyond the Brimstone Gate sits Malphas the Archdemon, the reason the Hollow is cursed. End him, and the sun may rise again.', [['kill', 'archdemon', 1]], { gold: 12000, items: ['holywater', 'holywater', 'greater', 'mana3'] }, 'q_hollow3'),
     Q('q_mod0', 'Coupon Collector', 'dale', 10, 'Customers drop crumpled coupons when they get beaten up. The store pays a bonus for them. Bring me three crumpled coupons.', [['get', 'coupon', 3]], { gold: 350, items: ['burger', 'cola'] }),
     Q('q_mod1', 'Park Pests', 'wanda', 11, 'The raccoons have taken over the dumpsters again. Deal with six of them before they steal the whole park.', [['kill', 'raccoon', 6]], { gold: 500, items: ['firstaid', 'hotdog'] }),
     Q('q_mod2', 'The Landlord', 'wanda', 14, 'Earl Boudreaux has not paid rent since the last decade, and now he sits in a golden lawn chair like a king. Evict him.', [['kill', 'trailer_king', 1]], { gold: 1500, items: ['strong', 'strong', 'firstaid'] }, 'q_mod1'),
@@ -38,6 +48,8 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    quill: ['{name} is down. Fascinating, a textbook predator ambush.', 'Do not touch {name}. Those are still evidence.', 'Another volunteer for science, {name}. Thank you.'],
+    aldric: ['May {name} rest, and may the Hollow not claim more than it has.', '{name} fell in the dark. Light a candle.', 'Even the faithful fall, {name}. Even the faithful.'],
     dale: ['{name} did not look both ways. Classic.', 'I have seen a lot of things at this counter, and {name} dying is one of them.', 'Two hot dogs for {name}. On the house, in memory.'],
     wanda: ['{name} is down. That is a lot of paperwork, hon.', 'Rule 4: no dying in the park, {name}.', 'Somebody tell {name} the deposit is not refundable.'],
     gary: ['{name} is down. Code blue in aisle nine.', 'I told {name} to wait for backup. Nobody ever waits for backup.', 'Please clear the area. {name} is having a moment.'],

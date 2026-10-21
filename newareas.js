@@ -4,7 +4,7 @@
 //   Starship Aurora (sci-fi crash site, L22-26) from the Sunscorch Dunes   The Drowned Reach (fantasy sunken kingdom, L27-31) from Frostpeak
 //   Brimstone Rail Yard (Old West hellish depot, L32-36) from the Ember Wastes
 module.exports = (items, mobs, rooms) => {
-  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u' }, link = (a, d, b) => { rooms[a].exits[d] = b; rooms[b].exits[OPP[d]] = a; };
+  const OPP = { n: 's', s: 'n', e: 'w', w: 'e', u: 'd', d: 'u', ne: 'sw', sw: 'ne', nw: 'se', se: 'nw', in: 'out', out: 'in' }, link = (a, d, b) => { rooms[a].exits[d] = b; rooms[b].exits[OPP[d]] = a; };
   const item = (id, name, type, o) => { items[id] = { name, ids: [id, ...name.toLowerCase().replace(/[^a-z ]/g, '').split(' ').filter((w) => w.length > 2)], type, long: `${name}.`, ...o }; };
   const gear = (id, name, slot, lv, value, long) => { // level-scaled weapons and armor for the shops
     if (slot === 'weapon') item(id, name, 'weapon', { dmg: [Math.round(lv * 2.4), Math.round(lv * 4)], lvl: lv, value, long });

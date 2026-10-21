@@ -41,11 +41,12 @@ ${h2('All contracts')}<p>Contract XP grows with the contract's level: about one 
 <p>All ${QS.length} quests together are worth <b>${QS.reduce((s, q) => s + q.rew.qp, 0)}</b> quest points.</p>`);
 
   // ---------------- directions: routes from Ashfall Square to every area and its notable places ----------------
-  const LET = { north: 'n', south: 's', east: 'e', west: 'w', up: 'u', down: 'd' };
+  const LET = { north: 'n', south: 's', east: 'e', west: 'w', up: 'u', down: 'd', northeast: 'ne', northwest: 'nw', southeast: 'se', southwest: 'sw', in: 'in', out: 'out' };
   const steps = (path) => { const r = route(path); return r === 'you start here' ? [] : r.split(', '); };
   const words = (st) => { if (!st.length) return 'You are already there'; const out = []; for (let i = 0; i < st.length;) { let j = i; while (j < st.length && st[j] === st[i]) j++; out.push(j - i > 1 ? `${j - i} x ${st[i]}` : st[i]); i = j; } return out.join(', '); };
-  const swalk = (st) => { const out = []; for (let i = 0; i < st.length;) { let j = i; while (j < st.length && st[j] === st[i]) j++; out.push((j - i > 1 ? j - i : '') + LET[st[i]]); i = j; } return out.join(','); };
-  const dir = (path) => { const st = steps(path); return [words(st), st.length ? `<code>speedwalk ${swalk(st)}</code>` : '', st.length]; };
+  const comp = (st) => { const out = []; for (let i = 0; i < st.length;) { let j = i; while (j < st.length && st[j] === st[i]) j++; out.push((j - i > 1 ? j - i : '') + LET[st[i]]); i = j; } return out.join(','); };
+  const swalk = (st) => { const segs = [[]]; for (const t of st) { if (t === 'enter portal') segs.push([]); else segs[segs.length - 1].push(t); } return segs.map((a) => (a.length ? `<code>speedwalk ${comp(a)}</code>` : '')).filter(Boolean).join(' then <code>enter portal</code> then '); }; // portals cannot be speedwalked, so the route is split around them
+  const dir = (path) => { const st = steps(path); return [words(st), st.length ? swalk(st) : '', st.length]; };
   const KIND = (r) => { const d = r.def, k = []; if (d.shop || d.clinic) k.push(d.exchange ? 'shop (best for materials)' : 'shop'); if (d.camp) k.push('safe camp'); if (d.healer) k.push('healer'); if (d.forge) k.push('forge'); if (d.rebirth) k.push('remort hall'); if (d.inn) k.push('inn'); if (d.saloon) k.push('saloon and blackjack');
     for (const id of d.mobs || []) { const m = D.W.mobs[id]; if (m && m.boss && !k.includes('boss: ' + m.name)) k.push('boss: ' + m.name); } if (d.vault) k.push('bank vault'); return k; };
   const HUB = ['town/adventurers_guild', 'town/smithy', 'town/market', 'town/armory', 'town/inn', 'town/temple', 'town/clinic', 'town/implant_lab', 'town/salvage_exchange', 'town/hall_of_rebirth', 'town/gate', 'town/eastgate', 'town/quarry'];

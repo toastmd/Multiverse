@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-298 rooms:
+356 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -134,6 +134,19 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Frostpeak Pass | Frostpeak Station (Sci-fi) | `frost-pass.jpg` |
 | Snowdrift Hollow | Frostpeak Station (Sci-fi) | `frost-snowdrift_hollow.jpg` |
 | Wind-Scoured Peak | Frostpeak Station (Sci-fi) | `frost-windscoured_peak.jpg` |
+| Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
+| Void Ring | The Proving Grounds (Bots) | `grounds-f10.jpg` |
+| Bone Yard | The Proving Grounds (Bots) | `grounds-f2.jpg` |
+| Reed Pit | The Proving Grounds (Bots) | `grounds-f3.jpg` |
+| Spider Hollow | The Proving Grounds (Bots) | `grounds-f4.jpg` |
+| Golem Court | The Proving Grounds (Bots) | `grounds-f5.jpg` |
+| Sand Ring | The Proving Grounds (Bots) | `grounds-f6.jpg` |
+| Frozen Pen | The Proving Grounds (Bots) | `grounds-f7.jpg` |
+| Ember Pen | The Proving Grounds (Bots) | `grounds-f8.jpg` |
+| Cinder Court | The Proving Grounds (Bots) | `grounds-f9.jpg` |
+| Proving Grounds Gate | The Proving Grounds (Bots) | `grounds-gate.jpg` |
+| The Turn | The Proving Grounds (Bots) | `grounds-mid.jpg` |
+| Training Yard | The Proving Grounds (Bots) | `grounds-yard.jpg` |
 | Gulch Gate | Tombstone Gulch (Old West) | `gulch-a.jpg` |
 | Main Street | Tombstone Gulch (Old West) | `gulch-b.jpg` |
 | Silver Dollar Saloon | Tombstone Gulch (Old West) | `gulch-c.jpg` |
@@ -149,6 +162,31 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Dry Well | Tombstone Gulch (Old West) | `gulch-m.jpg` |
 | Gold Rush Alley | Tombstone Gulch (Old West) | `gulch-n.jpg` |
 | The Vault | Tombstone Gulch (Old West) | `gulch-o.jpg` |
+| Crimson Ballroom | Nightfall Hollow (Fantasy) | `hollow-ball.jpg` |
+| Witches' Bog | Nightfall Hollow (Fantasy) | `hollow-bog.jpg` |
+| Bone Bridge | Nightfall Hollow (Fantasy) | `hollow-bridge.jpg` |
+| The Great Cauldron | Nightfall Hollow (Fantasy) | `hollow-cauldron.jpg` |
+| Wine Cellar | Nightfall Hollow (Fantasy) | `hollow-cellar.jpg` |
+| Hall of Chains | Nightfall Hollow (Fantasy) | `hollow-chains.jpg` |
+| Hunters' Chapel | Nightfall Hollow (Fantasy) | `hollow-chapel.jpg` |
+| Coven Circle | Nightfall Hollow (Fantasy) | `hollow-circle.jpg` |
+| Silver Clearing | Nightfall Hollow (Fantasy) | `hollow-clear.jpg` |
+| Cursed Crossroads | Nightfall Hollow (Fantasy) | `hollow-cross.jpg` |
+| The Count's Crypt | Nightfall Hollow (Fantasy) | `hollow-crypt.jpg` |
+| The Alpha's Den | Nightfall Hollow (Fantasy) | `hollow-den.jpg` |
+| Court of Fire | Nightfall Hollow (Fantasy) | `hollow-fire.jpg` |
+| Brimstone Gate | Nightfall Hollow (Fantasy) | `hollow-gateway.jpg` |
+| Moonlit Glade | Nightfall Hollow (Fantasy) | `hollow-glade.jpg` |
+| Blood Hall | Nightfall Hollow (Fantasy) | `hollow-hall.jpg` |
+| Hunters' Ruins | Nightfall Hollow (Fantasy) | `hollow-hunter.jpg` |
+| Hag's Cottage | Nightfall Hollow (Fantasy) | `hollow-hut.jpg` |
+| Forbidden Library | Nightfall Hollow (Fantasy) | `hollow-lib.jpg` |
+| Manor Gate | Nightfall Hollow (Fantasy) | `hollow-manorgate.jpg` |
+| The Hellmouth | Nightfall Hollow (Fantasy) | `hollow-pit.jpg` |
+| Moonless Road | Nightfall Hollow (Fantasy) | `hollow-road.jpg` |
+| Hollowmoor Square | Nightfall Hollow (Fantasy) | `hollow-square.jpg` |
+| Bat Tower | Nightfall Hollow (Fantasy) | `hollow-tower.jpg` |
+| Howling Woods | Nightfall Hollow (Fantasy) | `hollow-woods1.jpg` |
 | Hydra Den | Sunken Marsh (Fantasy) | `marsh-den.jpg` |
 | Drowned Chapel | Sunken Marsh (Fantasy) | `marsh-drowned_chapel.jpg` |
 | Marsh Edge | Sunken Marsh (Fantasy) | `marsh-edge.jpg` |
@@ -228,6 +266,26 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Sunset Acres: Lot Road | Modern District (Modern) | `modern-tpr1.jpg` |
 | Sunset Acres: Middle Row | Modern District (Modern) | `modern-tpr2.jpg` |
 | Sunset Acres: East Row | Modern District (Modern) | `modern-tpr3.jpg` |
+| Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
+| The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
+| Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |
+| Fern Forest | The Primeval Rift (Prehistoric) | `prime-fern.jpg` |
+| Allosaurus Gorge | The Primeval Rift (Prehistoric) | `prime-gorge.jpg` |
+| Triceratops Plains | The Primeval Rift (Prehistoric) | `prime-herd.jpg` |
+| Dino Lagoon | The Primeval Rift (Prehistoric) | `prime-lagoon.jpg` |
+| Portal Landing | The Primeval Rift (Prehistoric) | `prime-landing.jpg` |
+| Mudflats | The Primeval Rift (Prehistoric) | `prime-mud.jpg` |
+| Raptor Nest | The Primeval Rift (Prehistoric) | `prime-nest.jpg` |
+| Bone Pass | The Primeval Rift (Prehistoric) | `prime-pass.jpg` |
+| Pteranodon Ridge | The Primeval Rift (Prehistoric) | `prime-ridge1.jpg` |
+| Skyward Cliffs | The Primeval Rift (Prehistoric) | `prime-ridge2.jpg` |
+| The Eyrie | The Primeval Rift (Prehistoric) | `prime-ridge3.jpg` |
+| Roaring River | The Primeval Rift (Prehistoric) | `prime-river.jpg` |
+| Spinosaur Shallows | The Primeval Rift (Prehistoric) | `prime-shallows.jpg` |
+| Fern Swamp | The Primeval Rift (Prehistoric) | `prime-swamp.jpg` |
+| Tar Pits | The Primeval Rift (Prehistoric) | `prime-tar.jpg` |
+| Primeval Trail | The Primeval Rift (Prehistoric) | `prime-trail.jpg` |
+| Stegosaur Valley | The Primeval Rift (Prehistoric) | `prime-valley.jpg` |
 | Depot Gate | Brimstone Rail Yard (Old West) | `rail-a.jpg` |
 | Ticket Office | Brimstone Rail Yard (Old West) | `rail-b.jpg` |
 | Brimstone Saloon Car | Brimstone Rail Yard (Old West) | `rail-c.jpg` |

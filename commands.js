@@ -152,6 +152,14 @@ const C = {
     const dest = D.rooms.get(m.room); if (!dest) return p.msg('That milestone is unreachable right now.', 'sys');
     p.env.tell(`${p.name} touches the milestone and dissolves into light.`, p); p.msg(`The milestone flares. The world folds, and you step out beside the ${m.name} milestone.`, 'win'); p.enter(dest, true); dest.tell(`${p.name} appears in a flash of light beside the milestone.`, p); dest.look(p); D.sendMilestones(p);
   },
+  elevator(p, a) { // elevator [floor]: the Meridian Tower's elevator (B, 1-10); the lobbies have one
+    const T = D.W.tower || [], here = p.env.inv.find((o) => o.def && o.def.elevator), cur = T.find((f) => f.room === p.env.path);
+    if (!here) return p.msg('There is no elevator here. Meridian Tower stands north of Commerce Avenue at the shopping center corner in the Modern district.', 'sys');
+    const q = a.trim().toLowerCase(); if (!q) { p.msg(`Elevator (you are on ${cur ? (cur.label === 'B' ? 'the basement' : 'floor ' + cur.label) : 'a floor'}). Type \`elevator <floor>\`:`, 'rname'); for (const f of T) p.msg(`  ${f.label.padStart(2)}  ${f.name.padEnd(26)} levels ${f.levels}${cur && cur.key === f.key ? '  (you are here)' : ''}`, 'sys'); return p.send({ t: 'elevator', here: cur ? cur.key : '', floors: T.map((f) => ({ key: f.key, label: f.label, name: f.name, levels: f.levels })) }); }
+    const key = /^(b|basement|garage)$/.test(q) ? 'b' : /^(top|penthouse|ceo|csuite|c-suite)$/.test(q) ? '10' : /^(ground|lobby|atrium)$/.test(q) ? '1' : String(parseInt(q, 10)), f = T.find((x) => x.key === key);
+    if (!f) return p.msg('The panel has buttons B and 1 to 10.', 'sys'); if (cur && cur.key === f.key) return p.msg('You are already on that floor.', 'sys'); if (p.enemy) return p.msg('You are in a fight! Try to flee first.', 'hurt');
+    const dest = D.rooms.get(f.room); p.env.tell(`${p.name} steps into the elevator and the doors close.`, p); p.msg(`You press ${f.label}. The doors close, the elevator hums and drops or climbs... DING! ${f.label === 'B' ? 'Basement' : 'Floor ' + f.label}: ${f.name} (levels ${f.levels}).`, 'win'); p.enter(dest, true); dest.tell(`The elevator doors open and ${p.name} steps out.`, p); dest.look(p); p.send({ t: 'elevator', here: f.key, floors: T.map((x) => ({ key: x.key, label: x.label, name: x.name, levels: x.levels })), quiet: true });
+  },
   touch(p, a) { for (const o of p.env.inv) if (o.actions && o.actions.touch && o.actions.touch(p, a, o)) return; p.msg('There is nothing here to touch. (Milestones: `milestones`.)', 'sys'); },
   admin(p, a) { // admin add|remove|list <player>: administrators only
     if (!p.wiz) return p.msg('Only administrators can do that.', 'sys'); const [sub, who] = a.trim().split(/\s+/);
@@ -234,8 +242,8 @@ const C = {
     if (p.env.def.clinic) return C.clinicList(p);
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     p.msg(`${p.env.name}. You have ${p.gold} credits.`, 'rname'); p.msg(p.env.def.exchange ? 'The Exchange pays 60% of value for gathered materials. Type `sell materials`.' : 'We also buy gathered materials (ore, herbs, fish...). Type `sell materials`.', 'sys');
-    for (const id of sh.stock) { const d = D.W.items[id]; const st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}` : d.mana ? `restores ${d.mana} mana` : '';
-      p.msg(`  ${d.name.padEnd(22)} ${String(d.value).padStart(6)}c  ${st}${d.lvl ? ` (level ${d.lvl})` : ''}`, p.gold >= d.value ? 'spell' : 'sys'); }
+    for (const id of sh.stock) { const d = D.W.items[id]; const st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '';
+      p.msg(`  ${D.cn({ id, ...d }, d.name)}${' '.repeat(Math.max(0, 22 - d.name.length))} ${String(d.value).padStart(6)}c  ${st}${d.lvl ? ` (level ${d.lvl})` : ''}`, p.gold >= d.value ? 'spell' : 'sys'); }
   },
   buy(p, a) {
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
@@ -555,9 +563,9 @@ const C = {
     if (/^(clear|none|off)$/i.test(a)) return D.setTitle(p, ''); if (!D.cleanTitle(a)) return p.msg('That title is not allowed.'); D.setTitle(p, a);
   },
   mute(p, a) { // mute bounty, level-up and quest-completion announcements
-    const NAMES = { bounty: 'bounty announcements', levels: 'level-up announcements', quests: 'quest completion announcements', weather: 'weather events' }, KEY = { bounty: 'bounty', bounties: 'bounty', level: 'levels', levels: 'levels', quest: 'quests', quests: 'quests', weather: 'weather' };
+    const NAMES = { bounty: 'bounty announcements', levels: 'level-up announcements', quests: 'quest completion announcements', weather: 'weather events', taunts: 'NPC taunts (the taunts channel)', deaths: 'death announcements (the deaths channel)' }, KEY = { bounty: 'bounty', bounties: 'bounty', level: 'levels', levels: 'levels', quest: 'quests', quests: 'quests', weather: 'weather', taunt: 'taunts', taunts: 'taunts', death: 'deaths', deaths: 'deaths' };
     const [w, v] = a.trim().toLowerCase().split(/\s+/), k = KEY[w];
-    if (!k) { p.msg('Muted announcements (mute <bounties|levels|quests|weather> [on|off]):', 'rname'); return Object.entries(NAMES).forEach(([key, label]) => p.msg(`  ${label}: ${p.mute[key] ? 'MUTED' : 'shown'}`, 'sys')); }
+    if (!k) { p.msg('Muted announcements (mute <bounties|levels|quests|weather|taunts|deaths> [on|off]):', 'rname'); return Object.entries(NAMES).forEach(([key, label]) => p.msg(`  ${label}: ${p.mute[key] ? 'MUTED' : 'shown'}`, 'sys')); }
     const on = v === 'on' ? true : v === 'off' ? false : !p.mute[k]; D.setMute(p, { key: k, on }); p.msg(`${NAMES[k]}: ${on ? 'muted' : 'shown'}.`, 'win');
   },
   blackjack(p, a) { const w = a.trim().toLowerCase(); if (w === 'hit') return D.blackjack.hit(p); if (w === 'stand') return D.blackjack.stand(p); if (w === 'rules') return p.msg('Blackjack: a game costs 1000 credits. Get closer to 21 than the dealer without going over. Dealer stands on 17. Win pays 1:1, blackjack pays 3:2, a tie returns your stake. Play at any saloon.', 'sys'); D.blackjack.play(p); },
@@ -623,7 +631,7 @@ const C = {
       if (doc[2].length) p.msg('Examples: ' + doc[2].join('   |   '), 'sys'); if (doc[3].length) p.msg('See also: ' + doc[3].join(', '), 'sys'); return;
     }
     const w = (a || '').trim().toLowerCase(), sp = D.spellsOf(p).find((s) => s.k === w || s.n.toLowerCase() === w) || D.spellsOf(p).find((s) => s.n.toLowerCase().startsWith(w));
-    if (sp) return p.msg(`${sp.n}: level ${sp.lvl} ${p.klass().name} ability, ${sp.mp} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}${sp.cd ? `, ${sp.cd} round cooldown` : ''}. ${sp.d} Use it with \`cast ${sp.n.toLowerCase()}\` or just type its name.${sp.lvl > p.level ? ` (You unlock it at level ${sp.lvl}.)` : ''}`, 'win');
+    if (sp) return p.msg(`${sp.n}: level ${sp.lvl} ${p.klass().name} ability, ${sp.mp} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}${sp.cd ? `, ${sp.cd} round cooldown` : ''}. ${sp.d} Type \`${sp.k}\` (one word) to use it, or \`cast ${sp.k}\`.${sp.lvl > p.level ? ` (You unlock it at level ${sp.lvl}.)` : ''}`, 'win');
     if (require('./socials').SOC[q]) return p.msg(`${cap(q)} is a social (a feeling). Type \`${q}\` alone, or aim it: \`${q} <player>\`. \`socials\` lists them all.`, 'sys');
     p.msg(`There is no help for "${(a || '').trim()}". Type \`commands\` to see everything you can use.`);
   },
@@ -652,7 +660,7 @@ const route = (from, to) => { // shortest walk that stays on safe rooms until th
   while (q.length) { const c = q.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { const nr = D.rooms.get(n); if (!nr || n in prev || (n !== to && !nr.def.safe)) continue; prev[n] = [c, d]; if (n === to) { const out = []; let x = n; while (prev[x]) { out.unshift(prev[x][1]); x = prev[x][0]; } return out; } q.push(n); } }
   return null;
 };
-const TUTV = { look: 'look', score: 'score', spells: 'spells', board: 'board', talk: 'talk', buy: 'buy', wield: 'wield', wear: 'wield', recall: 'recall', gossip: 'gossip', team: 'team', learn: 'learn', travel: 'travel', quests: 'quests', tradeskills: 'tradeskills', list: 'list' };
+const TUTV = { touch: 'touch', milestones: 'milestones', look: 'look', score: 'score', spells: 'spells', board: 'board', talk: 'talk', buy: 'buy', wield: 'wield', wear: 'wield', recall: 'recall', gossip: 'gossip', team: 'team', learn: 'learn', travel: 'travel', quests: 'quests', tradeskills: 'tradeskills', list: 'list' };
 D.commandNames = () => Object.keys(C).filter((k) => k !== 'huh'); // used by the `commands` listing
 const KPN = { Numpad0: '0', Numpad1: '1', Numpad2: '2', Numpad3: '3', Numpad4: '4', Numpad5: '5', Numpad6: '6', Numpad7: '7', Numpad8: '8', Numpad9: '9', NumpadAdd: '+', NumpadSubtract: '-', NumpadMultiply: '*', NumpadDivide: '/', NumpadDecimal: '.', NumpadEnter: 'enter' };
 const KPCODE = Object.fromEntries([...Object.entries(KPN).map(([c, n]) => [n, c]), ['plus', 'NumpadAdd'], ['add', 'NumpadAdd'], ['minus', 'NumpadSubtract'], ['star', 'NumpadMultiply'], ['times', 'NumpadMultiply'], ['slash', 'NumpadDivide'], ['dot', 'NumpadDecimal'], ['decimal', 'NumpadDecimal'], ['return', 'NumpadEnter']]);

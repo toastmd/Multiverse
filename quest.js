@@ -38,9 +38,9 @@ D.qComplete = (p, q) => {
 };
 
 D.qpTotal = () => D.Q.QUESTS.reduce((s, q) => s + (q.rew.qp || 0), 0);
-D.taunt = (p) => { // a random NPC taunts the fallen player to the whole MUD
+D.taunt = (p) => { if (p.isBot) return; // NPCs only taunt real players // a random NPC taunts the fallen player to the whole MUD
   const ids = Object.keys(D.Q.NPCS), id = ids[D.rnd(0, ids.length - 1)], pool = D.Q.TAUNTS[id] || D.Q.TAUNTS._;
-  D.announce(`${D.Q.NPCS[id].name} taunts: "${pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, p.name)}"`, undefined, 'taunt');
+  D.announce(`${D.Q.NPCS[id].name} taunts: "${pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, p.name)}"`, 'taunts', 'taunt');
 };
 D.gosLog = [];
 D.gossip = (text, o = {}) => { // o.from + o.msg: a player's own words (shown under their name in Discord). o.source 'discord': came from Discord, so never send it back.

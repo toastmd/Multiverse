@@ -204,6 +204,156 @@
   "area": "Dry Gulch Bank (Old West)"
  },
  {
+  "id": "cave/crystal",
+  "key": "cave-crystal",
+  "name": "Crystal Cavern",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/den",
+  "key": "cave-den",
+  "name": "Bear Den",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/fire",
+  "key": "cave-fire",
+  "name": "Fire Pit Cavern",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/fork",
+  "key": "cave-fork",
+  "name": "Mammoth Gallery",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/graveyard",
+  "key": "cave-graveyard",
+  "name": "Mammoth Graveyard",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/grot",
+  "key": "cave-grot",
+  "name": "Drumming Grotto",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/hall1",
+  "key": "cave-hall1",
+  "name": "Painted Hall",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/hall2",
+  "key": "cave-hall2",
+  "name": "Bone Midden",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/hoard",
+  "key": "cave-hoard",
+  "name": "Grog's Hoard",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/knap",
+  "key": "cave-knap",
+  "name": "Flint Knapping Floor",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/landing",
+  "key": "cave-landing",
+  "name": "Sinkhole Landing",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/ledge",
+  "key": "cave-ledge",
+  "name": "The Deep Ledge",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/lodge",
+  "key": "cave-lodge",
+  "name": "Hunters' Lodge",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/mouth",
+  "key": "cave-mouth",
+  "name": "Cave Mouth",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/pen",
+  "key": "cave-pen",
+  "name": "Mammoth Pen",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/river",
+  "key": "cave-river",
+  "name": "Underground River",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/roost",
+  "key": "cave-roost",
+  "name": "Bat Roost",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/shaman",
+  "key": "cave-shaman",
+  "name": "Shaman's Cave",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/spiders",
+  "key": "cave-spiders",
+  "name": "Creeper Nest",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/squeeze",
+  "key": "cave-squeeze",
+  "name": "Narrow Squeeze",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/t1",
+  "key": "cave-t1",
+  "name": "Dripping Tunnel",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/t2",
+  "key": "cave-t2",
+  "name": "Echoing Tunnel",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/t3",
+  "key": "cave-t3",
+  "name": "Crossing of Tunnels",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/throne",
+  "key": "cave-throne",
+  "name": "Grog's Throne Cavern",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
+  "id": "cave/totem",
+  "key": "cave-totem",
+  "name": "Totem Chamber",
+  "area": "The Mammoth Caverns (Prehistoric)"
+ },
+ {
   "id": "cit/armory_ruins",
   "key": "cit-armory_ruins",
   "name": "Armory Ruins",
@@ -1476,9 +1626,81 @@
   "area": "Modern District (Modern)"
  },
  {
+  "id": "modern/t1_a",
+  "key": "modern-t1_a",
+  "name": "Security Station",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t1_b",
+  "key": "modern-t1_b",
+  "name": "Corporate Gift Shop",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t1_c",
+  "key": "modern-t1_c",
+  "name": "Visitor Lounge",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t1_lobby",
+  "key": "modern-t1_lobby",
+  "name": "Atrium and Reception",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t10_a",
+  "key": "modern-t10_a",
+  "name": "Boardroom",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t10_b",
+  "key": "modern-t10_b",
+  "name": "Private Bar",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t10_c",
+  "key": "modern-t10_c",
+  "name": "The CEO's Office",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t10_lobby",
+  "key": "modern-t10_lobby",
+  "name": "Penthouse Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
   "id": "modern/t2",
   "key": "modern-t2",
   "name": "Trailer 2: The Doublewide",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t2_a",
+  "key": "modern-t2_a",
+  "name": "Call Center Floor",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t2_b",
+  "key": "modern-t2_b",
+  "name": "Complaints Department",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t2_c",
+  "key": "modern-t2_c",
+  "name": "Hold Music Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t2_lobby",
+  "key": "modern-t2_lobby",
+  "name": "Support Floor Landing",
   "area": "Modern District (Modern)"
  },
  {
@@ -1488,9 +1710,57 @@
   "area": "Modern District (Modern)"
  },
  {
+  "id": "modern/t3_a",
+  "key": "modern-t3_a",
+  "name": "Ledger Hall",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t3_b",
+  "key": "modern-t3_b",
+  "name": "Audit Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t3_c",
+  "key": "modern-t3_c",
+  "name": "Vault of Receipts",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t3_lobby",
+  "key": "modern-t3_lobby",
+  "name": "Accounting Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
   "id": "modern/t4",
   "key": "modern-t4",
   "name": "Trailer 4: The Rusty Airstream",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t4_a",
+  "key": "modern-t4_a",
+  "name": "Open Plan Office",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t4_b",
+  "key": "modern-t4_b",
+  "name": "Compliance Office",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t4_c",
+  "key": "modern-t4_c",
+  "name": "Training Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t4_lobby",
+  "key": "modern-t4_lobby",
+  "name": "HR Landing",
   "area": "Modern District (Modern)"
  },
  {
@@ -1500,9 +1770,153 @@
   "area": "Modern District (Modern)"
  },
  {
+  "id": "modern/t5_a",
+  "key": "modern-t5_a",
+  "name": "Help Desk",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t5_b",
+  "key": "modern-t5_b",
+  "name": "Server Farm",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t5_c",
+  "key": "modern-t5_c",
+  "name": "Network Closet",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t5_lobby",
+  "key": "modern-t5_lobby",
+  "name": "Break Room Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
   "id": "modern/t6",
   "key": "modern-t6",
   "name": "Trailer 6: The Vacant One",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t6_a",
+  "key": "modern-t6_a",
+  "name": "Brainstorm Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t6_b",
+  "key": "modern-t6_b",
+  "name": "Brand Studio",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t6_c",
+  "key": "modern-t6_c",
+  "name": "Social Media Den",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t6_lobby",
+  "key": "modern-t6_lobby",
+  "name": "Marketing Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t7_a",
+  "key": "modern-t7_a",
+  "name": "Law Library",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t7_b",
+  "key": "modern-t7_b",
+  "name": "Deposition Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t7_c",
+  "key": "modern-t7_c",
+  "name": "Contracts Archive",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t7_lobby",
+  "key": "modern-t7_lobby",
+  "name": "Legal Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t8_a",
+  "key": "modern-t8_a",
+  "name": "Prototype Lab",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t8_b",
+  "key": "modern-t8_b",
+  "name": "Test Chamber",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t8_c",
+  "key": "modern-t8_c",
+  "name": "Specimen Storage",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t8_lobby",
+  "key": "modern-t8_lobby",
+  "name": "R&D Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t9_a",
+  "key": "modern-t9_a",
+  "name": "Executive Hall",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t9_b",
+  "key": "modern-t9_b",
+  "name": "Sales Floor",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t9_c",
+  "key": "modern-t9_c",
+  "name": "Corner Offices",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/t9_lobby",
+  "key": "modern-t9_lobby",
+  "name": "Executive Lounge Landing",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/tb_a",
+  "key": "modern-tb_a",
+  "name": "Boiler Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/tb_b",
+  "key": "modern-tb_b",
+  "name": "Parking Garage",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/tb_c",
+  "key": "modern-tb_c",
+  "name": "Mail Room",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/tb_lobby",
+  "key": "modern-tb_lobby",
+  "name": "Basement Landing",
   "area": "Modern District (Modern)"
  },
  {
@@ -1545,6 +1959,12 @@
   "id": "modern/tpr3",
   "key": "modern-tpr3",
   "name": "Sunset Acres: East Row",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/tw_front",
+  "key": "modern-tw_front",
+  "name": "Meridian Tower Plaza",
   "area": "Modern District (Modern)"
  },
  {

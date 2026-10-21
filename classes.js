@@ -292,4 +292,19 @@ SPELLS.pirate = [SP('cutlass_slash', 'Cutlass Slash', 1, 4, 'dmg', '\u{1F5E1}\uF
   SP('boarding_party', 'Boarding Party', 22, 65, 'summon', '\u{1F3F4}', '#cfd8dc', 'Your crew swarms over the rail.', { ticks: 12, sdmg: [20, 30], sname: 'Boarding party' }),
   SP('plunder', 'Plunder', 30, 80, 'dmg', '\u{1F4B0}', '#ffd34a', 'Take everything that is not nailed down.', { dmg: [170, 220], crit: 0.3, cd: 8 }),
   SP('krakens_wrath', "Kraken's Wrath", 40, 140, 'dmg', '\u{1F419}', '#9a8cff', 'The deep answers your call.', { dmg: [190, 250], aoe: 1, stun: 1, cd: 10 })];
+// ---- every ability gets a one-word command (typed as it is, e.g. `fireball`, `song`), so nothing needs typing with underscores in a fight ----
+const ONEWORD_STOP = new Set(['of', 'the', 'a', 'to', 'in', 'and', 'for', 'on', 'at']), ONEWORD_DULL = new Set(['end', 'bolt', 'shot', 'blade', 'strike', 'storm', 'bomb', 'form', 'call', 'touch', 'burst', 'blast', 'wave', 'round']);
+const ONEWORD_PICK = { bullet_time: 'bullet', judgment_day: 'judgment', dead_eye: 'deadeye', wrath_of_heaven: 'wrath', army_of_the_dead: 'army', symphony_of_pain: 'symphony', all_in: 'allin', ace_in_the_sleeve: 'ace', quick_draw: 'quickdraw', scalpel_slash: 'scalpel', pistol_whip: 'pistolwhip', forage: 'gather', field_craft: 'fieldcraft', forge_work: 'forgework', master_craft: 'mastercraft', dragon_forge: 'dragonforge', deep_cast: 'deepcast', cast_line: 'castline', philosophers_fire: 'philosopher', nights_end: 'nightsend', transmute_armor: 'transmute', wrath_of_nature: 'wrath', cataclysmic_storm: 'cataclysm' }; // hand-picked words where the automatic choice would be vague
+function oneWord() {
+  const reserved = new Set(['n', 's', 'e', 'w', 'u', 'd', 'ne', 'nw', 'se', 'sw', 'in', 'out', 'north', 'south', 'east', 'west', 'up', 'down', 'i', 'inv', 'eq', 'equipment', 'k', 'l', 'sc', 'rc', 'run', 'cmds', 'cmd', 'top', 'bj', 'hit', 'stand', 'chat', 'gos', 'take', 'attack', 'say', 'look', 'kill', 'flee', 'get', 'drop', 'quit', 'save', 'push', 'pray', 'rest', 'eat', 'drink', 'wear', 'wield', 'remove', 'list', 'buy', 'sell', 'talk', 'accept', 'quests', 'help', 'who', 'score', 'class', 'luck', 'spells', 'cast', 'tell', 'shout', 'team', 'gossip']);
+  try { const h = require('./helpdocs'); for (const k of [...Object.keys(h.H), ...Object.keys(h.T)]) reserved.add(k); } catch (e) { /* helpdocs missing: fine */ }
+  try { for (const k of Object.keys(require('./socials').SOC || {})) reserved.add(k); } catch (e) { /* socials missing: fine */ }
+  for (const list of Object.values(SPELLS)) {
+    const used = new Set();
+    for (const s of list) { s.was = s.k; const parts = s.k.split('_').filter((x) => x && !ONEWORD_STOP.has(x));
+      const last = parts[parts.length - 1], order = [ONEWORD_DULL.has(last) ? parts[0] : last, ONEWORD_DULL.has(last) ? last : parts[0], ...parts, parts.join('')].filter(Boolean).map((x) => x.replace(/[^a-z0-9]/g, ''));
+      let w = ONEWORD_PICK[s.k] && !used.has(ONEWORD_PICK[s.k]) ? ONEWORD_PICK[s.k] : order.find((c) => c && !used.has(c) && !reserved.has(c)); if (!w) { let n = 2; w = order[0] + n; while (used.has(w)) w = order[0] + ++n; } used.add(w); s.k = w; }
+  }
+}
+oneWord();
 module.exports = { CLASSES, SPELLS, RECIPES };

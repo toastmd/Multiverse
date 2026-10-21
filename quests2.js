@@ -1,8 +1,10 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    ugga: N('Elder Ugga', 'cave/mouth', 'Sit, small one. Warm fire, good meat. The Great One below has eaten too many of my clan. You are tall. You hit things. Yes?', 'A tiny, ancient cave elder in a patchwork fur cloak, with ochre handprints on her face, a bone staff and a look that has seen ten thousand winters.'),
+    dana: N('Dana Whitfield', 'modern/tw_front', 'Building Management, Meridian Tower. Please do not feed the interns. Something has gone very wrong upstairs and corporate would like it fixed, quietly.', 'A harried building manager in a headset and a lanyard with a clipboard, a flashlight and the thousand-yard stare of someone who has read the fire-safety manual.'),
     quill: N('Dr. Mara Quill', 'prime/landing', 'You came through the portal? Marvelous, and also very unwise. Welcome to the Primeval Rift. Please do not feed anything.', 'A sunburned paleontologist in a battered hat with a field notebook, a tranquilizer rifle she is bad with and a delighted, slightly unhinged smile.'),
     aldric: N('Father Aldric', 'hollow/chapel', 'Welcome to the last light in Nightfall Hollow, child. Pray you never need what we keep in the cellar.', 'A gaunt hunter-priest in a patched black coat, silver stakes at his belt, with tired, steady eyes that have seen everything the Hollow can do.'),
     dale: N('Dale the Attendant', 'modern/g1s', 'Welcome to QuikStop. Hot dogs are two for one, if you do not ask how long they have been rolling.', 'A tired gas station attendant in a faded vest, with a name tag, a mop and a lifetime of stories.'),
@@ -17,6 +19,12 @@ module.exports = ({ N, Q, BOSS_QP }) => {
   };
   const QUESTS = [
     Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_cave0', 'Bear Trouble', 'ugga', 26, 'The cave bears have taken the Bear Den and now they are in my kitchen. Send four of them back to sleep.', [['kill', 'cave_bear', 4]], { gold: 6000, items: ['mammothsteak', 'greater'] }),
+    Q('q_cave1', 'Mammoth Hunt', 'ugga', 29, 'The clan needs meat and ivory. Bring down two of the great woolly beasts in the Mammoth Graveyard.', [['kill', 'woolly_mammoth', 2]], { gold: 9000, items: ['mammothsteak', 'mammothsteak', 'greater'] }),
+    Q('q_cave2', 'The Great Chieftain', 'ugga', 31, 'Grog was my son, once. Now he is a mountain with a club who eats whoever comes near. He sits on his throne at the bottom of the deep cavern. Make him stop.', [['kill', 'grog', 1]], { gold: 25000, items: ['greater', 'greater', 'superior'] }, 'q_cave1'),
+    Q('q_tower0', 'Night Shift', 'dana', 17, 'The night janitors have been mopping in the basement for three days and will not stop. Please. Four of them.', [['kill', 'night_janitor', 4]], { gold: 3000, items: ['espresso', 'donut', 'firstaid'] }),
+    Q('q_tower1', 'Corporate Ladder', 'dana', 26, 'The vice presidents on nine are not answering my emails. They are, however, trying to eat the interns. Take two of them out.', [['kill', 'vp_sales', 2]], { gold: 9000, items: ['lunchbox', 'lunchbox', 'greater'] }),
+    Q('q_tower2', 'Hostile Takeover', 'dana', 30, 'The CEO has locked himself in the top-floor office with three bodyguards and refuses to resign. Perform a hostile takeover. Take the elevator to ten.', [['kill', 'ceo', 1]], { gold: 30000, items: ['greater', 'superior', 'lunchbox', 'lunchbox'] }, 'q_tower1'),
     Q('q_prime0', 'Raptor Cull', 'quill', 21, 'The raptor packs are getting bolder and my tents are getting shorter. Cull six of them before they learn to open the cages.', [['kill', 'raptor', 6]], { gold: 1200, items: ['jerky', 'strong'] }),
     Q('q_prime1', 'Horn and Hide', 'quill', 23, 'I need three triceratops dealt with. Their herds block the river crossing and they do not negotiate.', [['kill', 'trike', 3]], { gold: 1800, items: ['greater', 'firstaid'] }),
     Q('q_prime2', 'Tyrant of the Rift', 'quill', 26, 'Rex the Tyrant rules the arena at the end of the Bone Pass. He has eaten four of my assistants. Please make it five fewer.', [['kill', 'tyrant_rex', 1]], { gold: 5000, items: ['greater', 'greater', 'amber'] }, 'q_prime1'),
@@ -48,6 +56,8 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    ugga: ['{name} fell. The cave is cold tonight.', 'Ugga warned {name}. Ugga always warns.', 'Even big ones fall, {name}. Even big ones.'],
+    dana: ['{name} is down on floor nine again, and I will need to file a form.', 'Please remove {name} from the lobby before the board arrives.', 'That is the third incident report today, {name}.'],
     quill: ['{name} is down. Fascinating, a textbook predator ambush.', 'Do not touch {name}. Those are still evidence.', 'Another volunteer for science, {name}. Thank you.'],
     aldric: ['May {name} rest, and may the Hollow not claim more than it has.', '{name} fell in the dark. Light a candle.', 'Even the faithful fall, {name}. Even the faithful.'],
     dale: ['{name} did not look both ways. Classic.', 'I have seen a lot of things at this counter, and {name} dying is one of them.', 'Two hot dogs for {name}. On the house, in memory.'],

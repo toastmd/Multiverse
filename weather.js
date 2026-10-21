@@ -21,7 +21,7 @@ const TXT = {
   },
 };
 const state = {}; let timer = null; const rnd = (a, b) => a + Math.random() * (b - a);
-const indoor = (r) => !r || r.z < 0 || /saloon|store|office|lab\b|clinic|hall\b|lobby|vault|restroom|trailer \d|\binn\b|armory|smithy|temple|guild|arcade|books|aisle|multi-mart:|multi-mart entrance|stockroom|bank|crypt|mine|cave|cavern|tunnel|burger barn|\bhut\b|techhut|dollar|corridor|cages|counting|galley|med bay|engineering|quarters|bridge|hatch|exchange|alchemist|stable|parlor|church|roundhouse|ticket|station\b|habitat|food court|chrome|implant|rebirth|car\b/i.test(r.name); // under a roof: you only hear the weather (an EMP reaches everywhere)
+const indoor = (r) => !r || r.z < 0 || (r.def && r.def.indoor) || /saloon|store|office|lab\b|clinic|hall\b|lobby|vault|restroom|trailer \d|\binn\b|armory|smithy|temple|guild|arcade|books|aisle|multi-mart:|multi-mart entrance|stockroom|bank|crypt|mine|cave|cavern|tunnel|burger barn|\bhut\b|techhut|dollar|corridor|cages|counting|galley|med bay|engineering|quarters|bridge|hatch|exchange|alchemist|stable|parlor|church|roundhouse|ticket|station\b|habitat|food court|chrome|implant|rebirth|car\b/i.test(r.name); // under a roof: you only hear the weather (an EMP reaches everywhere)
 const pick = (g) => { const list = KINDS[g], tot = list.reduce((s, x) => s + x[1], 0); let r = Math.random() * tot; for (const [k, w] of list) { if ((r -= w) <= 0) return k; } return list[0][0]; };
 const players = (area) => [...D.players.values()].filter((p) => !p.isBot && p.env && p.env.area === area);
 const say = (area, text, muff, all) => { for (const p of players(area)) { if (p.mute && p.mute.weather) continue; const t = indoor(p.env) && !all ? muff : text; if (t) p.msg(t, 'weather'); } };

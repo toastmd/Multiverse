@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-356 rooms:
+426 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -42,6 +42,31 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Vault Corridor | Dry Gulch Bank (Old West) | `bank-d.jpg` |
 | The Vault | Dry Gulch Bank (Old West) | `bank-e.jpg` |
 | Counting Room | Dry Gulch Bank (Old West) | `bank-f.jpg` |
+| Crystal Cavern | The Mammoth Caverns (Prehistoric) | `cave-crystal.jpg` |
+| Bear Den | The Mammoth Caverns (Prehistoric) | `cave-den.jpg` |
+| Fire Pit Cavern | The Mammoth Caverns (Prehistoric) | `cave-fire.jpg` |
+| Mammoth Gallery | The Mammoth Caverns (Prehistoric) | `cave-fork.jpg` |
+| Mammoth Graveyard | The Mammoth Caverns (Prehistoric) | `cave-graveyard.jpg` |
+| Drumming Grotto | The Mammoth Caverns (Prehistoric) | `cave-grot.jpg` |
+| Painted Hall | The Mammoth Caverns (Prehistoric) | `cave-hall1.jpg` |
+| Bone Midden | The Mammoth Caverns (Prehistoric) | `cave-hall2.jpg` |
+| Grog's Hoard | The Mammoth Caverns (Prehistoric) | `cave-hoard.jpg` |
+| Flint Knapping Floor | The Mammoth Caverns (Prehistoric) | `cave-knap.jpg` |
+| Sinkhole Landing | The Mammoth Caverns (Prehistoric) | `cave-landing.jpg` |
+| The Deep Ledge | The Mammoth Caverns (Prehistoric) | `cave-ledge.jpg` |
+| Hunters' Lodge | The Mammoth Caverns (Prehistoric) | `cave-lodge.jpg` |
+| Cave Mouth | The Mammoth Caverns (Prehistoric) | `cave-mouth.jpg` |
+| Mammoth Pen | The Mammoth Caverns (Prehistoric) | `cave-pen.jpg` |
+| Underground River | The Mammoth Caverns (Prehistoric) | `cave-river.jpg` |
+| Bat Roost | The Mammoth Caverns (Prehistoric) | `cave-roost.jpg` |
+| Shaman's Cave | The Mammoth Caverns (Prehistoric) | `cave-shaman.jpg` |
+| Creeper Nest | The Mammoth Caverns (Prehistoric) | `cave-spiders.jpg` |
+| Narrow Squeeze | The Mammoth Caverns (Prehistoric) | `cave-squeeze.jpg` |
+| Dripping Tunnel | The Mammoth Caverns (Prehistoric) | `cave-t1.jpg` |
+| Echoing Tunnel | The Mammoth Caverns (Prehistoric) | `cave-t2.jpg` |
+| Crossing of Tunnels | The Mammoth Caverns (Prehistoric) | `cave-t3.jpg` |
+| Grog's Throne Cavern | The Mammoth Caverns (Prehistoric) | `cave-throne.jpg` |
+| Totem Chamber | The Mammoth Caverns (Prehistoric) | `cave-totem.jpg` |
 | Armory Ruins | Shattered Citadel (Fantasy) | `cit-armory_ruins.jpg` |
 | Banquet Hall | Shattered Citadel (Fantasy) | `cit-banquet_hall.jpg` |
 | Haunted Barracks | Shattered Citadel (Fantasy) | `cit-barracks.jpg` |
@@ -254,11 +279,55 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Multi-Mart: Sporting Goods | Modern District (Modern) | `modern-spo.jpg` |
 | Multi-Mart: Stockroom | Modern District (Modern) | `modern-sto.jpg` |
 | Trailer 1: The Pink Flamingo | Modern District (Modern) | `modern-t1.jpg` |
+| Security Station | Modern District (Modern) | `modern-t1_a.jpg` |
+| Corporate Gift Shop | Modern District (Modern) | `modern-t1_b.jpg` |
+| Visitor Lounge | Modern District (Modern) | `modern-t1_c.jpg` |
+| Atrium and Reception | Modern District (Modern) | `modern-t1_lobby.jpg` |
+| Boardroom | Modern District (Modern) | `modern-t10_a.jpg` |
+| Private Bar | Modern District (Modern) | `modern-t10_b.jpg` |
+| The CEO's Office | Modern District (Modern) | `modern-t10_c.jpg` |
+| Penthouse Landing | Modern District (Modern) | `modern-t10_lobby.jpg` |
 | Trailer 2: The Doublewide | Modern District (Modern) | `modern-t2.jpg` |
+| Call Center Floor | Modern District (Modern) | `modern-t2_a.jpg` |
+| Complaints Department | Modern District (Modern) | `modern-t2_b.jpg` |
+| Hold Music Room | Modern District (Modern) | `modern-t2_c.jpg` |
+| Support Floor Landing | Modern District (Modern) | `modern-t2_lobby.jpg` |
 | Trailer 3: The Gator Shack | Modern District (Modern) | `modern-t3.jpg` |
+| Ledger Hall | Modern District (Modern) | `modern-t3_a.jpg` |
+| Audit Room | Modern District (Modern) | `modern-t3_b.jpg` |
+| Vault of Receipts | Modern District (Modern) | `modern-t3_c.jpg` |
+| Accounting Landing | Modern District (Modern) | `modern-t3_lobby.jpg` |
 | Trailer 4: The Rusty Airstream | Modern District (Modern) | `modern-t4.jpg` |
+| Open Plan Office | Modern District (Modern) | `modern-t4_a.jpg` |
+| Compliance Office | Modern District (Modern) | `modern-t4_b.jpg` |
+| Training Room | Modern District (Modern) | `modern-t4_c.jpg` |
+| HR Landing | Modern District (Modern) | `modern-t4_lobby.jpg` |
 | Trailer 5: The Gnome Home | Modern District (Modern) | `modern-t5.jpg` |
+| Help Desk | Modern District (Modern) | `modern-t5_a.jpg` |
+| Server Farm | Modern District (Modern) | `modern-t5_b.jpg` |
+| Network Closet | Modern District (Modern) | `modern-t5_c.jpg` |
+| Break Room Landing | Modern District (Modern) | `modern-t5_lobby.jpg` |
 | Trailer 6: The Vacant One | Modern District (Modern) | `modern-t6.jpg` |
+| Brainstorm Room | Modern District (Modern) | `modern-t6_a.jpg` |
+| Brand Studio | Modern District (Modern) | `modern-t6_b.jpg` |
+| Social Media Den | Modern District (Modern) | `modern-t6_c.jpg` |
+| Marketing Landing | Modern District (Modern) | `modern-t6_lobby.jpg` |
+| Law Library | Modern District (Modern) | `modern-t7_a.jpg` |
+| Deposition Room | Modern District (Modern) | `modern-t7_b.jpg` |
+| Contracts Archive | Modern District (Modern) | `modern-t7_c.jpg` |
+| Legal Landing | Modern District (Modern) | `modern-t7_lobby.jpg` |
+| Prototype Lab | Modern District (Modern) | `modern-t8_a.jpg` |
+| Test Chamber | Modern District (Modern) | `modern-t8_b.jpg` |
+| Specimen Storage | Modern District (Modern) | `modern-t8_c.jpg` |
+| R&D Landing | Modern District (Modern) | `modern-t8_lobby.jpg` |
+| Executive Hall | Modern District (Modern) | `modern-t9_a.jpg` |
+| Sales Floor | Modern District (Modern) | `modern-t9_b.jpg` |
+| Corner Offices | Modern District (Modern) | `modern-t9_c.jpg` |
+| Executive Lounge Landing | Modern District (Modern) | `modern-t9_lobby.jpg` |
+| Boiler Room | Modern District (Modern) | `modern-tb_a.jpg` |
+| Parking Garage | Modern District (Modern) | `modern-tb_b.jpg` |
+| Mail Room | Modern District (Modern) | `modern-tb_c.jpg` |
+| Basement Landing | Modern District (Modern) | `modern-tb_lobby.jpg` |
 | TechHut Electronics | Modern District (Modern) | `modern-tec.jpg` |
 | Sunset Acres: Park Office | Modern District (Modern) | `modern-tof.jpg` |
 | Multi-Mart: Toys | Modern District (Modern) | `modern-toy.jpg` |
@@ -266,6 +335,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Sunset Acres: Lot Road | Modern District (Modern) | `modern-tpr1.jpg` |
 | Sunset Acres: Middle Row | Modern District (Modern) | `modern-tpr2.jpg` |
 | Sunset Acres: East Row | Modern District (Modern) | `modern-tpr3.jpg` |
+| Meridian Tower Plaza | Modern District (Modern) | `modern-tw_front.jpg` |
 | Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
 | The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
 | Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |

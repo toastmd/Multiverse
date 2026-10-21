@@ -12,7 +12,7 @@ const genMob = (id, m) => { // same stat curve as the built-in monsters
     drops: [[lv < 8 ? 'potion' : lv < 18 ? 'strong' : lv < 28 ? 'greater' : lv < 36 ? 'superior' : 'grand', 0.2], [lv < 14 ? 'mana1' : lv < 24 ? 'mana2' : lv < 34 ? 'mana3' : 'mana4', 0.1]] };
 };
 
-module.exports = (rooms, mobs, items) => {
+module.exports = (rooms, mobs, items, MS) => {
   if (!fs.existsSync(DIR)) return;
   for (const f of fs.readdirSync(DIR).filter((x) => x.endsWith('.json'))) {
     let a; try { a = JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8')); } catch (e) { console.log('bad custom area', f, e.message); continue; }
@@ -28,6 +28,7 @@ module.exports = (rooms, mobs, items) => {
       for (const [d, to] of Object.entries(r.exits || {})) if (OPP[d] && mine.has(to)) def.exits[d] = full(to);
       rooms[full(r.id)] = def;
     }
+    if (MS && (a.rooms || []).length) { const ids = a.rooms.map((r) => full(r.id)), room = ids.find((i) => rooms[i].safe) || ids[0]; require('./milestones').place(items, rooms, MS, aid, String(a.name || aid).slice(0, 40), 'custom', room); } // every area gets a milestone
     for (const r of a.rooms || []) { // make internal exits two-way, then attach external links in both directions
       const def = rooms[full(r.id)];
       for (const [d, to] of Object.entries(def.exits)) if (!rooms[to].exits[OPP[d]]) rooms[to].exits[OPP[d]] = full(r.id);

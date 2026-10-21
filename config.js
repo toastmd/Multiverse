@@ -32,6 +32,10 @@ module.exports = () => {
       cooldownSeconds: Math.max(0, +(e.GIPHY_COOLDOWN || (f.giphy || {}).cooldownSeconds || 6)),
       apiBase: e.GIPHY_API_BASE || (f.giphy || {}).apiBase || 'https://api.giphy.com',
     },
+    smtp: { // outgoing email for mudmail forwarding (any SMTP service: your ISP, Gmail with an app password, Mailgun, ...)
+      host: e.SMTP_HOST || (f.smtp || {}).host || '', port: +(e.SMTP_PORT || (f.smtp || {}).port || 587), secure: bool(e.SMTP_SECURE, bool((f.smtp || {}).secure, +(e.SMTP_PORT || (f.smtp || {}).port || 587) === 465)),
+      user: e.SMTP_USER || (f.smtp || {}).user || '', pass: e.SMTP_PASS || (f.smtp || {}).pass || '', from: e.SMTP_FROM || (f.smtp || {}).from || '', fromName: e.SMTP_FROM_NAME || (f.smtp || {}).fromName || 'MULTIVERSE MUD', starttls: bool(e.SMTP_STARTTLS, bool((f.smtp || {}).starttls, true)),
+    },
     github: {
       token: e.GITHUB_TOKEN || g.token || '',                           // fine-grained token with Contents: read and write on one repo
       repo: e.GITHUB_REPO || g.repo || '',                              // owner/name

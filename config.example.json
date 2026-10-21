@@ -41,5 +41,6 @@
   },
   "pixabay": {
     "apiKey": ""
-  }
+  },
+  "smtp": { "host": "smtp.example.com", "port": 587, "secure": false, "user": "mailer@example.com", "pass": "app-password", "from": "mud@example.com", "fromName": "MULTIVERSE MUD" }
 }

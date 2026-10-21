@@ -135,6 +135,43 @@ const C = {
       p.msg(`${cap(name)}: armor class ${def.ac || 0}, worn on the ${slot}.${need}${bonus}${using ? ' You are wearing it.' : cur ? ` Compared with your ${cur.name} (armor ${cur.def.ac || 0}): ${f1((def.ac || 0) - (cur.def.ac || 0))} armor class.` : ` Nothing is worn on your ${slot}.`}`, 'items');
     }
   },
+  mail(p, a) { require('./mail').command(p, a); },
+  milestones(p) { // every milestone, whether you are attuned, and where it stands
+    const L = D.W.milestones || [], got = p.milestones.filter((a) => L.some((m) => m.area === a)), here = p.env.inv.find((o) => o.def && o.def.ms);
+    p.msg(`Milestones: you are attuned to ${got.length} of ${L.length}.${here ? ' You are standing at a milestone, so you can travel: `milestone`.' : ' Travel needs you to stand at a milestone.'}`, 'rname');
+    for (const m of L) p.msg(`  ${p.milestones.includes(m.area) ? '\u2713' : '\u2717'} ${m.name.padEnd(22)} ${(m.levels ? 'levels ' + m.levels : '').padEnd(14)} ${(D.rooms.get(m.room) || {}).name || ''}${here && here.def.ms === m.area ? '  (you are here)' : ''}`, p.milestones.includes(m.area) ? 'win' : 'sys');
+    p.msg('Touch a milestone (`touch milestone`) to attune. A \u2717 means you have not touched that one yet: go there on foot first.', 'sys');
+  },
+  milestone(p, a) { // milestone: the travel window (only at a milestone); milestone <area>: travel there
+    const here = p.env.inv.find((o) => o.def && o.def.ms), q = a.trim().toLowerCase(), L = D.W.milestones || [];
+    if (!here) return p.msg('You must be standing at a milestone to travel. `milestones` lists where they are.', 'sys');
+    if (!q) { C.milestones(p); return D.sendMilestones(p); }
+    const m = L.find((x) => x.area === q || x.name.toLowerCase() === q) || L.find((x) => x.name.toLowerCase().startsWith(q) || x.area.startsWith(q));
+    if (!m) return p.msg(`No milestone called "${a.trim()}". \`milestones\` lists them.`, 'sys'); if (m.area === here.def.ms) return p.msg('You are already at that milestone.', 'sys');
+    if (!p.milestones.includes(m.area)) return p.msg(`You have not touched the ${m.name} milestone yet. Travel there on foot and touch it first.`, 'sys'); if (p.enemy) return p.msg('You are in a fight! Try to flee first.', 'hurt');
+    const dest = D.rooms.get(m.room); if (!dest) return p.msg('That milestone is unreachable right now.', 'sys');
+    p.env.tell(`${p.name} touches the milestone and dissolves into light.`, p); p.msg(`The milestone flares. The world folds, and you step out beside the ${m.name} milestone.`, 'win'); p.enter(dest, true); dest.tell(`${p.name} appears in a flash of light beside the milestone.`, p); dest.look(p); D.sendMilestones(p);
+  },
+  touch(p, a) { for (const o of p.env.inv) if (o.actions && o.actions.touch && o.actions.touch(p, a, o)) return; p.msg('There is nothing here to touch. (Milestones: `milestones`.)', 'sys'); },
+  admin(p, a) { // admin add|remove|list <player>: administrators only
+    if (!p.wiz) return p.msg('Only administrators can do that.', 'sys'); const [sub, who] = a.trim().split(/\s+/);
+    if (!sub || sub === 'list') { const l = D.listRoles ? D.listRoles() : { admins: [], architects: [] }; return p.msg(`Administrators: ${l.admins.join(', ') || 'none'}. Architects: ${l.architects.join(', ') || 'none'}.`, 'sys'); }
+    if (!['add', 'remove'].includes(sub) || !who) return p.msg('Usage: admin add <player> | admin remove <player> | admin list', 'sys');
+    const name = who[0].toUpperCase() + who.slice(1).toLowerCase(); if (name === p.name && sub === 'remove') return p.msg('You cannot remove your own administrator status.', 'sys');
+    const r = D.setRole(name, 'wiz', sub === 'add'); if (r === 'none') return p.msg(`Nobody called "${who}" has played here.`, 'sys'); if (r === 'last') return p.msg('There must always be at least one administrator.', 'sys');
+    p.msg(`${name} is ${sub === 'add' ? 'now an Administrator (wizard)' : 'no longer an Administrator'}.`, 'win');
+  },
+  architect(p, a) { // architect add|remove|list <player>: administrators make builders (Architects)
+    if (!p.wiz) return p.msg('Only administrators can do that. Type `help builder` to see how to become an Architect.', 'sys'); const [sub, who] = a.trim().split(/\s+/);
+    if (!sub || sub === 'list') { const l = D.listRoles ? D.listRoles() : { admins: [], architects: [] }; return p.msg(`Architects: ${l.architects.join(', ') || 'none'}. Administrators: ${l.admins.join(', ') || 'none'}.`, 'sys'); }
+    if (!['add', 'remove'].includes(sub) || !who) return p.msg('Usage: architect add <player> | architect remove <player> | architect list', 'sys');
+    const name = who[0].toUpperCase() + who.slice(1).toLowerCase(), r = D.setRole(name, 'architect', sub === 'add'); if (r === 'none') return p.msg(`Nobody called "${who}" has played here.`, 'sys');
+    p.msg(`${name} is ${sub === 'add' ? 'now an Architect: they can use the area builder (`builder`)' : 'no longer an Architect'}.`, 'win');
+  },
+  builder(p) { // the GUI area builder link and key, for Architects and administrators
+    if (!p.wiz && !p.architect) return p.msg('The area builder is for Architects. Type `help builder` to see how to become one.', 'sys'); const i = D.builderInfo ? D.builderInfo() : null; if (!i) return p.msg('The builder is not available on this server.', 'sys');
+    p.msg('The grid area builder (draw rooms on a map, link them, add monsters, items, shops and more):', 'rname'); p.msg(`  Open: ${i.url}   (use the server's address instead of localhost if it is not your own machine)`, 'items'); p.msg(`  Builder key: ${i.key}   (private: it lets you change the world)`, 'items'); p.msg('Save in the builder and your area goes live at once. `help builder` explains the process.', 'sys');
+  },
   idea(p, a) { require('./reports').submit(p, 'idea', a); },
   bug(p, a) { require('./reports').submit(p, 'bug', a); },
   brief(p, a) { // brief on | brief off: moving shows only the room name and exits
@@ -147,10 +184,10 @@ const C = {
   },
   finger(p, a) { // finger <name>: name, level, picture and email (if they set one and did not hide it)
     const q = (a.trim() || p.name).toLowerCase(), all = [...D.players.values()], on = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
-    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, bot: !!on.isBot };
-    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, seen: r.seen || 0 }; }
-    const seen = d.online ? 'online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
-    p.msg(`Finger: ${[d.pre, d.name].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); p.send({ t: 'finger', d });
+    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
+    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
+    const seen = d.online ? '\u25CF online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
+    p.msg(`Finger: ${[d.pre, d.name].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
   },
   wield(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`); p.equip.weapon = it; p.msg(`You wield ${it.short}.`); },
   wear(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`); p.equip[it.slot] = it; p.msg(`You wear ${it.short}.`); },
@@ -578,7 +615,9 @@ const C = {
   help(p, a) { // help | help <command> | help <class ability>
     const q = (a || '').trim().toLowerCase().split(/\s+/)[0] || '';
     if (!q) { p.msg('Move: n s e w u d, speedwalk n,n,e (sw), travel. Look: look [thing], check <item>. Fight: kill <mob> (autokill on), flee, cast. Items: get, drop, wield, wear, remove, quaff/eat, inventory (eq), keep, unkeep, salvage all. Shops: list, buy, sell. Talk: say, tell, gossip, team. Misc: brief, finger, email, idea, bug, deaths, weather, score, commands.', 'sys'); return p.msg('Type `help <command>` for detailed help on any command (for example `help kill` or `help eq`), `help <ability>` for a class ability, and `commands` for the full list. The Player\'s Guide website has everything in detail.', 'win'); }
-    const { H, WIZ } = require('./helpdocs'), DIRW = { n: 1, s: 1, e: 1, w: 1, u: 1, d: 1, north: 1, south: 1, east: 1, west: 1, up: 1, down: 1 }, name = ALIAS[q] || (DIRW[q] ? 'go' : q), doc = H[name];
+    const { H, WIZ, T } = require('./helpdocs'), topic = T[q]; // topics (aura, wizard, builder, god, ...) come first
+    if (topic) { p.msg(`HELP: ${topic[0]}`, 'rname'); for (const para of topic[1]) p.msg(para, 'text'); if (q === 'builder' && (p.wiz || p.architect)) p.msg('You are allowed to build: type `builder` for the link and key.', 'win'); return p.msg('See also: ' + topic[2].join(', '), 'sys'); }
+    const DIRW = { n: 1, s: 1, e: 1, w: 1, u: 1, d: 1, north: 1, south: 1, east: 1, west: 1, up: 1, down: 1 }, name = ALIAS[q] || (DIRW[q] ? 'go' : q), doc = H[name];
     if (doc && (!WIZ.has(name) || p.wiz)) {
       const als = Object.entries(ALIAS).filter(([, v]) => v === name).map(([k]) => k); p.msg(`HELP: ${name}${als.length ? `   (also: ${als.join(', ')})` : ''}`, 'rname'); p.msg(`Usage: ${doc[0]}`, 'items'); p.msg(doc[1]);
       if (doc[2].length) p.msg('Examples: ' + doc[2].join('   |   '), 'sys'); if (doc[3].length) p.msg('See also: ' + doc[3].join(', '), 'sys'); return;

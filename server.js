@@ -1,7 +1,7 @@
 'use strict';
 // MULTIVERSE MUD server. No npm packages needed: HTTP static files + a small WebSocket implementation.
 const http = require('http'), fs = require('fs'), path = require('path'), crypto = require('crypto');
-const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'), auction = require('./auction'); D.blackjack = require('./blackjack'); D.deaths = require('./deaths'); const weather = require('./weather'); const reports = require('./reports'); D.bridge = bridge; D.bounty = bounty; D.auction = auction;
+const D = require('./driver'); require('./lib'); require('./commands'); const bots = require('./bots'), bridge = require('./bridge'), github = require('./github'), bounty = require('./bounty'), auction = require('./auction'); D.blackjack = require('./blackjack'); D.deaths = require('./deaths'); const weather = require('./weather'); const reports = require('./reports'); D.mail = require('./mail'); D.bridge = bridge; D.bounty = bounty; D.auction = auction;
 const PORT = +process.env.PORT || 4000, HOST = process.env.HOST || '0.0.0.0';
 const PUB = path.join(__dirname, 'public'), DATA = path.join(__dirname, 'data', 'players');
 fs.mkdirSync(DATA, { recursive: true });
@@ -83,6 +83,15 @@ let areaPics = {}, areaAt = 0; // default room picture per area: public/img/area
 D.areaPic = (area) => { if (Date.now() - areaAt > 30000) { areaAt = Date.now(); try { areaPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'areas')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { areaPics = {}; } } return areaPics[area === 'cit' ? 'citadel' : area] || ''; };
 let people = {}, peopleAt = 0; // custom pictures for particular players (public/img/people/<name>.jpg, e.g. zeph.jpg); everyone else gets the class + gender portrait
 D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || 'n'}.jpg`; };
+D.listRoles = () => { const admins = [], architects = []; for (const f of fs.readdirSync(DATA)) { if (!f.endsWith('.json')) continue; const n = f.slice(0, -5); let r; try { r = JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch (e) { continue; } const on = D.players.get(n[0].toUpperCase() + n.slice(1)), w = on ? !!on.wiz : !!r.wiz, a = on ? !!on.architect : !!r.architect, nm = n[0].toUpperCase() + n.slice(1); if (w) admins.push(nm); if (a) architects.push(nm); } return { admins, architects }; };
+D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' (builder). Works for players who are offline too.
+  const key = role === 'wiz' ? 'wiz' : 'architect', p = D.players.get(name), f = file(name); if (!p && !fs.existsSync(f)) return 'none';
+  if (key === 'wiz' && !on) { const l = D.listRoles(); if (l.admins.length <= 1 && l.admins.includes(name)) return 'last'; }
+  if (p) { p[key] = !!on; D.savePlayer(p); p.recalc(); p.sendStats(); p.msg(on ? (key === 'wiz' ? 'You have been made an Administrator (wizard). `commands` shows your new commands; `help wizard` explains them.' : 'You have been made an Architect! Type `builder` for the area builder, and `help builder` for how to use it.') : `Your ${key === 'wiz' ? 'Administrator' : 'Architect'} status was removed.`, 'win'); }
+  else { const rec = JSON.parse(fs.readFileSync(f, 'utf8')); rec[key] = !!on; fs.writeFileSync(f, JSON.stringify(rec)); }
+  return 'ok';
+};
+D.builderInfo = () => ({ url: `http://localhost:${PORT}/builder.html`, key: BKEY });
 D.fingerRec = (name) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, name.toLowerCase() + '.json'), 'utf8')); } catch (e) { return null; } };
 let mobPics = {}, mobAt = 0; // monster pictures in public/img/mob/<mob id>.jpg are shown in the combat view (rescanned every 30 seconds)
 D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || ''; };
@@ -117,7 +126,7 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p);
+  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
@@ -161,6 +170,7 @@ function ws(req, socket) {
         else if (m.t === 'tr' && c.player) D.setTriggers(c.player, m);
         else if (m.t === 'mute' && c.player) D.setMute(c.player, m);
         else if (m.t === 'title' && c.player) D.setTitle(c.player, String(m.text || ''));
+        else if (m.t === 'mailsend' && c.player) D.mail.sendFrom(c.player, String(m.to || ''), String(m.subj || ''), String(m.body || ''));
         else if (m.t === 'email' && c.player) D.setEmail(c.player, String(m.text || ''));
         else if (m.t === 'emailhide' && c.player) D.hideEmail(c.player, !!m.hide);
         else if (m.t === 'tut' && c.player) D.tutMsg(c.player, m);
@@ -184,7 +194,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Last-Modified': lm.toUTCString() }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
-server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); });
+server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); D.mail.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;
 function halt(why) {
@@ -192,7 +202,7 @@ function halt(why) {
   try { auction.halt(); } catch (e) { D.log('auction halt', e.message); }
   for (const p of [...D.players.values()]) { if (p.isBot) continue; try { p.msg('*** The game is shutting down. Your character has been saved. Goodbye! ***', 'hurt'); D.savePlayer(p); saved++; } catch (e) { failed++; D.log('save failed for', p.name, e.message); } }
   try { bots.save(); } catch (e) { D.log('bot save failed', e.message); }
-  try { bridge.stop(); github.stop(); bounty.stop(); weather.stop(); reports.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
+  try { bridge.stop(); github.stop(); bounty.stop(); weather.stop(); reports.stop(); D.mail.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
   D.log(`saved ${saved} player${saved === 1 ? '' : 's'}${failed ? `, ${failed} FAILED` : ''}; goodbye`);
   setTimeout(() => { for (const p of D.players.values()) try { p.conn && p.conn.close(); } catch (e) { /* closing anyway */ } try { server.close(); } catch (e) { /* closing anyway */ } setTimeout(() => process.exit(failed ? 1 : 0), 300); }, 500);
 }

@@ -61,7 +61,8 @@ function page(id, title, intro, body) {
   const grp = (NAV.find(([, items]) => items.some(([i]) => i === id)) || [''])[0];
   const th = THEME[id] || id;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} · MULTIVERSE MUD Guide</title><link rel="icon" href="data:,"><link rel="stylesheet" href="guide.css"></head><body>
-<header class="top"><a class="logo" href="index.html"><b>SHADOW</b><i>PUNK</i><small>Player's Guide</small></a><button id="menu" aria-label="Menu">☰</button><a class="play" href="/">Play now</a></header>
+<header class="top"><a class="logo" href="index.html"><b>MULTIVERSE</b><i>MUD</i><small>Player's Guide</small></a><button id="menu" aria-label="Menu">☰</button><a class="play" href="/">Play now</a></header>
+<div class="realms"><span>REALMS</span><a class="rw" href="areas.html">&#129312; Old West</a><a class="rf" href="areas.html">&#128009; Fantasy</a><a class="rs" href="areas.html">&#128640; Sci-fi</a><a class="rm" href="areas.html">&#127980; Modern</a><a class="rp" href="areas.html">&#129430; Prehistoric</a><a class="rd" href="directions.html">Directions</a></div>
 <div class="wrap"><nav id="nav">${nav}</nav><main>
 <div class="hero"><img src="img/banner-${th}.${fs.existsSync(path.join(IMG, `banner-${th}.jpg`)) ? 'jpg' : 'svg'}" alt=""><div class="ht"><small>${grp}</small><h1>${esc(title)}</h1><p>${intro}</p></div></div>
 <article>${body}</article><footer>MULTIVERSE MUD Player's Guide. Generated from the live game data. All art is procedurally generated for this project.</footer></main></div><script src="guide.js"></script></body></html>`;

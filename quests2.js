@@ -1,8 +1,11 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_buck: 2, q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    sam: N('Shift Supervisor Sam', 'buck/0_0', 'Hey! New? Welcome to Buckstars. Honestly, you picked a rough night. The manager, Brenda, drank the whole roastery and the staff are all, well, wired. Grab an apron from the counter and help me close up.', 'A cheerful shift supervisor in a green apron with a name tag, a pen behind each ear and bags under both eyes.'),
+    bree: N('Barista Bree', 'buck/1_0', 'What can I get started for you? Type `list` to see the menu, then `buy <thing>`. Pastries are in the case, and the tip jar is purely decorative.', 'A friendly barista with a marker in her hair, drawing a name on a cup and a heart on the foam.'),
+    dex: N('Engineer Dex', 'town/implant_lab', 'Sorry, friend, I cannot talk right now. I am busy doing implants. Come back when I am done. (I am never done.)', 'A tall engineer in a grease-stained lab coat, goggles pushed up on his forehead, elbow-deep in a patient\'s neural port and humming a tune. He cannot be disturbed, and he will not be killed.'),
     ugga: N('Elder Ugga', 'cave/mouth', 'Sit, small one. Warm fire, good meat. The Great One below has eaten too many of my clan. You are tall. You hit things. Yes?', 'A tiny, ancient cave elder in a patchwork fur cloak, with ochre handprints on her face, a bone staff and a look that has seen ten thousand winters.'),
     dana: N('Dana Whitfield', 'modern/tw_front', 'Building Management, Meridian Tower. Please do not feed the interns. Something has gone very wrong upstairs and corporate would like it fixed, quietly.', 'A harried building manager in a headset and a lanyard with a clipboard, a flashlight and the thousand-yard stare of someone who has read the fire-safety manual.'),
     quill: N('Dr. Mara Quill', 'prime/landing', 'You came through the portal? Marvelous, and also very unwise. Welcome to the Primeval Rift. Please do not feed anything.', 'A sunburned paleontologist in a battered hat with a field notebook, a tranquilizer rifle she is bad with and a delighted, slightly unhinged smile.'),
@@ -19,6 +22,7 @@ module.exports = ({ N, Q, BOSS_QP }) => {
   };
   const QUESTS = [
     Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_buck', 'Closing Shift', 'sam', 1, 'Brenda has barricaded herself in the Roasting Room at the far corner of the shop, and half the staff have gone feral on her espresso. Fight your way through the shop (levels 1 to 3 up front, the tougher ones in the back), and take Brenda out. Grab an apron and a tamper club at the order counter first.', [['kill', 'brenda', 1]], { gold: 120, items: ['frappe', 'breakfast', 'potion'] }),
     Q('q_cave0', 'Bear Trouble', 'ugga', 26, 'The cave bears have taken the Bear Den and now they are in my kitchen. Send four of them back to sleep.', [['kill', 'cave_bear', 4]], { gold: 6000, items: ['mammothsteak', 'greater'] }),
     Q('q_cave1', 'Mammoth Hunt', 'ugga', 29, 'The clan needs meat and ivory. Bring down two of the great woolly beasts in the Mammoth Graveyard.', [['kill', 'woolly_mammoth', 2]], { gold: 9000, items: ['mammothsteak', 'mammothsteak', 'greater'] }),
     Q('q_cave2', 'The Great Chieftain', 'ugga', 31, 'Grog was my son, once. Now he is a mountain with a club who eats whoever comes near. He sits on his throne at the bottom of the deep cavern. Make him stop.', [['kill', 'grog', 1]], { gold: 25000, items: ['greater', 'greater', 'superior'] }, 'q_cave1'),
@@ -56,6 +60,7 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    sam: ['{name} is down in the back again, I will get the mop.', 'Oh no, {name}. Not by the ice machine.', 'Told you it was a rough night, {name}.'],
     ugga: ['{name} fell. The cave is cold tonight.', 'Ugga warned {name}. Ugga always warns.', 'Even big ones fall, {name}. Even big ones.'],
     dana: ['{name} is down on floor nine again, and I will need to file a form.', 'Please remove {name} from the lobby before the board arrives.', 'That is the third incident report today, {name}.'],
     quill: ['{name} is down. Fascinating, a textbook predator ambush.', 'Do not touch {name}. Those are still evidence.', 'Another volunteer for science, {name}. Thank you.'],

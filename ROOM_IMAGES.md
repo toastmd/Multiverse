@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-427 rooms:
+457 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -42,6 +42,36 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Vault Corridor | Dry Gulch Bank (Old West) | `bank-d.jpg` |
 | The Vault | Dry Gulch Bank (Old West) | `bank-e.jpg` |
 | Counting Room | Dry Gulch Bank (Old West) | `bank-f.jpg` |
+| Buckstars Entrance | Buckstars Coffee Shop (Modern) | `buck-0_0.jpg` |
+| Condiment Bar | Buckstars Coffee Shop (Modern) | `buck-0_1.jpg` |
+| Restroom Hall | Buckstars Coffee Shop (Modern) | `buck-0_2.jpg` |
+| Cleaning Closet | Buckstars Coffee Shop (Modern) | `buck-0_3.jpg` |
+| Trash Room | Buckstars Coffee Shop (Modern) | `buck-0_4.jpg` |
+| Order Counter | Buckstars Coffee Shop (Modern) | `buck-1_0.jpg` |
+| Window Seats | Buckstars Coffee Shop (Modern) | `buck-1_1.jpg` |
+| Women's Restroom | Buckstars Coffee Shop (Modern) | `buck-1_2.jpg` |
+| Dish Pit | Buckstars Coffee Shop (Modern) | `buck-1_3.jpg` |
+| Ice Machine Room | Buckstars Coffee Shop (Modern) | `buck-1_4.jpg` |
+| Espresso Bar | Buckstars Coffee Shop (Modern) | `buck-2_0.jpg` |
+| Cozy Corner | Buckstars Coffee Shop (Modern) | `buck-2_1.jpg` |
+| Men's Restroom | Buckstars Coffee Shop (Modern) | `buck-2_2.jpg` |
+| Stock Room | Buckstars Coffee Shop (Modern) | `buck-2_3.jpg` |
+| Bean Storage | Buckstars Coffee Shop (Modern) | `buck-2_4.jpg` |
+| Pastry Case | Buckstars Coffee Shop (Modern) | `buck-3_0.jpg` |
+| Laptop Row | Buckstars Coffee Shop (Modern) | `buck-3_1.jpg` |
+| Employee Hallway | Buckstars Coffee Shop (Modern) | `buck-3_2.jpg` |
+| Walk-in Cooler | Buckstars Coffee Shop (Modern) | `buck-3_3.jpg` |
+| Dumpster Alley | Buckstars Coffee Shop (Modern) | `buck-3_4.jpg` |
+| Mobile Order Pickup | Buckstars Coffee Shop (Modern) | `buck-4_0.jpg` |
+| Community Board Nook | Buckstars Coffee Shop (Modern) | `buck-4_1.jpg` |
+| Break Room | Buckstars Coffee Shop (Modern) | `buck-4_2.jpg` |
+| Manager's Office | Buckstars Coffee Shop (Modern) | `buck-4_3.jpg` |
+| Loading Dock | Buckstars Coffee Shop (Modern) | `buck-4_4.jpg` |
+| Merchandise Wall | Buckstars Coffee Shop (Modern) | `buck-5_0.jpg` |
+| Patio Gate | Buckstars Coffee Shop (Modern) | `buck-5_1.jpg` |
+| Outdoor Patio | Buckstars Coffee Shop (Modern) | `buck-5_2.jpg` |
+| Drive-Thru Window | Buckstars Coffee Shop (Modern) | `buck-5_3.jpg` |
+| The Roasting Room | Buckstars Coffee Shop (Modern) | `buck-5_4.jpg` |
 | Crystal Cavern | The Mammoth Caverns (Prehistoric) | `cave-crystal.jpg` |
 | Bear Den | The Mammoth Caverns (Prehistoric) | `cave-den.jpg` |
 | Fire Pit Cavern | The Mammoth Caverns (Prehistoric) | `cave-fire.jpg` |

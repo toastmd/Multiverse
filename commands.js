@@ -3,7 +3,14 @@ const D = require('./lib'); require('./magic'); require('./quest'); require('./t
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
 const silenced = (p) => { const t = D.isSilenced ? D.isSilenced(p.name) : 0; if (t) { p.msg(`An administrator has silenced you for about ${Math.ceil((t - Date.now()) / 60000)} more minute(s): no tells, gossips or shouts.`, 'hurt'); return true; } return false; };
-const ALIAS = { reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows for each kind of ground
+  grass: 'GRASS. Thick, springy turf, green where the water gathers and straw-colored where it does not. It swallows your footsteps and hides small things among the roots, and after rain it smells sweet and a little wild. Herbs and mushrooms grow in the damp patches, and animals use the same trails every day, so there are tracks for anyone who can read them.',
+  dirt: 'DIRT. Packed brown earth, hard and dry on top and gritty beneath. Wheel ruts and old boot prints crowd the surface. It rises as dust with every step and turns to sticky mud in the rain. Not much grows here, but it is easy to dig and easy to follow tracks across.',
+  stone: 'STONE. Cold gray rock: flagstones worn smooth by years of feet, or the raw floor of a cave, damp in the corners and ringing under your heels. Water seeps along the cracks and pale moss clings in the dark. It is hard on a fall and good for building, and when something glints in it, it is usually ore.',
+  concrete: 'CONCRETE. Poured, gray and flat, cracked in places and stained with oil and faded paint lines. It echoes. Weeds push up through the seams and old gum is pressed into it like tiny fossils. This ground was made by people, for people and wheels, and it is the same wherever you go.',
+  metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
+};
+const ALIAS = { pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -63,7 +70,9 @@ function go(p, d) {
 const C = {
   look(p, a) {
     if (!a) return p.env.look(p, true);
+    const w = a.replace(/^at\s+/, '').trim().toLowerCase(), gr = GROUND[p.env.terrain]; if (gr && /^(ground|floor|terrain|underfoot)$/.test(w)) return p.msg(gr, 'items');
     const t = find(p.env.inv, a.replace(/^at\s+/, '')) || find(p.inv, a.replace(/^at\s+/, ''));
+    if (!t && gr && w === p.env.terrain) return p.msg(gr, 'items');
     if (!t) return p.msg("You don't see that here.");
     p.msg(t.long); if (t.isLiving) p.msg(`${cap(t.the())} is ${health(t)}.`);
   },
@@ -74,6 +83,7 @@ const C = {
       if (!p.autokill) return p.msg('Kill what? (Type `autokill on` and a bare `kill` attacks the first monster in the room.)');
       t = p.env.inv.find((o) => o.isLiving && !o.isPlayer && o.hp > 0); if (!t) return p.msg('There is nothing here to kill.');
     } else t = find(p.env.inv.filter((o) => o.isLiving && o !== p), a);
+    if (!t && a.trim()) { const n = p.env.inv.find((o) => o.isNpc && o.isId(a.trim())); if (n) return p.msg(n.npcId === 'dex' ? 'Engineer Dex is far too busy doing implants to fight, and anyway, nobody here would let you.' : `${n.name} is not someone you can fight.`, 'sys'); }
     if (!t) return p.msg('No such target here.');
     if (t.isPlayer) return p.msg('Player combat is disabled.'); if (!p.engage(t)) return p.msg('The innkeeper glares. No fighting here.');
     p.sendPortrait(t.name, 'mob_' + t.mobId); p.msg(`You attack ${t.the()}!`, 'combat'); p.env.tell(`${p.name} attacks ${t.the()}!`, p, 'combat2'); if (!t.enemy) t.engage(p); p.fight(t);
@@ -587,14 +597,14 @@ const C = {
   },
   // ---- remote sell: all unworn weapons and armor, from anywhere, for 90% of the shop price (10% finder's fee) ----
   rsell(p, a) {
-    const sellable = (d) => d && (d.type === 'weapon' || d.type === 'armor') && !d.legend && priceOf(p, d) > 0, rows = [];
+    const sellable = (d) => d && (d.type === 'weapon' || d.type === 'armor' || d.type === 'material') && !d.legend && priceOf(p, d) > 0, rows = []; // gear and gathered materials (ore, herbs, fish...)
     for (const it of p.inv) if (!worn(p, it) && !it.kept && sellable(it.def)) rows.push({ name: it.name, price: priceOf(p, it.def), it });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (sellable(d) && !p.keepBag[id]) rows.push({ name: `${d.name}${c > 1 ? ' x' + c : ''}`, price: priceOf(p, d) * c, id }); }
-    if (!rows.length) return p.msg('You have no unworn weapons or armor to sell. (Legendary items are never sold by rsell.)', 'sys');
+    if (!rows.length) return p.msg('You have no unworn weapons, armor or gathered materials to sell. (Legendary and kept items are never sold by rsell.)', 'sys');
     const gross = rows.reduce((s, r) => s + r.price, 0), fee = Math.floor(gross * 0.1), net = gross - fee;
     if (a.trim().toLowerCase() === 'list') { rows.slice(0, 30).forEach((r) => p.msg(`  ${r.name.padEnd(28)} ${r.price}c`, 'sys')); if (rows.length > 30) p.msg(`  ...and ${rows.length - 30} more`, 'sys'); return p.msg(`rsell would sell ${rows.length} stack${rows.length > 1 ? 's' : ''} for ${gross} credits, minus a 10% finder's fee of ${fee}: you would receive ${net}. Type \`rsell\` to do it.`, 'win'); }
     for (const r of rows) { if (r.it) r.it.destroy(); else delete p.bag[r.id]; }
-    p.gold += net; p.msg(`You sell ${rows.length} stack${rows.length > 1 ? 's' : ''} of unworn gear remotely for ${gross} credits. Finder's fee (10%): ${fee}. You receive ${net} credits. (Worn and legendary items are never sold.)`, 'win');
+    p.gold += net; p.msg(`You sell ${rows.length} stack${rows.length > 1 ? 's' : ''} of unworn gear and materials remotely for ${gross} credits. Finder's fee (10%): ${fee}. You receive ${net} credits. (Worn and legendary items are never sold.)`, 'win');
   },
   auction(p, a) { D.auction.cmd(p, a); }, bid(p, a) { D.auction.bid(p, a); }, auctions(p) { D.auction.status(p); },
   title(p, a) { // set your own title, shown on the who list (the special pre-title for admins cannot be copied)
@@ -655,6 +665,13 @@ const C = {
     if (!m || t === 'list') { p.msg(`Keypad controls are ${p.kpOn ? 'ON' : 'OFF'} (keypad on | off | reset). Num Lock must be on.`, 'rname'); p.msg(Object.entries(p.kpMap).map(([k, v]) => `${KPN[k]} = ${v || '(nothing)'}`).join(', ') + '.', 'sys'); return p.msg('Change a key: keypad <key> <command>, e.g. keypad 5 look. Use keypad <key> none to clear it. Keys: 0-9 + - * / . enter. Separate several commands with ;', 'sys'); }
     D.kp(p, m[1] === 'on' ? { on: true } : m[1] === 'off' ? { on: false } : m[1] === 'reset' ? { reset: true } : { name: m[1], cmd: m[2] });
   },
+  give(p, a) { // give <amount> [credits|c] <player>  (or give <player> <amount>): hand credits to another player in the same room
+    const w = a.trim().split(/\s+/).filter((x) => !/^(credits?|c|cr|to)$/i.test(x)); const num = w.find((x) => /^\d+$/.test(x)), who = w.find((x) => x !== num);
+    if (!num || !who) return p.msg('Usage: give <amount> <player>   (for example `give 50 ben`: hands 50 credits to someone in the same room)', 'sys');
+    const n = parseInt(num, 10), t = p.env.inv.find((o) => o.isPlayer && o !== p && o.name.toLowerCase().startsWith(who.toLowerCase()));
+    if (!t) return p.msg(`${who} is not here.`, 'sys'); if (n < 1) return p.msg('Give at least 1 credit.', 'sys'); if (n > p.gold) return p.msg(`You only have ${p.gold} credits.`, 'sys');
+    p.gold -= n; t.gold += n; p.msg(`You give ${n} credits to ${t.name}.`, 'win'); t.msg(`${p.name} gives you ${n} credits.`, 'win'); p.env.tell(`${p.name} gives some credits to ${t.name}.`, [p, t], 'sys'); p.sendStats(); t.sendStats(); D.log('give', `${p.name} -> ${t.name}: ${n}`);
+  },
   changeclass(p, a) { // changeclass [confirm <class>]: change your class at the Hall of Many Faces for a fee
     if (!p.env.def.faces) return p.msg("Classes are changed at the Hall of Many Faces, north of the Adventurers' Guild (`travel guild`, then north).", 'sys');
     const rem = !!p.klass().remort, pool = Object.entries(D.K.CLASSES).filter(([, k]) => !!k.remort === rem), cost = Math.round((500 + 250 * p.level) * (rem ? 2 : 1)), w = a.trim().toLowerCase().split(/\s+/), confirm = w[0] === 'confirm', q = (confirm ? w[1] : w[0]) || '';
@@ -714,7 +731,7 @@ D.commandNames = () => Object.keys(C).filter((k) => k !== 'huh'); // used by the
 const KPN = { Numpad0: '0', Numpad1: '1', Numpad2: '2', Numpad3: '3', Numpad4: '4', Numpad5: '5', Numpad6: '6', Numpad7: '7', Numpad8: '8', Numpad9: '9', NumpadAdd: '+', NumpadSubtract: '-', NumpadMultiply: '*', NumpadDivide: '/', NumpadDecimal: '.', NumpadEnter: 'enter' };
 const KPCODE = Object.fromEntries([...Object.entries(KPN).map(([c, n]) => [n, c]), ['plus', 'NumpadAdd'], ['add', 'NumpadAdd'], ['minus', 'NumpadSubtract'], ['star', 'NumpadMultiply'], ['times', 'NumpadMultiply'], ['slash', 'NumpadDivide'], ['dot', 'NumpadDecimal'], ['decimal', 'NumpadDecimal'], ['return', 'NumpadEnter']]);
 D.kp = (p, m) => { // keypad settings, saved in the player's profile; used by the browser client and the keypad command
-  if (m.on !== undefined) p.kpOn = !!m.on; else if (m.reset) p.kpMap = { ...D.KP_DEFAULT };
+  if (m.on !== undefined) { p.kpOn = !!m.on; p.kpSet = true; } else if (m.reset) p.kpMap = { ...D.KP_DEFAULT };
   else { const code = D.KP_DEFAULT[m.code] !== undefined ? m.code : KPCODE[String(m.name || '').toLowerCase()]; if (!code) return p.msg('Unknown keypad key. Keys: 0-9 + - * / . enter'); let c = String(m.cmd || '').replace(/[\u0000-\u001f]/g, '').trim().slice(0, 100); if (/^(none|off|nothing|-)$/i.test(c)) c = ''; p.kpMap[code] = c; p.msg(`Keypad ${KPN[code]} ${c ? '= ' + c : 'cleared'}.`, 'win'); }
   if (m.on !== undefined) p.msg(`Keypad controls ${p.kpOn ? 'ON' : 'OFF'}.`, 'win'); if (m.reset) p.msg('Keypad reset to the defaults.', 'win'); p.sendKeypad();
 };

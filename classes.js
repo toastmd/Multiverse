@@ -5,17 +5,17 @@
 const S = (k, n, lvl, mp, kind, i, c, d, o = {}) => ({ k, n, lvl, mp, kind, i, c, d, ...o });
 
 const CLASSES = {
-  magician:    { name: 'Arcanist',     icon: '🧙', hpl: 9,  mpl: 12, rg: 2, str: -2, dex: 0,  con: -2, kit: 'staff',    desc: 'A wizard channeling raw mana through staff and spellbook. Fragile, but the strongest bolts, fire and frost in the multiverse. (Fantasy)' },
+  magician:    { name: 'Mage',     icon: '🧙', hpl: 9,  mpl: 12, rg: 2, str: -2, dex: 0,  con: -2, kit: 'staff',    desc: 'A wizard channeling raw mana through staff and spellbook. Fragile, but the strongest bolts, fire and frost in the multiverse. (Fantasy)' },
   thief:       { name: 'Rogue',  icon: '🥷', hpl: 11, mpl: 6,  rg: 1, str: 0,  dex: 4,  con: -1, kit: 'dagger',   desc: 'A shadow-walking cutthroat: crits, poisons and dirty tricks. Hard to hit, hard to find. (Fantasy)' },
   alchemist:   { name: 'Alchemist',      icon: '⚗️', hpl: 10, mpl: 9,  rg: 1, str: -1, dex: 1,  con: 0,  kit: 'pestle',   desc: 'A brewer of acids, bombs, tonics and elixirs. Heals and hurts. (Fantasy)' },
   gunslinger:  { name: 'Gunslinger',       icon: '🤠', hpl: 11, mpl: 6,  rg: 1, str: 0,  dex: 3,  con: 0,  kit: 'revolver', desc: 'An Old West pistol-and-rifle specialist: rapid shots, stuns and a deadly crit rate. (Old West)' },
-  barbarian:   { name: 'Chromeblade',  icon: '🧔', hpl: 16, mpl: 5,  rg: 1, str: 4,  dex: 0,  con: 3,  kit: 'axe',      desc: 'A heavily augmented warrior from the star-cities with a huge health pool. Rage, cleave and brute force. (Sci-fi)' },
-  engineer:    { name: 'Mechwright',       icon: '👷', hpl: 11, mpl: 8,  rg: 1, str: 0,  dex: 1,  con: 1,  kit: 'wrench',   desc: 'A sci-fi engineer: turrets, gadgets, deployables and a powered combat suit. (Sci-fi)' },
+  barbarian:   { name: 'Space Marine',  icon: '🧔', hpl: 16, mpl: 5,  rg: 1, str: 4,  dex: 0,  con: 3,  kit: 'axe',      desc: 'A heavily augmented warrior from the star-cities with a huge health pool. Rage, cleave and brute force. (Sci-fi)' },
+  engineer:    { name: 'Engineer',       icon: '👷', hpl: 11, mpl: 8,  rg: 1, str: 0,  dex: 1,  con: 1,  kit: 'wrench',   desc: 'A sci-fi engineer: turrets, gadgets, deployables and a powered combat suit. (Sci-fi)' },
   necromancer: { name: 'Necromancer', icon: '🧛', hpl: 9,  mpl: 11, rg: 2, str: -2, dex: 0,  con: -1, kit: 'bonewand', desc: 'A death-magic specialist. Drains life, curses foes and binds the restless dead. (Fantasy)' },
   cleric:      { name: 'Preacher', icon: '👼', hpl: 12, mpl: 10, rg: 2, str: 1,  dex: -1, con: 2,  kit: 'mace',     desc: 'A frontier preacher and doctor with a bible, a medical bag and a sturdy constitution. The reliable support. (Old West)' },
   druid:       { name: 'Druid', icon: '🧝', hpl: 12, mpl: 10, rg: 2, str: 0,  dex: 1,  con: 1,  kit: 'sickle',   desc: 'A wild-spirit druid bonded to the forest: thorns, regrowth and a wolf companion. (Fantasy)' },
-  bard:        { name: 'Showman',  icon: '🧑‍🎤', hpl: 10, mpl: 9,  rg: 2, str: -1, dex: 2,  con: 0,  kit: 'lute',     desc: 'A saloon showman: songs, tall tales and a piano that wound, soothe, buff and put foes to sleep. (Old West)' },
-  wirewalker:  { name: 'Wirewalker',   icon: '🔌', hpl: 9,  mpl: 12, rg: 2, str: -2, dex: 1,  con: -2, kit: 'cyberdeck', desc: 'A sci-fi netrunner. Burns targets with hostile code, crashes systems and hijacks drones. (Sci-fi)' },
+  bard:        { name: 'Musician',  icon: '🧑‍🎤', hpl: 10, mpl: 9,  rg: 2, str: -1, dex: 2,  con: 0,  kit: 'lute',     desc: 'A saloon musician: songs, tall tales and a piano that wound, soothe, buff and put foes to sleep. (Old West)' },
+  wirewalker:  { name: 'Hacker',   icon: '🔌', hpl: 9,  mpl: 12, rg: 2, str: -2, dex: 1,  con: -2, kit: 'cyberdeck', desc: 'A sci-fi netrunner. Burns targets with hostile code, crashes systems and hijacks drones. (Sci-fi)' },
   scavenger:   { name: 'Prospector',    icon: '🧑‍🌾', hpl: 13, mpl: 6,  rg: 2, str: 1,  dex: 1,  con: 2,  kit: 'scrapknife', desc: 'A prospector and trailblazer, not a fighter: botany, mining, fishing and crafting skills. Carries more. (Old West)' },
 };
 

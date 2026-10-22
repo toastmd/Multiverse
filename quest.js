@@ -7,6 +7,9 @@ const need = (o) => (o[0] === 'kill' || o[0] === 'get' || o[0] === 'rob' ? o[2] 
 D.objText = (o) => o[0] === 'kill' ? `Kill ${mname(o[1])} x${o[2]}` : o[0] === 'get' ? `Bring ${iname(o[1])} x${o[2]}`
   : o[0] === 'visit' ? `Visit ${(D.rooms.get(o[1]) || {}).name || o[1]}` : o[0] === 'rob' ? `Rob ${o[2]} people at the bank (rob <person>)` : o[0] === 'vault' ? 'Unlock and loot the bank vault' : o[0] === 'tutorial' ? 'Finish the newbie tutorial' : `Talk to ${(D.Q.NPCS[o[1]] || {}).name || o[1]}`;
 D.qNeed = need;
+D.autoTalk = (p, npcId) => { // the first time you enter a room with a quest giver who has one for you, open the conversation
+  const q = D.Q.QUESTS.find((x) => x.giver === npcId); if (!q || !p.env || !p.env.inv.some((o) => o.npcId === npcId) || D.qState(p, q) !== 'avail' || (p._at || (p._at = {}))[q.id]) return; p._at[q.id] = 1; D.command(p, 'talk ' + npcId);
+};
 D.qDef = (id) => D.Q.QUESTS.find((q) => q.id === id);
 D.qCur = (p, q, i) => { const o = q.obj[i]; return o[0] === 'get' ? Math.min(o[2], D.itemCount(p, o[1])) : Math.min(need(o), (p.quests[q.id].prog[i]) || 0); };
 D.qReady = (p, q) => q.obj.every((o, i) => D.qCur(p, q, i) >= need(o));

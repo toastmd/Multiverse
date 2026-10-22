@@ -24,7 +24,7 @@ button{background:var(--btn);color:var(--text);border:1px solid var(--line);bord
 button:hover{border-color:var(--sea)} button:focus-visible,input:focus-visible{outline:2px solid var(--lamp);outline-offset:1px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:14px}
 aside.right{border-right:0;border-left:1px solid var(--line)}
-#cvw{position:absolute;left:50%;top:5%;transform:translateX(-50%);width:min(640px,94%);z-index:35;background:#070707ee;border:2px solid #e9b44c;border-radius:12px;box-shadow:0 10px 40px #000c;overflow:hidden}#cvw[hidden]{display:none}#cvh{display:flex;justify-content:space-between;align-items:center;padding:3px 10px;background:#1a1508;color:#e9b44c;font:700 13px ui-sans-serif,system-ui}#cvh button{background:none;border:0;color:#e9b44c;cursor:pointer;font-size:14px}#cvw canvas{display:block;width:100%;height:auto}
+#cvw{position:absolute;left:50%;top:5%;transform:translateX(-50%);width:min(640px,94%);z-index:35;background:#070707ee;border:2px solid #e9b44c;border-radius:12px;box-shadow:0 10px 40px #000c;overflow:hidden}#cvw[hidden]{display:none}#cvh{display:flex;justify-content:space-between;align-items:center;padding:3px 10px;background:#1a1508;color:#e9b44c;font:700 13px ui-sans-serif,system-ui}#cvh button{background:none;border:0;color:#e9b44c;cursor:pointer;font-size:14px}#cvw canvas{display:block;width:100%;height:auto}#cvlog{max-height:132px;overflow:hidden;padding:5px 12px 8px;font:13px/1.35 ui-sans-serif,system-ui;border-top:1px solid #e9b44c44;display:flex;flex-direction:column;justify-content:flex-end;min-height:40px}#cvlog div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#cvlog .combat{color:#ffd9a0}#cvlog .hurt{color:#ff8a8a}#cvlog .spell{color:#9be7ff}#cvlog .combat2{color:#aaa}
 main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;height:100%;overflow:hidden}
 #out{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px 22px;font-size:17px}
 #out div{max-width:78ch;margin:0 0 4px;white-space:pre-wrap}
@@ -151,12 +151,13 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 #login button{background:linear-gradient(90deg,#ffb347,#a0e06a,#19e3ff);color:#10130f;border:0;border-radius:8px;font-weight:800;letter-spacing:.08em;padding:13px;cursor:pointer;box-shadow:0 0 24px #ffb34733}#login button:hover{filter:brightness(1.1)}
 .deathmsg{color:#ff9a9a;font-weight:600;border-left:3px solid #c04040;padding-left:8px}.exits{line-height:1.35}
 
-#login{background:#05060f url(img/multiverse.jpg) center/cover no-repeat;place-items:center end;padding-right:5vw}
+#login{background:#05060f url(img/multiverse.jpg) center/cover no-repeat;place-items:center}
 #login:before{display:none}
 #login h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 #login .lgen,#login p.lt{display:none}
 #login form{width:min(380px,92vw);gap:10px;padding:20px 22px;background:#07060fe0}
-@media(max-width:900px){#login{place-items:end center;padding:0 0 3vh}}
+
+#sbar{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}#sbar:empty{display:none}#sbar button{font-size:13px;padding:3px 9px;border-left:3px solid var(--line);white-space:nowrap}#sbar button:hover{background:#2a2a2a}
 </style>
 </head>
 <body>
@@ -183,8 +184,8 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
   <div id="qwin" hidden role="dialog" aria-label="Quest window"><div id="qbar"><b>Quests</b><small id="qcount"></small><span class="sp"></span><button id="qclose" type="button" aria-label="Close quest window">✕</button></div><div id="qbody"></div></div>
   
 </div><div id="gos" aria-label="Gossip channel (type /g message)"><div><b>GOSSIP CHANNEL</b> type /g message, or gossip off</div></div></aside>
-<main><div id="cvw" hidden><div id="cvh"><span>⚔ Combat</span><button type="button" id="cvx" title="Hide (combat messages return while hidden)">✕</button></div><canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas></div><div id="out" aria-live="polite"></div><form id="f"><div id="vitals"><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div><div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div><div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div></div>
-  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button><button type="button" id="recallbtn" data-c="recall" title="Recall: return to Ashfall Square (sends: recall)">&#8962; recall</button><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button type="button" data-c="inventory">pack</button><button type="button" data-c="score">score</button><button type="button" data-c="flee">flee</button><button type="button" data-c="who">who</button><button type="button" data-c="spells">spells</button><button type="button" data-c="tradeskills">tradeskills</button><button type="button" data-c="commands">commands</button><button id="mailbtn" type="button" data-c="mail" title="Mudmail">&#9993; mail <span id="mailn"></span></button><button type="button" data-c="milestones" title="Milestones: where you can travel">milestones</button></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
+<main><div id="cvw" hidden><div id="cvh"><span>⚔ Combat</span><button type="button" id="cvx" title="Hide (combat messages return while hidden)">✕</button></div><canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas><div id="cvlog" aria-live="off"></div></div><div id="out" aria-live="polite"></div><form id="f"><div id="vitals"><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div><div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div><div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div></div>
+  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button><button type="button" id="recallbtn" data-c="recall" title="Recall: return to Ashfall Square (sends: recall)">&#8962; recall</button><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button type="button" data-c="kill" title="Attack (sends: kill). With `autokill on` it attacks the first monster in the room.">kill</button><button type="button" data-c="inventory">pack</button><button type="button" data-c="score">score</button><button type="button" data-c="flee">flee</button><button type="button" data-c="who">who</button><button type="button" data-c="spells">spells</button><button type="button" data-c="tradeskills">tradeskills</button><button type="button" data-c="commands">commands</button><button id="mailbtn" type="button" data-c="mail" title="Mudmail">&#9993; mail <span id="mailn"></span></button><button type="button" data-c="milestones" title="Milestones: where you can travel">milestones</button></div><div id="sbar" role="toolbar" aria-label="Class spells"></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
 <aside class="right"><div class="rscroll">
   <canvas id="map" width="680" height="560" aria-label="Map of explored rooms"></canvas>
   <div class="cap"><span id="area"></span><span id="legend"></span></div>
@@ -340,7 +341,7 @@ let invT=0; function inviteShow(d){ clearTimeout(invT); $('#ibody').innerHTML='<
 $('#ibody').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return; send({t:'cmd',line:b.dataset.c}); $('#iwin').hidden=true; clearTimeout(invT); });
 function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(e._t); e._t=setTimeout(()=>e.classList.remove('on'),1800); }
 $('#ix').onclick=()=>{ $('#iwin').hidden=true; clearTimeout(invT); }; 
-$('#qk').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(b){ send({t:'cmd',line:b.dataset.c}); $('#in').focus(); } });
+/* quick keys are handled by the document-level data-c click handler (a second handler here sent every quick key twice) */
 // ---------- map: hover a room for its name, click a room to run there ----------
 const MAPS=78; function mapHit(e){ if(!map) return null; const c=$('#map'), r=c.getBoundingClientRect(), sx=c.width/r.width, sy=c.height/r.height, mx=(e.clientX-r.left)*sx, my=(e.clientY-r.top)*sy, cur=map.rooms.find(q=>q.p===map.me); if(!cur) return null;
   for(const q of map.rooms){ const x=c.width/2+(q.x-cur.x)*MAPS, y=c.height/2+(q.y-cur.y)*MAPS; if(Math.abs(mx-x)<=26&&Math.abs(my-y)<=26) return q; } return null; }
@@ -400,6 +401,7 @@ function elevatorShow(d){ if(d.quiet&&$('#msw').hidden) return; $('#msbar span')
   for(const f of d.floors){ const r=document.createElement('div'); r.className='msr '+(f.key===d.here?'here':'ok'); const ck=document.createElement('span'); ck.className='ck'; ck.textContent=f.label; const mn=document.createElement('span'); mn.className='mn'; const nm=document.createElement('b'); nm.textContent=f.name; const sm=document.createElement('small'); sm.textContent='monster levels '+f.levels; mn.append(nm,sm); r.append(ck,mn);
     if(f.key===d.here){ const t=document.createElement('span'); t.className='onote'; t.textContent='you are here'; r.appendChild(t); } else { const b=document.createElement('button'); b.type='button'; b.className='oacc'; b.textContent='Go'; b.onclick=()=>{ send({t:'cmd',line:'elevator '+f.key}); $('#msw').hidden=true; }; r.appendChild(b); } B.appendChild(r); }
   $('#msw').hidden=false; }
+$('#sbar').addEventListener('pointerdown',e=>{ const b=e.target.closest('button[data-k]'); if(b&&e.button===0){ e.preventDefault(); cmd('cast '+b.dataset.k); $('#in').focus(); } }); $('#sbar').addEventListener('click',e=>{ const b=e.target.closest('button[data-k]'); if(b&&e.detail===0) cmd('cast '+b.dataset.k); }); // keyboard activation (Enter or Space on a focused spell button)
 function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; $('#wbody').innerHTML=list.map(p=>'<div class="wc" data-n="'+wesc(p.name)+'" title="Click to finger '+wesc(p.name)+'"><img alt="" loading="lazy" src="'+wesc(p.pic||genSrc(p.cls,p.g))+'" onerror="this.style.visibility=\'hidden\'"><b>'+(p.pre?'<em class="pre">'+wesc(p.pre)+'</em> ':'')+wesc(p.name)+(p.bot?' (bot)':'')+'</b>'+(p.title?'<small class="ttl">'+wesc(p.title)+'</small>':'')+'<small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+' \u00b7 '+wesc(p.gl||p.g)+'</small></div>').join(''); }
 (function(){ const w=$('#wwin'),bar=$('#wbar'); let pos={}; try{ pos=JSON.parse(localStorage.getItem('sp_wwin')||'{}'); }catch(e){} if(pos.x!=null){ w.style.left=pos.x+'px'; w.style.top=pos.y+'px'; }
   $('#wx').onclick=()=>{ w.hidden=true; }; let d=null; bar.onpointerdown=e=>{ if(e.target.id==='wx') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
@@ -527,6 +529,7 @@ function book(m){
   for(const s of m.list){ if(s.school&&s.school!==school){ school=s.school; const h=document.createElement('h3'); h.textContent=school; b.appendChild(h); }
     const el=document.createElement('button'), ok=s.lvl<=m.level; el.disabled=!ok; el.title=s.d; if(ok) el.dataset.c='cast '+s.k;
     el.innerHTML=`${ok?s.i:'🔒'} ${s.n}<small>${ok?s.mp+' mp \u00b7 type: '+s.k:'unlocks at level '+s.lvl}</small>`; b.appendChild(el); }
+  const sb=$('#sbar'), sig=m.list.filter(s=>s.lvl<=m.level).map(s=>s.k).join(','); if(sb.dataset.sig===sig) return; sb.dataset.sig=sig; sb.innerHTML=''; for(const s of m.list){ if(s.lvl>m.level) continue; const e=document.createElement('button'); e.type='button'; e.dataset.k=s.k; e.title=s.d+' ('+s.mp+' mp, one word: '+s.k+')'; if(s.c) e.style.borderLeftColor=s.c; e.textContent=(s.i?s.i+' ':'')+s.n; sb.appendChild(e); } // clickable spells under the quick keys (they fire on press, like a hotbar, which is what you want mid-fight)
 }
 
 // ---------- map: terrain textures, paths, and a you-are-here marker ----------
@@ -598,8 +601,8 @@ $('#legend').innerHTML=Object.keys(TERRAIN).map(k=>`<i class="sw" style="backgro
 // ---------- combat arena ----------
 const MIC={}; function mobImg(f){ if(!f) return null; let i=MIC[f]; if(!i){ i=new Image(); i.src='img/mob/'+f; MIC[f]=i; } return i.complete&&i.naturalWidth?i:null; } // monster pictures for the combat view
 const PIC={}; function plImg(u){ if(u.name!==myName) return null; const src=myPic||genSrc(myCls,myGender); let i=PIC[src]; if(!i){ i=new Image(); i.src=src; PIC[src]=i; } return i.complete&&i.naturalWidth?i:null; } // your portrait in the combat view
-let vcX=false; function vcShow(){ if(prefs.vcombat===false||vcX) return; $('#cvw').hidden=false; } function vcHide(){ $('#cvw').hidden=true; } $('#cvx').onclick=()=>{ vcHide(); vcX=true; setTimeout(()=>{ vcX=false; },15000); }; // visual combat: a pop-up in the middle of the terminal while you fight
-const VCQ=/^(combat|combat2|miss)$/; function vcHides(m,c){ if(prefs.vcombat===false) return false; /* these classes only ever occur in a fight, and the first lines arrive before the pop-up opens */ return VCQ.test(c)||(c==='hurt'&&/\(\d+\)$/.test(m))||(c==='spell'&&/ You cast /.test(' '+m)); }
+let vcX=false; function vcShow(){ if(prefs.vcombat===false||vcX) return; $('#cvw').hidden=false; } function vcHide(){ $('#cvw').hidden=true; $('#cvlog').innerHTML=''; } $('#cvx').onclick=()=>{ vcHide(); vcX=true; setTimeout(()=>{ vcX=false; },15000); }; // visual combat: a pop-up in the middle of the terminal while you fight
+const VCQ=/^(combat|combat2|miss)$/; function vcHides(m,c){ if(prefs.vcombat===false) return false; /* these classes only ever occur in a fight, and the first lines arrive before the pop-up opens */ if(c==='miss') return true; /* misses and fumbles are gagged */ const hit=VCQ.test(c)||(c==='hurt'&&/\(\d+\)$/.test(m))||(c==='spell'&&/ You cast /.test(' '+m)); if(!hit) return false; const L=$('#cvlog'), d=document.createElement('div'); d.className=c; d.textContent=m.replace(/\s+/g,' ').trim(); L.appendChild(d); while(L.children.length>6) L.removeChild(L.firstChild); return true; } // combat messages go to the pop-up's own log
 function onFight(m){   if(prefs.vcombat===false) return; vcShow(); const now=performance.now(), sp=m.spell;
   if(m.heal!==undefined||m.buff){ if(!fight) return; const side=m.a.id===fight.L.id?'L':'R'; fight.t=now;
     if(m.heal) fight.floats.push({side,txt:'+'+m.heal,col:'#7be0a0',hit:true,t:now}); if(sp) fight.banner={...sp,t:now}; return; }
@@ -609,7 +612,7 @@ function onFight(m){   if(prefs.vcombat===false) return; vcShow(); const now=per
   fight.L={...fight.L,...L}; fight.R={...fight.R,...R}; fight.t=now; fight.dead=!!m.dead;
   if(!m.dead){ fight.atk=atkLeft?'L':'R'; fight.at=now;
     if(sp){ fight.proj={from:atkLeft?'L':'R',to:side,...sp,t:now}; fight.banner={...sp,t:now}; }
-    fight.floats.push({side,txt:m.hit?String(m.dmg):'miss',crit:m.crit,hit:m.hit,t:now+lag,col:sp&&m.hit&&!m.crit?sp.c:null}); if(m.hit) fight.hurt={side,t:now+lag}; }
+    if(m.hit) fight.floats.push({side,txt:m.hit?String(m.dmg):'miss',crit:m.crit,hit:m.hit,t:now+lag,col:sp&&m.hit&&!m.crit?sp.c:null}); if(m.hit) fight.hurt={side,t:now+lag}; }
   if(!fight.run){ fight.run=true; requestAnimationFrame(frame); }
 }
 function frame(now){

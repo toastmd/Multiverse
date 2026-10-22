@@ -82,7 +82,7 @@ D.build = () => { try { const t = fs.statSync(path.join(PUB, 'index.html')); ret
 let areaPics = {}, areaAt = 0; // default room picture per area: public/img/areas/<area id>.jpg
 D.areaPic = (area) => { if (Date.now() - areaAt > 30000) { areaAt = Date.now(); try { areaPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'areas')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { areaPics = {}; } } return areaPics[area === 'cit' ? 'citadel' : area] || ''; };
 let people = {}, peopleAt = 0; // custom pictures for particular players (public/img/people/<name>.jpg, e.g. zeph.jpg); everyone else gets the class + gender portrait
-D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || 'n'}.jpg`; };
+D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || ((() => { let h = 0; for (const ch of String(p.name || 'x')) h = (h * 31 + ch.charCodeAt(0)) | 0; return h & 1 ? 'm' : 'f'; })())}.jpg`; }; // 'other' gets the male or female picture, chosen steadily from the name (same rule as the client)
 D.listRoles = () => { const admins = [], architects = []; for (const f of fs.readdirSync(DATA)) { if (!f.endsWith('.json')) continue; const n = f.slice(0, -5); let r; try { r = JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch (e) { continue; } const on = D.players.get(n[0].toUpperCase() + n.slice(1)), w = on ? !!on.wiz : !!r.wiz, a = on ? !!on.architect : !!r.architect, nm = n[0].toUpperCase() + n.slice(1); if (w) admins.push(nm); if (a) architects.push(nm); } return { admins, architects }; };
 D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' (builder). Works for players who are offline too.
   const key = role === 'wiz' ? 'wiz' : 'architect', p = D.players.get(name), f = file(name); if (!p && !fs.existsSync(f)) return 'none';
@@ -103,6 +103,20 @@ D.savePlayer = (p) => {
   if (!p.rec) return;
   fs.writeFileSync(file(p.name), JSON.stringify({ ...p.rec, ...p.toRec() }));
 };
+// ---- bans (by IP address), deleting characters, silencing ----
+const BANF = path.join(__dirname, 'data', 'bans.json'); let BANS = {}; try { BANS = JSON.parse(fs.readFileSync(BANF, 'utf8')); } catch (e) { BANS = {}; }
+const saveBans = () => { try { fs.mkdirSync(path.dirname(BANF), { recursive: true }); fs.writeFileSync(BANF, JSON.stringify(BANS, null, 1)); } catch (e) { D.log('bans', e.message); } };
+D.isLoopback = (ip) => !ip || /^(127\.|::1$|localhost)/.test(ip);
+D.isBanned = (ip) => !!ip && Object.hasOwn(BANS, ip); D.listBans = () => Object.entries(BANS).map(([ip, b]) => ({ ip, ...b }));
+D.banIp = (ip, by, who) => { BANS[ip] = { by, who: who || '', at: new Date().toISOString().slice(0, 16).replace('T', ' ') }; saveBans(); for (const p of [...D.players.values()]) if (p.conn && p.conn.ip === ip && !p.wiz) { p.msg('*** You have been banned from this game. ***'); const oc = p.conn; drop(p, true); oc.close(); } };
+D.unbanIp = (ip) => { if (!Object.hasOwn(BANS, ip)) return false; delete BANS[ip]; saveBans(); return true; };
+D.lastIp = (name) => { const p = D.players.get(name); if (p && p.conn && p.conn.ip) return p.conn.ip; try { return JSON.parse(fs.readFileSync(file(name), 'utf8')).ip || ''; } catch (e) { return ''; } };
+D.deleteCharacter = (name) => { // completely removes a character: the save file, mudmail, and the live player if online
+  const p = D.players.get(name); if (p) { p.rec = null; /* so the save on the way out cannot recreate the file */ if (p.team) D.teamLeave(p, 'deleted'); const oc = p.conn; try { drop(p, true); } catch (e) { D.log('deleteCharacter', e.message); } if (oc) { try { oc.send({ t: 'err', m: 'Your character has been deleted.' }); } catch (e) { /* closed */ } setTimeout(() => oc.close(), 300); } }
+  let ok = false; try { fs.unlinkSync(file(name)); ok = true; } catch (e) { ok = !!p; } try { D.mail.purge(name); } catch (e) { /* no mailbox */ } boardCache.at = 0; return ok;
+};
+D.silenced = new Map(); // name -> until (ms); silenced players cannot send tells, gossips or shouts
+D.isSilenced = (name) => { const t = D.silenced.get(name); if (!t) return 0; if (t <= Date.now()) { D.silenced.delete(name); return 0; } return t; };
 function drop(p, silent) { // disconnect cleanup; silent when the same player simply reconnects
   if (!p || p.gone) return; p.gone = true; if (p.team) D.teamLeave(p, 'disconnected'); try { auction.onDrop(p); } catch (e) { D.log('auction', e.message); } D.savePlayer(p); if (!silent && !p.isBot) D.presence(p, 'out');
   if (p.env) p.env.tell(`${p.name} fades from the world.`, p, 'sys');
@@ -114,6 +128,7 @@ function login(conn, m) {
   const raw = String(m.name || '').trim(), pass = String(m.pass || '');
   if (!/^[A-Za-z]{3,12}$/.test(raw)) return conn.send({ t: 'err', m: 'Names are 3 to 12 letters.' });
   if (pass.length < 4) return conn.send({ t: 'err', m: 'Passwords need at least 4 characters.' });
+  if (D.isBanned(conn.ip)) return conn.send({ t: 'err', m: 'This address has been banned from the game.' });
   const name = raw[0].toUpperCase() + raw.slice(1).toLowerCase(); let rec, fresh = false;
   if (bots.NAMES.includes(name)) return conn.send({ t: 'err', m: 'That name belongs to a resident bot. Pick another.' });
   if (fs.existsSync(file(name))) {
@@ -124,7 +139,7 @@ function login(conn, m) {
     rec = { salt, hash: hash(pass, salt), wiz: fs.readdirSync(DATA).length === 0 }; // first account becomes a wizard
   }
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
-  const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash }; p.conn = conn; conn.player = p;
+  const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash, ip: conn.ip || rec.ip || '' }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
   D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
@@ -138,7 +153,8 @@ function ws(req, socket) {
   const key = req.headers['sec-websocket-key']; if (!key) return socket.destroy();
   const acc = crypto.createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
   socket.write(`HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ${acc}\r\n\r\n`);
-  const c = { buf: Buffer.alloc(0), player: null, count: 0, closed: false };
+  const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim(), raw = (process.env.TRUST_PROXY && fwd) || socket.remoteAddress || '', ip = raw.replace(/^::ffff:/, '');
+  const c = { buf: Buffer.alloc(0), player: null, count: 0, closed: false, ip };
   setImmediate(() => c.send({ t: 'classes', list: Object.entries(D.K.CLASSES).filter(([, v]) => !v.remort).map(([k, v]) => ({ k, name: v.name, icon: v.icon, desc: v.desc })) }));
   c.raw = (op, pl) => {
     if (c.closed) return; const n = pl.length;

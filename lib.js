@@ -52,8 +52,8 @@ class Room extends GameObject {
   fx(evt) { for (const o of this.inv) if (o.isPlayer) o.send({ t: 'fight', ...evt }); }
   look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
     p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text');
-    const exs = Object.entries(this.exits); p.msg(exs.length ? 'Exits:' : 'Exits: none.', 'exits'); // one line per exit: the direction and the name of the room that way
-    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d]} - ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits');
+    const exs = Object.entries(this.exits); p.msg(exs.length ? 'Exits' : 'Exits (none)', 'exits'); // one line per exit: the direction and the name of the room that way
+    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d]}: ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits');
     const things = this.inv.filter((o) => !o.isLiving && !o.isNpc).map((o) => o.short);
     if (things.length) p.msg('You see: ' + things.join(', ') + '.', 'items');
     const nodes = Object.entries(this.nodes).filter(([, n]) => n > 0).map(([r, n]) => `${r} x${n}`);
@@ -245,7 +245,7 @@ class Player extends Living {
   }
   die(killer) {
     if (D.deaths) D.deaths.record(this, killer); // the death tally (deaths.js)
-    D.announce(`\u2620 ${this.name} (level ${this.level} ${this.klass().name}) ${killer && killer !== D.NOBODY && killer.name ? `was slain by ${killer.name}` : 'has died'}${this.env ? ` in ${this.env.name}` : ''}.`, 'deaths', 'deathmsg'); // the deaths channel
+    D.announce(`${this.name} (level ${this.level} ${this.klass().name}) ${killer && killer !== D.NOBODY && killer.name ? `was slain by ${killer.name}` : 'has died'}${this.env ? ` in ${this.env.name}` : ''}.`, 'deaths', 'deathmsg'); // the deaths channel
     this.send({ t: 'sound', k: 'death' }); this.msg('You have died. Your vision fades to static...', 'hurt'); this.lastDeath = this.env.path; this.deaths = (this.deaths || 0) + 1; D.taunt(this);
     this.env.tell(`${this.name} has been slain by ${killer.the()}!`, this, 'combat');
     this.xp = Math.floor(this.xp * 0.9); this.hp = Math.ceil(this.maxhp / 2); this.enemy = null; killer.enemy = null; this.fx = [];
@@ -370,7 +370,8 @@ D.takeFloor = (p, it) => { // picking up an item from the floor
   return false;
 };
 const MUTEKEY = { bounty: 'bounty', level: 'levels', milestone: 'levels', quest: 'quests', taunts: 'taunts', deaths: 'deaths' }; // players can mute these announcement types
-D.announce = (text, kind, cls = 'announce') => { if (D.tweet) D.tweet(text, kind); for (const p of D.players.values()) if (!(p.mute && p.mute[MUTEKEY[kind]])) p.msg('📣 ' + text, cls); if (D.bridge && D.bridge.wantsAnnouncements()) D.bridge.out('📣 ' + text); }; // mud-wide announcements
+const TAGS = { bounty: '[bounty] ', deaths: '[death] ' }; // channel tags in front of announcements (other announcements keep the megaphone)
+D.announce = (text, kind, cls = 'announce') => { if (D.tweet) D.tweet(text, kind); for (const p of D.players.values()) if (!(p.mute && p.mute[MUTEKEY[kind]])) p.msg((TAGS[kind] || '📣 ') + text, cls); if (D.bridge && D.bridge.wantsAnnouncements()) D.bridge.out((TAGS[kind] || '📣 ') + text); }; // mud-wide announcements
 D.presence = (p, kind) => { // everyone online hears when a player logs in or out (players can mute it with `notify off`)
   const who = `${p.name} (${p.remort ? `Remort ${p.remort}, ` : ''}L${p.level} ${p.klass().name})`, text = `${who} has logged ${kind === 'in' ? 'in' : 'out'}.`;
   for (const o of D.players.values()) if (o !== p && !o.isBot && o.notify !== false) o.msg('🔔 ' + text, 'notify');

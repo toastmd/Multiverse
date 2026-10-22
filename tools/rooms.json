@@ -2484,6 +2484,12 @@
   "area": "Ashfall Junction (Old West)"
  },
  {
+  "id": "town/hall_of_faces",
+  "key": "town-hall_of_faces",
+  "name": "Hall of Many Faces",
+  "area": "Ashfall Junction (Old West)"
+ },
+ {
   "id": "town/hall_of_rebirth",
   "key": "town-hall_of_rebirth",
   "name": "Hall of Rebirth",

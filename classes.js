@@ -307,4 +307,19 @@ function oneWord() {
   }
 }
 oneWord();
-module.exports = { CLASSES, SPELLS, RECIPES };
+// ---- remort abilities: every remort level unlocks one new, stronger one-word ability (Remort 1 = the first ... Remort 40 = the last). They are added to your class's own list. ----
+const REMORT_NAMES = [['rekindle', 'Rekindle'], ['afterimage', 'Afterimage'], ['resurgence', 'Resurgence'], ['wraithfire', 'Wraithfire'], ['ascendance', 'Ascendance'], ['starfall', 'Starfall'], ['tempest', 'Tempest'], ['onslaught', 'Onslaught'], ['cinderstorm', 'Cinderstorm'], ['transcend', 'Transcendence'],
+  ['eclipse', 'Eclipse'], ['maelstrom', 'Maelstrom'], ['flurry', 'Thousand Cuts'], ['blight', 'Rebirth Blight'], ['apotheosis', 'Apotheosis'], ['comet', 'Comet Strike'], ['cyclone', 'Cyclone'], ['gauntlet', 'Gauntlet'], ['hellfire', 'Hellfire'], ['immortal', 'Immortal Form'],
+  ['supernova', 'Supernova'], ['quake', 'Worldquake'], ['devastate', 'Devastation'], ['voidrot', 'Voidrot'], ['ascendant', 'Ascendant'], ['oblivion', 'Oblivion'], ['armageddon', 'Armageddon'], ['verdict', 'Final Verdict'], ['abyssfire', 'Abyssfire'], ['eternity', 'Eternity'],
+  ['quasar', 'Quasar'], ['ruination', 'Ruination'], ['annihilate', 'Annihilate'], ['skyfall', 'Skyfall'], ['timeless', 'Timeless'], ['extinction', 'Extinction'], ['worldbreak', 'Worldbreaker'], ['twilight', 'Twilight of Worlds'], ['paradox', 'Paradox'], ['godslayer', 'Godslayer']];
+const REMORT_ICONS = ['\u{1F525}', '\u2728', '\u26A1', '\u{1F300}', '\u{1F4AB}', '\u2604\uFE0F', '\u{1F30B}', '\u{1F32A}\uFE0F'], REMORT_COLORS = ['#ff9a3c', '#ffd34a', '#7fd6ff', '#c77dff', '#ff5a36', '#7be0a0', '#ff7ad9', '#e9e9e9'];
+const REMORT_SPELLS = REMORT_NAMES.map(([k, n], i) => { const r = i + 1, a = Math.round(16 + r * 7.2), b = Math.round(a * 1.32), kind = r % 5, base = { k, n, lvl: Math.min(40, r + 2), mp: Math.min(220, 18 + r * 5), i: REMORT_ICONS[i % 8], c: REMORT_COLORS[i % 8], rem: r, school: 'Rebirth' };
+  const d = `A power only the reborn command (Remort ${r}).`;
+  if (kind === 1) return { ...base, kind: 'dmg', d, dmg: [a, b], crit: Math.min(0.25, 0.08 + r * 0.004) };
+  if (kind === 2) return { ...base, kind: 'dmg', d, dmg: [Math.round(a * 0.8), Math.round(b * 0.8)], aoe: 1, cd: 4 + Math.floor(r / 8) };
+  if (kind === 3) return { ...base, kind: 'dmg', d, dmg: [Math.round(a * 0.5), Math.round(b * 0.5)], hits: 3 + Math.floor(r / 15) };
+  if (kind === 4) return { ...base, kind: 'dmg', d, dmg: [Math.round(a * 0.7), Math.round(b * 0.7)], dot: { dmg: [Math.round(a * 0.25), Math.round(b * 0.25)], ticks: 5 } };
+  return { ...base, kind: 'buff', d, ticks: 14 + Math.floor(r / 10), atk: Math.round(4 + r * 0.9), ac: Math.round(3 + r * 0.6), crit: Math.min(0.35, 0.1 + r * 0.005), regen: Math.round(r / 2), heal: [Math.round(a * 1.6), Math.round(b * 1.6)], cd: 12 };
+});
+{ const taken = new Set(); for (const l of Object.values(SPELLS)) for (const s of l) taken.add(s.k); for (const s of REMORT_SPELLS) if (taken.has(s.k)) s.k = s.k + 'x'; } // never clash with a class ability
+module.exports = { CLASSES, SPELLS, RECIPES, REMORT_SPELLS };

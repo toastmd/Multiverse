@@ -9,6 +9,6 @@
   function applyZoom() { $$('.mapbox svg').forEach(function (s) { var vb = s.viewBox.baseVal; s.style.width = Math.round(vb.width * zoom) + 'px'; s.style.height = Math.round(vb.height * zoom) + 'px'; }); }
   $$('[data-zoom]').forEach(function (b) { b.onclick = function () { var z = +b.getAttribute('data-zoom'); zoom = z === 0 ? 1 : Math.max(0.4, Math.min(2.4, zoom * (z > 0 ? 1.25 : 0.8))); applyZoom(); }; });
   $$('[data-layer]').forEach(function (b) { b.onclick = function () { var u = b.getAttribute('data-layer') === 'under'; $('#map-surface').hidden = u; $('#map-under').hidden = !u; $$('[data-layer]').forEach(function (x) { x.classList.toggle('on', x === b); }); applyZoom(); }; });
-  function fit() { var box = $('.mapbox'); if (!box) return; var s = box.querySelector('svg'), vb = s.viewBox.baseVal; zoom = Math.max(0.5, Math.min(1, (box.clientWidth - 4) / vb.width)); applyZoom(); }
+  function fit() { zoom = 1; applyZoom(); }
   if ($('.mapbox')) fit();
 })();

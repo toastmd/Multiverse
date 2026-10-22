@@ -2,7 +2,8 @@
 const D = require('./lib'); require('./magic'); require('./quest'); require('./trade');
 const { cap, DIRS } = D;
 const FULL = Object.fromEntries(Object.entries(DIRS).map(([k, v]) => [v, k]));
-const ALIAS = { l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const silenced = (p) => { const t = D.isSilenced ? D.isSilenced(p.name) : 0; if (t) { p.msg(`An administrator has silenced you for about ${Math.ceil((t - Date.now()) / 60000)} more minute(s): no tells, gossips or shouts.`, 'hurt'); return true; } return false; };
+const ALIAS = { reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -161,6 +162,41 @@ const C = {
     const dest = D.rooms.get(f.room); p.env.tell(`${p.name} steps into the elevator and the doors close.`, p); p.msg(`You press ${f.label}. The doors close, the elevator hums and drops or climbs... DING! ${f.label === 'B' ? 'Basement' : 'Floor ' + f.label}: ${f.name} (levels ${f.levels}).`, 'win'); p.enter(dest, true); dest.tell(`The elevator doors open and ${p.name} steps out.`, p); dest.look(p); p.send({ t: 'elevator', here: f.key, floors: T.map((x) => ({ key: x.key, label: x.label, name: x.name, levels: x.levels })), quiet: true });
   },
   touch(p, a) { for (const o of p.env.inv) if (o.actions && o.actions.touch && o.actions.touch(p, a, o)) return; p.msg('There is nothing here to touch. (Milestones: `milestones`.)', 'sys'); },
+  deleteme(p, a) { // deleteme [confirm]: permanently deletes your own character
+    const w = a.trim().toLowerCase();
+    if (w === 'confirm') {
+      if (!p.delAsk || Date.now() - p.delAsk > 120000) return p.msg('Type `deleteme` first to read what this does, then `deleteme confirm` within two minutes.', 'sys');
+      if (p.wiz) { const l = D.listRoles ? D.listRoles() : { admins: [p.name] }; if (l.admins.length <= 1) return p.msg('You are the only Administrator, so you cannot delete this character. Make someone else an Administrator first (`admin add <player>`).', 'sys'); }
+      const name = p.name; p.msg('Your character is being deleted. Goodbye, and thank you for playing.', 'sys'); D.deleteCharacter(name); D.log('deleteme', name); return;
+    }
+    p.delAsk = Date.now(); p.msg('*** DELETE YOUR CHARACTER ***', 'rname');
+    p.msg('This permanently deletes your character, ' + p.name + ': level, items, credits, quests, mudmail, settings, everything. It cannot be undone and nobody can restore it. You can create a new character afterwards (even with the same name) and start again from scratch.', 'hurt');
+    p.msg('If you are sure, type `deleteme confirm` within two minutes. Anything else cancels.', 'sys');
+  },
+  suicide(p) { return C.help(p, 'suicide'); }, // typing the word shows the support information
+  purge(p, a) { // purge <player>: administrators permanently delete a character
+    if (!p.wiz) return C.huh(p); const who = a.trim(); if (!who) return p.msg('Usage: purge <player>   (permanently deletes that character, online or not)', 'sys');
+    const name = who[0].toUpperCase() + who.slice(1).toLowerCase(); if (name === p.name) return p.msg('Use `deleteme` to delete your own character.', 'sys');
+    const t = D.players.get(name), l = D.listRoles ? D.listRoles() : { admins: [] }; if ((t && t.wiz) || l.admins.includes(name)) return p.msg(`${name} is an Administrator. Remove that first with \`admin remove ${name}\`.`, 'sys');
+    if (t && t.isBot) return p.msg('That is a resident bot.', 'sys');
+    if (!D.deleteCharacter(name)) return p.msg(`Nobody called "${who}" has played here.`, 'sys'); D.log('purge', `${p.name} purged ${name}`); p.msg(`${name} has been purged: character, mudmail and all.`, 'win');
+  },
+  ban(p, a) { // ban <player|ip>: bans an IP address from logging in
+    if (!p.wiz) return C.huh(p); const w = a.trim(); if (!w) return p.msg('Usage: ban <player|ip>   (bans the address that player last logged in from; see `bans`, `unban`)', 'sys');
+    const isIp = /^[0-9a-f:.]{3,45}$/i.test(w) && /[.:]/.test(w), name = w[0].toUpperCase() + w.slice(1).toLowerCase(), ip = isIp ? w : D.lastIp(name);
+    if (!ip) return p.msg(isIp ? 'That is not an address.' : `No address on record for "${w}". They need to have logged in at least once since bans were added.`, 'sys');
+    if (D.isLoopback(ip)) return p.msg(`That address (${ip}) is the local machine: banning it would lock out everyone playing on this computer.`, 'sys');
+    if (p.conn && p.conn.ip === ip) return p.msg('That is your own address.', 'sys'); for (const o of D.players.values()) if (o.wiz && o.conn && o.conn.ip === ip) return p.msg(`${o.name}, an Administrator, is on that address.`, 'sys');
+    D.banIp(ip, p.name, isIp ? '' : name); D.log('ban', `${p.name} banned ${ip} (${isIp ? 'by address' : name})`); p.msg(`Banned ${ip}${isIp ? '' : ` (${name}'s address)`}. Anyone on it is disconnected and cannot log in. \`unban ${ip}\` lifts it.`, 'win');
+  },
+  unban(p, a) { if (!p.wiz) return C.huh(p); const w = a.trim(); if (!w) return p.msg('Usage: unban <ip|player>', 'sys'); const ip = /[.:]/.test(w) ? w : D.lastIp(w[0].toUpperCase() + w.slice(1).toLowerCase()); p.msg(ip && D.unbanIp(ip) ? `Unbanned ${ip}.` : 'That address is not banned.', 'win'); },
+  bans(p) { if (!p.wiz) return C.huh(p); const l = D.listBans(); p.msg(l.length ? 'Banned addresses:' : 'No addresses are banned.', 'rname'); for (const b of l) p.msg(`  ${b.ip}  ${b.who ? '(' + b.who + ') ' : ''}banned by ${b.by} on ${b.at}`, 'sys'); },
+  silence(p, a) { // silence <player>: no tells, gossips or shouts for 10 minutes
+    if (!p.wiz) return C.huh(p); const w = a.trim(); if (!w) return p.msg('Usage: silence <player>   (10 minutes with no tells, gossips or shouts; `unsilence <player>` lifts it)', 'sys');
+    const t = D.players.get(w[0].toUpperCase() + w.slice(1).toLowerCase()); if (!t) return p.msg('Nobody by that name is online.', 'sys'); if (t.wiz) return p.msg('Administrators cannot be silenced.', 'sys'); if (t.isBot) return p.msg('That is a resident bot.', 'sys');
+    D.silenced.set(t.name, Date.now() + 10 * 60000); t.msg('*** An administrator has silenced you for 10 minutes: no tells, gossips or shouts. ***', 'hurt'); p.msg(`${t.name} is silenced for 10 minutes.`, 'win'); D.log('silence', `${p.name} silenced ${t.name}`);
+  },
+  unsilence(p, a) { if (!p.wiz) return C.huh(p); const w = a.trim(); if (!w) return p.msg('Usage: unsilence <player>', 'sys'); const n = w[0].toUpperCase() + w.slice(1).toLowerCase(); if (!D.silenced.delete(n)) return p.msg(`${n} is not silenced.`, 'sys'); const t = D.players.get(n); if (t) t.msg('You can speak on the channels again.', 'win'); p.msg(`${n} is no longer silenced.`, 'win'); },
   admin(p, a) { // admin add|remove|list <player>: administrators only
     if (!p.wiz) return p.msg('Only administrators can do that.', 'sys'); const [sub, who] = a.trim().split(/\s+/);
     if (!sub || sub === 'list') { const l = D.listRoles ? D.listRoles() : { admins: [], architects: [] }; return p.msg(`Administrators: ${l.admins.join(', ') || 'none'}. Architects: ${l.architects.join(', ') || 'none'}.`, 'sys'); }
@@ -272,7 +308,9 @@ const C = {
       p.msg(`Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} items (base 60, +20 for each of your ${p.remort || 0} remorts). Mode: ${p.bagMode}.`, 'rname');
       const groups = { Materials: [], 'Weapons and armor': [], Other: [] };
       for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; groups[d.type === 'material' ? 'Materials' : ['weapon', 'armor'].includes(d.type) ? 'Weapons and armor' : 'Other'].push(`${c} ${d.name}`); }
-      for (const [g, l] of Object.entries(groups)) if (l.length) p.msg(`${g}: ${l.join(', ')}.`, 'items');
+      const eq = Object.entries(p.bag).filter(([id]) => ['weapon', 'armor'].includes(D.W.items[id].type)).sort((x, y) => (D.W.items[x[0]].lvl || 0) - (D.W.items[y[0]].lvl || 0));
+      for (const [g, l] of Object.entries(groups)) if (l.length && g !== 'Weapons and armor') p.msg(`${g}: ${l.join(', ')}.`, 'items');
+      if (eq.length) { p.msg('Weapons and armor (one per line):', 'items'); for (const [id, c] of eq) { const d = D.W.items[id], st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : `armor ${d.ac}`, sl = d.slot ? `, ${d.slot}` : ''; p.msg(`  ${c} x ${D.cn({ id, ...d }, d.name)}  (${st}${sl}${d.lvl ? `, level ${d.lvl}` : ''})`, 'items'); } }
       if (!D.bagUsed(p)) p.msg('It is empty. Gathered materials and looted gear go in automatically.', 'sys');
       return p.msg('Commands: bag put <item|all|materials|gear>, bag get <item> [n|all], bag sell [materials|all], bag auto loot|overflow|off. Crafting and salvaging use bag contents. The bag is bound to you and cannot be dropped or sold.', 'sys');
     }
@@ -345,6 +383,7 @@ const C = {
     if (!q || !a.trim()) return p.msg('Abandon which quest? (see `quests`)'); delete p.quests[q.id]; p.msg(`You abandon "${q.name}".`, 'sys'); p.sendQuests();
   },
   gossip(p, a) {
+    if (a && !/^(history|on|off)\b/i.test(a.trim()) && silenced(p)) return;
     a = a.trim(); if (a === 'off') { p.gos = false; return p.msg('Gossip channel off.', 'sys'); } if (a === 'on') { p.gos = true; return p.msg('Gossip channel on.', 'sys'); }
     if (a === 'history') { p.msg('Recent gossip:', 'rname'); return D.gosLog.slice(-15).forEach((l) => p.msg('[gossip] ' + l, 'gossip')); }
     if (!a) return p.msg('Gossip what? (gossip <message>, gossip on|off|history)'); if (p.gos === false) return p.msg('Turn the channel on first: gossip on');
@@ -352,13 +391,13 @@ const C = {
     if (ym) { const wait = (p.ytAt || 0) + 10000 - Date.now(); if (wait > 0) return p.msg(`Videos need a short breather: try again in ${Math.ceil(wait / 1000)}s.`, 'sys'); p.ytAt = Date.now(); yt = ym[1]; a = a.replace(ym[0], '[YouTube video]').trim(); }
     const gos = (text, o) => D.gossip(text, { ...o, yt, msg: yt ? `${o.msg !== undefined ? o.msg : text} https://youtu.be/${yt}` : o.msg });
     const G = require('./giphy'), { msg, q } = G.parse(a); // "gossip hi ;wave" adds a GIPHY GIF for "wave"
-    if (q === null) return gos(`${p.name} gossips: ${a}`, { from: p.name, msg: a });
+    if (q === null) return gos(`${p.name}: ${a}`, { from: p.name, msg: a });
     if (!q) return p.msg('Add a search after the semicolon, e.g. gossip ;hi  or  gossip good game ;applause');
-    if (!G.enabled()) { p.msg('GIFs are not set up on this server yet (the owner needs a GIPHY_API_KEY). Sending your words only.', 'sys'); return msg ? gos(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
+    if (!G.enabled()) { p.msg('GIFs are not set up on this server yet (the owner needs a GIPHY_API_KEY). Sending your words only.', 'sys'); return msg ? gos(`${p.name}: ${msg}`, { from: p.name, msg }) : undefined; }
     const wait = (p.gifAt || 0) + G.cooldown() - Date.now(); if (wait > 0) return p.msg(`GIFs need a short breather: try again in ${Math.ceil(wait / 1000)}s.`, 'sys'); p.gifAt = Date.now();
     return G.search(q).then((g) => {
-      const said = msg ? `${p.name} gossips: ${msg}  ;${q}` : `${p.name} gossips a GIF: ${q}`;
-      if (!g) { p.msg(`GIPHY found nothing for "${q}".`, 'sys'); return msg ? gos(`${p.name} gossips: ${msg}`, { from: p.name, msg }) : undefined; }
+      const said = msg ? `${p.name}: ${msg}  ;${q}` : `${p.name} sent a GIF: ${q}`;
+      if (!g) { p.msg(`GIPHY found nothing for "${q}".`, 'sys'); return msg ? gos(`${p.name}: ${msg}`, { from: p.name, msg }) : undefined; }
       gos(said, { from: p.name, msg: `${msg ? msg + ' ' : ''}${g.url}`, gif: { url: g.url, title: g.title, q } });
     }).catch((e) => { D.log('giphy failed:', e.message); p.msg('GIPHY did not answer. Try again in a moment.', 'sys'); });
   },
@@ -469,11 +508,11 @@ const C = {
   },
   say(p, a) { if (!a) return p.msg('Say what?'); p.msg(`You say: ${a}`, 'say'); p.env.tell(`${p.name} says: ${a}`, p, 'say'); },
   tell(p, a) {
-    const m = a.match(/^(\S+)\s+(.+)$/); if (!m) return p.msg('Tell whom what?');
+    if (silenced(p)) return; const m = a.match(/^(\S+)\s+(.+)$/); if (!m) return p.msg('Tell whom what?');
     const t = D.players.get(cap(m[1].toLowerCase())); if (!t) return p.msg('Nobody by that name is online.');
     t.msg(`${p.name} tells you: ${m[2]}`, 'chat'); p.msg(`You tell ${t.name}: ${m[2]}`, 'chat');
   },
-  shout(p, a) { if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
+  shout(p, a) { if (silenced(p)) return; if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
   who(p) { // one player per line: name, title, class and gender
     const all = [...D.players.values()];
     p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon, pic: D.playerPic(o) })) });
@@ -616,6 +655,16 @@ const C = {
     if (!m || t === 'list') { p.msg(`Keypad controls are ${p.kpOn ? 'ON' : 'OFF'} (keypad on | off | reset). Num Lock must be on.`, 'rname'); p.msg(Object.entries(p.kpMap).map(([k, v]) => `${KPN[k]} = ${v || '(nothing)'}`).join(', ') + '.', 'sys'); return p.msg('Change a key: keypad <key> <command>, e.g. keypad 5 look. Use keypad <key> none to clear it. Keys: 0-9 + - * / . enter. Separate several commands with ;', 'sys'); }
     D.kp(p, m[1] === 'on' ? { on: true } : m[1] === 'off' ? { on: false } : m[1] === 'reset' ? { reset: true } : { name: m[1], cmd: m[2] });
   },
+  changeclass(p, a) { // changeclass [confirm <class>]: change your class at the Hall of Many Faces for a fee
+    if (!p.env.def.faces) return p.msg("Classes are changed at the Hall of Many Faces, north of the Adventurers' Guild (`travel guild`, then north).", 'sys');
+    const rem = !!p.klass().remort, pool = Object.entries(D.K.CLASSES).filter(([, k]) => !!k.remort === rem), cost = Math.round((500 + 250 * p.level) * (rem ? 2 : 1)), w = a.trim().toLowerCase().split(/\s+/), confirm = w[0] === 'confirm', q = (confirm ? w[1] : w[0]) || '';
+    if (!q) { p.msg(`The mask-woman's price list (you are a level ${p.level} ${p.klass().name}; changing costs ${cost} credits; you have ${p.gold}):`, 'rname'); for (const [k, c] of pool) p.msg(`  ${c.icon || ''} ${k.padEnd(13)} ${c.name}${k === p.cls ? '  (your class)' : ''}`, k === p.cls ? 'sys' : 'items'); return p.msg(`${rem ? 'Reborn characters can only swap between remort classes. ' : ''}Type \`changeclass <class>\` to preview, \`changeclass confirm <class>\` to pay. Gender changes are free: \`gender male|female|other\`.`, 'sys'); }
+    const pick = pool.find(([k, c]) => k === q || c.name.toLowerCase() === q); if (!pick) return p.msg(`No such class${rem ? ' among the remort classes' : ''}. Type \`changeclass\` for the list.`, 'sys'); if (pick[0] === p.cls) return p.msg('You already are one.', 'sys');
+    if (!confirm) return p.msg(`${pick[1].icon || ''} ${pick[1].name}: ${pick[1].desc} It will cost ${cost} credits and swaps your abilities (your level and gear stay). Type \`changeclass confirm ${pick[0]}\` to do it.`, 'win');
+    if (p.gold < cost) return p.msg(`That costs ${cost} credits and you have ${p.gold}.`, 'sys');
+    p.gold -= cost; p.cls = pick[0]; p.fx = []; p.cd = {}; p.recalc(); p.hp = Math.min(p.hp, p.maxhp); p.mp = Math.min(p.mp, p.maxmp); p.luck = Math.min(p.luck, p.maxLuck ? p.maxLuck() : p.luck);
+    p.msg(`The mirrors swirl and you step out as a ${pick[1].name}! (-${cost} credits)`, 'win'); p.env.tell(`${p.name} steps through a mirror and comes out as a ${pick[1].name}.`, p, 'sys'); p.sendSpells(); p.sendStats(); D.log('changeclass', `${p.name} -> ${pick[0]}`);
+  },
   gender(p, a) {
     let g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${D.genderLabel(p.gender)}. Change it with: gender male | female | other`);
     if (g === 'other') g = 'nonbinary'; if (!['male', 'female', 'nonbinary'].includes(g)) return p.msg('Choose male, female or other.'); p.gender = g; p.recalc(); p.sendStats(); p.msg(`You are now ${D.genderLabel(g)}.`, 'sys');
@@ -654,7 +703,7 @@ D.remort = (p, cls) => { // reset to level 1 as a remort class, keeping the thin
 };
 
 const SOCIALS = require('./socials');
-const PLACES = { square: 'town/square', guild: 'town/adventurers_guild', smithy: 'town/smithy', market: 'town/market', armory: 'town/armory', temple: 'town/temple', saloon: 'town/inn', clinic: 'town/clinic', gate: 'town/gate', exchange: 'town/salvage_exchange', rebirth: 'town/hall_of_rebirth', forest: 'forest/path' };
+const PLACES = { faces: 'town/hall_of_faces', square: 'town/square', guild: 'town/adventurers_guild', smithy: 'town/smithy', market: 'town/market', armory: 'town/armory', temple: 'town/temple', saloon: 'town/inn', clinic: 'town/clinic', gate: 'town/gate', exchange: 'town/salvage_exchange', rebirth: 'town/hall_of_rebirth', forest: 'forest/path' };
 const route = (from, to) => { // shortest walk that stays on safe rooms until the last step
   if (from === to) return []; const prev = { [from]: null }, q = [from];
   while (q.length) { const c = q.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { const nr = D.rooms.get(n); if (!nr || n in prev || (n !== to && !nr.def.safe)) continue; prev[n] = [c, d]; if (n === to) { const out = []; let x = n; while (prev[x]) { out.unshift(prev[x][1]); x = prev[x][0]; } return out; } q.push(n); } }

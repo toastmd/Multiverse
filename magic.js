@@ -3,7 +3,7 @@
 const D = require('./lib');
 const { rnd } = D;
 
-D.spellsOf = (p) => D.K.SPELLS[p.cls] || [];
+D.spellsOf = (p) => { const base = D.K.SPELLS[p.cls] || [], r = Math.min(40, p.remort || 0); return r && D.K.REMORT_SPELLS ? [...base, ...D.K.REMORT_SPELLS.slice(0, r)] : base; }; // each remort level adds one new ability
 D.findSpell = (p, w) => {
   w = String(w || '').toLowerCase().replace(/\s+/g, '_'); if (!w) return null;
   const l = D.spellsOf(p);
@@ -14,7 +14,7 @@ D.spellbook = (p) => {
   p.msg(`${p.klass().name} abilities (mana ${p.mp}/${p.maxmp}). Use: cast <name> [target]`, 'rname');
   for (const s of list) {
     if (s.school && s.school !== school) { school = s.school; p.msg(`-- ${school} --`, 'sys'); }
-    p.msg(`${s.lvl <= p.level ? s.i : '🔒'} ${s.k}  (lvl ${s.lvl}, ${s.mp} mp)  ${s.d}`, s.lvl <= p.level ? 'spell' : 'sys');
+    p.msg(`${s.lvl <= p.level ? s.i : '🔒'} ${s.k}  (${s.rem ? `remort ${s.rem}, ` : ''}lvl ${s.lvl}, ${s.mp} mp)  ${s.d}`, s.lvl <= p.level ? 'spell' : 'sys');
   }
 };
 

@@ -75,4 +75,5 @@ function command(p, a) {
   p.msg('Usage: mail <player> <subject> = <message>. Type `help mail` for everything.', 'sys');
 }
 const start = () => { timer = setInterval(flush, 60000); setTimeout(flush, 20000); }, stop = () => { clearInterval(timer); };
-module.exports = { command, sendFrom, sync, deliver, start, stop, flush, enqueue, exists, unread: (n) => box(n).inbox.filter((m) => !m.read).length, state: () => ({ outbox: outbox.length }) };
+const purge = (n) => { boxes.delete(key(n)); try { fs.unlinkSync(boxFile(n)); } catch (e) { /* no mailbox */ } }; // used when a character is deleted
+module.exports = { purge, command, sendFrom, sync, deliver, start, stop, flush, enqueue, exists, unread: (n) => box(n).inbox.filter((m) => !m.read).length, state: () => ({ outbox: outbox.length }) };

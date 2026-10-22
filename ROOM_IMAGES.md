@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-426 rooms:
+427 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -422,6 +422,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Cooper's Yard | Ashfall Junction (Old West) | `town-coopers_yard.jpg` |
 | East Gate | Ashfall Junction (Old West) | `town-eastgate.jpg` |
 | North Gate | Ashfall Junction (Old West) | `town-gate.jpg` |
+| Hall of Many Faces | Ashfall Junction (Old West) | `town-hall_of_faces.jpg` |
 | Hall of Rebirth | Ashfall Junction (Old West) | `town-hall_of_rebirth.jpg` |
 | Neural Implant Lab | Ashfall Junction (Old West) | `town-implant_lab.jpg` |
 | Silver Spur Saloon | Ashfall Junction (Old West) | `town-inn.jpg` |

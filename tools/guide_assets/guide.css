@@ -64,3 +64,5 @@ footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:v
 .realms .rw{color:#ffb347;border-color:#ffb34766;background:#ffb34714}.realms .rf{color:#7be0a0;border-color:#7be0a066;background:#7be0a014}.realms .rs{color:#19e3ff;border-color:#19e3ff66;background:#19e3ff14}.realms .rm{color:#ff8a8a;border-color:#ff8a8a66;background:#ff8a8a14}.realms .rp{color:#a0e06a;border-color:#a0e06a66;background:#a0e06a14}.realms .rd{color:var(--text);border-color:var(--line)}
 .logo b{color:#ffb347}.logo i{font-style:normal;background:linear-gradient(90deg,#7be0a0,#19e3ff,#ff8a8a);-webkit-background-clip:text;background-clip:text;color:transparent;margin-left:.3em}
 #nav{top:94px;height:calc(100vh - 94px)}html{scroll-padding-top:100px}
+
+.areamap h2 small,.areamap h3 small{color:var(--dim);font-weight:400;font-size:.6em}.areamap{margin-top:30px}.chip{display:inline-block;border:1px solid var(--line);border-radius:14px;padding:1px 10px;margin:2px;text-decoration:none;font-size:13px}.mapbox{max-height:70vh}

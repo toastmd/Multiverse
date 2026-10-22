@@ -24,7 +24,8 @@ button{background:var(--btn);color:var(--text);border:1px solid var(--line);bord
 button:hover{border-color:var(--sea)} button:focus-visible,input:focus-visible{outline:2px solid var(--lamp);outline-offset:1px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:14px}
 aside.right{border-right:0;border-left:1px solid var(--line)}
-main{display:flex;flex-direction:column;min-width:0;min-height:0;height:100%;overflow:hidden}
+#cvw{position:absolute;left:50%;top:5%;transform:translateX(-50%);width:min(640px,94%);z-index:35;background:#070707ee;border:2px solid #e9b44c;border-radius:12px;box-shadow:0 10px 40px #000c;overflow:hidden}#cvw[hidden]{display:none}#cvh{display:flex;justify-content:space-between;align-items:center;padding:3px 10px;background:#1a1508;color:#e9b44c;font:700 13px ui-sans-serif,system-ui}#cvh button{background:none;border:0;color:#e9b44c;cursor:pointer;font-size:14px}#cvw canvas{display:block;width:100%;height:auto}
+main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;height:100%;overflow:hidden}
 #out{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px 22px;font-size:17px}
 #out div{max-width:78ch;margin:0 0 4px;white-space:pre-wrap}
 .rname{color:var(--lamp);font-weight:700;font-size:19px;margin-top:12px!important}
@@ -133,7 +134,7 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 #toast{position:fixed;top:78px;left:50%;transform:translate(-50%,-10px);z-index:60;background:#12301a;border:1px solid #3f9a3a;color:#a8f0a0;padding:8px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;font-weight:600}#toast.on{opacity:1;transform:translate(-50%,0)}
 #mtip{position:fixed;z-index:70;pointer-events:none;background:#000d;border:1px solid var(--lamp);color:#fff;padding:5px 10px;border-radius:5px;font-size:13px;max-width:260px}#mtip small{display:block;color:var(--dim)}#mtip[hidden]{display:none}#map.hot{cursor:pointer}
 .taunt{color:#5fe06a;font-weight:700;border-left:3px solid #2fa83f;padding-left:8px}
-.wanted{background:#d9bd8c;color:#3a2210;border-left:3px solid #5a3a1a;padding-left:8px;font-weight:700}
+.wanted{color:#ff9a2e;font-weight:600;border-left:3px solid #ff9a2e;padding-left:8px}
 .mail{color:#ffb347;font-weight:700;border-left:3px solid #ffb347;padding-left:8px}
 #qk{flex-wrap:wrap}#qk button{padding:5px 12px}#mailn:not(:empty){background:#ff9a3c;color:#000;border-radius:9px;padding:0 6px;font-size:12px;margin-left:2px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#3fe05a;box-shadow:0 0 8px #3fe05a;margin-right:5px;vertical-align:baseline}.fw{color:var(--ember)}
@@ -149,6 +150,13 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 .lgen{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.lgen span{font:600 12px sans-serif;letter-spacing:.06em;padding:3px 11px;border-radius:12px;border:1px solid}.gw{color:#ffb347;border-color:#ffb34766;background:#ffb34714}.gf{color:#7be0a0;border-color:#7be0a066;background:#7be0a014}.gs{color:#19e3ff;border-color:#19e3ff66;background:#19e3ff14}.gm{color:#ff8a8a;border-color:#ff8a8a66;background:#ff8a8a14}.gp{color:#a0e06a;border-color:#a0e06a66;background:#a0e06a14}#login p.lt{text-align:center;font-size:14.5px;line-height:1.5}
 #login button{background:linear-gradient(90deg,#ffb347,#a0e06a,#19e3ff);color:#10130f;border:0;border-radius:8px;font-weight:800;letter-spacing:.08em;padding:13px;cursor:pointer;box-shadow:0 0 24px #ffb34733}#login button:hover{filter:brightness(1.1)}
 .deathmsg{color:#ff9a9a;font-weight:600;border-left:3px solid #c04040;padding-left:8px}.exits{line-height:1.35}
+
+#login{background:#05060f url(img/multiverse.jpg) center/cover no-repeat;place-items:center end;padding-right:5vw}
+#login:before{display:none}
+#login h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#login .lgen,#login p.lt{display:none}
+#login form{width:min(380px,92vw);gap:10px;padding:20px 22px;background:#07060fe0}
+@media(max-width:900px){#login{place-items:end center;padding:0 0 3vh}}
 </style>
 </head>
 <body>
@@ -175,13 +183,12 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
   <div id="qwin" hidden role="dialog" aria-label="Quest window"><div id="qbar"><b>Quests</b><small id="qcount"></small><span class="sp"></span><button id="qclose" type="button" aria-label="Close quest window">✕</button></div><div id="qbody"></div></div>
   
 </div><div id="gos" aria-label="Gossip channel (type /g message)"><div><b>GOSSIP CHANNEL</b> type /g message, or gossip off</div></div></aside>
-<main><div id="out" aria-live="polite"></div><form id="f"><div id="vitals"><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div><div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div><div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div></div>
-  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button><button type="button" id="recallbtn" data-c="recall" title="Recall: return to Ashfall Square (sends: recall)">&#8962; recall</button><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button data-c="inventory">pack</button><button data-c="score">score</button><button data-c="flee">flee</button><button data-c="who">who</button><button data-c="spells">spells</button><button data-c="tradeskills">tradeskills</button><button data-c="commands">commands</button><button id="mailbtn" type="button" data-c="mail" title="Mudmail">&#9993; mail <span id="mailn"></span></button><button data-c="milestones" title="Milestones: where you can travel">milestones</button></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
+<main><div id="cvw" hidden><div id="cvh"><span>⚔ Combat</span><button type="button" id="cvx" title="Hide (combat messages return while hidden)">✕</button></div><canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas></div><div id="out" aria-live="polite"></div><form id="f"><div id="vitals"><div class="bar hp" title="Hit points"><i id="hpf"></i><span id="hpt"></span></div><div class="bar" title="Mana / stamina"><i id="mpf" style="background:#4f7fe0"></i><span id="mpt"></span></div><div class="bar" title="Experience"><i id="xpf" style="background:#5a8fd6"></i><span id="xpt"></span></div></div>
+  <div id="qk" role="toolbar" aria-label="Quick keys"><button type="button" id="healbtn" title="Eat or drink the best healing item (sends: eat)">&#10010; heal</button><button type="button" id="recallbtn" data-c="recall" title="Recall: return to Ashfall Square (sends: recall)">&#8962; recall</button><button id="topbtn" type="button" title="Top 10 achievements (L)">top 10</button><button type="button" data-c="inventory">pack</button><button type="button" data-c="score">score</button><button type="button" data-c="flee">flee</button><button type="button" data-c="who">who</button><button type="button" data-c="spells">spells</button><button type="button" data-c="tradeskills">tradeskills</button><button type="button" data-c="commands">commands</button><button id="mailbtn" type="button" data-c="mail" title="Mudmail">&#9993; mail <span id="mailn"></span></button><button type="button" data-c="milestones" title="Milestones: where you can travel">milestones</button></div><input id="in" autocomplete="off" spellcheck="false" placeholder="Type a command (help)"></form></main>
 <aside class="right"><div class="rscroll">
   <canvas id="map" width="680" height="560" aria-label="Map of explored rooms"></canvas>
   <div class="cap"><span id="area"></span><span id="legend"></span></div>
   <div id="roompic"><div class="rpf"><img id="rpimg" alt="Picture of the current room"><canvas id="wxc" width="640" height="360" aria-hidden="true"></canvas></div><div class="cap"><span id="rpname">Room picture</span><span id="rpnote"></span></div></div>
-  <canvas id="arena" width="680" height="380" aria-label="Combat view"></canvas>
   <div class="cap"><span id="pname">You</span><span id="pnote"></span></div>
   <div id="portrait" aria-label="Portrait"></div>
 </div></aside>
@@ -200,7 +207,7 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
     <label><span>Your email</span> <input id="sem" type="email" maxlength="100" placeholder="you@example.com (shown by finger)"> <button id="seb" type="button">Set</button></label><label><span>Hide my email from finger</span> <input id="seh" type="checkbox"></label>
     <label>Font <select id="sf"><option value="serif">Serif (Iowan/Georgia)</option><option value="sans">Sans-serif (system)</option><option value="mono">Monospace (Menlo)</option><option value="type">Typewriter (Courier)</option><option value="rounded">Rounded (Trebuchet)</option><option value="wide">Wide (Verdana)</option></select></label>
     <label>Size <input id="ss" type="range" min="12" max="30" step="1"> <output id="so"></output></label>
-    <label><span>Show GIFs in gossip</span> <input id="sg" type="checkbox"></label>
+    <label><span>Visual combat pop-up (off = combat messages in the main window)</span> <input id="svc" type="checkbox"></label>     <label><span>Show GIFs in gossip</span> <input id="sg" type="checkbox"></label>
     <label><span>Show YouTube videos in gossip</span> <input id="sy" type="checkbox"></label>
     <label><span>Keypad controls</span> <input id="sk" type="checkbox"></label>
     <details id="trd"><summary>Triggers (saved to your character)</summary><div id="trlist"></div><button id="tradd" type="button">Add trigger</button><small>When a line of game text contains the text (or matches /regex/), your command runs. Separate several commands with ; and use $1 for a captured group. Tick the last box to highlight the line. Chat lines never fire triggers. Also: the trigger command.</small></details>
@@ -224,7 +231,7 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 const $=s=>document.querySelector(s), out=$('#out'), BUILD=(document.querySelector('meta[name=build]')||{}).content||'';
 let sock, me={}, map=null, fight=null, hist=[], hi=0, myCls='magician', myGender='nonbinary', myName='', myPic='', theirs=false;
 // ---- portrait window: the NPC picture if there is one, otherwise a generic portrait of you (class + gender) ----
-const genSrc=(c,g)=>'img/player/'+(c||'magician')+'-'+String(g||'nonbinary')[0]+'.jpg';
+const genSrc=(c,g)=>{ let x=String(g||'nonbinary')[0]; if(x==='n'){ let h=0; for(const ch of String(myName||'x')) h=(h*31+ch.charCodeAt(0))|0; x=(h&1)?'m':'f'; } return 'img/player/'+(c||'magician')+'-'+x+'.jpg'; }; // 'other' gets the male or female picture, chosen steadily from the name
 window.svgFallback=()=>SPPortrait.svg({cls:myCls,gender:myGender,seed:myName||'you',label:'Your portrait'});
 function generic(){ return '<img alt="Your portrait" src="'+wesc(myPic||genSrc(myCls,myGender))+'" onerror="this.onerror=null;this.outerHTML=svgFallback()">'; }
 const wesc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -335,8 +342,8 @@ function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); 
 $('#ix').onclick=()=>{ $('#iwin').hidden=true; clearTimeout(invT); }; 
 $('#qk').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(b){ send({t:'cmd',line:b.dataset.c}); $('#in').focus(); } });
 // ---------- map: hover a room for its name, click a room to run there ----------
-const MAPS=108; function mapHit(e){ if(!map) return null; const c=$('#map'), r=c.getBoundingClientRect(), sx=c.width/r.width, sy=c.height/r.height, mx=(e.clientX-r.left)*sx, my=(e.clientY-r.top)*sy, cur=map.rooms.find(q=>q.p===map.me); if(!cur) return null;
-  for(const q of map.rooms){ const x=c.width/2+(q.x-cur.x)*MAPS, y=c.height/2+(q.y-cur.y)*MAPS; if(Math.abs(mx-x)<=34&&Math.abs(my-y)<=34) return q; } return null; }
+const MAPS=78; function mapHit(e){ if(!map) return null; const c=$('#map'), r=c.getBoundingClientRect(), sx=c.width/r.width, sy=c.height/r.height, mx=(e.clientX-r.left)*sx, my=(e.clientY-r.top)*sy, cur=map.rooms.find(q=>q.p===map.me); if(!cur) return null;
+  for(const q of map.rooms){ const x=c.width/2+(q.x-cur.x)*MAPS, y=c.height/2+(q.y-cur.y)*MAPS; if(Math.abs(mx-x)<=26&&Math.abs(my-y)<=26) return q; } return null; }
 $('#map').addEventListener('mousemove',e=>{ const q=mapHit(e), t=$('#mtip'), c=$('#map'); if(!q){ t.hidden=true; c.classList.remove('hot'); return; } const here=q.p===map.me; t.innerHTML=''; const b=document.createElement('b'); b.textContent=q.n; t.appendChild(b); const sm=document.createElement('small'); sm.textContent=(TERRAIN[q.t]||'')+(here?' \u00b7 you are here':' \u00b7 click to run here'); t.appendChild(sm); t.hidden=false; t.style.left=Math.min(innerWidth-270,e.clientX+14)+'px'; t.style.top=(e.clientY+14)+'px'; c.classList.toggle('hot',!here); });
 $('#map').addEventListener('mouseleave',()=>{ $('#mtip').hidden=true; $('#map').classList.remove('hot'); });
 $('#map').addEventListener('click',e=>{ const q=mapHit(e); if(q&&q.p!==map.me) send({t:'cmd',line:'runto '+q.p}); });
@@ -361,7 +368,7 @@ const group=(id,els)=>{ const wrap=document.createElement('div'); wrap.id=id; el
 wmDef('char','Character',group('w-char',[$('.scw'),$('#qbtn'),...[...document.querySelectorAll('.lscroll > .cap')].slice(0,2)]));
 wmDef('enh','Enhancements',$('.enh')); wmDef('spells','Spells',group('w-book',[$('#book')])); wmDef('pad','Movement',$('.pad'));
 wmDef('quests','Quests',$('#qwin'),{bar:$('#qbar'),q:1,h:1});
-wmDef('map','Map',group('w-map',[$('#map'),$('#map').nextElementSibling])); wmDef('room','Room picture',$('#roompic')); wmDef('combat','Combat',group('w-combat',[$('#arena'),$('#arena').nextElementSibling])); wmDef('portrait','Portrait',group('w-portrait',[$('#portrait')]),{h:1}); wmDef('gossip','Gossip',$('#gos'),{h:1});
+wmDef('map','Map',group('w-map',[$('#map'),$('#map').nextElementSibling])); wmDef('room','Room picture',$('#roompic')); wmDef('portrait','Portrait',group('w-portrait',[$('#pname').parentElement,$('#portrait')]),{h:1}); wmDef('gossip','Gossip',$('#gos'),{h:1});
 function wmMenu(){ const m=$('#winmenu'); m.innerHTML='<h6>WINDOWS (tick to show)</h6>'; for(const w of WINS){ const l=document.createElement('label'), sp=document.createElement('span'), cb=document.createElement('input'); sp.textContent=w.title; cb.type='checkbox'; cb.checked=wmIsOpen(w); cb.onchange=()=>wmSet(w,cb.checked); l.append(sp,cb); m.appendChild(l); }
   const h=document.createElement('h6'); h.textContent='OPEN'; m.appendChild(h); for(const [t,fn] of [['Mudmail',()=>send({t:'cmd',line:'mail'})],['Milestones',()=>send({t:'cmd',line:'milestones'})],['Who',()=>send({t:'cmd',line:'who'})],['Top 10',()=>$('#topbtn').click()],['Character sheet',()=>send({t:'cmd',line:'score'})],['Tutorial',()=>send({t:'cmd',line:'tutorial'})],['Settings',()=>$('#cog').click()]]){ const b=document.createElement('button'); b.type='button'; b.textContent=t; b.onclick=()=>{ $('#winmenu').hidden=true; $('#winbtn').setAttribute('aria-expanded','false'); fn(); }; m.appendChild(b); }
   const r=document.createElement('button'); r.type='button'; r.textContent='Reset window layout'; r.style.marginTop='8px'; r.onclick=()=>{ try{ localStorage.removeItem(WMK); localStorage.removeItem('sp_swin'); localStorage.removeItem('sp_fwin'); localStorage.removeItem('sp_owin'); localStorage.removeItem('sp_iwin'); localStorage.removeItem('sp_set'); }catch(e){} location.reload(); }; m.appendChild(r); }
@@ -398,15 +405,11 @@ function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textCon
   $('#wx').onclick=()=>{ w.hidden=true; }; let d=null; bar.onpointerdown=e=>{ if(e.target.id==='wx') return; const r=w.getBoundingClientRect(); d={dx:e.clientX-r.left,dy:e.clientY-r.top}; bar.setPointerCapture(e.pointerId); };
   bar.onpointermove=e=>{ if(!d) return; w.style.left=Math.max(0,Math.min(innerWidth-120,e.clientX-d.dx))+'px'; w.style.top=Math.max(0,Math.min(innerHeight-60,e.clientY-d.dy))+'px'; };
   bar.onpointerup=()=>{ if(!d) return; d=null; const r=w.getBoundingClientRect(); try{ localStorage.setItem('sp_wwin',JSON.stringify({x:r.left,y:r.top})); }catch(e){} }; })();
-function showPortrait(name,img){
-  const box=$('#portrait'); theirs=!!name;
-  $('#pname').textContent=name||(myName?myName+' (you)':'You'); $('#pnote').textContent=name&&!img?'no picture: showing you':'';
-  if(img){ box.innerHTML=''; const i=document.createElement('img'); i.alt=name; i.src=img; i.onerror=()=>{ box.innerHTML=generic(); $('#pnote').textContent='no picture: showing you'; }; box.appendChild(i); } else box.innerHTML=generic();
-}
+function showPortrait(name,img){ /* the portrait window only ever shows you; monsters and NPCs appear in the combat pop-up */ const box=$('#portrait'); theirs=false; $('#pname').textContent=myName?myName+' (you)':'You'; $('#pnote').textContent=''; box.innerHTML=generic(); }
 // ---- display preferences: font, size, keypad (remembered in this browser) ----
 const FONTS={serif:'"Iowan Old Style",Palatino,Georgia,serif',sans:'-apple-system,"Helvetica Neue",Arial,sans-serif',mono:'ui-monospace,"SF Mono",Menlo,monospace',type:'"Courier New",Courier,monospace',rounded:'"Trebuchet MS",Verdana,sans-serif',wide:'Verdana,Geneva,sans-serif'};
 let prefs={font:'serif',size:17,keypad:false,gifs:true,yt:true,theme:'black',vol:70,gfs:13,gside:'left'}; try{ Object.assign(prefs,JSON.parse(localStorage.getItem('sp_prefs')||'{}')); }catch(e){}
-function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; $('#sgf').value=prefs.gfs; $('#sgfo').textContent=prefs.gfs+'px'; $('#sgs').value=prefs.gside; const g=$('#gos'); g.style.fontSize=prefs.gfs+'px'; const dest=document.querySelector(prefs.gside==='right'?'aside.right':'aside.left'); if(dest&&g.parentElement!==dest){ dest.appendChild(g); g.scrollTop=g.scrollHeight; } }
+function applyPrefs(){ const r=document.documentElement.style; r.setProperty('--tf',FONTS[prefs.font]||FONTS.serif); r.setProperty('--ts',prefs.size+'px'); $('#sf').value=prefs.font; $('#ss').value=prefs.size; $('#so').textContent=prefs.size+'px'; $('#sg').checked=prefs.gifs!==false; $('#svc').checked=prefs.vcombat!==false; $('#sy').checked=prefs.yt!==false; document.documentElement.dataset.theme=prefs.theme||'black'; $('#sth').value=prefs.theme||'black'; $('#sv').value=prefs.vol; $('#svo').textContent=prefs.vol+'%'; $('#sgf').value=prefs.gfs; $('#sgfo').textContent=prefs.gfs+'px'; $('#sgs').value=prefs.gside; const g=$('#gos'); g.style.fontSize=prefs.gfs+'px'; const dest=document.querySelector(prefs.gside==='right'?'aside.right':'aside.left'); if(dest&&g.parentElement!==dest){ dest.appendChild(g); g.scrollTop=g.scrollHeight; } }
 function savePrefs(){ try{ localStorage.setItem('sp_prefs',JSON.stringify(prefs)); }catch(e){} applyPrefs(); }
 $('#healbtn').onclick=()=>{ send({t:'cmd',line:'eat'}); $('#in').focus(); }; // the HEAL quick key sends: eat
 $('#ver').textContent='build '+BUILD; $('#setsave').onclick=()=>{ savePrefs(); toast('\u2713 Settings saved'); $('#settings').hidden=true; $('#cog').setAttribute('aria-expanded','false'); }; // settings save themselves as you change them: this button just confirms it
@@ -415,7 +418,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('#settings').hi
 $('#sgf').oninput=e=>{ prefs.gfs=+e.target.value; savePrefs(); }; $('#sgs').onchange=e=>{ prefs.gside=e.target.value; savePrefs(); };
 $('#mud').onchange=e=>{ const k=e.target.dataset&&e.target.dataset.m; if(k) send({t:'mute',key:k,on:e.target.checked}); }; $('#stb').onclick=()=>send({t:'title',text:$('#stt').value}); $('#seb').onclick=()=>send({t:'email',text:$('#sem').value}); $('#sem').onkeydown=e=>{ e.stopPropagation(); if(e.key==='Enter') send({t:'email',text:$('#sem').value}); }; $('#seh').onchange=e=>send({t:'emailhide',hide:e.target.checked});
 $('#stt').onkeydown=e=>{ e.stopPropagation(); if(e.key==='Enter') send({t:'title',text:$('#stt').value}); };
-$('#sf').onchange=e=>{ prefs.font=e.target.value; savePrefs(); }; $('#ss').oninput=e=>{ prefs.size=+e.target.value; savePrefs(); }; $('#sth').onchange=e=>{ prefs.theme=e.target.value; savePrefs(); }; $('#sy').onchange=e=>{ prefs.yt=e.target.checked; savePrefs(); }; $('#sv').oninput=e=>{ prefs.vol=+e.target.value; savePrefs(); for(const [k,a] of Object.entries(wloop)) a.volume=mvol()*(k==='rain'?(WX==='rain'?.5:.42):(WX==='tornado'?.95:.28)); }; $('#sv').onchange=()=>play('skill'); $('#sg').onchange=e=>{ prefs.gifs=e.target.checked; savePrefs(); }; $('#sk').onchange=e=>send({t:'kp',on:e.target.checked});
+$('#sf').onchange=e=>{ prefs.font=e.target.value; savePrefs(); }; $('#ss').oninput=e=>{ prefs.size=+e.target.value; savePrefs(); }; $('#sth').onchange=e=>{ prefs.theme=e.target.value; savePrefs(); }; $('#sy').onchange=e=>{ prefs.yt=e.target.checked; savePrefs(); }; $('#sv').oninput=e=>{ prefs.vol=+e.target.value; savePrefs(); for(const [k,a] of Object.entries(wloop)) a.volume=mvol()*(k==='rain'?(WX==='rain'?.5:.42):(WX==='tornado'?.95:.28)); }; $('#sv').onchange=()=>play('skill'); $('#sg').onchange=e=>{ prefs.gifs=e.target.checked; savePrefs(); }; $('#svc').onchange=e=>{ prefs.vcombat=e.target.checked; savePrefs(); if(!prefs.vcombat) vcHide(); }; $('#sk').onchange=e=>send({t:'kp',on:e.target.checked});
 applyPrefs();
 // ---- keypad: the key map lives in your character (server side), so it follows you to any browser ----
 let kp={on:false,map:{}}; const KPK=[['Numpad7','7'],['Numpad8','8'],['Numpad9','9'],['Numpad4','4'],['Numpad5','5'],['Numpad6','6'],['Numpad1','1'],['Numpad2','2'],['Numpad3','3'],['Numpad0','0'],['NumpadDecimal','.'],['NumpadEnter','Enter'],['NumpadAdd','+'],['NumpadSubtract','-'],['NumpadMultiply','*'],['NumpadDivide','/']];
@@ -437,12 +440,12 @@ function linkPlain(el,text){ const re=/https?:\/\/[^\s<>"']*[^\s<>"'.,;:!?)]/gi;
 const CTOK=/\u27e6(#[0-9a-fA-F]{6})\|([^\u27e7]*)\u27e7/g; // item colours: the server wraps item names as \u27e6#rrggbb|name\u27e7
 function linkify(el,text){ let last=0,m; CTOK.lastIndex=0; while((m=CTOK.exec(text))){ if(m.index>last) linkPlain(el,text.slice(last,m.index)); const sp=document.createElement('span'); sp.style.color=m[1]; sp.textContent=m[2]; el.appendChild(sp); last=m.index+m[0].length; } if(last<text.length||!last) linkPlain(el,text.slice(last)); }
 function add(m,c='text'){
-  if(c==='gossip'){ const g=$('#gos'),e=document.createElement('div'); e.className='gossip'; linkify(e,m.replace(/^\[gossip\] /,'')); g.appendChild(e); while(g.childElementCount>200) g.children[1].remove(); g.scrollTop=g.scrollHeight; return; }
+  if(c==='gossip'){ const g=$('#gos'),e=document.createElement('div'); e.className='gossip'; linkify(e,m); g.appendChild(e); while(g.childElementCount>200) g.children[1].remove(); g.scrollTop=g.scrollHeight; return; }
   const d=document.createElement('div'); d.className=c; linkify(d,m); out.appendChild(d);
   while(out.childElementCount>600) out.firstChild.remove(); out.scrollTop=out.scrollHeight;
 }
 function handle(m){
-  if(m.t==='text'){ add(m.m,m.c); trCheck(m.m,m.c); }
+  if(m.t==='text'){ if(vcHides(m.m,m.c)){ trCheck(m.m,m.c); return; } add(m.m,m.c); trCheck(m.m,m.c); }
   else if(m.t==='mutes'){ document.querySelectorAll('#mud input[data-m]').forEach(i=>{ i.checked=!!(m.mute||{})[i.dataset.m]; }); if(document.activeElement!==$('#stt')) $('#stt').value=m.title||''; if(document.activeElement!==$('#sem')) $('#sem').value=m.email||''; $('#seh').checked=!!m.eh; }
   else if(m.t==='ok'){ if(m.v&&BUILD&&m.v!==BUILD){ let again=false; try{ again=sessionStorage.getItem('sp_reload')===m.v; sessionStorage.setItem('sp_reload',m.v); }catch(e){} if(!again){ location.reload(); return; } setTimeout(()=>add('Your browser is showing an old copy of the game page (page build '+BUILD+', server build '+m.v+'). Press Ctrl+Shift+R (Cmd+Shift+R on a Mac) to load the new interface.','hurt'),800); } document.body.classList.add('in'); $('#login').style.display='none'; $('#in').focus(); }
   else if(m.t==='err') $('#err').textContent=m.m;
@@ -569,23 +572,23 @@ function roomPic(){ if(!map||!map.me||rpKey===map.me) return; rpKey=map.me; cons
   const area=()=>{ img.onerror=()=>{ img.onerror=null; img.style.visibility='hidden'; }; img.src='guide/img/area-'+(map.ra||'town')+'.jpg'; $('#rpnote').textContent='area picture'; };
   if(map.rp){ img.onerror=area; img.src='img/rooms/'+map.rp; } else if(map.ap){ img.onerror=area; img.src='img/areas/'+map.ap; $('#rpnote').textContent='area picture'; } else area(); }
 function drawMap(){
-  const c=$('#map'),g=c.getContext('2d'),W=c.width,H=c.height,S=108; g.clearRect(0,0,W,H);
+  const c=$('#map'),g=c.getContext('2d'),W=c.width,H=c.height,S=MAPS; g.clearRect(0,0,W,H);
   if(!map) return; $('#area').textContent=map.area+(map.z&&map.z<20?` · level ${map.z}`:'');
   const by=Object.fromEntries(map.rooms.map(r=>[r.p,r])), cur=by[map.me]; if(!cur) return;
   const P=r=>[W/2+(r.x-cur.x)*S, H/2+(r.y-cur.y)*S], pulse=.55+.45*Math.sin(Date.now()/260);
   g.lineCap='round';
   for(const r of map.rooms){ const [x,y]=P(r);   // paths drawn in the terrain of the room they leave
     for(const e of r.ex){ const v=V[e.d]; if(!v) continue; const t=by[e.to]; let ex,ey; if(t){ [ex,ey]=P(t); } else { ex=x+v[0]*S*.42; ey=y+v[1]*S*.42; }
-      g.setLineDash(t?[]:[7,7]); g.strokeStyle='#000'; g.lineWidth=18; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.strokeStyle=tex(g,r.t); g.lineWidth=12; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.setLineDash([]); } }
-  for(const r of map.rooms){ const [x,y]=P(r), here=r.p===map.me, z=33;
+      g.setLineDash(t?[]:[7,7]); g.strokeStyle='#000'; g.lineWidth=13; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.strokeStyle=tex(g,r.t); g.lineWidth=9; g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.setLineDash([]); } }
+  for(const r of map.rooms){ const [x,y]=P(r), here=r.p===map.me, z=24;
     g.save(); g.beginPath(); rrect(g,x-z,y-z,z*2,z*2,8); g.clip(); g.fillStyle=tex(g,r.t); g.fillRect(x-z,y-z,z*2,z*2);
     const sh=g.createLinearGradient(x,y-z,x,y+z); sh.addColorStop(0,'rgba(255,255,255,.14)'); sh.addColorStop(1,'rgba(0,0,0,.28)'); g.fillStyle=sh; g.fillRect(x-z,y-z,z*2,z*2); g.restore();
     g.beginPath(); rrect(g,x-z,y-z,z*2,z*2,8); g.lineWidth=here?6:3; g.strokeStyle=here?`rgba(255,154,60,${.65+.35*pulse})`:'#000'; if(here){ g.shadowColor='#ff9a3c'; g.shadowBlur=14*pulse; } g.stroke(); g.shadowBlur=0;
     g.textAlign='center'; g.textBaseline='middle'; const up=r.ex.some(e=>e.d==='u'),dn=r.ex.some(e=>e.d==='d');
-    if(up||dn){ g.font='600 20px ui-sans-serif,system-ui'; g.lineWidth=4; g.strokeStyle='#000'; g.strokeText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); g.fillStyle='#ffe9a8'; g.fillText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); }
+    if(up||dn){ g.font='600 15px ui-sans-serif,system-ui'; g.lineWidth=3; g.strokeStyle='#000'; g.strokeText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); g.fillStyle='#ffe9a8'; g.fillText((up?'▲':'')+(dn?'▼':''),x,y+(here?19:0)); }
     if(map.others.includes(r.p)){ g.fillStyle='#19e3ff'; g.strokeStyle='#000'; g.lineWidth=3; g.beginPath(); g.arc(x+z-5,y-z+5,9,0,7); g.stroke(); g.fill(); }
     if(here&&map.mobs){ g.fillStyle='#e5603f'; g.lineWidth=3; g.strokeStyle='#000'; g.beginPath(); g.arc(x-z+5,y-z+5,10,0,7); g.stroke(); g.fill(); g.fillStyle='#fff'; g.font='700 14px ui-sans-serif'; g.fillText(map.mobs,x-z+5,y-z+6); }
-    if(here){ g.fillStyle='rgba(0,0,0,.62)'; g.beginPath(); g.arc(x,y-3,17,0,7); g.fill(); g.lineWidth=2; g.strokeStyle='#ff9a3c'; g.stroke(); g.font='24px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; g.fillStyle='#fff'; g.fillText(myIcon,x,y-2);   // you are here
+    if(here){ g.fillStyle='rgba(0,0,0,.62)'; g.beginPath(); g.arc(x,y-2,13,0,7); g.fill(); g.lineWidth=2; g.strokeStyle='#ff9a3c'; g.stroke(); g.font='18px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; g.fillStyle='#fff'; g.fillText(myIcon,x,y-1);   // you are here
       g.fillStyle='#ff9a3c'; g.strokeStyle='#000'; g.lineWidth=3; g.font='700 15px ui-sans-serif'; g.strokeText('YOU',x,y-z-12); g.fillText('YOU',x,y-z-12); } }
   g.fillStyle='rgba(0,0,0,.72)'; g.fillRect(0,H-46,W,46); g.fillStyle='#e6dfcb'; g.font='600 22px "Iowan Old Style",Georgia,serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(cur.n+' · '+(TERRAIN[cur.t]||'Concrete'),W/2,H-23);
 }
@@ -594,8 +597,10 @@ $('#legend').innerHTML=Object.keys(TERRAIN).map(k=>`<i class="sw" style="backgro
 
 // ---------- combat arena ----------
 const MIC={}; function mobImg(f){ if(!f) return null; let i=MIC[f]; if(!i){ i=new Image(); i.src='img/mob/'+f; MIC[f]=i; } return i.complete&&i.naturalWidth?i:null; } // monster pictures for the combat view
-function onFight(m){
-  const now=performance.now(), sp=m.spell;
+const PIC={}; function plImg(u){ if(u.name!==myName) return null; const src=myPic||genSrc(myCls,myGender); let i=PIC[src]; if(!i){ i=new Image(); i.src=src; PIC[src]=i; } return i.complete&&i.naturalWidth?i:null; } // your portrait in the combat view
+let vcX=false; function vcShow(){ if(prefs.vcombat===false||vcX) return; $('#cvw').hidden=false; } function vcHide(){ $('#cvw').hidden=true; } $('#cvx').onclick=()=>{ vcHide(); vcX=true; setTimeout(()=>{ vcX=false; },15000); }; // visual combat: a pop-up in the middle of the terminal while you fight
+const VCQ=/^(combat|combat2|miss)$/; function vcHides(m,c){ if(prefs.vcombat===false) return false; /* these classes only ever occur in a fight, and the first lines arrive before the pop-up opens */ return VCQ.test(c)||(c==='hurt'&&/\(\d+\)$/.test(m))||(c==='spell'&&/ You cast /.test(' '+m)); }
+function onFight(m){   if(prefs.vcombat===false) return; vcShow(); const now=performance.now(), sp=m.spell;
   if(m.heal!==undefined||m.buff){ if(!fight) return; const side=m.a.id===fight.L.id?'L':'R'; fight.t=now;
     if(m.heal) fight.floats.push({side,txt:'+'+m.heal,col:'#7be0a0',hit:true,t:now}); if(sp) fight.banner={...sp,t:now}; return; }
   const L=m.a.k==='p'||m.b.k!=='p'?m.a:m.b, R=L===m.a?m.b:m.a, atkLeft=m.a.id===L.id, side=atkLeft?'R':'L', lag=sp&&!m.dot?320:0;
@@ -618,7 +623,7 @@ function frame(now){
     if(f.hurt&&f.hurt.side===s&&now>=f.hurt.t&&now-f.hurt.t<300){ x+=Math.sin(now/18)*7; g.fillStyle='rgba(229,96,63,.18)'; g.fillRect(pos[s]-100,20,200,H*.76); }
     if(u.hp<=0){ a=.35; rot=s==='L'?-1.2:1.2; }
     g.fillStyle='rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(pos[s],H*.78,70,14,0,0,7); g.fill();
-    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); const im=mobImg(u.mp); if(im){ const bw=190, bh=190; g.beginPath(); rrect(g,-bw/2,-bh+24,bw,bh,16); g.clip(); const r=Math.min(im.naturalWidth,im.naturalHeight), sx=(im.naturalWidth-r)/2, sy=(im.naturalHeight-r)*.2; g.drawImage(im,sx,sy,r,r,-bw/2,-bh+24,bw,bh); } else { g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); } g.restore(); if(im){ g.save(); g.globalAlpha=a; g.strokeStyle='#e9b44c'; g.lineWidth=3; g.beginPath(); rrect(g,x-95,y-190+24,190,190,16); g.stroke(); g.restore(); }
+    g.save(); g.globalAlpha=a; g.translate(x,y); g.rotate(rot*.5); const im=u.k==='p'?plImg(u):mobImg(u.mp); if(im){ const bw=190, bh=190; g.beginPath(); rrect(g,-bw/2,-bh+24,bw,bh,16); g.clip(); const r=Math.min(im.naturalWidth,im.naturalHeight), sx=(im.naturalWidth-r)/2, sy=(im.naturalHeight-r)*.2; g.drawImage(im,sx,sy,r,r,-bw/2,-bh+24,bw,bh); } else { g.font='120px "Apple Color Emoji",sans-serif'; if(s==='R') g.scale(-1,1); g.fillText(u.icon,0,0); } g.restore(); if(im){ g.save(); g.globalAlpha=a; g.strokeStyle='#e9b44c'; g.lineWidth=3; g.beginPath(); rrect(g,x-95,y-190+24,190,190,16); g.stroke(); g.restore(); }
     g.fillStyle='#e6dfcb'; g.font='600 26px "Iowan Old Style",Georgia,serif'; g.fillText(`${u.name}  ·  lvl ${u.lvl}`,pos[s],42);
     const bw=250,r=Math.max(0,u.d/u.max); g.fillStyle='#0a1115'; g.fillRect(pos[s]-bw/2,56,bw,22); g.fillStyle=hpColor(r); g.fillRect(pos[s]-bw/2,56,bw*r,22);
     g.strokeStyle='#777'; g.lineWidth=2; g.strokeRect(pos[s]-bw/2,56,bw,22);
@@ -630,7 +635,7 @@ function frame(now){
     if(k<1){ const x=pos[p.from]+(pos[p.to]-pos[p.from])*k, y=H*.5-Math.sin(k*Math.PI)*34; g.fillStyle=p.c; g.globalAlpha=.35; g.beginPath(); g.arc(x,y,26,0,7); g.fill(); g.globalAlpha=1; g.font='64px "Apple Color Emoji",sans-serif'; g.textAlign='center'; g.fillText(p.i,x,y+22); }
     else if(k<1.7){ const r=(k-1)/.7; g.strokeStyle=p.c; g.globalAlpha=1-r; g.lineWidth=8*(1-r)+1; g.beginPath(); g.arc(pos[p.to],H*.5,30+r*90,0,7); g.stroke(); g.globalAlpha=1; } }
   const bn=f.banner; if(bn&&now-bn.t<1300){ g.globalAlpha=Math.min(1,(1300-(now-bn.t))/500); g.fillStyle=bn.c; g.font='700 30px "Iowan Old Style",Georgia,serif'; g.textAlign='center'; g.fillText(bn.i+' '+bn.n,W/2,H-34); g.globalAlpha=1; }
-  if(now-f.t>9000){ fight=null; g.clearRect(0,0,W,H); return; }
+  if(now-f.t>(f.dead?1800:5000)){ fight=null; g.clearRect(0,0,W,H); vcHide(); return; }
   requestAnimationFrame(frame);
 }
 
@@ -639,7 +644,7 @@ $('#lf').onsubmit=e=>{ e.preventDefault(); $('#err').textContent=''; if(!sock||s
   const go=()=>send({t:'login',name:$('#ln').value,pass:$('#lp').value,cls:$('#lc').value,gender:$('#lg').value});
   sock.readyState===1?go():sock.addEventListener('open',go,{once:true}); };
 function cmd(line){ if(!line) return; if(/^\/g\s/i.test(line)) line='gossip '+line.slice(3); add('> '+line,'cmd'); send({t:'cmd',line}); }
-$('#f').onsubmit=e=>{ e.preventDefault(); const v=$('#in').value.trim(); $('#in').value=''; if(v){hist.push(v);hi=hist.length;} cmd(v); };
+$('#f').onsubmit=e=>{ e.preventDefault(); if(e.submitter&&e.submitter.dataset.c) return; const v=$('#in').value.trim(); $('#in').value=''; if(v){hist.push(v);hi=hist.length;} cmd(v); };
 $('#in').onkeydown=e=>{ if(e.key==='ArrowUp'&&!e.altKey){ e.preventDefault(); if(hi>0)$('#in').value=hist[--hi]; }
   else if(e.key==='ArrowDown'&&!e.altKey){ e.preventDefault(); hi=Math.min(hist.length,hi+1); $('#in').value=hist[hi]||''; } };
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-c]'); if(b){ cmd(b.dataset.c); $('#in').focus(); } });

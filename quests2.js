@@ -1,8 +1,10 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_buck: 2, q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_mars2: 7, q_manor2: 4, q_buck: 2, q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    reyes: N('Commander Reyes', 'mars/0_0', 'Welcome to Mars, runner. Little green men with ray guns, a whole planet of them, and a very large, very angry Overlord at the far corner. Keep your head down, your gun up, and your oxygen full.', 'A weathered Space Corps commander in a dusty silver suit, a helmet under one arm and a ray pistol in the other hand, who has plainly been here too long.'),
+    dolores: N('Nurse Dolores', 'manor/0_0', 'Welcome to Golden Years Manor, dear. Visiting hours are over, and so, I am afraid, are most of our residents. They will not rest. Would you help them? Gently. With a heavy cane, if you have one.', 'A tired night nurse with an old-fashioned cap and a flashlight, her sleeves rolled up and her calm completely unshaken by the ghosts.'),
     sam: N('Shift Supervisor Sam', 'buck/0_0', 'Hey! New? Welcome to Buckstars. Honestly, you picked a rough night. The manager, Brenda, drank the whole roastery and the staff are all, well, wired. Grab an apron from the counter and help me close up.', 'A cheerful shift supervisor in a green apron with a name tag, a pen behind each ear and bags under both eyes.'),
     bree: N('Barista Bree', 'buck/1_0', 'What can I get started for you? Type `list` to see the menu, then `buy <thing>`. Pastries are in the case, and the tip jar is purely decorative.', 'A friendly barista with a marker in her hair, drawing a name on a cup and a heart on the foam.'),
     dex: N('Engineer Dex', 'town/implant_lab', 'Sorry, friend, I cannot talk right now. I am busy doing implants. Come back when I am done. (I am never done.)', 'A tall engineer in a grease-stained lab coat, goggles pushed up on his forehead, elbow-deep in a patient\'s neural port and humming a tune. He cannot be disturbed, and he will not be killed.'),
@@ -22,6 +24,12 @@ module.exports = ({ N, Q, BOSS_QP }) => {
   };
   const QUESTS = [
     Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_mars0', 'Little Green Problem', 'reyes', 30, 'They are all over the flats: little green martians with ray guns. Take out ten of them and prove you can survive here.', [['kill', 'martian_grunt', 10]], { gold: 14000, items: ['martianjuice', 'martianjuice', 'oxygenpack'] }),
+    Q('q_mars1', 'Ray Gun Rumble', 'reyes', 33, 'Their gunners hold the craters and the canyon. Drop eight martian ray gunners, and the road to the city is open.', [['kill', 'martian_gunner', 8]], { gold: 20000, items: ['martianjuice', 'rayrifle'] }, 'q_mars0'),
+    Q('q_mars2', 'The Martian Leader', 'reyes', 36, 'The Martian Overlord Zorgblat sits in his throne room at the far corner of the planet, behind a citadel of guards and tripod war-machines. He carries a death ray gun. Take him down and bring it home.', [['kill', 'martian_overlord', 1]], { gold: 60000, items: ['martianjuice', 'martianjuice', 'superior'] }, 'q_mars1'),
+    Q('q_manor0', 'Lights Out', 'dolores', 12, 'The restless residents roam the halls all night. Put six of them to rest, gently.', [['kill', 'restless_resident', 6]], { gold: 1800, items: ['prunejuice', 'tapioca'] }),
+    Q('q_manor1', 'Bingo Night', 'dolores', 13, 'The ghost callers are running bingo in the middle of the night and no one is allowed to win. Put four of them to rest.', [['kill', 'bingo_ghost', 4]], { gold: 2600, items: ['oakcane', 'tapioca'] }, 'q_manor0'),
+    Q('q_manor2', 'Rest in Peace', 'dolores', 15, 'Matriarch Edna, our oldest resident, has run the Memory Care Wing for fifty years and refuses to leave. Put her to rest. She would want you to.', [['kill', 'edna', 1]], { gold: 6500, items: ['bingodauber', 'tapioca', 'greater'] }, 'q_manor1'),
     Q('q_buck', 'Closing Shift', 'sam', 1, 'Brenda has barricaded herself in the Roasting Room at the far corner of the shop, and half the staff have gone feral on her espresso. Fight your way through the shop (levels 1 to 3 up front, the tougher ones in the back), and take Brenda out. Grab an apron and a tamper club at the order counter first.', [['kill', 'brenda', 1]], { gold: 120, items: ['frappe', 'breakfast', 'potion'] }),
     Q('q_cave0', 'Bear Trouble', 'ugga', 26, 'The cave bears have taken the Bear Den and now they are in my kitchen. Send four of them back to sleep.', [['kill', 'cave_bear', 4]], { gold: 6000, items: ['mammothsteak', 'greater'] }),
     Q('q_cave1', 'Mammoth Hunt', 'ugga', 29, 'The clan needs meat and ivory. Bring down two of the great woolly beasts in the Mammoth Graveyard.', [['kill', 'woolly_mammoth', 2]], { gold: 9000, items: ['mammothsteak', 'mammothsteak', 'greater'] }),
@@ -60,6 +68,8 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    reyes: ['{name} is down on the red dust. Stay low next time.', 'The Martians got {name}. Again.', 'Medic! {name} is down on Mars!'],
+    dolores: ['{name} has been put to rest, I am afraid.', 'Oh dear, {name}. They do get feisty at night.', 'Another one for the ghosts, {name}.'],
     sam: ['{name} is down in the back again, I will get the mop.', 'Oh no, {name}. Not by the ice machine.', 'Told you it was a rough night, {name}.'],
     ugga: ['{name} fell. The cave is cold tonight.', 'Ugga warned {name}. Ugga always warns.', 'Even big ones fall, {name}. Even big ones.'],
     dana: ['{name} is down on floor nine again, and I will need to file a form.', 'Please remove {name} from the lobby before the board arrives.', 'That is the third incident report today, {name}.'],

@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-457 rooms:
+584 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -187,6 +187,9 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Frozen Ledge | Frostpeak Station (Sci-fi) | `frost-ledge.jpg` |
 | Frostpeak Station | Frostpeak Station (Sci-fi) | `frost-lodge.jpg` |
 | Frostpeak Pass | Frostpeak Station (Sci-fi) | `frost-pass.jpg` |
+| Starship Tharsis: Cockpit | Frostpeak Station (Sci-fi) | `frost-ship_cockpit.jpg` |
+| Starship Tharsis: Passenger Deck | Frostpeak Station (Sci-fi) | `frost-ship_deck.jpg` |
+| Starship Tharsis: Boarding Ramp | Frostpeak Station (Sci-fi) | `frost-ship_ramp.jpg` |
 | Snowdrift Hollow | Frostpeak Station (Sci-fi) | `frost-snowdrift_hollow.jpg` |
 | Wind-Scoured Peak | Frostpeak Station (Sci-fi) | `frost-windscoured_peak.jpg` |
 | Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
@@ -242,6 +245,130 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Hollowmoor Square | Nightfall Hollow (Fantasy) | `hollow-square.jpg` |
 | Bat Tower | Nightfall Hollow (Fantasy) | `hollow-tower.jpg` |
 | Howling Woods | Nightfall Hollow (Fantasy) | `hollow-woods1.jpg` |
+| Manor Lobby | Golden Years Manor (Modern) | `manor-0_0.jpg` |
+| Activity Room | Golden Years Manor (Modern) | `manor-0_1.jpg` |
+| East Wing Corridor | Golden Years Manor (Modern) | `manor-0_2.jpg` |
+| Garden Path | Golden Years Manor (Modern) | `manor-0_3.jpg` |
+| Sunroom | Golden Years Manor (Modern) | `manor-1_0.jpg` |
+| Bingo Hall | Golden Years Manor (Modern) | `manor-1_1.jpg` |
+| Resident Room 101 | Golden Years Manor (Modern) | `manor-1_2.jpg` |
+| Shuffleboard Court | Golden Years Manor (Modern) | `manor-1_3.jpg` |
+| Dining Hall | Golden Years Manor (Modern) | `manor-2_0.jpg` |
+| Craft Room | Golden Years Manor (Modern) | `manor-2_1.jpg` |
+| Resident Room 102 | Golden Years Manor (Modern) | `manor-2_2.jpg` |
+| Gazebo Pond | Golden Years Manor (Modern) | `manor-2_3.jpg` |
+| Kitchen | Golden Years Manor (Modern) | `manor-3_0.jpg` |
+| Library | Golden Years Manor (Modern) | `manor-3_1.jpg` |
+| Resident Room 103 | Golden Years Manor (Modern) | `manor-3_2.jpg` |
+| Greenhouse | Golden Years Manor (Modern) | `manor-3_3.jpg` |
+| Pantry | Golden Years Manor (Modern) | `manor-4_0.jpg` |
+| Chapel | Golden Years Manor (Modern) | `manor-4_1.jpg` |
+| Nurses Station | Golden Years Manor (Modern) | `manor-4_2.jpg` |
+| Hobby Barn | Golden Years Manor (Modern) | `manor-4_3.jpg` |
+| Laundry Room | Golden Years Manor (Modern) | `manor-5_0.jpg` |
+| Tea Parlor | Golden Years Manor (Modern) | `manor-5_1.jpg` |
+| Medication Room | Golden Years Manor (Modern) | `manor-5_2.jpg` |
+| Memory Care Wing | Golden Years Manor (Modern) | `manor-5_3.jpg` |
+| Martian Landing Pad | Mars (Sci-fi) | `mars-0_0.jpg` |
+| Cracked Basin | Mars (Sci-fi) | `mars-0_1.jpg` |
+| Dry Hollow | Mars (Sci-fi) | `mars-0_2.jpg` |
+| Windswept Wash | Mars (Sci-fi) | `mars-0_3.jpg` |
+| Dusty Dune | Mars (Sci-fi) | `mars-0_4.jpg` |
+| Quiet Scar | Mars (Sci-fi) | `mars-0_5.jpg` |
+| Jagged Fissure | Mars (Sci-fi) | `mars-0_6.jpg` |
+| Old Rim | Mars (Sci-fi) | `mars-0_7.jpg` |
+| Smoking Ledge | Mars (Sci-fi) | `mars-0_8.jpg` |
+| Hidden Cut | Mars (Sci-fi) | `mars-0_9.jpg` |
+| Silent Plain | Mars (Sci-fi) | `mars-1_0.jpg` |
+| Rusty Flat | Mars (Sci-fi) | `mars-1_1.jpg` |
+| Dusty Basin | Mars (Sci-fi) | `mars-1_2.jpg` |
+| Crimson Hollow | Mars (Sci-fi) | `mars-1_3.jpg` |
+| Deep Cairn | Mars (Sci-fi) | `mars-1_4.jpg` |
+| Shattered Pit | Mars (Sci-fi) | `mars-1_5.jpg` |
+| Smoking Dish | Mars (Sci-fi) | `mars-1_6.jpg` |
+| Frozen Cairn | Mars (Sci-fi) | `mars-1_7.jpg` |
+| Echoing Gorge | Mars (Sci-fi) | `mars-1_8.jpg` |
+| Painted Chasm | Mars (Sci-fi) | `mars-1_9.jpg` |
+| Martian Bazaar Ruins | Mars (Sci-fi) | `mars-2_0.jpg` |
+| Dry Plain | Mars (Sci-fi) | `mars-2_1.jpg` |
+| Windswept Flat | Mars (Sci-fi) | `mars-2_2.jpg` |
+| Quiet Bowl | Mars (Sci-fi) | `mars-2_3.jpg` |
+| Frozen Dish | Mars (Sci-fi) | `mars-2_4.jpg` |
+| Glowing Cairn | Mars (Sci-fi) | `mars-2_5.jpg` |
+| Old Bowl | Mars (Sci-fi) | `mars-2_6.jpg` |
+| Towering Wall | Mars (Sci-fi) | `mars-2_7.jpg` |
+| Red Stair | Mars (Sci-fi) | `mars-2_8.jpg` |
+| Narrow Arch | Mars (Sci-fi) | `mars-2_9.jpg` |
+| Salt Ridge | Mars (Sci-fi) | `mars-3_0.jpg` |
+| Pitted Gully | Mars (Sci-fi) | `mars-3_1.jpg` |
+| Glowing Pocket | Mars (Sci-fi) | `mars-3_2.jpg` |
+| Shattered Crater | Mars (Sci-fi) | `mars-3_3.jpg` |
+| Smoking Bowl | Mars (Sci-fi) | `mars-3_4.jpg` |
+| Hollow Dish | Mars (Sci-fi) | `mars-3_5.jpg` |
+| Sunken Defile | Mars (Sci-fi) | `mars-3_6.jpg` |
+| Carved Arch | Mars (Sci-fi) | `mars-3_7.jpg` |
+| Twisting Wall | Mars (Sci-fi) | `mars-3_8.jpg` |
+| Hidden Defile | Mars (Sci-fi) | `mars-3_9.jpg` |
+| Ochre Rise | Mars (Sci-fi) | `mars-4_0.jpg` |
+| Broken Rim | Mars (Sci-fi) | `mars-4_1.jpg` |
+| Hollow Ledge | Mars (Sci-fi) | `mars-4_2.jpg` |
+| Jagged Pocket | Mars (Sci-fi) | `mars-4_3.jpg` |
+| Saucer Hangar | Mars (Sci-fi) | `mars-4_4.jpg` |
+| Painted Passage | Mars (Sci-fi) | `mars-4_5.jpg` |
+| Hidden Spire | Mars (Sci-fi) | `mars-4_6.jpg` |
+| Red Canyon | Mars (Sci-fi) | `mars-4_7.jpg` |
+| Echoing Passage | Mars (Sci-fi) | `mars-4_8.jpg` |
+| Crowded Terrace | Mars (Sci-fi) | `mars-4_9.jpg` |
+| Frozen Scar | Mars (Sci-fi) | `mars-5_0.jpg` |
+| Deep Fissure | Mars (Sci-fi) | `mars-5_1.jpg` |
+| Shattered Rim | Mars (Sci-fi) | `mars-5_2.jpg` |
+| Quiet Ledge | Mars (Sci-fi) | `mars-5_3.jpg` |
+| Sunken Cut | Mars (Sci-fi) | `mars-5_4.jpg` |
+| Carved Canyon | Mars (Sci-fi) | `mars-5_5.jpg` |
+| Forgotten Passage | Mars (Sci-fi) | `mars-5_6.jpg` |
+| Towering Spire | Mars (Sci-fi) | `mars-5_7.jpg` |
+| Copper Alley | Mars (Sci-fi) | `mars-5_8.jpg` |
+| Lamp-lit Arcade | Mars (Sci-fi) | `mars-5_9.jpg` |
+| Smoking Pit | Mars (Sci-fi) | `mars-6_0.jpg` |
+| Hollow Scar | Mars (Sci-fi) | `mars-6_1.jpg` |
+| Glowing Fissure | Mars (Sci-fi) | `mars-6_2.jpg` |
+| Forgotten Gorge | Mars (Sci-fi) | `mars-6_3.jpg` |
+| Towering Chasm | Mars (Sci-fi) | `mars-6_4.jpg` |
+| Red Cut | Mars (Sci-fi) | `mars-6_5.jpg` |
+| Echoing Canyon | Mars (Sci-fi) | `mars-6_6.jpg` |
+| Mirrored Yard | Mars (Sci-fi) | `mars-6_7.jpg` |
+| Glass Market | Mars (Sci-fi) | `mars-6_8.jpg` |
+| Silent Alley | Mars (Sci-fi) | `mars-6_9.jpg` |
+| Old Cairn | Mars (Sci-fi) | `mars-7_0.jpg` |
+| Broken Pit | Mars (Sci-fi) | `mars-7_1.jpg` |
+| The Great Crater | Mars (Sci-fi) | `mars-7_2.jpg` |
+| Narrow Stair | Mars (Sci-fi) | `mars-7_3.jpg` |
+| Carved Gorge | Mars (Sci-fi) | `mars-7_4.jpg` |
+| Twisting Chasm | Mars (Sci-fi) | `mars-7_5.jpg` |
+| Neon Gate | Mars (Sci-fi) | `mars-7_6.jpg` |
+| Humming Street | Mars (Sci-fi) | `mars-7_7.jpg` |
+| Lamp-lit Yard | Mars (Sci-fi) | `mars-7_8.jpg` |
+| Crowded Market | Mars (Sci-fi) | `mars-7_9.jpg` |
+| Jagged Dish | Mars (Sci-fi) | `mars-8_0.jpg` |
+| Echoing Defile | Mars (Sci-fi) | `mars-8_1.jpg` |
+| Painted Arch | Mars (Sci-fi) | `mars-8_2.jpg` |
+| Hidden Wall | Mars (Sci-fi) | `mars-8_3.jpg` |
+| Sunken Stair | Mars (Sci-fi) | `mars-8_4.jpg` |
+| Silver Plaza | Mars (Sci-fi) | `mars-8_5.jpg` |
+| Ruined Lane | Mars (Sci-fi) | `mars-8_6.jpg` |
+| Glass Gate | Mars (Sci-fi) | `mars-8_7.jpg` |
+| Copper Street | Mars (Sci-fi) | `mars-8_8.jpg` |
+| Endless Gate | Mars (Sci-fi) | `mars-8_9.jpg` |
+| Twisting Passage | Mars (Sci-fi) | `mars-9_0.jpg` |
+| Red Spire | Mars (Sci-fi) | `mars-9_1.jpg` |
+| Narrow Defile | Mars (Sci-fi) | `mars-9_2.jpg` |
+| Forgotten Arch | Mars (Sci-fi) | `mars-9_3.jpg` |
+| Canyon Overlook | Mars (Sci-fi) | `mars-9_4.jpg` |
+| Silent Tower | Mars (Sci-fi) | `mars-9_5.jpg` |
+| Humming Plaza | Mars (Sci-fi) | `mars-9_6.jpg` |
+| Mirrored Lane | Mars (Sci-fi) | `mars-9_7.jpg` |
+| Royal Walk | Mars (Sci-fi) | `mars-9_8.jpg` |
+| Overlord's Throne Room | Mars (Sci-fi) | `mars-9_9.jpg` |
 | Hydra Den | Sunken Marsh (Fantasy) | `marsh-den.jpg` |
 | Drowned Chapel | Sunken Marsh (Fantasy) | `marsh-drowned_chapel.jpg` |
 | Marsh Edge | Sunken Marsh (Fantasy) | `marsh-edge.jpg` |

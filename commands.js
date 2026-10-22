@@ -10,7 +10,13 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   concrete: 'CONCRETE. Poured, gray and flat, cracked in places and stained with oil and faded paint lines. It echoes. Weeds push up through the seams and old gum is pressed into it like tiny fossils. This ground was made by people, for people and wheels, and it is the same wherever you go.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-const ALIAS = { pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const events = require('./events'); D.events = events; // holiday events (events.js)
+D.ship = { at: 'frost', flying: false, emptyAt: 0 }; // the starship Tharsis: docked at Frostpeak Station ('frost') or on Mars ('mars')
+const SHIPR = ['frost/ship_ramp', 'frost/ship_deck', 'frost/ship_cockpit'];
+const aboard = () => SHIPR.flatMap((r) => (D.rooms.get(r) ? D.rooms.get(r).inv.filter((o) => o.isPlayer) : []));
+D.shipDock = (where) => { const lodge = D.rooms.get('frost/lodge'), pad = D.rooms.get('mars/0_0'), ramp = D.rooms.get('frost/ship_ramp'); if (!lodge || !pad || !ramp) return; delete lodge.exits.in; delete pad.exits.in; const dest = where === 'mars' ? pad : lodge; dest.exits.in = 'frost/ship_ramp'; ramp.exits.out = dest.path; D.ship.at = where; D.ship.flying = false; };
+{ const t = setInterval(() => { if (D.ship.at !== 'mars' || D.ship.flying || !D.rooms.size) return; if (aboard().length) D.ship.emptyAt = 0; else if (!D.ship.emptyAt) D.ship.emptyAt = Date.now(); else if (Date.now() - D.ship.emptyAt > 180000) { D.shipDock('frost'); D.ship.emptyAt = 0; } }, 30000); if (t.unref) t.unref(); } // an empty ship flies itself home after a few minutes
+const ALIAS = { fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -665,6 +671,39 @@ const C = {
     if (!m || t === 'list') { p.msg(`Keypad controls are ${p.kpOn ? 'ON' : 'OFF'} (keypad on | off | reset). Num Lock must be on.`, 'rname'); p.msg(Object.entries(p.kpMap).map(([k, v]) => `${KPN[k]} = ${v || '(nothing)'}`).join(', ') + '.', 'sys'); return p.msg('Change a key: keypad <key> <command>, e.g. keypad 5 look. Use keypad <key> none to clear it. Keys: 0-9 + - * / . enter. Separate several commands with ;', 'sys'); }
     D.kp(p, m[1] === 'on' ? { on: true } : m[1] === 'off' ? { on: false } : m[1] === 'reset' ? { reset: true } : { name: m[1], cmd: m[2] });
   },
+  events(p, a) { // events: the holiday calendar and your counters; administrators: events start <name> | events stop
+    if (/^(start|stop)\b/i.test(a.trim())) { if (!p.wiz) return C.huh(p); return events.admin(p, a); } events.report(p);
+  },
+  trickortreat(p) { events.trick(p); },
+  fireworks(p) { // fireworks: fills the screen with fireworks for a few seconds (for you and everyone in the room)
+    if (Date.now() - (p._fw || 0) < 25000) return p.msg('Let the last fireworks fade first.', 'sys'); p._fw = Date.now(); p.msg('\u{1F386} You light the fuse and stand back...', 'event'); p.env.tell(`${p.name} launches a barrage of fireworks!`, p, 'event'); D.fireworks(p, 8);
+  },
+  launch(p) { // launch: in the cockpit of the starship Tharsis, flies it between Frostpeak Station and Mars
+    if (!p.env.inv.some((o) => o.def && o.def.launchTo)) return p.msg('The launch console is in the cockpit of the starship Tharsis, docked beside Frostpeak Station (the Frostpeak area): `in`, then north twice.', 'sys');
+    if (D.ship.flying) return p.msg('The Tharsis is already in flight.', 'sys'); const from = D.ship.at, to = from === 'frost' ? 'mars' : 'frost', dock = D.rooms.get(from === 'frost' ? 'frost/lodge' : 'mars/0_0'), ramp = D.rooms.get('frost/ship_ramp'), nm = { frost: 'Frostpeak Station', mars: 'the Mars Landing Pad' }, say = (t, c = 'win') => aboard().forEach((o) => o.msg(t, c));
+    D.ship.flying = true; D.ship.emptyAt = 0; delete ramp.exits.out; delete dock.exits.in; dock.tell('The Tharsis fires its engines, lifts off in a roar of flame and climbs into the sky.', null, 'sys');
+    say(`Gus the pilot-bot: "Strap in, folks. Next stop: ${to === 'mars' ? 'Mars' : 'home'}."`, 'say'); setTimeout(() => say('The engines roar and the whole ship shakes. You are pressed into your seat.', 'hurt'), 2500); setTimeout(() => say('The sky goes black. The stars stream past the viewscreen and the quiet is enormous.', 'sys'), 5200);
+    setTimeout(() => { D.shipDock(to); say(`The Tharsis touches down at ${nm[to]}. The ramp lowers: go south from the deck, then out.`, 'win'); const arr = D.rooms.get(to === 'mars' ? 'mars/0_0' : 'frost/lodge'); if (arr) arr.tell('The Tharsis thunders down out of the sky and settles on its landing pad, and the ramp lowers.', null, 'sys'); }, 8500);
+  },
+  equip(p, a) { // equip [list]: finds the best gear in your pack and bag and puts it on
+    const preview = /^(list|check|preview)$/i.test(a.trim()), B = (d) => d.bonus || {};
+    const score = (d, inst) => d.type === 'weapon' ? (((inst && inst.dmg) || d.dmg)[0] + ((inst && inst.dmg) || d.dmg)[1]) / 2 + 3 * (B(d).dmg || 0) + 2 * (B(d).pool || 0) : ((inst ? inst.ac : d.ac) || 0) + (B(d).hp || 0) / 25 + (B(d).mp || 0) / 40 + (B(d).dmg || 0);
+    const slotOf = (d) => (d.type === 'weapon' ? 'weapon' : d.slot), worn = new Set(Object.values(p.equip)), cand = [];
+    for (const it of p.inv) if (!worn.has(it) && (it.def.type === 'weapon' || it.def.type === 'armor') && slotOf(it.def)) cand.push({ src: 'pack', it, def: it.def, slot: slotOf(it.def), s: score(it.def, it) });
+    for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
+    const slots = ['weapon', 'head', 'body', 'shield', 'feet'], out = [], later = [];
+    for (const sl of slots) {
+      const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) <= p.level).sort((x, y) => y.s - x.s), best = ok[0];
+      const tooHigh = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) > p.level && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);
+      if (!best || best.s <= curS + 0.001) continue;
+      const nm = best.def.name, st = best.def.type === 'weapon' ? `damage ${((best.it && best.it.dmg) || best.def.dmg).join('-')}` : `armor ${(best.it ? best.it.ac : best.def.ac) || 0}`;
+      if (preview) { out.push(`  would ${best.def.type === 'weapon' ? 'wield' : 'wear'} ${nm} (${st})${cur ? ` instead of ${cur.name}` : ''}`); continue; }
+      let it = best.it; if (best.src === 'bag') { p.bag[best.id]--; if (p.bag[best.id] <= 0) delete p.bag[best.id]; it = D.cloneItem(best.id); it.move(p); }
+      p.equip[sl] = it; out.push(`  ${best.def.type === 'weapon' ? 'You wield' : 'You wear'} ${it.short} (${st})${cur ? `; ${cur.short} goes back to your pack` : ''}${best.src === 'bag' ? ' (from your bag)' : ''}.`);
+    }
+    if (!out.length) p.msg(`You are already using the best gear you have${later.length ? '' : ' (your pack and bag have nothing better)'}.`, 'sys'); else { p.msg(preview ? 'Equip would change:' : 'Equipped the best gear from your pack and bag:', 'rname'); out.forEach((l) => p.msg(l, 'win')); if (!preview && p.sendStats) p.sendStats(); }
+    if (later.length) p.msg(`Better gear waiting for a higher level: ${[...new Set(later)].join(', ')}.`, 'sys');
+  },
   give(p, a) { // give <amount> [credits|c] <player>  (or give <player> <amount>): hand credits to another player in the same room
     const w = a.trim().split(/\s+/).filter((x) => !/^(credits?|c|cr|to)$/i.test(x)); const num = w.find((x) => /^\d+$/.test(x)), who = w.find((x) => x !== num);
     if (!num || !who) return p.msg('Usage: give <amount> <player>   (for example `give 50 ben`: hands 50 credits to someone in the same room)', 'sys');
@@ -750,6 +789,9 @@ D.command = (p, line) => {
   if (DIRS[v]) return go(p, v); if (FULL[v]) return go(p, FULL[v]);
   if (Object.hasOwn(C, v) && v !== 'huh') { if (TUTV[v]) D.tutEvent(p, TUTV[v]); return C[v](p, a); }
   if (D.spellsOf(p).some((s) => s.k === v)) return D.cast(p, v + ' ' + a);
+  if (v === 'drink' && a.trim() && !/^(fountain|water)$/i.test(a.trim())) { // `drink champagne`: a potion in your pack, or one lying in the room (you pick it up first)
+    let pot = find(p.inv.filter((i) => i.type === 'potion'), a.trim()); if (!pot) { const g = find(p.env.inv.filter((i) => !i.isLiving && !i.isNpc && !i.fixed && i.type === 'potion'), a.trim()); if (g) { g.move(p); pot = g; } } if (pot) return C.quaff(p, a);
+  }
   for (const o of [...p.inv, ...p.env.inv]) if (o.actions && o.actions[v] && o.actions[v](p, a, o)) return; // add_action-style item verbs
   if (SOCIALS.handle(p, v, a, find)) return;
   p.msg("What? (type 'help')");

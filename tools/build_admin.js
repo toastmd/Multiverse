@@ -21,6 +21,7 @@ const GROUPS = [
   ['World: testing and running', 'Everything for looking around the game as a builder or tester.', [
     ['goto', 'Teleports you to any room by its id (area/room). Handy for testing a boss or checking a new area.', 'goto modern/t10_c\n> (you arrive in the CEO\'s Office)\ngoto cave/throne\ngoto town/square'],
     ['clone', 'Creates any item in your pack by its id.', 'clone goldenparachute\nclone mammothsteak\nclone ironsword'],
+    ['events', 'Shows the holiday calendar. As an Administrator you can also force an event on for 7 days to test it (it spawns its creatures and decorations at once): `events start halloween|thanksgiving|easter|christmas|newyear|july4`, and end it with `events stop`. The calendar events turn themselves on and off by the server\'s date; a forced event is saved so it survives restarts.', 'events\nevents start easter\nevents stop'],
     ['update', 'Reloads the world data (rooms, mobs, items, quests) without restarting. Players are not disconnected.', 'update'],
     ['shutdown', 'Saves everyone and stops the server after a countdown; `shutdown cancel` stops it.', 'shutdown confirm\nshutdown cancel'],
   ]],

@@ -57,7 +57,7 @@ class Room extends GameObject {
   }
   fx(evt) { for (const o of this.inv) if (o.isPlayer) o.send({ t: 'fight', ...evt }); }
   look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
-    p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text'); if (this.def.light) p.msg(this.def.light, 'brightlight'); if (this.path === 'town/square' && D.events) for (const t of D.events.decor()) p.msg(t, 'event');
+    p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text'); if (this.def.light) p.msg(this.def.light, 'brightlight'); if (this.path === 'town/square' && D.events) for (const t of D.events.decor()) p.msg(t, 'event'); if (D.taxi) { if (D.taxi.here(this.path)) p.msg(`\u{1F695} A yellow taxi idles at the curb with its door open: \`enter taxi\` (${D.taxi.FARE} credits). It leaves in ${Math.max(0, Math.ceil((D.taxi.T.until - Date.now()) / 1000))} seconds.`, 'event'); if (this.def.taxi) p.msg(D.taxi.status(), 'items'); }
     const exs = Object.entries(this.exits); p.msg(exs.length ? 'Exits' : 'Exits (none)', 'exits'); // one line per exit: the direction and the name of the room that way
     for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d]}: ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits');
     const things = this.inv.filter((o) => !o.isLiving && !o.isNpc).map((o) => o.short);

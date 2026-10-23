@@ -8,7 +8,7 @@ const D = require('../lib'); require('../commands'); D.loadWorld();
 const art = require('./make_art'), PORT = require('../public/portrait.js');
 fs.mkdirSync(IMG, { recursive: true });
 
-const CATALOG = [...D.rooms.values()].filter((r) => !r.def.custom); // built-in rooms only
+const CATALOG = [...D.rooms.values()].filter((r) => !r.def.custom && !r.def.hidden); // built-in rooms only (the taxi cab is hidden)
 const ROOM = Object.fromEntries(CATALOG.map((r) => [r.path, r]));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const nm = (id) => (D.W.items[id] || {}).name || id, cap = (s) => s[0].toUpperCase() + s.slice(1), num = (n) => Math.round(n).toLocaleString('en-US');

@@ -210,7 +210,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Last-Modified': lm.toUTCString() }); fs.createReadStream(f).pipe(res);
 });
 server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
-server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); D.events.start(); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); D.mail.start(); });
+server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); D.events.start(); D.taxi.start(); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); D.mail.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;
 function halt(why) {
@@ -218,7 +218,7 @@ function halt(why) {
   try { auction.halt(); } catch (e) { D.log('auction halt', e.message); }
   for (const p of [...D.players.values()]) { if (p.isBot) continue; try { p.msg('*** The game is shutting down. Your character has been saved. Goodbye! ***', 'hurt'); D.savePlayer(p); saved++; } catch (e) { failed++; D.log('save failed for', p.name, e.message); } }
   try { bots.save(); } catch (e) { D.log('bot save failed', e.message); }
-  try { bridge.stop(); github.stop(); bounty.stop(); D.events.stop(); weather.stop(); reports.stop(); D.mail.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
+  try { bridge.stop(); github.stop(); bounty.stop(); D.events.stop(); D.taxi.stop(); weather.stop(); reports.stop(); D.mail.stop(); D.deaths.flush(); } catch (e) { /* stopping anyway */ }
   D.log(`saved ${saved} player${saved === 1 ? '' : 's'}${failed ? `, ${failed} FAILED` : ''}; goodbye`);
   setTimeout(() => { for (const p of D.players.values()) try { p.conn && p.conn.close(); } catch (e) { /* closing anyway */ } try { server.close(); } catch (e) { /* closing anyway */ } setTimeout(() => process.exit(failed ? 1 : 0), 300); }, 500);
 }

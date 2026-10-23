@@ -16,7 +16,7 @@ const SHIPR = ['frost/ship_ramp', 'frost/ship_deck', 'frost/ship_cockpit'];
 const aboard = () => SHIPR.flatMap((r) => (D.rooms.get(r) ? D.rooms.get(r).inv.filter((o) => o.isPlayer) : []));
 D.shipDock = (where) => { const lodge = D.rooms.get('frost/lodge'), pad = D.rooms.get('mars/0_0'), ramp = D.rooms.get('frost/ship_ramp'); if (!lodge || !pad || !ramp) return; delete lodge.exits.in; delete pad.exits.in; const dest = where === 'mars' ? pad : lodge; dest.exits.in = 'frost/ship_ramp'; ramp.exits.out = dest.path; D.ship.at = where; D.ship.flying = false; };
 { const t = setInterval(() => { if (D.ship.at !== 'mars' || D.ship.flying || !D.rooms.size) return; if (aboard().length) D.ship.emptyAt = 0; else if (!D.ship.emptyAt) D.ship.emptyAt = Date.now(); else if (Date.now() - D.ship.emptyAt > 180000) { D.shipDock('frost'); D.ship.emptyAt = 0; } }, 30000); if (t.unref) t.unref(); } // an empty ship flies itself home after a few minutes
-const ALIAS = { tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -76,7 +76,9 @@ function go(p, d) {
 const C = {
   look(p, a) {
     if (!a) return p.env.look(p, true);
-    const w = a.replace(/^at\s+/, '').trim().toLowerCase(), gr = GROUND[p.env.terrain]; if (gr && /^(ground|floor|terrain|underfoot)$/.test(w)) return p.msg(gr, 'items');
+    const w = a.replace(/^at\s+/, '').trim().toLowerCase(), gr = GROUND[p.env.terrain];
+    if (/^(my\s+|the\s+)?(\u{1F34D}\s*)?(pineapple|phone)(\s+pro(\s+max)?)?$/iu.test(w)) return p.msg('\u{1F34D}Phone Pro Max. A sleek titanium smartphone shaped like a pineapple, with a leaf-green glow around the screen, a camera bump that looks like a pineapple crown and a battery that never dies. It is permanently attached to you: it is always listed in your `inventory` (outside your pack and bag), and it cannot be dropped, sold, salvaged, given away or stored.\nWHAT IT DOES: it lets you text any player who is online, wherever they are in the game. Type `phone <player> <message>` (or `tell <player> <message>`), for example `phone joe hello!`. If they are offline, use `mail <player>` instead.', 'items');
+    if (/^(in\s+|inside\s+)?(my\s+|the\s+)?bag( of holding)?$/.test(w)) return C.bag(p, 'list'); // look bag if (gr && /^(ground|floor|terrain|underfoot)$/.test(w)) return p.msg(gr, 'items');
     const t = find(p.env.inv, a.replace(/^at\s+/, '')) || find(p.inv, a.replace(/^at\s+/, ''));
     if (!t && gr && w === p.env.terrain) return p.msg(gr, 'items');
     if (!t) return p.msg("You don't see that here.");
@@ -100,6 +102,7 @@ const C = {
     const [d] = exits[D.rnd(0, exits.length - 1)]; p.enemy = null; p.msg('You flee in panic!', 'sys'); go(p, d);
   },
   get(p, a) {
+    const fb = a.match(/^(.+?)\s+from\s+(?:my\s+|the\s+)?bag(?:\s+of\s+holding)?$/i); if (fb) return C.bag(p, 'get ' + fb[1]); // get <thing> from bag
     if (!a) return p.msg('Get what?');
     const list = a === 'all' ? p.env.inv.filter((o) => !o.isLiving && !o.isNpc && !o.fixed) : [find(p.env.inv.filter((o) => !o.isLiving && !o.isNpc), a)];
     if (!list[0]) return p.msg(a === 'all' ? 'Nothing to take.' : "You don't see that here.");
@@ -115,7 +118,7 @@ const C = {
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
     for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.dmg[0]}-${it.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
-    p.msg(`  ${'Phone'.padEnd(17)}: Pineapple Phone  (always with you: it cannot be dropped, sold or salvaged; \`phone <player> <message>\` or \`tell <player> <message>\`)`, 'items');
+    p.msg(`  ${'Phone'.padEnd(17)}: 🍍Phone Pro Max  (always with you: it cannot be dropped, sold or salvaged; \`phone <player> <message>\` or \`tell <player> <message>\`)`, 'items');
     const pack = p.inv.filter((i) => !worn(p, i)), groups = new Map(); for (const it of pack) { const key = it.itemId + (it.kept ? '*' : ''); const g = groups.get(key) || { it, n: 0 }; g.n++; groups.set(key, g); }
     p.msg(`Pack (${pack.length} carried, ${p.inv.length}/${p.cap()} with what you wear):`, 'rname'); p.msg(groups.size ? '  ' + [...groups.values()].map((g) => `${g.it.short}${g.n > 1 ? ' x' + g.n : ''}${g.it.kept ? ' [kept]' : ''}`).join(', ') + '.' : '  nothing.', 'items');
     p.msg(`Credits: ${p.gold}. Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} (type \`bag\`). Tools: type \`tools\`. [kept] items are protected from sell and salvage (\`keep\`, \`unkeep\`).`, 'sys');
@@ -189,6 +192,10 @@ const C = {
     p.delAsk = Date.now(); p.msg('*** DELETE YOUR CHARACTER ***', 'rname');
     p.msg('This permanently deletes your character, ' + p.name + ': level, items, credits, quests, mudmail, settings, everything. It cannot be undone and nobody can restore it. You can create a new character afterwards (even with the same name) and start again from scratch.', 'hurt');
     p.msg('If you are sure, type `deleteme confirm` within two minutes. Anything else cancels.', 'sys');
+  },
+  autoheal(p, a) { // autoheal [on|off]: eat or drink your best healing item automatically at 40% health
+    const w = a.trim().toLowerCase(); p.autoheal = w === 'on' ? true : w === 'off' ? false : !p.autoheal;
+    p.msg(p.autoheal ? 'Autoheal is ON: when your health drops to 40% or below you automatically use the best healing item from your pack or bag. (If you have nothing to heal with, nothing happens.)' : 'Autoheal is OFF.', 'win');
   },
   suicide(p) { return C.help(p, 'suicide'); }, // typing the word shows the support information
   purge(p, a) { // purge <player>: administrators permanently delete a character
@@ -322,24 +329,32 @@ const C = {
   bag(p, a) {
     const [sub, ...rest] = a.trim().split(/\s+/), arg = rest.join(' ').trim(), room = () => D.bagCap(p) - D.bagUsed(p);
     if (!sub || sub === 'list') {
-      p.msg(`Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} items (base 60, +20 for each of your ${p.remort || 0} remorts). Mode: ${p.bagMode}.`, 'rname');
+      p.msg(`Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} items (base 60, +20 for each of your ${p.remort || 0} remorts; gathered materials do not count, carry as many as you like). Mode: ${p.bagMode}.`, 'rname');
       const groups = { Materials: [], 'Weapons and armor': [], Other: [] };
       for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; groups[d.type === 'material' ? 'Materials' : ['weapon', 'armor'].includes(d.type) ? 'Weapons and armor' : 'Other'].push(`${c} ${d.name}`); }
       const eq = Object.entries(p.bag).filter(([id]) => ['weapon', 'armor'].includes(D.W.items[id].type)).sort((x, y) => (D.W.items[x[0]].lvl || 0) - (D.W.items[y[0]].lvl || 0));
       for (const [g, l] of Object.entries(groups)) if (l.length && g !== 'Weapons and armor') { p.msg(`${g} (one per line):`, 'items'); for (const it of l) { const sp = it.indexOf(' '); p.msg(`  ${it.slice(0, sp)} x ${it.slice(sp + 1)}`, 'items'); } }
       if (eq.length) { p.msg('Weapons and armor (one per line):', 'items'); for (const [id, c] of eq) { const d = D.W.items[id], st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : `armor ${d.ac}`, sl = d.slot ? `, ${d.slot}` : ''; p.msg(`  ${c} x ${D.cn({ id, ...d }, d.name)}  (${st}${sl}${d.lvl ? `, level ${d.lvl}` : ''})`, 'items'); } }
-      if (!D.bagUsed(p)) p.msg('It is empty. Gathered materials and looted gear go in automatically.', 'sys');
-      return p.msg('Commands: bag put <item|all|materials|gear>, bag get <item> [n|all], bag sell [materials|all], bag auto loot|overflow|off. Crafting and salvaging use bag contents. The bag is bound to you and cannot be dropped or sold.', 'sys');
+      if (!Object.keys(p.bag).length) p.msg('It is empty. Gathered materials and looted gear go in automatically.', 'sys');
+      return p.msg('Commands: bag put <item|all|materials|gear>, bag get <item> [n|all] (also `get <item> from bag`, `bag get all|gear|materials`), look bag, bag sell [materials|all], bag auto loot|overflow|off. Crafting and salvaging use bag contents. The bag is bound to you and cannot be dropped or sold.', 'sys');
     }
     if (sub === 'auto') { if (!['loot', 'overflow', 'off'].includes(arg)) return p.msg(`Bag mode is "${p.bagMode}". Use: bag auto loot (gathered materials and looted gear go straight in), overflow (only when your pack is full) or off.`); p.bagMode = arg; return p.msg(`Bag mode: ${arg}.`, 'win'); }
     if (sub === 'put') {
       const movable = (i) => !worn(p, i) && i.type !== 'potion', items = arg === 'all' ? p.inv.filter(movable) : arg === 'materials' ? p.inv.filter((i) => i.type === 'material') : arg === 'gear' ? p.inv.filter((i) => movable(i) && ['weapon', 'armor'].includes(i.type)) : [find(p.inv, arg)];
       if (!arg || !items[0]) return p.msg(arg ? "You don't have that." : 'Put what? (an item, or all, materials, gear)');
-      let n = 0; for (const it of items) { if (worn(p, it)) { p.msg('Unequip that first.'); continue; } if (room() <= 0) { p.msg('Your bag of holding is full.'); break; } p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); n++; }
+      let n = 0; for (const it of items) { if (worn(p, it)) { p.msg('Unequip that first.'); continue; } if (room() <= 0 && it.type !== 'material') { p.msg('Your bag of holding is full (gathered materials never count, so you can still put those in).'); continue; } p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); n++; }
       return n && p.msg(`You put ${n} item${n > 1 ? 's' : ''} into your bag of holding (${D.bagUsed(p)}/${D.bagCap(p)}).`, 'win');
     }
     if (sub === 'get' || sub === 'take') {
-      const m = arg.match(/^(.*?)(?:\s+(\d+|all))?$/), id = bagFind(p, (m[1] || '').trim()); if (!id) return p.msg("That isn't in your bag.");
+      const w = arg.trim().toLowerCase();
+      if (/^(all|everything|items|gear|materials)$/.test(w)) { // bag get all | gear | materials: take the whole lot (as far as your pack has room)
+        const ids = Object.keys(p.bag).filter((id) => { const d = D.W.items[id]; if (!d) return false; return w === 'gear' ? ['weapon', 'armor'].includes(d.type) : w === 'materials' ? d.type === 'material' : d.type !== 'material'; });
+        if (!ids.length) return p.msg(w === 'materials' ? 'You have no materials in your bag.' : w === 'gear' ? 'You have no weapons or armor in your bag.' : 'Your bag has nothing but materials. (`bag get materials`, or `bag get <material> all`.)', 'sys');
+        let got = 0, left = 0; for (const id of ids) { while (p.bag[id] > 0 && p.inv.length < p.cap()) { D.cloneItem(id).move(p); p.bag[id]--; got++; } if (p.bag[id] <= 0) delete p.bag[id]; else left += p.bag[id]; }
+        const mats = (w === 'all' || w === 'everything' || w === 'items') && Object.keys(p.bag).some((id) => D.W.items[id] && D.W.items[id].type === 'material');
+        return p.msg(got ? `You take ${got} item${got > 1 ? 's' : ''} out of the bag.${left ? ` ${left} more stay in the bag because your pack is full.` : ''}${mats ? ' Materials stay in the bag (they never count and you can carry any number): `bag get materials` takes them out too.' : ''}` : 'Your pack is full.', got ? 'win' : 'sys');
+      }
+      const m = arg.match(/^(.*?)(?:\s+(\d+|all))?$/), id = bagFind(p, (m[1] || '').trim()); if (!id) return p.msg("That isn't in your bag. (`look bag` lists what is.)");
       let n = m[2] === 'all' ? p.bag[id] : Math.min(+m[2] || 1, p.bag[id]), got = 0;
       while (n-- > 0 && p.inv.length < p.cap()) { D.cloneItem(id).move(p); p.bag[id]--; got++; } if (p.bag[id] <= 0) delete p.bag[id];
       return p.msg(got ? `You take ${got} ${D.W.items[id].name} out of the bag.` : 'Your pack is full.', got ? 'win' : 'sys');
@@ -705,8 +720,8 @@ const C = {
     if (!out.length) p.msg(`You are already using the best gear you have${later.length ? '' : ' (your pack and bag have nothing better)'}.`, 'sys'); else { p.msg(preview ? 'Equip would change:' : 'Equipped the best gear from your pack and bag:', 'rname'); out.forEach((l) => p.msg(l, 'win')); if (!preview && p.sendStats) p.sendStats(); }
     if (later.length) p.msg(`Better gear waiting for a higher level: ${[...new Set(later)].join(', ')}.`, 'sys');
   },
-  phone(p, a) { // phone <player> <message>  (also: tell <player> <message>): text anyone who is online on your Pineapple Phone
-    if (silenced(p)) return; const m = a.match(/^(\S+)\s+([\s\S]+)$/); if (!m) return p.msg('Your Pineapple Phone: `phone <player> <message>` (or `tell <player> <message>`) texts anyone who is online, wherever they are. For someone offline, use `mail <player>`.', 'sys');
+  phone(p, a) { // phone <player> <message>  (also: tell <player> <message>): text anyone who is online on your 🍍Phone Pro Max
+    if (silenced(p)) return; const m = a.match(/^(\S+)\s+([\s\S]+)$/); if (!m) return p.msg('Your 🍍Phone Pro Max: `phone <player> <message>` (or `tell <player> <message>`) texts anyone who is online, wherever they are. For someone offline, use `mail <player>`.', 'sys');
     const t = D.players.get(cap(m[1].toLowerCase())); if (!t) return p.msg(`Nobody called "${m[1]}" is online. (Leave a message with \`mail ${m[1]}\`.)`, 'sys');
     t.msg(`\u{1F4F1} ${p.name} texts you: ${m[2]}`, 'chat'); p.msg(`\u{1F4F1} You text ${t.name}: ${m[2]}`, 'chat');
   },
@@ -798,7 +813,7 @@ D.command = (p, line) => {
   if (p.aliases && Object.hasOwn(p.aliases, v)) return runAlias(p, v, a);
   v = ALIAS[v] || v;
   if (D.events && /^(say|shout|gossip|phone)$/.test(v) && a && !/^(history|on|off)$/i.test(a.trim()) && !/(\s;|https?:)/.test(a) && D.events.active().includes('pirate')) a = v === 'phone' ? a.replace(/^(\S+\s+)([\s\S]+)$/, (mm, who, msg) => who + D.events.pirate(msg)) : D.events.pirate(a); // Talk Like a Pirate Day
-  if (/^(drop|sell|salvage|auction|give|put|store|trade|junk|destroy|keep|unkeep)$/.test(v) && /\b(pineapple|phone)\b/i.test(a)) return p.msg('Your Pineapple Phone is glued to your hand: it cannot be dropped, sold, salvaged, given away or put in a bag. Use it with `phone <player> <message>`.', 'sys');
+  if (/^(drop|sell|salvage|auction|give|put|store|trade|junk|destroy|keep|unkeep)$/.test(v) && /\b(pineapple|phone)\b/i.test(a)) return p.msg('Your 🍍Phone Pro Max is glued to your hand: it cannot be dropped, sold, salvaged, given away or put in a bag. Use it with `phone <player> <message>`.', 'sys');
   if (v === 'enter' && /^(the\s+)?(taxi|cab)$/i.test(a.trim())) return D.taxi.board(p);
   if ((v === 'out' || v === 'exit' || v === 'leave') && p.env.path === 'town/taxi_cab' && !p.env.exits.out) return p.msg('The taxi is moving! Wait for the next stop.', 'sys');
   if (DIRS[v]) return go(p, v); if (FULL[v]) return go(p, FULL[v]);

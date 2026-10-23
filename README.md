@@ -40,10 +40,18 @@ The setting mixes three genres: Old West towns with saloons (Ashfall Junction, R
 ## If the new interface does not appear
 The server now sends `Cache-Control: no-store` for the game page and makes every other file revalidate, stamps the page with a build id (shown as "build ..." at the top of the settings panel), and the server tells the page which build it expects at login. If a browser is showing an old cached copy, the page reloads itself once; if that does not fix it, it prints a warning in the text window. An old copy from before this change has no such check, so do one hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on a Mac) after restarting the server, and make sure you unzipped the whole new folder over the old one (public/index.html must be the new file).
 
-## Pirate Day, Pi Day, taxi, Pineapple Phone, buttons and more
+## Bag fixes, autoheal, text sizes and the implant sign
+- `bag get all` (and `gear`, `materials`) now works; `get <item> from bag` and `look bag` are alternative syntax. Gathered materials no longer count toward the bag's capacity (carry as many as you like; they always go to the bag when the pack is full). With `bag auto loot` on, every kind of item a monster drops goes to the bag.
+- `autoheal [on|off]`: at 40% health (in a fight or after taking damage) the best healing item from the pack or bag is used automatically; ignored if you have none. Saved with the character.
+- Shops and the Salvage Exchange show a red "Type 'list' or 'sell'" line. The HP bar ends with your credits in yellow; the XP bar is dark magenta.
+- The character sheet (`score`) opens centered over the terminal. Settings has text-size choices for the quest board window, the Quests panel and the combat window (Normal to Huge); the board and combat windows also have A- / A+ buttons.
+- The Neural Implant Lab and Chrome Clinic have a readable sign (`read sign`) explaining implants, and `help implant` / `help implants` explain it in full.
+- The phone is now the 🍍Phone Pro Max; `look phone` describes it.
+
+## Pirate Day, Pi Day, taxi, 🍍Phone Pro Max, buttons and more
 - **Talk Like a Pirate Day** (Sept 19) and **Pi Day** (Mar 14) are one-day events (`days: 1` in `events.js`; set a different span there if you want longer). On Pirate Day `say`, `shout`, `gossip` and `phone`/`tell` text is translated to pirate (dictionary in `events.js`). On Pi Day cherry, strawberry, blueberry and apple pies are scattered on the ground; they heal and restore mana and vanish when the day ends.
 - **Milestone Taxi** (`taxi.js`): a yellow cab tours every milestone and waits 30 seconds at each (8 seconds between stops). `enter taxi` at a stop costs 30 credits; riding on is free; `out` steps out so you can touch the milestone, and boarding again costs another 30. `taxi` shows status and route. The cab is the hidden room `town/taxi_cab`.
-- **Pineapple Phone:** every character always has one (shown in `inventory`, not in the bag; it cannot be dropped, sold, salvaged or given away). `phone <player> <message>`; `tell` is an alias.
+- **🍍Phone Pro Max:** every character always has one (shown in `inventory`, not in the bag; it cannot be dropped, sold, salvaged or given away). `phone <player> <message>`; `tell` is an alias.
 - Quick keys: **leaderboard** and **get all** added. The newbie tutorial window can be dragged around (it remembers its place). `bag` lists every group (materials, other, gear) one item per line.
 - Rogue (female) and Buckstars pictures added.
 

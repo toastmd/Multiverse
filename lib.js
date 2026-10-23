@@ -59,7 +59,7 @@ class Room extends GameObject {
   look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
     p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text'); if (this.def.light) p.msg(this.def.light, 'brightlight'); if (this.path === 'town/square' && D.events) for (const t of D.events.decor()) p.msg(t, 'event'); if (D.taxi) { if (D.taxi.here(this.path)) p.msg(`\u{1F695} A yellow taxi idles at the curb with its door open: \`enter taxi\` (${D.taxi.FARE} credits). It leaves in ${Math.max(0, Math.ceil((D.taxi.T.until - Date.now()) / 1000))} seconds.`, 'event'); if (this.def.taxi) p.msg(D.taxi.status(), 'items'); }
     const exs = Object.entries(this.exits); p.msg(exs.length ? 'Exits' : 'Exits (none)', 'exits'); // one line per exit: the direction and the name of the room that way
-    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d]}: ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits');
+    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d]}: ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits'); if (this.def.shop || this.def.exchange) p.msg("Type 'list' or 'sell'", 'shophint');
     const things = this.inv.filter((o) => !o.isLiving && !o.isNpc).map((o) => o.short);
     if (things.length) p.msg('You see: ' + things.join(', ') + '.', 'items');
     const nodes = Object.entries(this.nodes).filter(([, n]) => n > 0).map(([r, n]) => `${r} x${n}`);
@@ -147,7 +147,7 @@ class Living extends GameObject {
       dmg = t.hurt(dmg);
     }
     if (!t.enemy && t.hp > 0) t.engage(this);
-    if (t.isPlayer && t.autoflee && t.hp > 0) t.autoFleeCheck();
+    if (t.isPlayer && t.autoheal && t.hp > 0) t.autoHealCheck(); if (t.isPlayer && t.autoflee && t.hp > 0) t.autoFleeCheck();
     const sty = styleOf(this), [, v2, v3, adv] = (sty ? sty.set : VERBS)[vi] || [], c = crit ? ' Critical hit!' : '';
     if (hit) {
       this.msg(`You ${v2} ${t.the()}${adv}.${c} (${dmg})`, 'combat');
@@ -237,6 +237,11 @@ class Player extends Living {
   sendTriggers() { this.send({ t: 'triggers', list: this.triggers }); }
   sendTut(auto) { const open = !!auto && !this.tut.seen && !this.tut.off && this.level <= 5; if (open) this.tut.seen = true; this.send({ t: 'tut', off: this.tut.off, step: this.tut.step, done: this.tut.done, open }); }
   sendKeypad() { this.send({ t: 'keypad', on: this.kpOn, map: this.kpMap }); }
+  autoHealCheck() { // autoheal: drink or eat the best healing item at 40% health or less; ignored when you have nothing to heal with
+    if (!this.autoheal || this.hp <= 0 || this.hp > this.maxhp * 0.4 || Date.now() - (this.healTry || 0) < 1500) return;
+    const has = this.inv.some((i) => i.type === 'potion' && i.def.heal > 0 && !i.def.smoke) || Object.keys(this.bag).some((id) => this.bag[id] > 0 && D.W.items[id] && D.W.items[id].type === 'potion' && D.W.items[id].heal > 0 && !D.W.items[id].smoke); if (!has) return;
+    this.healTry = Date.now(); this.msg('Autoheal: you are at 40% health or less!', 'win'); D.command(this, 'quaff');
+  }
   autoFleeCheck() { // autoflee: run when health drops to 30% or below
     if (!this.autoflee || !this.enemy || this.hp <= 0 || this.hp > this.maxhp * 0.3 || Date.now() - (this.fleeTry || 0) < 900) return;
     this.fleeTry = Date.now(); this.msg('Autoflee: you are at 30% health or less!', 'hurt'); D.command(this, 'flee');
@@ -268,16 +273,16 @@ class Player extends Living {
     this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
   }
   heart_beat() {
-    super.heart_beat(); this.autoFleeCheck(); if ((this.lt = (this.lt || 0) + 1) % 45 === 0 && this.luck < this.maxLuck()) this.luck++;
+    super.heart_beat(); if (this.enemy) this.autoHealCheck(); this.autoFleeCheck(); if ((this.lt = (this.lt || 0) + 1) % 45 === 0 && this.luck < this.maxLuck()) this.luck++;
     if (this.mp < this.maxmp) this.mp = Math.min(this.maxmp, this.mp + 1 + Math.floor(this.level * 0.3) + this.klass().rg + (this.env && (this.env.def.inn || this.env.def.camp) ? 3 : 0));
     this.sendStats(); if (Object.keys(this.quests).length && (this.qt = (this.qt || 0) + 1) % 3 === 0) this.sendQuests();
   }
   toRec() {
-    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
+    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, autoheal: this.autoheal, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
       inv: this.inv.map((i) => i.itemId), ups: this.inv.map((i) => i.up || 0), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId, this.inv.indexOf(i)]) };
   }
   load(rec) {
-    Object.assign(this, { evk: Object.fromEntries(Object.entries(rec.evk && typeof rec.evk === 'object' ? rec.evk : {}).filter(([k, v]) => /^[a-z]{3,12}$/.test(k) && Number.isFinite(v)).map(([k, v]) => [k, Math.min(1e6, Math.max(0, v | 0))])), title: D.cleanTitle(rec.title), fwd: rec.fwd && typeof rec.fwd === 'object' ? { on: !!rec.fwd.on, email: String(rec.fwd.email || ''), pending: rec.fwd.pending || null } : { on: false }, architect: !!rec.architect, milestones: (Array.isArray(rec.milestones) ? rec.milestones : []).filter((a) => typeof a === 'string').slice(0, 40), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather, taunts: !!(rec.mute || {}).taunts, deaths: !!(rec.mute || {}).deaths }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, kpOn: rec.kpSet ? !!rec.kpOn : true, kpSet: !!rec.kpSet, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
+    Object.assign(this, { evk: Object.fromEntries(Object.entries(rec.evk && typeof rec.evk === 'object' ? rec.evk : {}).filter(([k, v]) => /^[a-z]{3,12}$/.test(k) && Number.isFinite(v)).map(([k, v]) => [k, Math.min(1e6, Math.max(0, v | 0))])), title: D.cleanTitle(rec.title), fwd: rec.fwd && typeof rec.fwd === 'object' ? { on: !!rec.fwd.on, email: String(rec.fwd.email || ''), pending: rec.fwd.pending || null } : { on: false }, architect: !!rec.architect, milestones: (Array.isArray(rec.milestones) ? rec.milestones : []).filter((a) => typeof a === 'string').slice(0, 40), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather, taunts: !!(rec.mute || {}).taunts, deaths: !!(rec.mute || {}).deaths }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, autoheal: !!rec.autoheal, kpOn: rec.kpSet ? !!rec.kpOn : true, kpSet: !!rec.kpSet, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
     this.aliases = {}; for (const [k, v] of Object.entries(rec.aliases || {})) if (/^[a-z][a-z0-9_]{0,11}$/.test(k) && typeof v === 'string' && v.length <= 200) this.aliases[k] = v;
     this.triggers = D.cleanTriggers(rec.triggers); const tu = rec.tut || {}; this.tut = { off: !!tu.off, seen: !!tu.seen, step: Math.max(0, Math.min(30, tu.step | 0)), done: Object.fromEntries(Object.keys(tu.done || {}).filter((k) => /^[a-z]{2,12}$/.test(k)).map((k) => [k, 1])) };
     this.kpMap = { ...KP_DEFAULT }; for (const [k, v] of Object.entries(rec.kpMap || {})) if (k in KP_DEFAULT && typeof v === 'string') this.kpMap[k] = v.slice(0, 100);
@@ -318,7 +323,7 @@ D.mapFor = (p) => {
 D.pushMaps = () => { for (const p of D.players.values()) if (p.env) p.send(D.mapFor(p)); };
 // ---- bag of holding and bound tools: automatic for every character, never droppable or sellable, saved with the player ----
 D.bagCap = (p) => 60 + 20 * (p.remort || 0); // each remort adds room
-D.bagUsed = (p) => Object.values(p.bag).reduce((a, b) => a + b, 0);
+D.bagUsed = (p) => Object.entries(p.bag).reduce((a, [id, c]) => a + (D.W.items[id] && D.W.items[id].type === 'material' ? 0 : c), 0); // gathered materials do not count: carry as many as you like
 D.ensureKit = (p) => { if (D.T) for (const id of Object.keys(D.T.TOOLS)) if (!p.tools[id]) p.tools[id] = { uses: 0 }; if (!p.bag) p.bag = {}; };
 const isWorn = (p, it) => Object.values(p.equip).includes(it);
 D.itemCount = (p, id) => p.inv.filter((i) => i.itemId === id && !isWorn(p, i)).length + (p.bag[id] || 0);
@@ -363,16 +368,16 @@ D.setEmail = (p, text) => { const t = String(text || '').trim(); const oldEmail 
 D.hideEmail = (p, hide) => { p.emailHidden = !!hide; p.sendMutes(); p.msg(p.emailHidden ? 'Your email is hidden from finger.' : 'Your email is shown to anyone who fingers you.', 'sys'); };
 D.setTitle = (p, text) => { const t = D.cleanTitle(text); p.title = t; p.sendMutes(); p.msg(t ? `Your title is now: ${t}` : 'Your title is cleared.', 'win'); };
 D.give = (p, id, how) => { // where a new item goes: loot-like items go to the bag first (bag mode "loot"), otherwise the pack, overflowing to the bag
-  const def = D.W.items[id], room = D.bagCap(p) - D.bagUsed(p), lootish = how === 'loot' && ['material', 'weapon', 'armor'].includes(def.type);
+  const def = D.W.items[id], mat = def.type === 'material', room = mat ? Infinity : D.bagCap(p) - D.bagUsed(p), lootish = how === 'loot' && def.type !== 'fixture'; // with bag auto loot on, everything a monster drops goes straight in the bag
   if (lootish && p.bagMode === 'loot' && room > 0) { p.bag[id] = (p.bag[id] || 0) + 1; return 'bag'; }
-  if (p.inv.length < p.cap()) { D.cloneItem(id).move(p); return 'pack'; }
-  if (p.bagMode !== 'off' && room > 0) { p.bag[id] = (p.bag[id] || 0) + 1; return 'bag'; }
+  if (p.inv.length < p.cap() && !(mat && p.bagMode === 'loot')) { D.cloneItem(id).move(p); return 'pack'; }
+  if ((p.bagMode !== 'off' || mat) && room > 0) { p.bag[id] = (p.bag[id] || 0) + 1; return 'bag'; }
   D.cloneItem(id).move(p.env); return 'floor';
 };
 D.takeFloor = (p, it) => { // picking up an item from the floor
   if (!it.itemId) return false;
-  const room = D.bagCap(p) - D.bagUsed(p), lootish = ['material', 'weapon', 'armor'].includes(it.type);
-  if ((lootish && p.bagMode === 'loot' && room > 0) || (p.inv.length >= p.cap() && p.bagMode !== 'off' && room > 0)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); return 'bag'; }
+  const room = it.type === 'material' ? Infinity : D.bagCap(p) - D.bagUsed(p), lootish = ['material', 'weapon', 'armor'].includes(it.type);
+  if ((lootish && p.bagMode === 'loot' && room > 0) || (p.inv.length >= p.cap() && (p.bagMode !== 'off' || it.type === 'material') && room > 0)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); return 'bag'; }
   if (p.inv.length < p.cap()) { it.move(p); return 'pack'; }
   return false;
 };

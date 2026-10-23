@@ -18,7 +18,7 @@ function depart() {
 }
 function arrive() {
   T.i = (T.i + 1) % T.route.length; T.phase = 'stay'; T.until = Date.now() + STAY; apply(); const to = D.rooms.get(stop());
-  if (to) to.tell('\u{1F695} A yellow taxi pulls up and stops. (`enter taxi`: 30 credits)', null, 'event');
+  if (to) { to.tell('\u{1F695} A yellow taxi pulls up and stops. (`enter taxi`: 30 credits)', null, 'event'); for (const o of to.inv) if (o.isPlayer) o.send({ t: 'sound', k: 'taxi' }); } // beep beep
   tellCab(`\u{1F695} The taxi stops at ${label(stop())}. Type \`out\` to step out (it waits 30 seconds); stay in to ride on for free.`, 'win');
 }
 function tick() {

@@ -26,7 +26,9 @@ const NOBODY = { id: 0, name: 'something', enemy: null, msg() {}, the() { return
 const art = (n) => (/^[aeiou]/i.test(n) ? 'an ' : 'a ') + n;
 // Dice pools: roll n six-sided dice; a 5 or 6 is a "hit". More than half ones with no hits is a fumble.
 const roll = (n) => { n = Math.max(1, Math.round(n)); let h = 0, ones = 0; for (let i = 0; i < n; i++) { const d = rnd(1, 6); if (d >= 5) h++; else if (d === 1) ones++; } return { h, f: h === 0 && ones * 2 > n }; };
-const KP_DEFAULT = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
+const KP_DEFAULT = { Numpad1: 'southwest', Numpad2: 'south', Numpad3: 'southeast', Numpad4: 'west', Numpad5: 'look', Numpad6: 'east', Numpad7: 'northwest', Numpad8: 'north', Numpad9: 'northeast', Numpad0: 'get all', NumpadDecimal: 'heal', NumpadAdd: 'down', NumpadSubtract: 'up', NumpadMultiply: 'out', NumpadDivide: 'kill', NumpadEnter: '' };
+const KP_OLD = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
+D.kpFromRec = (rec) => { const m = rec.kpMap && typeof rec.kpMap === 'object' ? rec.kpMap : {}; return rec.kpVer !== 2 && Object.keys(KP_OLD).every((k) => m[k] === undefined || m[k] === KP_OLD[k]) ? {} : m; }; // players who never changed the old keypad get the new defaults; custom keypads are kept
 D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
 const need = (lvl) => lvl * lvl * 50; // xp required to leave this level
 // weapon styles: what you wield decides how a hit reads (clubs bash, guns shoot, blades slash, spears stab)
@@ -53,7 +55,7 @@ class Room extends GameObject {
     const homed = (id) => { let c = 0; for (const o of D.objects.values()) if (o.mobId === id && o.home === this) c++; return c; }; // wanderers still count toward their home room
     for (const [id, n] of Object.entries(want(this.def.mobs || []))) for (let i = homed(id); i < n; i++) { const m = D.cloneMob(id); m.home = this; m.move(this); }
     for (const [id, n] of Object.entries(want(this.def.items || []))) for (let i = count('itemId', id); i < n; i++) D.cloneItem(id).move(this);
-    for (const [id, n] of Object.entries(D.Q.NPCS)) if (n.room === this.path && !this.inv.some((o) => o.npcId === id)) new Npc(id, n).move(this);
+    D.ensureShopkeeper(this); for (const [id, n] of Object.entries(D.Q.NPCS)) if (n.room === this.path && !this.inv.some((o) => o.npcId === id)) new Npc(id, n).move(this);
   }
   fx(evt) { for (const o of this.inv) if (o.isPlayer) o.send({ t: 'fight', ...evt }); }
   look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
@@ -258,14 +260,14 @@ class Player extends Living {
   die(killer) {
     if (D.deaths) D.deaths.record(this, killer); // the death tally (deaths.js)
     if (!this.isBot) D.announce(`${this.name} (level ${this.level} ${this.klass().name}) ${killer && killer !== D.NOBODY && killer.name ? `was slain by ${killer.name}` : 'has died'}${this.env ? ` in ${this.env.name}` : ''}.`, 'deaths', 'deathmsg'); // the deaths channel
-    this.send({ t: 'sound', k: 'death' }); this.msg('You have died. Your vision fades to static...', 'hurt'); this.lastDeath = this.env.path; this.deaths = (this.deaths || 0) + 1; D.taunt(this);
+    this.send({ t: 'sound', k: this.gender === 'male' ? 'deathm' : this.gender === 'female' ? 'deathf' : (Math.random() < 0.5 ? 'deathm' : 'deathf') }); this.msg('You have died. Your vision fades to static...', 'hurt'); this.lastDeath = this.env.path; this.deaths = (this.deaths || 0) + 1; D.taunt(this);
     this.env.tell(`${this.name} has been slain by ${killer.the()}!`, this, 'combat');
     this.xp = Math.floor(this.xp * 0.9); this.hp = Math.ceil(this.maxhp / 2); this.enemy = null; killer.enemy = null; this.fx = [];
     this.move(D.rooms.get(D.W.start)); this.msg('You wake in Ashfall, bruised but alive.', 'sys');
     this.env.look(this); D.pushMaps();
   }
   enter(room, quiet) {
-    this.move(room); this.visited.add(room.path); D.qEvent(this, 'visit', room.path); if (!quiet) room.look(this);
+    this.move(room); this.visited.add(room.path); D.qEvent(this, 'visit', room.path); if (room.def.sfx) { if (this._sfx !== room.path) { this._sfx = room.path; this.send({ t: 'sound', k: room.def.sfx }); } } else this._sfx = null; /* door chimes, saloon din */ if (!quiet) room.look(this);
     D.pushMaps(); this.sendStats();
   }
   sendStats() {
@@ -278,14 +280,14 @@ class Player extends Living {
     this.sendStats(); if (Object.keys(this.quests).length && (this.qt = (this.qt || 0) + 1) % 3 === 0) this.sendQuests();
   }
   toRec() {
-    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, autoheal: this.autoheal, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
+    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, autoheal: this.autoheal, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, kpVer: 2, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited],
       inv: this.inv.map((i) => i.itemId), ups: this.inv.map((i) => i.up || 0), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId, this.inv.indexOf(i)]) };
   }
   load(rec) {
     Object.assign(this, { evk: Object.fromEntries(Object.entries(rec.evk && typeof rec.evk === 'object' ? rec.evk : {}).filter(([k, v]) => /^[a-z]{3,12}$/.test(k) && Number.isFinite(v)).map(([k, v]) => [k, Math.min(1e6, Math.max(0, v | 0))])), title: D.cleanTitle(rec.title), fwd: rec.fwd && typeof rec.fwd === 'object' ? { on: !!rec.fwd.on, email: String(rec.fwd.email || ''), pending: rec.fwd.pending || null } : { on: false }, architect: !!rec.architect, milestones: (Array.isArray(rec.milestones) ? rec.milestones : []).filter((a) => typeof a === 'string').slice(0, 40), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather, taunts: !!(rec.mute || {}).taunts, deaths: !!(rec.mute || {}).deaths }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, autoheal: !!rec.autoheal, kpOn: rec.kpSet ? !!rec.kpOn : true, kpSet: !!rec.kpSet, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
     this.aliases = {}; for (const [k, v] of Object.entries(rec.aliases || {})) if (/^[a-z][a-z0-9_]{0,11}$/.test(k) && typeof v === 'string' && v.length <= 200) this.aliases[k] = v;
     this.triggers = D.cleanTriggers(rec.triggers); const tu = rec.tut || {}; this.tut = { off: !!tu.off, seen: !!tu.seen, step: Math.max(0, Math.min(30, tu.step | 0)), done: Object.fromEntries(Object.keys(tu.done || {}).filter((k) => /^[a-z]{2,12}$/.test(k)).map((k) => [k, 1])) };
-    this.kpMap = { ...KP_DEFAULT }; for (const [k, v] of Object.entries(rec.kpMap || {})) if (k in KP_DEFAULT && typeof v === 'string') this.kpMap[k] = v.slice(0, 100);
+    this.kpMap = { ...KP_DEFAULT }; for (const [k, v] of Object.entries(D.kpFromRec(rec))) if (k in KP_DEFAULT && typeof v === 'string') this.kpMap[k] = v.slice(0, 100);
     this.bag = {}; for (const [id, n] of Object.entries(rec.bag || {})) if (D.W.items[id] && n > 0 && D.bagUsed(this) + n <= D.bagCap(this)) this.bag[id] = Math.floor(n);
     this.tools = {}; for (const [id, t] of Object.entries(rec.tools || {})) if (D.T && D.T.TOOLS[id]) this.tools[id] = { uses: Math.max(0, t.uses | 0) }; D.ensureKit(this);
     for (const id of rec.inv || []) if (D.W.items[id]) D.cloneItem(id).move(this);
@@ -311,8 +313,8 @@ D.loadWorld = () => { // also used by the wizard `update` command to hot-reload 
   for (const r of D.rooms.values()) r.reset();
 };
 D.mapFor = (p) => {
-  const z = p.env.z, rooms = [];
-  for (const path of p.visited) {
+  const z = p.env.z, rooms = [], shown = new Set([...p.visited, ...[...D.rooms.values()].filter((r) => r.area === p.env.area && r.z === z && !r.def.hidden).map((r) => r.path)]); // the whole map of the area you are in, plus anywhere you have been
+  for (const path of shown) {
     const r = D.rooms.get(path); if (!r || r.z !== z) continue;
     rooms.push({ p: path, x: r.x, y: r.y, n: r.name, t: r.terrain, ex: Object.entries(r.exits).map(([d, to]) => ({ d, to })) });
   }
@@ -380,6 +382,18 @@ D.takeFloor = (p, it) => { // picking up an item from the floor
   if ((lootish && p.bagMode === 'loot' && room > 0) || (p.inv.length >= p.cap() && (p.bagMode !== 'off' || it.type === 'material') && room > 0)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); return 'bag'; }
   if (p.inv.length < p.cap()) { it.move(p); return 'pack'; }
   return false;
+};
+// ---- shopkeepers: every shop, exchange and clinic has someone behind the counter (they cannot be fought) ----
+const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
+const SHOPKEEPERS = { west: [['Dusty Pete', 'a dusty old trader with a corncob pipe and sleeve garters'], ['Widow Mae', 'a sharp-eyed widow in a black bonnet who counts change twice'], ['Cactus Jack', 'a leathery old-timer with a bandana and a grin full of gold'], ['Honest Abe', 'a rumpled clerk in a green eyeshade who swears he is honest'], ['Silas the Peddler', 'a bent peddler with a pack that never seems to empty']],
+  fantasy: [['Merchant Orlo', 'a round merchant in a velvet cap with rings on every finger'], ['Dame Hesper', 'a tall, calm trader in a hooded traveling cloak'], ['Old Fenwick', 'a gnarled old shopkeeper with spectacles on a chain'], ['Brindle the Trader', 'a cheerful halfling trader perched on a tall stool'], ['Quillon the Fence', 'a quick-eyed dealer who asks no questions']],
+  scifi: [['Vendor-Bot 7', 'a dented vending droid with a flickering screen face'], ['Trader Zix', 'a six-armed trader in a patched jumpsuit, juggling inventory'], ['Quartermaster Nova', 'a brisk quartermaster in a crisp silver uniform'], ['Dealer K-9', 'a gruff cyborg dealer with a chrome jaw and a tablet'], ['Supply Officer Tam', 'a tired supply officer with a stylus behind each ear']],
+  stone: [['Trader Gronk', 'a hairy trader wrapped in furs, bartering with bones and shells'], ['Uga the Barterer', 'a shaggy cave barterer with a pile of shiny rocks']],
+  modern: [['Cashier Dana', 'a friendly cashier with a name tag and a pen behind her ear'], ['Clerk Marcus', 'a bored clerk in a branded polo, scanning one-handed'], ['Manager Priya', 'a brisk store manager with a lanyard and a clipboard'], ['Cashier Leo', 'a young cashier with earbuds in and a very big smile'], ['Stock Clerk Ben', 'a patient stock clerk pushing a cart of boxes']] };
+D.ensureShopkeeper = (room) => { // registers a shopkeeper NPC for a shop, exchange or clinic that has no NPC yet
+  const d = room.def; if (!d || d.hidden || !(d.shop || d.exchange || d.clinic) || !D.Q || !D.Q.NPCS) return; if (Object.values(D.Q.NPCS).some((n) => n.room === room.path)) return;
+  const pool = SHOPKEEPERS[AREA_GENRE[room.area] || 'modern']; let h = 0; for (const ch of room.path) h = (h * 31 + ch.charCodeAt(0)) >>> 0; const [name, look] = pool[h % pool.length];
+  D.Q.NPCS['shk_' + room.path.replace(/\W/g, '_')] = { name, room: room.path, hi: d.clinic ? `Welcome to ${room.name}. Type 'list' to see the implants, and 'install <name>' (or 'install <number>') to get one fitted.` : `Welcome to ${room.name}! Type 'list' to see what I have for sale, or 'sell' to sell me your things. Take your time.`, long: `${name}, ${look}, stands behind the counter. ${name} is here to serve, not to fight.` };
 };
 const MUTEKEY = { bounty: 'bounty', level: 'levels', milestone: 'levels', quest: 'quests', taunts: 'taunts', deaths: 'deaths' }; // players can mute these announcement types
 const TAGS = { bounty: '[bounty] ', deaths: '[death] ' }; // channel tags in front of announcements (other announcements keep the megaphone)

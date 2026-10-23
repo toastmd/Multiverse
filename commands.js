@@ -16,7 +16,7 @@ const SHIPR = ['frost/ship_ramp', 'frost/ship_deck', 'frost/ship_cockpit'];
 const aboard = () => SHIPR.flatMap((r) => (D.rooms.get(r) ? D.rooms.get(r).inv.filter((o) => o.isPlayer) : []));
 D.shipDock = (where) => { const lodge = D.rooms.get('frost/lodge'), pad = D.rooms.get('mars/0_0'), ramp = D.rooms.get('frost/ship_ramp'); if (!lodge || !pad || !ramp) return; delete lodge.exits.in; delete pad.exits.in; const dest = where === 'mars' ? pad : lodge; dest.exits.in = 'frost/ship_ramp'; ramp.exits.out = dest.path; D.ship.at = where; D.ship.flying = false; };
 { const t = setInterval(() => { if (D.ship.at !== 'mars' || D.ship.flying || !D.rooms.size) return; if (aboard().length) D.ship.emptyAt = 0; else if (!D.ship.emptyAt) D.ship.emptyAt = Date.now(); else if (Date.now() - D.ship.emptyAt > 180000) { D.shipDock('frost'); D.ship.emptyAt = 0; } }, 30000); if (t.unref) t.unref(); } // an empty ship flies itself home after a few minutes
-const ALIAS = { read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -302,14 +302,15 @@ const C = {
     if (p.env.def.clinic) return C.clinicList(p);
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     p.msg(`${p.env.name}. You have ${p.gold} credits.`, 'rname'); p.msg(p.env.def.exchange ? 'The Exchange pays 60% of value for gathered materials. Type `sell materials`.' : 'We also buy gathered materials (ore, herbs, fish...). Type `sell materials`.', 'sys');
-    for (const id of sh.stock) { const d = D.W.items[id]; const st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '';
-      p.msg(`  ${D.cn({ id, ...d }, d.name)}${' '.repeat(Math.max(0, 22 - d.name.length))} ${String(d.value).padStart(6)}c  ${st}${d.lvl ? ` (level ${d.lvl})` : ''}`, p.gold >= d.value ? 'spell' : 'sys'); }
+    let ix = 0; for (const id of sh.stock) { ix++; const d = D.W.items[id]; const st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '';
+      p.msg(`  ${String(ix).padStart(2)}. ${D.cn({ id, ...d }, d.name)}${' '.repeat(Math.max(0, 24 - d.name.length))}${st ? ' ' + st : ''}${d.lvl ? ` (level ${d.lvl})` : ''}  Credits: ${d.value}`, p.gold >= d.value ? 'spell' : 'sys'); }
+    p.msg('Buy with `buy <number>` or `buy <name>` (for more than one: `buy 3 <number>`).', 'sys');
   },
   buy(p, a) {
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     const m = a.trim().match(/^(\d+)\s+(.+)$/), n = m ? Math.min(+m[1], 20) : 1, w = (m ? m[2] : a).trim().toLowerCase(); if (!w) return p.msg('Buy what? (see `list`)');
-    const id = sh.stock.find((i) => { const d = D.W.items[i]; return i === w || d.name.toLowerCase() === w || d.name.toLowerCase().split(' ').includes(w) || (d.ids || []).includes(w); });
-    if (!id) return p.msg("That isn't for sale here."); const d = D.W.items[id]; let bought = 0;
+    const id = /^\d+$/.test(w) ? sh.stock[+w - 1] : sh.stock.find((i) => { const d = D.W.items[i]; return i === w || d.name.toLowerCase() === w || d.name.toLowerCase().split(' ').includes(w) || (d.ids || []).includes(w); });
+    if (!id) return p.msg(/^\d+$/.test(w) ? `There is no item number ${w} (see \`list\`).` : "That isn't for sale here."); const d = D.W.items[id]; let bought = 0;
     for (let i = 0; i < n; i++) { if (p.gold < d.value) { p.msg('You cannot afford that.'); break; } if (p.inv.length >= p.cap() && (p.bagMode === 'off' || D.bagUsed(p) >= D.bagCap(p))) { p.msg('Your pack and bag are full.'); break; } p.gold -= d.value; D.give(p, id, 'normal'); bought++; }
     if (bought) p.msg(`You buy ${bought} x ${d.name} for ${bought * d.value} credits.`, 'win');
   },
@@ -435,13 +436,13 @@ const C = {
   },
   clinicList(p) {
     p.msg(`${p.env.name}. You have ${p.gold} credits. Aura ${p.aura().toFixed(1)}/6.0`, 'rname');
-    for (const id of p.env.def.clinic.stock) { const d = D.W.items[id], b = Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' '), have = p.cyber.includes(id);
-      p.msg(`  ${d.name.padEnd(18)} ${String(d.value).padStart(6)}c  aura -${d.aura.toFixed(1)}  ${b}  (level ${d.lvl})${d.tier > 1 ? `  upgrade of Mk ${['I', 'II', 'III', 'IV'][d.tier - 2]}` : ''}${have ? '  [installed]' : ''}`, have ? 'sys' : p.gold >= d.value && p.level >= d.lvl ? 'spell' : 'sys'); }
+    let ix = 0; for (const id of p.env.def.clinic.stock) { ix++; const d = D.W.items[id], b = Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' '), have = p.cyber.includes(id);
+      p.msg(`  ${String(ix).padStart(2)}. ${d.name.padEnd(18)} aura -${d.aura.toFixed(1)}  ${b}  (level ${d.lvl})${d.tier > 1 ? `  upgrade of Mk ${['I', 'II', 'III', 'IV'][d.tier - 2]}` : ''}${have ? '  [installed]' : ''}  Credits: ${d.value}`, have ? 'sys' : p.gold >= d.value && p.level >= d.lvl ? 'spell' : 'sys'); }
   },
   install(p, a) {
     const cl = p.env.def.clinic; if (!cl) return p.msg('You need a ripperdoc. Try the Chrome Clinic or the Neural Implant Lab in Ashfall.');
-    const w = a.trim().toLowerCase(), id = cl.stock.find((i) => { const d = D.W.items[i]; return i === w || d.name.toLowerCase() === w || d.name.toLowerCase().split(' ').join('') === w.split(' ').join('') || (!/^mk|^[ivx]+$/.test(w) && d.name.toLowerCase().split(' ').includes(w) && !d.line); });
-    if (!w || !id) return p.msg('Install what? Use the full name, e.g. `install brawn implant mk i` (see `list`).'); const d = D.W.items[id];
+    const w = a.trim().toLowerCase(), id = /^\d+$/.test(w) ? cl.stock[+w - 1] : cl.stock.find((i) => { const d = D.W.items[i]; return i === w || d.name.toLowerCase() === w || d.name.toLowerCase().split(' ').join('') === w.split(' ').join('') || (!/^mk|^[ivx]+$/.test(w) && d.name.toLowerCase().split(' ').includes(w) && !d.line); });
+    if (!w || !id) return p.msg('Install what? Use the number from `list` (`install 3`) or the full name, e.g. `install brawn implant mk i`.'); const d = D.W.items[id];
     if (p.cyber.includes(id)) return p.msg('You already have that installed.'); if (p.level < d.lvl) return p.msg(`That needs level ${d.lvl}.`);
     let old = null;
     if (d.line) { // implant series: upgrade in order, trading in the previous Mark for half its price
@@ -723,7 +724,7 @@ const C = {
   phone(p, a) { // phone <player> <message>  (also: tell <player> <message>): text anyone who is online on your 🍍Phone Pro Max
     if (silenced(p)) return; const m = a.match(/^(\S+)\s+([\s\S]+)$/); if (!m) return p.msg('Your 🍍Phone Pro Max: `phone <player> <message>` (or `tell <player> <message>`) texts anyone who is online, wherever they are. For someone offline, use `mail <player>`.', 'sys');
     const t = D.players.get(cap(m[1].toLowerCase())); if (!t) return p.msg(`Nobody called "${m[1]}" is online. (Leave a message with \`mail ${m[1]}\`.)`, 'sys');
-    t.msg(`\u{1F4F1} ${p.name} texts you: ${m[2]}`, 'chat'); p.msg(`\u{1F4F1} You text ${t.name}: ${m[2]}`, 'chat');
+    t.msg(`\u{1F4F1} ${p.name} texts you: ${m[2]}`, 'chat'); t.send({ t: 'sound', k: 'text' }); p.msg(`\u{1F4F1} You text ${t.name}: ${m[2]}`, 'chat');
   },
   taxi(p, a) { // taxi [enter|out]: the milestone taxi
     const w = a.trim().toLowerCase(); if (/^(enter|board|in|ride)$/.test(w)) return D.taxi.board(p); if (/^(out|exit|leave)$/.test(w)) return D.taxi.leave(p);
@@ -739,13 +740,13 @@ const C = {
   },
   changeclass(p, a) { // changeclass [confirm <class>]: change your class at the Hall of Many Faces for a fee
     if (!p.env.def.faces) return p.msg("Classes are changed at the Hall of Many Faces, north of the Adventurers' Guild (`travel guild`, then north).", 'sys');
-    const rem = !!p.klass().remort, pool = Object.entries(D.K.CLASSES).filter(([, k]) => !!k.remort === rem), cost = Math.round((500 + 250 * p.level) * (rem ? 2 : 1)), w = a.trim().toLowerCase().split(/\s+/), confirm = w[0] === 'confirm', q = (confirm ? w[1] : w[0]) || '';
-    if (!q) { p.msg(`The mask-woman's price list (you are a level ${p.level} ${p.klass().name}; changing costs ${cost} credits; you have ${p.gold}):`, 'rname'); for (const [k, c] of pool) p.msg(`  ${c.icon || ''} ${k.padEnd(13)} ${c.name}${k === p.cls ? '  (your class)' : ''}`, k === p.cls ? 'sys' : 'items'); return p.msg(`${rem ? 'Reborn characters can only swap between remort classes. ' : ''}Type \`changeclass <class>\` to preview, \`changeclass confirm <class>\` to pay. Gender changes are free: \`gender male|female|other\`.`, 'sys'); }
+    const rem = !!p.klass().remort, pool = Object.entries(D.K.CLASSES).filter(([, k]) => !!k.remort === rem), cost = p.level < 5 ? 0 : Math.round((500 + 250 * p.level) * (rem ? 2 : 1)), w = a.trim().toLowerCase().split(/\s+/), confirm = w[0] === 'confirm', q = (confirm ? w[1] : w[0]) || '';
+    if (!q) { p.msg(`The mask-woman's price list (you are a level ${p.level} ${p.klass().name}; changing costs ${cost ? cost + ' credits' : 'nothing: it is free below level 5'}; you have ${p.gold}):`, 'rname'); for (const [k, c] of pool) p.msg(`  ${c.icon || ''} ${k.padEnd(13)} ${c.name}${k === p.cls ? '  (your class)' : ''}`, k === p.cls ? 'sys' : 'items'); return p.msg(`${rem ? 'Reborn characters can only swap between remort classes. ' : ''}Type \`changeclass <class>\` to preview, \`changeclass confirm <class>\` to pay. Gender changes are free: \`gender male|female|other\`.`, 'sys'); }
     const pick = pool.find(([k, c]) => k === q || c.name.toLowerCase() === q); if (!pick) return p.msg(`No such class${rem ? ' among the remort classes' : ''}. Type \`changeclass\` for the list.`, 'sys'); if (pick[0] === p.cls) return p.msg('You already are one.', 'sys');
     if (!confirm) return p.msg(`${pick[1].icon || ''} ${pick[1].name}: ${pick[1].desc} It will cost ${cost} credits and swaps your abilities (your level and gear stay). Type \`changeclass confirm ${pick[0]}\` to do it.`, 'win');
     if (p.gold < cost) return p.msg(`That costs ${cost} credits and you have ${p.gold}.`, 'sys');
     p.gold -= cost; p.cls = pick[0]; p.fx = []; p.cd = {}; p.recalc(); p.hp = Math.min(p.hp, p.maxhp); p.mp = Math.min(p.mp, p.maxmp); p.luck = Math.min(p.luck, p.maxLuck ? p.maxLuck() : p.luck);
-    p.msg(`The mirrors swirl and you step out as a ${pick[1].name}! (-${cost} credits)`, 'win'); p.env.tell(`${p.name} steps through a mirror and comes out as a ${pick[1].name}.`, p, 'sys'); p.sendSpells(); p.sendStats(); D.log('changeclass', `${p.name} -> ${pick[0]}`);
+    p.msg(`The mirrors swirl and you step out as a ${pick[1].name}! ${cost ? `(-${cost} credits)` : '(free: under level 5!)'}`, 'win'); p.env.tell(`${p.name} steps through a mirror and comes out as a ${pick[1].name}.`, p, 'sys'); p.sendSpells(); p.sendStats(); D.log('changeclass', `${p.name} -> ${pick[0]}`);
   },
   gender(p, a) {
     let g = a.trim().toLowerCase(); if (!g) return p.msg(`You are ${D.genderLabel(p.gender)}. Change it with: gender male | female | other`);

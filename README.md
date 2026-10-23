@@ -40,6 +40,16 @@ The setting mixes three genres: Old West towns with saloons (Ashfall Junction, R
 ## If the new interface does not appear
 The server now sends `Cache-Control: no-store` for the game page and makes every other file revalidate, stamps the page with a build id (shown as "build ..." at the top of the settings panel), and the server tells the page which build it expects at login. If a browser is showing an old cached copy, the page reloads itself once; if that does not fix it, it prints a warning in the text window. An old copy from before this change has no such check, so do one hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on a Mac) after restarting the server, and make sure you unzipped the whole new folder over the old one (public/index.html must be the new file).
 
+## New keypad, numbered shop lists, shopkeepers, sounds, area maps and a floating terminal
+- **Keypad defaults:** 1 southwest, 2 south, 3 southeast, 4 west, 5 look, 6 east, 7 northwest, 8 north, 9 northeast, 0 get all, . heal, + down, - up, * out, / kill (`heal` is now an alias for `eat`/`quaff`). Characters who never changed the old keypad get the new one; custom keypads are kept.
+- A separate yellow **credits bar** follows the XP bar. `changeclass` is free below level 5.
+- **Numbered shop lists:** `list` numbers every item and ends each line with `Credits: <cost>`; `buy 3` and `install 3` use the numbers (`buy 3 2` buys 2 of item 2... an amount first, then the item or its number). Implants list the same way.
+- **Shopkeepers:** Armorer Gunnar Ironbound (Ironbound Armory), Salvage Boss Pike (Salvage Exchange), and a generated shopkeeper for every other shop, exchange and clinic (`D.ensureShopkeeper` in `lib.js`). None can be fought.
+- **Sounds** (`public/sounds/`): new level-up, quest, bounty-alert, taxi-horn, phone-text, store-door-chime, Buckstars and saloon sounds, separate male and female death sounds (random for "other"), and new rain and tornado loops. Rooms play a sound when you walk in via the `sfx` room property (saloons, the three convenience stores, the Buckstars entrance).
+- **Pictures:** Brann's Smithy, the Martian Landing Pad, the Dollar Palace, Food Court, Hot Dog Hut and both convenience stores, plus the Mars area picture and the default Martian (used for every Martian monster).
+- **Maps:** the map shows the whole area you are in (not only rooms you have visited).
+- **The terminal window** can be dragged and resized like every other window (it always stays on screen and its middle column stays reserved). Reset it with Windows > Reset window layout.
+
 ## Bag fixes, autoheal, text sizes and the implant sign
 - `bag get all` (and `gear`, `materials`) now works; `get <item> from bag` and `look bag` are alternative syntax. Gathered materials no longer count toward the bag's capacity (carry as many as you like; they always go to the bag when the pack is full). With `bag auto loot` on, every kind of item a monster drops goes to the bag.
 - `autoheal [on|off]`: at 40% health (in a fight or after taking damage) the best healing item from the pack or bag is used automatically; ignored if you have none. Saved with the character.

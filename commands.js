@@ -10,13 +10,13 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   concrete: 'CONCRETE. Poured, gray and flat, cracked in places and stained with oil and faded paint lines. It echoes. Weeds push up through the seams and old gum is pressed into it like tiny fossils. This ground was made by people, for people and wheels, and it is the same wherever you go.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 D.ship = { at: 'frost', flying: false, emptyAt: 0 }; // the starship Tharsis: docked at Frostpeak Station ('frost') or on Mars ('mars')
 const SHIPR = ['frost/ship_ramp', 'frost/ship_deck', 'frost/ship_cockpit'];
 const aboard = () => SHIPR.flatMap((r) => (D.rooms.get(r) ? D.rooms.get(r).inv.filter((o) => o.isPlayer) : []));
 D.shipDock = (where) => { const lodge = D.rooms.get('frost/lodge'), pad = D.rooms.get('mars/0_0'), ramp = D.rooms.get('frost/ship_ramp'); if (!lodge || !pad || !ramp) return; delete lodge.exits.in; delete pad.exits.in; const dest = where === 'mars' ? pad : lodge; dest.exits.in = 'frost/ship_ramp'; ramp.exits.out = dest.path; D.ship.at = where; D.ship.flying = false; };
 { const t = setInterval(() => { if (D.ship.at !== 'mars' || D.ship.flying || !D.rooms.size) return; if (aboard().length) D.ship.emptyAt = 0; else if (!D.ship.emptyAt) D.ship.emptyAt = Date.now(); else if (Date.now() - D.ship.emptyAt > 180000) { D.shipDock('frost'); D.ship.emptyAt = 0; } }, 30000); if (t.unref) t.unref(); } // an empty ship flies itself home after a few minutes
-const ALIAS = { heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -31,7 +31,7 @@ const scoreData = (p) => { // everything the graphical score window shows
   for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) continue; if (d.type === 'material') mats[d.name] = (mats[d.name] || 0) + c; goods += priceOf(p, d) * c; }
   for (const it of p.inv) { if (it.type === 'material') mats[it.name] = (mats[it.name] || 0) + 1; if (!worn.has(it)) goods += sellPrice(p, it); }
   return { name: p.name, pre: D.preTitle(p), title: p.title || '', cls: k.name, ic: k.icon, ck: p.cls, gl: D.genderLabel(p.gender), rm: p.remort || 0, wiz: !!p.wiz, pic: D.playerPic(p), level: p.level, xp: p.xp, lo: p.level > 1 ? p.xpNeed(p.level - 1) : 0, hi: p.xpNeed(p.level),
-    hp: p.hp, mhp: p.maxhp, mp: p.mp, mmp: p.maxmp, stam: p.cls === 'scavenger', luck: p.luck, mluck: p.maxLuck(), aura: p.aura(), attrs: p.attrs(), atk: p.atkPool(), def: p.defPool(), ac: p.ac(), wpn: w ? { n: w.name, a: w.def.dmg[0], b: w.def.dmg[1] } : null,
+    hp: p.hp, mhp: p.maxhp, mp: p.mp, mmp: p.maxmp, stam: p.cls === 'scavenger', luck: p.luck, mluck: p.maxLuck(), aura: p.aura(), amax: p.auraMax(), bp: p.bounty || 0, attrs: p.attrs(), atk: p.atkPool(), def: p.defPool(), ac: p.ac(), wpn: w ? { n: w.name, a: w.def.dmg[0], b: w.def.dmg[1] } : null,
     gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
     skills: Object.entries(p.skills).map(([id, s]) => ({ n: D.T.SKILLS[id].name, i: D.T.SKILLS[id].icon || '', l: s.lvl })), chrome: p.cyber.map((id) => D.W.items[id].name), mats, equip: Object.fromEntries(Object.entries(p.equip).map(([sl, i]) => [sl, i.name])) };
 };
@@ -63,10 +63,10 @@ function walkSteps(p, steps, label) { // walks single steps one at a time; typin
 D.pathDirs = (from, to) => { // the list of single directions from one room to another (locked doors and portals are not used), or null
   const prev = { [from]: null }, q = [from]; while (q.length) { const c = q.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { const r = D.rooms.get(n); if (!r || n in prev || (r.def.locked && !r.unlocked)) continue; prev[n] = [c, d]; if (n === to) { const out = []; let k = n; while (prev[k]) { out.unshift(prev[k][1]); k = prev[k][0]; } return out; } q.push(n); } } return null;
 };
-function go(p, d) {
+function go(p, d, typed) {
   let to = p.env.exits[d]; if (!to && d === 'out') { const ex = Object.entries(p.env.exits); if (ex.length === 1) [d, to] = ex[0]; } // `out` leaves a room that has only one way out
   if (!to) return p.msg(d === 'out' ? 'There is no single way out of here: pick a direction.' : 'You cannot go that way.');
-  if (p.enemy) return p.msg('You are fighting! Try to flee.', 'hurt');
+  if (p.enemy) return typed ? C.flee(p, d) : p.msg('You are fighting! Try to flee.', 'hurt'); // typing an exit in a fight tries to flee that way
   if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
   if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
@@ -84,7 +84,7 @@ const C = {
     if (!t) return p.msg("You don't see that here.");
     p.msg(t.long); if (t.isLiving) p.msg(`${cap(t.the())} is ${health(t)}.`);
   },
-  go: (p, a) => go(p, FULL[a] || a),
+  go: (p, a) => go(p, FULL[a] || a, true),
   kill(p, a) {
     let t;
     if (!a.trim()) { // autokill on: a bare `kill` attacks the first monster in the room
@@ -96,10 +96,10 @@ const C = {
     if (t.isPlayer) return p.msg('Player combat is disabled.'); if (!p.engage(t)) return p.msg('The innkeeper glares. No fighting here.');
     p.sendPortrait(t.name, 'mob_' + t.mobId); p.msg(`You attack ${t.the()}!`, 'combat'); p.env.tell(`${p.name} attacks ${t.the()}!`, p, 'combat2'); if (!t.enemy) t.engage(p); p.fight(t);
   },
-  flee(p) {
+  flee(p, dir) { // flee: runs off through a random exit; `flee north` (or just typing `north` in a fight) picks the way
     if (!p.enemy) return p.msg('You are not fighting.');
     const exits = Object.entries(p.env.exits); if (Math.random() < 0.35 || !exits.length) return p.msg('You fail to get away!', 'hurt');
-    const [d] = exits[D.rnd(0, exits.length - 1)]; p.enemy = null; p.msg('You flee in panic!', 'sys'); go(p, d);
+    const pick = dir && p.env.exits[FULL[dir] || dir] ? FULL[dir] || dir : exits[D.rnd(0, exits.length - 1)][0]; p.enemy = null; p.msg('You flee in panic!', 'sys'); go(p, pick);
   },
   get(p, a) {
     const fb = a.match(/^(.+?)\s+from\s+(?:my\s+|the\s+)?bag(?:\s+of\s+holding)?$/i); if (fb) return C.bag(p, 'get ' + fb[1]); // get <thing> from bag
@@ -302,8 +302,9 @@ const C = {
     if (p.env.def.clinic) return C.clinicList(p);
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     p.msg(`${p.env.name}. You have ${p.gold} credits.`, 'rname'); p.msg(p.env.def.exchange ? 'The Exchange pays 60% of value for gathered materials. Type `sell materials`.' : 'We also buy gathered materials (ore, herbs, fish...). Type `sell materials`.', 'sys');
-    let ix = 0; for (const id of sh.stock) { ix++; const d = D.W.items[id]; const st = d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '';
-      p.msg(`  ${String(ix).padStart(2)}. ${D.cn({ id, ...d }, d.name)}${' '.repeat(Math.max(0, 24 - d.name.length))}${st ? ' ' + st : ''}${d.lvl ? ` (level ${d.lvl})` : ''}  Credits: ${d.value}`, p.gold >= d.value ? 'spell' : 'sys'); }
+    const rows = sh.stock.map((id) => { const d = D.W.items[id]; return { id, d, st: d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '', lv: d.lvl ? `(level ${d.lvl})` : '' }; });
+    const NW = Math.max(...rows.map((r) => r.d.name.length)), SW = Math.max(...rows.map((r) => r.st.length)), LW = Math.max(...rows.map((r) => r.lv.length)), CW = Math.max(...rows.map((r) => String(r.d.value).length)); // fixed columns so everything lines up
+    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${D.cn({ id: r.id, ...r.d }, r.d.name)}${' '.repeat(NW - r.d.name.length)}  ${r.st.padEnd(SW)}  ${r.lv.padEnd(LW)}  Credits: ${String(r.d.value).padStart(CW)}`, p.gold >= r.d.value ? 'shopy' : 'shopn'));
     p.msg('Buy with `buy <number>` or `buy <name>` (for more than one: `buy 3 <number>`).', 'sys');
   },
   buy(p, a) {
@@ -402,6 +403,8 @@ const C = {
   },
   quests(p, a) {
     if (/^all|board$/.test(a.trim())) return C.board(p, '');
+    p.send(D.questLog(p)); // the quest log window: current quests and a Completed tab
+    if (p.noQuestWindow) {} else return p.msg(`Quest log opened. Quest points: ${p.qp}/${D.qpTotal()}  (${p.qdone.size}/${D.Q.QUESTS.length} quests done)`, 'sys');
     const act = D.Q.QUESTS.filter((q) => p.quests[q.id]); p.msg(`Quest points: ${p.qp}/${D.qpTotal()}  (${p.qdone.size}/${D.Q.QUESTS.length} quests done)`, 'win'); p.msg(act.length ? 'Your quests:' : "You have no active quests. Type `board` at the Adventurers' Guild, or talk to people.", 'rname');
     for (const q of act) { p.msg(`${q.name}${D.qReady(p, q) ? ' (ready to turn in)' : ''}  [${D.Q.NPCS[q.giver].name}]`, 'quest'); q.obj.forEach((o, i) => p.msg(`   ${D.objText(o)}: ${D.qCur(p, q, i)}/${D.qNeed(o)}`, 'combat2')); }
   },
@@ -435,9 +438,10 @@ const C = {
     }).catch((e) => { D.log('giphy failed:', e.message); p.msg('GIPHY did not answer. Try again in a moment.', 'sys'); });
   },
   clinicList(p) {
-    p.msg(`${p.env.name}. You have ${p.gold} credits. Aura ${p.aura().toFixed(1)}/6.0`, 'rname');
-    let ix = 0; for (const id of p.env.def.clinic.stock) { ix++; const d = D.W.items[id], b = Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' '), have = p.cyber.includes(id);
-      p.msg(`  ${String(ix).padStart(2)}. ${d.name.padEnd(18)} aura -${d.aura.toFixed(1)}  ${b}  (level ${d.lvl})${d.tier > 1 ? `  upgrade of Mk ${['I', 'II', 'III', 'IV'][d.tier - 2]}` : ''}${have ? '  [installed]' : ''}  Credits: ${d.value}`, have ? 'sys' : p.gold >= d.value && p.level >= d.lvl ? 'spell' : 'sys'); }
+    p.msg(`${p.env.name}. You have ${p.gold} credits. Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}`, 'rname');
+    const rows = p.env.def.clinic.stock.map((id) => { const d = D.W.items[id]; return { id, d, b: Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' '), have: p.cyber.includes(id), up: d.tier > 1 ? `upgrade of Mk ${['I', 'II', 'III', 'IV'][d.tier - 2]}` : '' }; });
+    const NW = Math.max(...rows.map((r) => r.d.name.length)), BW = Math.max(...rows.map((r) => r.b.length)), UW = Math.max(...rows.map((r) => r.up.length)), CW = Math.max(...rows.map((r) => String(r.d.value).length));
+    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${r.d.name.padEnd(NW)}  aura -${r.d.aura.toFixed(1)}  ${r.b.padEnd(BW)}  (level ${String(r.d.lvl).padStart(2)})  ${r.up.padEnd(UW)}  Credits: ${String(r.d.value).padStart(CW)}${r.have ? '  [installed]' : ''}`, r.have ? 'shopn' : p.gold >= r.d.value && p.level >= r.d.lvl ? 'shopy' : 'shopn'));
   },
   install(p, a) {
     const cl = p.env.def.clinic; if (!cl) return p.msg('You need a ripperdoc. Try the Chrome Clinic or the Neural Implant Lab in Ashfall.');
@@ -454,16 +458,19 @@ const C = {
     if (p.gold + refund < d.value) return p.msg(`You cannot afford the surgery (${d.value} credits${refund ? `, minus ${refund} for trading in your old implant` : ''}).`);
     if (freeAura < d.aura) return p.msg(`Your aura (${p.aura().toFixed(1)}) cannot take another ${d.aura.toFixed(1)} of chrome. Uninstall something first.`);
     if (old) p.cyber = p.cyber.filter((i) => D.W.items[i] !== old); p.gold += refund - d.value; p.cyber.push(id); p.recalc();
-    p.msg(`The doc fits your ${d.name}${old ? ` (trading in ${old.name} for ${refund} credits)` : ''}. Aura is now ${p.aura().toFixed(1)}/6.0. Max mana is ${p.maxmp}.`, 'win'); p.sendStats();
+    p.msg(`The doc fits your ${d.name}${old ? ` (trading in ${old.name} for ${refund} credits)` : ''}. Aura is now ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}. Max mana is ${p.maxmp}.`, 'win'); p.sendStats();
   },
   uninstall(p, a) {
     const cl = p.env.def.clinic; if (!cl) return p.msg('You need a ripperdoc for that.');
     const w = a.trim().toLowerCase(), id = p.cyber.find((i) => { const d = D.W.items[i]; return i === w || d.name === w || d.name.split(' ').includes(w); });
     if (!w || !id) return p.msg('Uninstall what? (see `cyber`)'); const d = D.W.items[id];
     p.cyber = p.cyber.filter((i) => i !== id); p.gold += Math.floor(d.value / 2); p.recalc(); p.hp = Math.min(p.hp, p.maxhp);
-    p.msg(`The doc removes your ${d.name} and pays you ${Math.floor(d.value / 2)} credits. Aura is now ${p.aura().toFixed(1)}/6.0.`, 'win'); p.sendStats();
+    p.msg(`The doc removes your ${d.name} and pays you ${Math.floor(d.value / 2)} credits. Aura is now ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`, 'win'); p.sendStats();
   },
-  cyber(p) { p.msg(`Aura ${p.aura().toFixed(1)}/6.0. ` + (p.cyber.length ? 'Installed chrome: ' + p.cyber.map((id) => { const d = D.W.items[id]; return `${d.name} (${Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' ')})`; }).join(', ') + '.' : 'You have no chrome installed.')); },
+  cyber(p) { // the chrome you carry, one implant to a line
+    p.msg(`Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`, 'rname'); if (!p.cyber.length) return p.msg('You have no chrome installed.', 'sys');
+    p.msg(`Installed chrome (${p.cyber.length}):`, 'items'); for (const id of p.cyber) { const d = D.W.items[id]; p.msg(`  ${d.name}  ${Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' ')}  (aura -${(d.aura || 0).toFixed(1)})`, 'items'); }
+  },
   luck(p) { p.msg(`Luck ${p.luck}/${p.maxLuck()}. A point of Luck saves you from a killing blow (halving it) automatically, or you can \`push\` to add six dice to your next two attacks. Luck returns slowly, on level-up, and at the clinic or inn.`); },
   push(p) { if (p.luck < 1) return p.msg('You have no Luck left.'); p.luck--; p.addFx({ k: 'buff', n: 'Pushed', ticks: 2, pool: 6, src: p }); p.msg('You push your luck: +6 attack dice for your next two rounds!', 'win'); p.sendStats(); },
   remort(p, a) {
@@ -530,7 +537,8 @@ const C = {
     const need = p.xpNeed(p.level);
     p.msg(p.level < 40 ? `Level ${p.level}. Experience ${n(p.xp)} of ${n(need)}: ${n(Math.max(0, need - p.xp))} more XP for level ${p.level + 1}.`
       : `Level 40 (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
-    p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/6.0.`);
+    p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`);
+    p.msg(`Bounty points: ${n(p.bounty || 0)} (${n(p.bounties || 0)} bounties collected).`, 'items');
     p.msg(`Wealth: ${n(p.gold)} credits${goods ? ` (plus about ${n(goods)} in goods you could sell)` : ''}.`, 'items');
     p.msg(`Materials (pack and bag): ${list(mats)}.`, 'items'); p.msg(`Consumables: ${list(cons)}.`, 'items');
     p.msg(`Attributes: ${Object.entries(at).map(([a, v]) => `${a} ${v}`).join(', ')}.`, 'sys');
@@ -546,11 +554,19 @@ const C = {
     t.msg(`${p.name} tells you: ${m[2]}`, 'chat'); p.msg(`You tell ${t.name}: ${m[2]}`, 'chat');
   },
   shout(p, a) { if (silenced(p)) return; if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
-  who(p) { // one player per line: name, title, class and gender
-    const all = [...D.players.values()];
-    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ic: o.klass().icon, pic: D.playerPic(o) })) });
-    p.msg(`Players online (${all.length}):`, 'rname');
-    for (const o of all) p.msg([[D.preTitle(o), o.name].filter(Boolean).join(' '), o.title || '', `${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level})`, D.genderLabel(o.gender), o.isBot ? 'bot' : ''].filter(Boolean).join(' | '), 'sys');
+  who(p) { // grouped: administrators, architects and builders, players, bots
+    const all = [...D.players.values()], grp = (o) => (o.isBot ? 'bot' : o.wiz ? 'admin' : o.architect ? 'arch' : 'player');
+    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, grp: grp(o), ic: o.klass().icon, pic: D.playerPic(o) })) });
+    const line = (o) => [[D.preTitle(o), o.name].filter(Boolean).join(' '), o.title || '', `${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level})`, D.genderLabel(o.gender)].filter(Boolean).join(' | ');
+    p.msg(`Online now (${all.length}):`, 'rname');
+    for (const [g, label] of [['admin', 'Administrators'], ['arch', 'Architects and builders'], ['player', 'Players'], ['bot', 'Bots']]) { const l = all.filter((o) => grp(o) === g); if (l.length) { p.msg(`${label} (${l.length}):`, 'items'); for (const o of l) p.msg('  ' + line(o), 'sys'); } }
+  },
+  prime(p) { // prime: every 30 minutes, a major buff to all vitals and spells for 5 minutes (unlocked at Remort 1, kept forever)
+    if ((p.remort || 0) < 1) return p.msg('PRIME is a gift of rebirth: it unlocks the moment you reach Remort 1 (at the Hall of Rebirth) and stays with you forever.', 'sys');
+    const now = Date.now(), mmss = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
+    if (now < (p.primeUntil || 0)) return p.msg(`PRIME is burning: ${mmss(p.primeUntil - now)} left.`, 'win'); if (now < (p.primeReady || 0)) return p.msg(`PRIME is recharging: ready in ${mmss(p.primeReady - now)}.`, 'sys');
+    p.primeUntil = now + 5 * 60000; p.primeReady = now + 30 * 60000; p.recalc(); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck();
+    p.msg('*** PRIME! *** Power from every rebirth floods through you. For 5 minutes: +50% health, mana and luck (all refilled), +50% spell power and half-price spells. It will be ready again in 30 minutes.', 'win'); p.env.tell(`${p.name} blazes with PRIME energy!`, p, 'event'); p.send({ t: 'sound', k: 'skill' }); p.sendStats();
   },
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
@@ -731,6 +747,22 @@ const C = {
     p.msg(`\u{1F695} The Milestone Taxi: ${D.taxi.status()}`, 'rname'); p.msg(`It tours every milestone in turn and waits ${D.taxi.STAY / 1000} seconds at each. \`enter taxi\` at a stop costs ${D.taxi.FARE} credits; riding on to the next stop is free; stepping out and boarding again costs ${D.taxi.FARE} again.`, 'sys');
     const r = D.taxi.T.route; if (r.length) p.msg('Route: ' + r.map((x) => (D.rooms.get(x) ? D.AREA_LABEL[D.rooms.get(x).area] || D.rooms.get(x).area : x).replace(/ \(.*\)$/, '')).join(' > ') + ' > (and around again)', 'sys');
   },
+  value(p, a) { // value <item>: what a shop would pay you for something you carry
+    const w = a.trim(); if (!w) return p.msg('Usage: value <item>   (what a shop would pay for it; works anywhere)', 'sys');
+    const it = find(p.inv, w) || Object.values(p.equip).find((i) => i && i.isId && i.isId(w)); const bid = it ? null : Object.keys(p.bag).find((id) => { const d = D.W.items[id]; return d && (id === w.toLowerCase() || d.name.toLowerCase().includes(w.toLowerCase()) || (d.ids || []).includes(w.toLowerCase())); });
+    if (!it && !bid) return p.msg("You aren't carrying anything like that (pack, wearing or bag).", 'sys');
+    const def = it ? it.def : D.W.items[bid], n = it ? 1 : p.bag[bid], name = it ? it.short : D.cn({ id: bid, ...def }, def.name);
+    if (def.legend) return p.msg(`${name} is legendary: shops will not buy it. A collector would pay about ${def.value.toLocaleString('en-US')} credits at the auction house.`, 'items');
+    const one = it ? sellPrice(p, it) : priceOf(p, def), ex = def.type === 'material' ? Math.max(1, Math.floor((def.value || 0) * 0.6)) : 0;
+    const worn_ = it && worn(p, it) ? ' (you are wearing it: take it off to sell)' : '', kept = it && it.kept ? ' It is marked kept, so sell and rsell skip it.' : '';
+    if (!one) return p.msg(`${name}: shops would not pay anything for that.`, 'sys');
+    p.msg(`${name}: a shop would pay about ${one} credits${n > 1 ? ` each (${one * n} for all ${n})` : ''}${worn_}.${ex ? ` The Salvage Exchange pays about ${ex} each for materials.` : ''}${kept}`, 'win');
+  },
+  peace(p) { // peace: staff only; ends every fight in the room and keeps even aggressive monsters calm for two minutes
+    if (!(p.wiz || p.architect)) return C.huh(p); let n = 0; for (const o of p.env.inv) if (o.isLiving) { if (o.enemy) n++; o.enemy = null; if (o.fx) o.fx = o.fx.filter((e) => e.k !== 'taunt'); }
+    p.env.peaceUntil = Date.now() + 120000; p.env.tell(`A hush of peace falls over the room: ${p.name} has stopped the fighting.`, null, 'win'); p.msg(`Peace: ${n} fighter${n === 1 ? '' : 's'} calmed. Monsters here will not start a fight for two minutes.`, 'win');
+  },
+  bones(p, a) { D.bones.roll(p, a); },
   give(p, a) { // give <amount> [credits|c] <player>  (or give <player> <amount>): hand credits to another player in the same room
     const w = a.trim().split(/\s+/).filter((x) => !/^(credits?|c|cr|to)$/i.test(x)); const num = w.find((x) => /^\d+$/.test(x)), who = w.find((x) => x !== num);
     if (!num || !who) return p.msg('Usage: give <amount> <player>   (for example `give 50 ben`: hands 50 credits to someone in the same room)', 'sys');
@@ -817,7 +849,7 @@ D.command = (p, line) => {
   if (/^(drop|sell|salvage|auction|give|put|store|trade|junk|destroy|keep|unkeep)$/.test(v) && /\b(pineapple|phone)\b/i.test(a)) return p.msg('Your 🍍Phone Pro Max is glued to your hand: it cannot be dropped, sold, salvaged, given away or put in a bag. Use it with `phone <player> <message>`.', 'sys');
   if (v === 'enter' && /^(the\s+)?(taxi|cab)$/i.test(a.trim())) return D.taxi.board(p);
   if ((v === 'out' || v === 'exit' || v === 'leave') && p.env.path === 'town/taxi_cab' && !p.env.exits.out) return p.msg('The taxi is moving! Wait for the next stop.', 'sys');
-  if (DIRS[v]) return go(p, v); if (FULL[v]) return go(p, FULL[v]);
+  if (DIRS[v]) return go(p, v, true); if (FULL[v]) return go(p, FULL[v], true);
   if (Object.hasOwn(C, v) && v !== 'huh') { if (TUTV[v]) D.tutEvent(p, TUTV[v]); return C[v](p, a); }
   if (D.spellsOf(p).some((s) => s.k === v)) return D.cast(p, v + ' ' + a);
   if (v === 'drink' && a.trim() && !/^(fountain|water)$/i.test(a.trim())) { // `drink champagne`: a potion in your pack, or one lying in the room (you pick it up first)

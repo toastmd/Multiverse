@@ -40,6 +40,23 @@ The setting mixes three genres: Old West towns with saloons (Ashfall Junction, R
 ## If the new interface does not appear
 The server now sends `Cache-Control: no-store` for the game page and makes every other file revalidate, stamps the page with a build id (shown as "build ..." at the top of the settings panel), and the server tells the page which build it expects at login. If a browser is showing an old cached copy, the page reloads itself once; if that does not fix it, it prints a warning in the text window. An old copy from before this change has no such check, so do one hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on a Mac) after restarting the server, and make sure you unzipped the whole new folder over the old one (public/index.html must be the new file).
 
+## Spell messages, PRIME, grouped who, monster pictures and sounds
+- **Spell messages** (`flavor.js`): every spell fires messages chosen from its name. Magic Missile sends magical missiles streaking at the target, Fireball hurls a huge ball of fire that engulfs it, Frost Bolt shoots shards of frost, Backstab slips behind the target, Fire Breath exhales dragonfire, and so on (about 215 of the 237 spell names are themed; the rest get a neutral line). Healing and buff spells describe the effect on you. Add or tune a line in the rule tables in `flavor.js`.
+- **PRIME** (`prime` command): unlocked at Remort 1 and kept forever. Every 30 minutes, 5 minutes of +50% health, mana and luck (refilled), +50% spell power and half-price spells. A **PRIME bar** under the vitals counts down the buff while it burns, fills while it recharges and glows when READY (click it to use it). The timers persist across logins.
+- `who` separates Administrators, Architects and builders, Players and Bots (in the window and the text version).
+- **Monster pictures:** wraiths, scorpion, witch and hag, raccoon, zombies and ghoul, skeletons and the barista have their own; every other monster without a picture shows `public/img/mob/default.jpg` (the hooded figure) until you add `<monster id>.jpg`. Ashfall Junction, the Bank and the Brimstone Rail Yard use the Old West default area picture.
+- **Sounds:** `fireworks` plays the fireworks sound (trimmed to 11 seconds so it matches the show) and every milestone touch plays the milestone sound.
+
+## Peace, Games, quest log, aura, shop columns and more
+- `peace` (administrators and architects) ends every fight in the room and stops bosses starting new ones for two minutes. Only **bosses** (and the CEO's bodyguards, a boss's own guard) start fights now; every other monster is passive until attacked.
+- `blackjack` and the new `bones` (Rolling Bones dice: `bones 100 high`) are played in saloons, each with a table you can `look table` / `look dice` at. The player guide has a **Games** section with both.
+- `quests` opens a **Quest log** window with Current and Completed tabs. Completed quests cannot be accepted or offered again (Bank Robbery is the one deliberate exception: it is repeatable).
+- `value <item>` tells you what a shop would pay. `cyber` lists each implant on its own line. `score` shows bounty points. In a fight, typing an exit (`north`, `n`, `go west`) tries to flee that way; `flee` still works.
+- Spell and skill messages from a fight go to the combat window when visual combat is on. Text size goes up to 34px, and the terminal no longer renders bold (it was inheriting the green bold message style when it became a window).
+- **Aura** maximum is now 6.0 plus 0.03 per level plus a full 1.0 per remort (mana is only reduced when aura falls below 6, so extra aura pays for more chrome).
+- Shop and implant lists use fixed monospace columns so the numbers and `Credits:` line up. The Buckstars stairs line in the Ashfall Square description is dark brown.
+- `node tools/check_layout.js` audits every room: compass exits must agree with the map coordinates, and every exit needs a way back (it currently passes apart from the 8 deliberate links between separate map levels).
+
 ## New keypad, numbered shop lists, shopkeepers, sounds, area maps and a floating terminal
 - **Keypad defaults:** 1 southwest, 2 south, 3 southeast, 4 west, 5 look, 6 east, 7 northwest, 8 north, 9 northeast, 0 get all, . heal, + down, - up, * out, / kill (`heal` is now an alias for `eat`/`quaff`). Characters who never changed the old keypad get the new one; custom keypads are kept.
 - A separate yellow **credits bar** follows the XP bar. `changeclass` is free below level 5.

@@ -40,6 +40,7 @@ D.qComplete = (p, q) => {
   p.send({ t: 'sound', k: 'quest' }); D.announce(`${p.name} has completed the contract "${q.name}"!`, 'quest'); p.gainXp(xp); p.sendQuests();
 };
 
+D.questLog = (p) => ({ t: 'qlog', qp: p.qp, qpt: D.qpTotal(), total: D.Q.QUESTS.length, current: D.Q.QUESTS.filter((q) => p.quests[q.id]).map((q) => ({ n: q.name, g: (D.Q.NPCS[q.giver] || {}).name || '', ready: !!D.qReady(p, q), obj: q.obj.map((o, i) => ({ t: D.objText(o), c: D.qCur(p, q, i), m: D.qNeed(o) })) })), done: D.Q.QUESTS.filter((q) => p.qdone.has(q.id)).map((q) => ({ n: q.name, g: (D.Q.NPCS[q.giver] || {}).name || '', qp: (q.rew && q.rew.qp) || 0, lv: q.min })) });
 D.qpTotal = () => D.Q.QUESTS.reduce((s, q) => s + (q.rew.qp || 0), 0);
 D.taunt = (p) => { if (p.isBot) return; // NPCs only taunt real players // a random NPC taunts the fallen player to the whole MUD
   const ids = Object.keys(D.Q.NPCS), id = ids[D.rnd(0, ids.length - 1)], pool = D.Q.TAUNTS[id] || D.Q.TAUNTS._;

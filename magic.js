@@ -1,6 +1,7 @@
 'use strict';
 // Spell engine. Spell data lives in classes.js; this file turns it into game effects.
 const D = require('./lib');
+const FL = require('./flavor'); // spell messages that match the spell's name
 const { rnd } = D;
 
 D.spellsOf = (p) => { const base = D.K.SPELLS[p.cls] || [], r = Math.min(40, p.remort || 0); return r && D.K.REMORT_SPELLS ? [...base, ...D.K.REMORT_SPELLS.slice(0, r)] : base; }; // each remort level adds one new ability
@@ -23,7 +24,7 @@ const pick = (p, rest) => {
   const t = rest ? foes(p).find((o) => o.isId(rest)) : (p.enemy && p.enemy.env === p.env ? p.enemy : foes(p)[0]);
   if (!t) p.msg(rest ? "You don't see that here." : 'There is nothing to target.'); return t;
 };
-const mult = (p) => (1 + Math.max(0, p.level - 10) * 0.12) * (p.klass().pwr || 1) * (1 + 0.03 * (p.remort || 0)); // levels 10-40, remort classes (pwr) and each remort add power
+const mult = (p) => (1 + Math.max(0, p.level - 10) * 0.12) * (p.klass().pwr || 1) * (1 + 0.03 * (p.remort || 0)) * (D.primeOn(p) ? 1.5 : 1); // PRIME adds 50% spell power // levels 10-40, remort classes (pwr) and each remort add power
 const power = (p, sp, r) => Math.round((rnd(r[0], r[1]) + Math.floor(p.level * (sp.sc ?? 1))) * mult(p)) + p.fxVal('atk');
 const evt = (p, t, sp, o) => p.env.fx({ a: p.info(), b: t.info(), hit: true, crit: false, dmg: 0, spell: { n: sp.n, i: sp.i, c: sp.c }, ...o });
 
@@ -31,7 +32,7 @@ const KIND = {
   dmg(p, sp, rest) {
     if (p.env.def.safe) return p.msg('Violence is not welcome here.'), false;
     const ts = sp.aoe ? foes(p) : [pick(p, rest)]; if (!ts[0]) return sp.aoe ? (p.msg('There is nothing to hit.'), false) : false;
-    p.msg(`${sp.i} You cast ${sp.n}!`, 'spell'); p.env.tell(`${p.name} casts ${sp.n}!`, p, 'combat2');
+    p.msg(`${sp.i} ${sp.n}: ${FL.castLine(sp, sp.aoe ? 'your enemies' : ts[0].the())}`, p.enemy ? 'spellfx' : 'spell'); p.env.tell(`${p.name} casts ${sp.n}!`, p, 'combat2');
     for (const t of ts) {
       let total = 0, crits = 0;
       for (let h = 0; h < (sp.hits || 1) && t.hp > 0; h++) {
@@ -41,9 +42,9 @@ const KIND = {
         t.hp -= d; total += d;
         if (!p.enemy) p.enemy = t; if (!t.enemy && t.hp > 0) t.engage(p); evt(p, t, sp, { dmg: d, crit });
       }
-      p.msg(`  ${sp.n} hits ${t.the()} for ${total}${crits ? ' (critical!)' : ''}.`, 'spell');
-      if (sp.drain && total) { const h = Math.min(p.maxhp - p.hp, Math.floor(total * sp.drain)); p.hp += h; if (h) p.msg(`  You drain ${h} life.`, 'win'); }
-      if (t.hp > 0 && sp.stun) { t.addFx({ k: 'stun', n: 'stun', ticks: sp.stun, src: p }); p.msg(`  ${D.cap(t.the())} is stunned!`, 'win'); }
+      p.msg(`  ${FL.hitLine(sp, t.the())} for ${total}${crits ? ' (critical!)' : ''}.`, 'spellfx');
+      if (sp.drain && total) { const h = Math.min(p.maxhp - p.hp, Math.floor(total * sp.drain)); p.hp += h; if (h) p.msg(`  You drain ${h} life.`, 'spellfx'); }
+      if (t.hp > 0 && sp.stun) { t.addFx({ k: 'stun', n: 'stun', ticks: sp.stun, src: p }); p.msg(`  ${D.cap(t.the())} is stunned!`, 'spellfx'); }
       if (t.hp > 0 && sp.dot) t.addFx({ k: 'dot', n: sp.n, dmg: sp.dot.dmg.map((v) => Math.round(v * mult(p))), ticks: sp.dot.ticks, src: p });
       if (t.hp <= 0) t.die(p);
     }
@@ -51,23 +52,23 @@ const KIND = {
   heal(p, sp) {
     const h = Math.min(p.maxhp - p.hp, sp.heal ? Math.round((rnd(...sp.heal) + p.level * 2) * mult(p)) : 0); p.hp += h;
     if (sp.hot) p.addFx({ k: 'hot', n: sp.n, heal: Math.round((sp.hot + Math.floor(p.level / 2)) * mult(p)), ticks: sp.ticks });
-    p.msg(`${sp.i} You cast ${sp.n} and recover ${h} hit points${sp.hot ? ', and will keep healing' : ''}.`, 'win');
+    p.msg(`${sp.i} ${sp.n}: ${FL.heal(sp)} You recover ${h} hit points${sp.hot ? ', and will keep healing' : ''}.`, p.enemy ? 'spellfx' : 'win');
     p.env.fx({ a: p.info(), b: p.info(), heal: h, spell: { n: sp.n, i: sp.i, c: sp.c } }); p.env.tell(`${p.name} casts ${sp.n}.`, p, 'combat2');
   },
   buff(p, sp) {
     p.addFx({ k: 'buff', n: sp.n, ticks: sp.ticks, ac: sp.ac && Math.round(sp.ac * mult(p)), atk: sp.atk && Math.round(sp.atk * mult(p)), crit: sp.crit, evade: sp.evade, regen: sp.regen && Math.round(sp.regen * mult(p)), src: p });
     if (sp.heal) p.hp = Math.min(p.maxhp, p.hp + Math.round(rnd(...sp.heal) * mult(p)));
-    p.msg(`${sp.i} You cast ${sp.n}. ${sp.d}`, 'spell'); p.env.tell(`${p.name} casts ${sp.n}.`, p, 'combat2');
+    p.msg(`${sp.i} ${sp.n}: ${FL.self(sp)} (${sp.d})`, p.enemy ? 'spellfx' : 'spell'); p.env.tell(`${p.name} casts ${sp.n}.`, p, 'combat2');
     p.env.fx({ a: p.info(), b: p.info(), buff: true, spell: { n: sp.n, i: sp.i, c: sp.c } });
   },
   summon(p, sp) {
     p.addFx({ k: 'summon', n: sp.sname, ticks: sp.ticks, sdmg: sp.sdmg, mul: mult(p), i: sp.i, src: p });
-    p.msg(`${sp.i} You summon ${sp.sname}. It will fight for ${sp.ticks} rounds.`, 'spell'); p.env.tell(`${p.name} summons ${sp.sname}!`, p, 'combat2');
+    p.msg(`${sp.i} ${sp.n}: ${FL.self(sp)} ${D.cap(sp.sname)} will fight for ${sp.ticks} rounds.`, p.enemy ? 'spellfx' : 'spell'); p.env.tell(`${p.name} summons ${sp.sname}!`, p, 'combat2');
     p.env.fx({ a: p.info(), b: p.info(), buff: true, spell: { n: sp.sname, i: sp.i, c: sp.c } });
   },
   escape(p, sp) {
     const ex = Object.values(p.env.exits); if (!ex.length) return p.msg('There is nowhere to go.'), false;
-    p.msg(`${sp.i} You vanish in a cloud of smoke!`, 'spell'); p.env.tell(`${p.name} vanishes in smoke.`, p); p.enemy = null;
+    p.msg(`${sp.i} You vanish in a cloud of smoke!`, 'spellfx'); p.env.tell(`${p.name} vanishes in smoke.`, p); p.enemy = null;
     const dest = D.rooms.get(ex[rnd(0, ex.length - 1)]); p.enter(dest, true); dest.tell(`${p.name} appears out of smoke.`, p); dest.look(p);
   },
   gather(p, sp) {
@@ -101,8 +102,9 @@ D.cast = (p, arg) => {
   const sp = D.findSpell(p, m[0]); if (!sp) return p.msg("You don't know that. Type 'spells' to see your abilities.");
   if (sp.lvl > p.level) return p.msg(`${sp.n} unlocks at level ${sp.lvl}.`);
   const now = Date.now(); if ((p.cd[sp.k] || 0) > now) return p.msg(`${sp.n} is not ready (${Math.ceil((p.cd[sp.k] - now) / 1000)}s).`);
-  if (p.mp < sp.mp) return p.msg(`Not enough ${p.cls === 'scavenger' ? 'stamina' : 'mana'}: ${sp.n} costs ${sp.mp}.`);
+  const cost = D.primeOn(p) ? Math.ceil(sp.mp * 0.5) : sp.mp; // PRIME halves spell costs
+  if (p.mp < cost) return p.msg(`Not enough ${p.cls === 'scavenger' ? 'stamina' : 'mana'}: ${sp.n} costs ${cost}.`);
   if (p.fx.some((e) => e.k === 'stun')) return p.msg('You are stunned!');
   if (KIND[sp.kind](p, sp, m.slice(1).join(' ')) === false) return;
-  p.mp -= sp.mp; p.cd[sp.k] = now + (sp.cd ?? 3) * 1000; p.sendStats();
+  p.mp -= cost; p.cd[sp.k] = now + (sp.cd ?? 3) * 1000; p.sendStats();
 };

@@ -41,5 +41,5 @@ module.exports = (items, mobs, rooms) => {
   GRID.forEach((row, y) => row.forEach(([name, long, mm, ex], x) => { const key = `${x}_${y}`; rooms['buck/' + key] = { name, area: 'buck', x, y, z: 40, long, exits: {}, mobs: mm, items: ex.items || [], terrain: 'concrete', indoor: true, ...(ex.safe ? { safe: true } : {}), ...(ex.camp ? { camp: true } : {}), ...(ex.shop ? { shop: ex.shop } : {}), ...(ex.autoTalk ? { autoTalk: ex.autoTalk } : {}) }; }));
   for (let y = 0; y < 5; y++) for (let x = 0; x < 6; x++) { const r = rooms[`buck/${x}_${y}`]; if (x < 5) { r.exits.e = `buck/${x + 1}_${y}`; rooms[`buck/${x + 1}_${y}`].exits.w = `buck/${x}_${y}`; } if (y < 4) { r.exits.s = `buck/${x}_${y + 1}`; rooms[`buck/${x}_${y + 1}`].exits.n = `buck/${x}_${y}`; } }
   rooms['buck/0_0'].exits.u = 'town/square'; rooms['town/square'].exits.d = 'buck/0_0';
-  return { post: () => { const s = rooms['town/square']; if (s && !s.long.includes('Buckstars')) s.long += ' A set of green-lit stairs leads down to a Buckstars Coffee Shop, where new runners learn the ropes: type `down`.'; } };
+  return { post: () => { const s = rooms['town/square']; if (s && !s.long.includes('Buckstars')) s.long += ' \u27e6#8b5a2b|A set of green-lit stairs leads down to a Buckstars Coffee Shop, where new runners learn the ropes: type `down`.\u27e7'; } };
 };

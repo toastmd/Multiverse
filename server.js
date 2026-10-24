@@ -94,7 +94,7 @@ D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' 
 D.builderInfo = () => ({ url: `http://localhost:${PORT}/builder.html`, key: BKEY });
 D.fingerRec = (name) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, name.toLowerCase() + '.json'), 'utf8')); } catch (e) { return null; } };
 let mobPics = {}, mobAt = 0; // monster pictures in public/img/mob/<mob id>.jpg are shown in the combat view (rescanned every 30 seconds)
-D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || ''; };
+D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || 'default.jpg'; }; // monsters without their own picture get the hooded default
 let picMap = {}, picAt = 0; // which rooms have a picture in public/img/rooms (rescanned every 30 seconds, so you can drop images in while the game runs)
 D.roomPic = (id) => { if (Date.now() - picAt > 30000) { picAt = Date.now(); try { picMap = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'rooms')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { picMap = {}; } } return picMap[id.replace('/', '-')] || ''; };
 const hash = (pw, salt) => crypto.scryptSync(pw, salt, 32).toString('hex');

@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-620 rooms:
+794 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -256,6 +256,66 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Dry Well | Tombstone Gulch (Old West) | `gulch-m.jpg` |
 | Gold Rush Alley | Tombstone Gulch (Old West) | `gulch-n.jpg` |
 | The Vault | Tombstone Gulch (Old West) | `gulch-o.jpg` |
+| Charon's Landing | Hades (Fantasy) | `hades-0_0.jpg` |
+| Pale Mudflat | Hades (Fantasy) | `hades-0_1.jpg` |
+| Wailing Shallows | Hades (Fantasy) | `hades-0_2.jpg` |
+| Cold Reach | Hades (Fantasy) | `hades-0_3.jpg` |
+| Silent Ferry Landing | Hades (Fantasy) | `hades-0_4.jpg` |
+| Silent Way | Hades (Fantasy) | `hades-0_5.jpg` |
+| Slimy Marsh | Hades (Fantasy) | `hades-1_0.jpg` |
+| Black Bank | Hades (Fantasy) | `hades-1_1.jpg` |
+| Silent Mudflat | Hades (Fantasy) | `hades-1_2.jpg` |
+| Gloomy Shallows | Hades (Fantasy) | `hades-1_3.jpg` |
+| Ashen Barrow | Hades (Fantasy) | `hades-1_4.jpg` |
+| Grey Plain | Hades (Fantasy) | `hades-1_5.jpg` |
+| Muddy Quay | Hades (Fantasy) | `hades-2_0.jpg` |
+| Wailing Marsh | Hades (Fantasy) | `hades-2_1.jpg` |
+| Cold Bank | Hades (Fantasy) | `hades-2_2.jpg` |
+| Silent Fen | Hades (Fantasy) | `hades-2_3.jpg` |
+| Pale Heath | Hades (Fantasy) | `hades-2_4.jpg` |
+| Withered Barrow | Hades (Fantasy) | `hades-2_5.jpg` |
+| Drifting Shore | Hades (Fantasy) | `hades-3_0.jpg` |
+| Pale Quay | Hades (Fantasy) | `hades-3_1.jpg` |
+| Withered Steppe | Hades (Fantasy) | `hades-3_2.jpg` |
+| Grey Field | Hades (Fantasy) | `hades-3_3.jpg` |
+| Sorrowing Fen | Hades (Fantasy) | `hades-3_4.jpg` |
+| Dusty Heath | Hades (Fantasy) | `hades-3_5.jpg` |
+| Misty Pier | Hades (Fantasy) | `hades-4_0.jpg` |
+| Wind-swept Meadow | Hades (Fantasy) | `hades-4_1.jpg` |
+| Dusty Moor | Hades (Fantasy) | `hades-4_2.jpg` |
+| Faded Steppe | Hades (Fantasy) | `hades-4_3.jpg` |
+| Endless Field | Hades (Fantasy) | `hades-4_4.jpg` |
+| Bleak Chasm | Hades (Fantasy) | `hades-4_5.jpg` |
+| Pale Way | Hades (Fantasy) | `hades-5_0.jpg` |
+| Ashen Orchard | Hades (Fantasy) | `hades-5_1.jpg` |
+| Grey Meadow | Hades (Fantasy) | `hades-5_2.jpg` |
+| The Gates of Tartarus | Hades (Fantasy) | `hades-5_3.jpg` |
+| Molten Cauldron | Hades (Fantasy) | `hades-5_4.jpg` |
+| Burning Pit | Hades (Fantasy) | `hades-5_5.jpg` |
+| Sorrowing Plain | Hades (Fantasy) | `hades-6_0.jpg` |
+| Dusty Way | Hades (Fantasy) | `hades-6_1.jpg` |
+| Withered Orchard | Hades (Fantasy) | `hades-6_2.jpg` |
+| Cursed Furnace | Hades (Fantasy) | `hades-6_3.jpg` |
+| Bone Gallery | Hades (Fantasy) | `hades-6_4.jpg` |
+| Sulfurous Cauldron | Hades (Fantasy) | `hades-6_5.jpg` |
+| Endless Barrow | Hades (Fantasy) | `hades-7_0.jpg` |
+| Wind-swept Plain | Hades (Fantasy) | `hades-7_1.jpg` |
+| Iron Gaol | Hades (Fantasy) | `hades-7_2.jpg` |
+| Screaming Terrace | Hades (Fantasy) | `hades-7_3.jpg` |
+| Burning Furnace | Hades (Fantasy) | `hades-7_4.jpg` |
+| Smoking Gallery | Hades (Fantasy) | `hades-7_5.jpg` |
+| Faded Heath | Hades (Fantasy) | `hades-8_0.jpg` |
+| Fiery Hall | Hades (Fantasy) | `hades-8_1.jpg` |
+| Bleak Forge | Hades (Fantasy) | `hades-8_2.jpg` |
+| Bone Gaol | Hades (Fantasy) | `hades-8_3.jpg` |
+| Molten Terrace | Hades (Fantasy) | `hades-8_4.jpg` |
+| The Obsidian Stair | Hades (Fantasy) | `hades-8_5.jpg` |
+| Smoking Chasm | Hades (Fantasy) | `hades-9_0.jpg` |
+| Sulfurous Bridge | Hades (Fantasy) | `hades-9_1.jpg` |
+| Screaming Hall | Hades (Fantasy) | `hades-9_2.jpg` |
+| Cursed Forge | Hades (Fantasy) | `hades-9_3.jpg` |
+| Silent Gate | Hades (Fantasy) | `hades-9_4.jpg` |
+| Nyx's Throne of Night | Hades (Fantasy) | `hades-9_5.jpg` |
 | Crimson Ballroom | Nightfall Hollow (Fantasy) | `hollow-ball.jpg` |
 | Witches' Bog | Nightfall Hollow (Fantasy) | `hollow-bog.jpg` |
 | Bone Bridge | Nightfall Hollow (Fantasy) | `hollow-bridge.jpg` |
@@ -405,6 +465,10 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Mirrored Lane | Mars (Sci-fi) | `mars-9_7.jpg` |
 | Royal Walk | Mars (Sci-fi) | `mars-9_8.jpg` |
 | Overlord's Throne Room | Mars (Sci-fi) | `mars-9_9.jpg` |
+| Crimson Fang: Bridge | Mars (Sci-fi) | `mars-fang_bridge.jpg` |
+| Crimson Fang: Crew Deck | Mars (Sci-fi) | `mars-fang_deck.jpg` |
+| Crimson Fang: Ramp | Mars (Sci-fi) | `mars-fang_ramp.jpg` |
+| Martian Fleet Dock | Mars (Sci-fi) | `mars-fleet.jpg` |
 | Hydra Den | Sunken Marsh (Fantasy) | `marsh-den.jpg` |
 | Drowned Chapel | Sunken Marsh (Fantasy) | `marsh-drowned_chapel.jpg` |
 | Marsh Edge | Sunken Marsh (Fantasy) | `marsh-edge.jpg` |
@@ -529,6 +593,66 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Sunset Acres: Middle Row | Modern District (Modern) | `modern-tpr2.jpg` |
 | Sunset Acres: East Row | Modern District (Modern) | `modern-tpr3.jpg` |
 | Meridian Tower Plaza | Modern District (Modern) | `modern-tw_front.jpg` |
+| Martian Beachhead | Pluto (Sci-fi) | `pluto-0_0.jpg` |
+| Pale Crater Rim | Pluto (Sci-fi) | `pluto-0_1.jpg` |
+| Wind-scoured Gulch | Pluto (Sci-fi) | `pluto-0_2.jpg` |
+| Frozen Line | Pluto (Sci-fi) | `pluto-0_3.jpg` |
+| Deep Firing Line | Pluto (Sci-fi) | `pluto-0_4.jpg` |
+| Silent Wire | Pluto (Sci-fi) | `pluto-0_5.jpg` |
+| Icy Field | Pluto (Sci-fi) | `pluto-1_0.jpg` |
+| Frozen Perimeter | Pluto (Sci-fi) | `pluto-1_1.jpg` |
+| Smoking Redoubt | Pluto (Sci-fi) | `pluto-1_2.jpg` |
+| Frosted Dugout | Pluto (Sci-fi) | `pluto-1_3.jpg` |
+| Bloody Line | Pluto (Sci-fi) | `pluto-1_4.jpg` |
+| Shattered Firing Line | Pluto (Sci-fi) | `pluto-1_5.jpg` |
+| Bleak Outpost | Pluto (Sci-fi) | `pluto-2_0.jpg` |
+| Blasted Gun Pit | Pluto (Sci-fi) | `pluto-2_1.jpg` |
+| Shattered Trench | Pluto (Sci-fi) | `pluto-2_2.jpg` |
+| Sunken Redoubt | Pluto (Sci-fi) | `pluto-2_3.jpg` |
+| Wrecked Dugout | Pluto (Sci-fi) | `pluto-2_4.jpg` |
+| Humming Walk | Pluto (Sci-fi) | `pluto-2_5.jpg` |
+| Deep Bunker | Pluto (Sci-fi) | `pluto-3_0.jpg` |
+| Silent Crater | Pluto (Sci-fi) | `pluto-3_1.jpg` |
+| Frosted Gun Pit | Pluto (Sci-fi) | `pluto-3_2.jpg` |
+| Frozen Trench | Pluto (Sci-fi) | `pluto-3_3.jpg` |
+| Silent Dome | Pluto (Sci-fi) | `pluto-3_4.jpg` |
+| Frosted Foundry | Pluto (Sci-fi) | `pluto-3_5.jpg` |
+| Bloody Sap | Pluto (Sci-fi) | `pluto-4_0.jpg` |
+| Shattered Bunker | Pluto (Sci-fi) | `pluto-4_1.jpg` |
+| The Great Trench Front | Pluto (Sci-fi) | `pluto-4_2.jpg` |
+| Humming Depot | Pluto (Sci-fi) | `pluto-4_3.jpg` |
+| Cold Avenue | Pluto (Sci-fi) | `pluto-4_4.jpg` |
+| Crowded Dome | Pluto (Sci-fi) | `pluto-4_5.jpg` |
+| Wrecked Wire | Pluto (Sci-fi) | `pluto-5_0.jpg` |
+| Blasted Sap | Pluto (Sci-fi) | `pluto-5_1.jpg` |
+| Crowded Plaza | Pluto (Sci-fi) | `pluto-5_2.jpg` |
+| Frosted Skyway | Pluto (Sci-fi) | `pluto-5_3.jpg` |
+| Glass Depot | Pluto (Sci-fi) | `pluto-5_4.jpg` |
+| Gleaming Avenue | Pluto (Sci-fi) | `pluto-5_5.jpg` |
+| Sunken Firing Line | Pluto (Sci-fi) | `pluto-6_0.jpg` |
+| Steel Barracks | Pluto (Sci-fi) | `pluto-6_1.jpg` |
+| Blue Market | Pluto (Sci-fi) | `pluto-6_2.jpg` |
+| Plutonian Reactor Hall | Pluto (Sci-fi) | `pluto-6_3.jpg` |
+| Lit Skyway | Pluto (Sci-fi) | `pluto-6_4.jpg` |
+| Royal Vault | Pluto (Sci-fi) | `pluto-6_5.jpg` |
+| Gleaming Walk | Pluto (Sci-fi) | `pluto-7_0.jpg` |
+| Silent Reactor Hall | Pluto (Sci-fi) | `pluto-7_1.jpg` |
+| Frosted Barracks | Pluto (Sci-fi) | `pluto-7_2.jpg` |
+| Humming Market | Pluto (Sci-fi) | `pluto-7_3.jpg` |
+| Black Gate | Pluto (Sci-fi) | `pluto-7_4.jpg` |
+| Grim Armory | Pluto (Sci-fi) | `pluto-7_5.jpg` |
+| Glass Foundry | Pluto (Sci-fi) | `pluto-8_0.jpg` |
+| Blue Walk | Pluto (Sci-fi) | `pluto-8_1.jpg` |
+| Crowded Reactor Hall | Pluto (Sci-fi) | `pluto-8_2.jpg` |
+| Blue Bridge | Pluto (Sci-fi) | `pluto-8_3.jpg` |
+| Iron Barracks | Pluto (Sci-fi) | `pluto-8_4.jpg` |
+| Absolute Gate | Pluto (Sci-fi) | `pluto-8_5.jpg` |
+| Lit Dome | Pluto (Sci-fi) | `pluto-9_0.jpg` |
+| Steel Foundry | Pluto (Sci-fi) | `pluto-9_1.jpg` |
+| Frozen Stair | Pluto (Sci-fi) | `pluto-9_2.jpg` |
+| Silent War Room | Pluto (Sci-fi) | `pluto-9_3.jpg` |
+| Grim Bridge | Pluto (Sci-fi) | `pluto-9_4.jpg` |
+| The Warlord's Frozen Throne | Pluto (Sci-fi) | `pluto-9_5.jpg` |
 | Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
 | The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
 | Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |
@@ -590,6 +714,56 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Shepherd's Rest | Redrock Trail (Old West) | `road-shepherds_rest.jpg` |
 | Toll Bridge | Redrock Trail (Old West) | `road-toll_bridge.jpg` |
 | Watch Hill | Redrock Trail (Old West) | `road-watch_hill.jpg` |
+| Whirlpool Landing | Poseidon's Realm (Fantasy) | `sea-0_0.jpg` |
+| Dappled Lagoon | Poseidon's Realm (Fantasy) | `sea-0_1.jpg` |
+| Golden Bank | Poseidon's Realm (Fantasy) | `sea-0_2.jpg` |
+| Shimmering Pool | Poseidon's Realm (Fantasy) | `sea-0_3.jpg` |
+| Silent Grove | Poseidon's Realm (Fantasy) | `sea-0_4.jpg` |
+| Clear Cove | Poseidon's Realm (Fantasy) | `sea-1_0.jpg` |
+| Bright Shallows | Poseidon's Realm (Fantasy) | `sea-1_1.jpg` |
+| Calm Lagoon | Poseidon's Realm (Fantasy) | `sea-1_2.jpg` |
+| Whispering Hollow | Poseidon's Realm (Fantasy) | `sea-1_3.jpg` |
+| Swaying Passage | Poseidon's Realm (Fantasy) | `sea-1_4.jpg` |
+| Sandy Shoal | Poseidon's Realm (Fantasy) | `sea-2_0.jpg` |
+| Merman Market | Poseidon's Realm (Fantasy) | `sea-2_1.jpg` |
+| Tangled Kelp Maze | Poseidon's Realm (Fantasy) | `sea-2_2.jpg` |
+| Green Weave | Poseidon's Realm (Fantasy) | `sea-2_3.jpg` |
+| Slick Hollow | Poseidon's Realm (Fantasy) | `sea-2_4.jpg` |
+| Glittering Sandbar | Poseidon's Realm (Fantasy) | `sea-3_0.jpg` |
+| Ancient Canopy | Poseidon's Realm (Fantasy) | `sea-3_1.jpg` |
+| Dark Glade | Poseidon's Realm (Fantasy) | `sea-3_2.jpg` |
+| Swaying Kelp Maze | Poseidon's Realm (Fantasy) | `sea-3_3.jpg` |
+| Crimson Arch | Poseidon's Realm (Fantasy) | `sea-3_4.jpg` |
+| Towering Tangle | Poseidon's Realm (Fantasy) | `sea-4_0.jpg` |
+| Silent Thicket | Poseidon's Realm (Fantasy) | `sea-4_1.jpg` |
+| Mermaid Lagoon | Poseidon's Realm (Fantasy) | `sea-4_2.jpg` |
+| Fan Spire | Poseidon's Realm (Fantasy) | `sea-4_3.jpg` |
+| Rainbow Reef | Poseidon's Realm (Fantasy) | `sea-4_4.jpg` |
+| Slick Path | Poseidon's Realm (Fantasy) | `sea-5_0.jpg` |
+| Dark Tangle | Poseidon's Realm (Fantasy) | `sea-5_1.jpg` |
+| Fluted Garden | Poseidon's Realm (Fantasy) | `sea-5_2.jpg` |
+| Glowing Terrace | Poseidon's Realm (Fantasy) | `sea-5_3.jpg` |
+| Antler Spire | Poseidon's Realm (Fantasy) | `sea-5_4.jpg` |
+| Murky Grove | Poseidon's Realm (Fantasy) | `sea-6_0.jpg` |
+| Pillar Walk | Poseidon's Realm (Fantasy) | `sea-6_1.jpg` |
+| Brain Bazaar | Poseidon's Realm (Fantasy) | `sea-6_2.jpg` |
+| Rainbow Garden | Poseidon's Realm (Fantasy) | `sea-6_3.jpg` |
+| Bone Ledge | Poseidon's Realm (Fantasy) | `sea-6_4.jpg` |
+| Spiked Road | Poseidon's Realm (Fantasy) | `sea-7_0.jpg` |
+| Crimson Plaza | Poseidon's Realm (Fantasy) | `sea-7_1.jpg` |
+| Glowing Walk | Poseidon's Realm (Fantasy) | `sea-7_2.jpg` |
+| Cold Gorge | Poseidon's Realm (Fantasy) | `sea-7_3.jpg` |
+| Lightless Abyss | Poseidon's Realm (Fantasy) | `sea-7_4.jpg` |
+| Antler Court | Poseidon's Realm (Fantasy) | `sea-8_0.jpg` |
+| Brain Road | Poseidon's Realm (Fantasy) | `sea-8_1.jpg` |
+| Silent Chasm | Poseidon's Realm (Fantasy) | `sea-8_2.jpg` |
+| Sunken Cavern | Poseidon's Realm (Fantasy) | `sea-8_3.jpg` |
+| Triton's Court | Poseidon's Realm (Fantasy) | `sea-8_4.jpg` |
+| Pink Arch | Poseidon's Realm (Fantasy) | `sea-9_0.jpg` |
+| Glowing Drop | Poseidon's Realm (Fantasy) | `sea-9_1.jpg` |
+| Crushing Depth | Poseidon's Realm (Fantasy) | `sea-9_2.jpg` |
+| Silver Court | Poseidon's Realm (Fantasy) | `sea-9_3.jpg` |
+| Poseidon's Throne Room | Poseidon's Realm (Fantasy) | `sea-9_4.jpg` |
 | Briar Gate | Thornwild Court (Fantasy) | `thorn-a.jpg` |
 | Mushroom Ring | Thornwild Court (Fantasy) | `thorn-b.jpg` |
 | Moonwell | Thornwild Court (Fantasy) | `thorn-c.jpg` |

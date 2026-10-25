@@ -13,7 +13,7 @@ D.autoTalk = (p, npcId) => { // the first time you enter a room with a quest giv
 D.qDef = (id) => D.Q.QUESTS.find((q) => q.id === id);
 D.qCur = (p, q, i) => { const o = q.obj[i]; return o[0] === 'get' ? Math.min(o[2], D.itemCount(p, o[1])) : Math.min(need(o), (p.quests[q.id].prog[i]) || 0); };
 D.qReady = (p, q) => q.obj.every((o, i) => D.qCur(p, q, i) >= need(o));
-D.qState = (p, q) => p.qdone.has(q.id) && !q.repeat ? 'done' : p.quests[q.id] ? (D.qReady(p, q) ? 'ready' : 'active') : (p.level >= q.min && (!q.after || p.qdone.has(q.after)) ? 'avail' : 'locked');
+D.qState = (p, q) => p.qdone.has(q.id) && !q.repeat ? 'done' : p.quests[q.id] ? (D.qReady(p, q) ? 'ready' : 'active') : ((p.level >= q.min || p.anyQuest) && (!q.after || p.qdone.has(q.after)) ? 'avail' : 'locked');
 
 D.qEvent = (p, type, key) => { // progress kill/visit/talk objectives
   for (const q of D.Q.QUESTS) {

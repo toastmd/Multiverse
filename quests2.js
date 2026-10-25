@@ -1,8 +1,9 @@
 'use strict';
 // NPCs, contracts and extra taunts for the five newer areas, plus extra taunt lines for the original NPCs. Merged into quests.js.
 module.exports = ({ N, Q, BOSS_QP }) => {
-  Object.assign(BOSS_QP, { q_mars2: 7, q_manor2: 4, q_buck: 2, q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
+  Object.assign(BOSS_QP, { q_castle2: 6, q_castle3: 7, q_mars2: 7, q_manor2: 4, q_buck: 2, q_cave2: 6, q_tower2: 6, q_prime2: 5, q_hollow3: 5, q_hollow4: 6, q_mod2: 5, q_mod4: 5, q_bank: 6, q_gulch2: 4, q_thorn2: 5, q_aurora2: 6, q_reach2: 7, q_rail2: 8 });
   const NPCS = {
+    igor: N('Igor', 'castle/g_0_0', 'Yeth, Marthter... I mean, friend. The Doctor hath gone too far. Hith monthter wanderth the dungeon and the lightning never thtopth. Pleathe, thtop them both before the village burnth the whole ridge.', 'A hunched, one-eyed servant with a lopsided grin, a lantern and a limp, who has plainly been here far too long.'),
     gunnar: N('Armorer Gunnar Ironbound', 'town/armory', 'Welcome to the Ironbound Armory. Steel, leather and a lot of dents. Take a look with `list`; I am too busy hammering rivets to chat, and no, you cannot try the cannon.', 'A huge, soot-streaked armorer in a leather apron with forearms like anvils, tapping rivets into a breastplate. He is here to arm you, not to be fought.'),
     pike: N('Salvage Boss Pike', 'town/salvage_exchange', 'Ore, herbs, fish, scrap: if you dug it, picked it or caught it, I will buy it. `sell materials`, nice and easy. The Exchange pays better than the shops, and I never haggle on a Tuesday.', 'A wiry salvage boss in goggles and a scale-covered vest, weighing a bag of ore on a rusty hanging scale. He buys; he does not brawl.'),
     reyes: N('Commander Reyes', 'mars/0_0', 'Welcome to Mars, runner. Little green men with ray guns, a whole planet of them, and a very large, very angry Overlord at the far corner. Keep your head down, your gun up, and your oxygen full.', 'A weathered Space Corps commander in a dusty silver suit, a helmet under one arm and a ray pistol in the other hand, who has plainly been here too long.'),
@@ -26,6 +27,10 @@ module.exports = ({ N, Q, BOSS_QP }) => {
   };
   const QUESTS = [
     Q('q_tutorial', 'Welcome to the Multiverse', 'torv', 1, 'Finish the newbie tutorial (type `tutorial`) and learn the ropes. Torv pays new arrivals who bother to listen.', [['tutorial', 'finish']], { gold: 200, items: ['potion', 'potion'], qp: 3 }),
+    Q('q_castle0', 'Torches and Pitchforks', 'igor', 31, 'The Doctor\'s stitched servants roam the courtyard and the graveyard. Put six of them down, and give the village a thtart.', [['kill', 'stitched_zombie', 6]], { gold: 20000, items: ['serum', 'smellingsalts'] }),
+    Q('q_castle1', 'Lightning in a Bottle', 'igor', 33, 'The tesla constructs power the Doctor\'s machines. Take out four of them and the lab will thtutter.', [['kill', 'tesla_construct', 4]], { gold: 28000, items: ['serum', 'serum', 'ether'] }, 'q_castle0'),
+    Q('q_castle2', "It's Alive!", 'igor', 35, 'Dr. Victor Frankenstein is in his great laboratory at the top of the tower, still raving about lightning. Climb the thtair and put an end to hith experiments.', [['kill', 'dr_frankenstein', 1]], { gold: 80000, items: ['serum', 'serum', 'superior'] }, 'q_castle1'),
+    Q('q_castle3', 'Put the Monster to Rest', 'igor', 36, 'The Doctor\'s Monster wanders the dungeon below in thorrow and fury. Make an end of him, and let him find the pea he never had.', [['kill', 'frankenstein_monster', 1]], { gold: 120000, items: ['serum', 'serum', 'superior', 'greater'] }, 'q_castle2'),
     Q('q_mars0', 'Little Green Problem', 'reyes', 30, 'They are all over the flats: little green martians with ray guns. Take out ten of them and prove you can survive here.', [['kill', 'martian_grunt', 10]], { gold: 14000, items: ['martianjuice', 'martianjuice', 'oxygenpack'] }),
     Q('q_mars1', 'Ray Gun Rumble', 'reyes', 33, 'Their gunners hold the craters and the canyon. Drop eight martian ray gunners, and the road to the city is open.', [['kill', 'martian_gunner', 8]], { gold: 20000, items: ['martianjuice', 'rayrifle'] }, 'q_mars0'),
     Q('q_mars2', 'The Martian Leader', 'reyes', 36, 'The Martian Overlord Zorgblat sits in his throne room at the far corner of the planet, behind a citadel of guards and tripod war-machines. He carries a death ray gun. Take him down and bring it home.', [['kill', 'martian_overlord', 1]], { gold: 60000, items: ['martianjuice', 'martianjuice', 'superior'] }, 'q_mars1'),
@@ -70,6 +75,7 @@ module.exports = ({ N, Q, BOSS_QP }) => {
     Q('q_rail2', 'The Brimstone Express', 'cobb', 35, 'The Express leaves Hell at midnight and arrives wherever it pleases. Stop it before it arrives anywhere you love.', [['kill', 'brimstone_express', 1]], { gold: 7000, items: ['grand', 'mana4'] }, 'q_rail1'),
   ];
   const TAUNTS = { // lines added to the existing pools; {name} is the fallen player
+    igor: ['{name} fell... the Doctor will be pleathed.', 'Oh dear, {name}. Not the dungeon again.', '{name} joined the collection, thtill.'],
     reyes: ['{name} is down on the red dust. Stay low next time.', 'The Martians got {name}. Again.', 'Medic! {name} is down on Mars!'],
     dolores: ['{name} has been put to rest, I am afraid.', 'Oh dear, {name}. They do get feisty at night.', 'Another one for the ghosts, {name}.'],
     sam: ['{name} is down in the back again, I will get the mop.', 'Oh no, {name}. Not by the ice machine.', 'Told you it was a rough night, {name}.'],

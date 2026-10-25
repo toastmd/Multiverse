@@ -29,7 +29,7 @@ const roll = (n) => { n = Math.max(1, Math.round(n)); let h = 0, ones = 0; for (
 const KP_DEFAULT = { Numpad1: 'southwest', Numpad2: 'south', Numpad3: 'southeast', Numpad4: 'west', Numpad5: 'look', Numpad6: 'east', Numpad7: 'northwest', Numpad8: 'north', Numpad9: 'northeast', Numpad0: 'get all', NumpadDecimal: 'heal', NumpadAdd: 'down', NumpadSubtract: 'up', NumpadMultiply: 'out', NumpadDivide: 'kill', NumpadEnter: '' };
 const KP_OLD = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
 D.kpFromRec = (rec) => { const m = rec.kpMap && typeof rec.kpMap === 'object' ? rec.kpMap : {}; return rec.kpVer !== 2 && Object.keys(KP_OLD).every((k) => m[k] === undefined || m[k] === KP_OLD[k]) ? {} : m; }; // players who never changed the old keypad get the new defaults; custom keypads are kept
-D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
+D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', castle: 'Castle Frankenstein (Horror)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
 const need = (lvl) => lvl * lvl * 50; // xp required to leave this level
 // weapon styles: what you wield decides how a hit reads (clubs bash, guns shoot, blades slash, spears stab)
 const STYLES = { bash: { re: /club|bat\b|mace|hammer|staff|stick|cudgel|baton|truncheon|wrench|pipe|extinguisher|putter|crowbar|tire ?iron|maul|flail|bone|pike\b.*tusk|tusk/, noun: 'swing', set: [[0.05, 'tap', 'taps', ' lightly'], [0.15, 'bash', 'bashes', ''], [0.3, 'bash', 'bashes', ' hard'], [0.5, 'smash', 'smashes', ''], [9, 'pulverize', 'pulverizes', '']] },
@@ -98,7 +98,7 @@ class Living extends GameObject {
   msg() {}
   the() { return this.isPlayer || /^(the |[A-Z])/.test(this.name) ? this.name : 'the ' + this.name; }
   ac() { return Object.values(this.equip).reduce((a, i) => a + i.ac, 0) + (this.natAc || 0) + this.fxVal('ac') + (this.cyberVal ? this.cyberVal('ac') : 0); }
-  atkPool() { return 5 + Math.floor(this.level * 0.5) + Math.floor(this.dex / 4) + this.fxVal('pool') + Math.floor(this.fxVal('crit') * 10) + (this.cyberVal ? this.cyberVal('pool') : 0) + Math.floor((this.remort || 0) / 4); }
+  atkPool() { return 5 + Math.floor(this.level * 0.5) + Math.floor(this.dex / 4) + this.fxVal('pool') + Math.floor(this.fxVal('crit') * 10) + (this.cyberVal ? this.cyberVal('pool') : 0) + Math.floor((this.remort || 0) / 4) + (this.isPlayer && D.brawn(this) ? 1 + Math.floor(this.level / 10) : 0); }
   defPool() { return 2 + Math.floor(this.level * 0.25) + Math.floor(this.dex / 6) + Math.floor(this.ac() / 5) + Math.floor(this.fxVal('evade') * 20) + Math.floor((this.remort || 0) / 4); }
   hurt(d) { // Luck: a player may spend a Luck point to halve a blow that would kill them
     if (this.isPlayer && d >= this.hp && this.luck > 0) { this.luck--; d = Math.floor(d / 2); this.msg('Luck holds! You ride out the blow, halving the damage.', 'win'); }
@@ -135,22 +135,26 @@ class Living extends GameObject {
     if (this.enemy && (this.enemy.env !== this.env || this.enemy.hp <= 0)) this.enemy = null;
     if (stunned) { this.msg('You are stunned and cannot act!', 'hurt'); return; }
     if (this.enemy) return this.fight(this.enemy);
-    if (this.hp < this.maxhp && this.beats++ % 2 === 0) this.hp = Math.min(this.maxhp, this.hp + 1 + Math.floor(this.con / 6) + (this.env && (this.env.def.inn || this.env.def.camp) ? 5 : 0));
+    if (this.hp < this.maxhp && this.beats++ % 2 === 0) this.hp = Math.min(this.maxhp, this.hp + 1 + Math.floor(this.con / 6) + (this.env && (this.env.def.inn || this.env.def.camp) ? 5 : 0) + (this.isPlayer && D.brawn(this) ? 2 + Math.floor(this.level / 5) : 0));
     this.idle();
   }
   idle() {}
   fight(t) {
     const a = roll(this.atkPool()), d = roll(t.defPool()), net = a.h - d.h, hit = net > 0 && !a.f;
-    let dmg = 0, crit = false, vi = 0;
+    let dmg = 0, crit = false, vi = 0, smash = false;
     if (hit) { // net hits add damage; six or more net hits is a critical
       const [lo, hi] = this.weapon(); dmg = rnd(lo, hi) + Math.floor(this.str / 5) + this.fxVal('atk') + (this.cyberVal ? this.cyberVal('dmg') : 0);
       dmg = Math.floor(dmg * (1 + 0.06 * Math.min(net - 1, 8))); crit = net >= 6; if (crit) dmg = Math.floor(dmg * 1.4);
-      dmg = Math.max(1, dmg - rnd(0, Math.floor(t.ac() * 0.6))); vi = VERBS.findIndex((v) => dmg / t.maxhp < v[0]);
-      dmg = t.hurt(dmg);
+      dmg = Math.max(1, dmg - rnd(0, Math.floor(t.ac() * 0.6)));
+      const bw = this.isPlayer ? D.brawn(this) : null, tb = t.isPlayer ? D.brawn(t) : null; // Juggernaut and Titan: Brute Force, Hulking, Thick Skin
+      if (bw) { dmg = Math.round(dmg * bw.dmg); if (Math.random() < bw.extra) { dmg += Math.round(dmg * (bw.xlo + Math.random() * (bw.xhi - bw.xlo))); smash = true; if (bw.stun && t.addFx && Math.random() < bw.stun) t.addFx({ k: 'stun', n: 'stun', ticks: 2, src: this }); } }
+      if (tb) dmg = Math.max(1, Math.round(dmg * (1 - tb.dr)));
+      vi = VERBS.findIndex((v) => dmg / t.maxhp < v[0]); dmg = t.hurt(dmg);
+      if (bw && bw.steal) this.hp = Math.min(this.maxhp, this.hp + Math.round(dmg * bw.steal));
     }
     if (!t.enemy && t.hp > 0) t.engage(this);
     if (t.isPlayer && t.autoheal && t.hp > 0) t.autoHealCheck(); if (t.isPlayer && t.autoflee && t.hp > 0) t.autoFleeCheck();
-    const sty = styleOf(this), [, v2, v3, adv] = (sty ? sty.set : VERBS)[vi] || [], c = crit ? ' Critical hit!' : '';
+    const sty = styleOf(this), [, v2, v3, adv] = (sty ? sty.set : VERBS)[vi] || [], c = (crit ? ' Critical hit!' : '') + (smash ? ' SMASH!' : '');
     if (hit) {
       this.msg(`You ${v2} ${t.the()}${adv}.${c} (${dmg})`, 'combat');
       t.msg(`${cap(this.the())} ${v3} you${adv}.${c} (${dmg})`, 'hurt');
@@ -273,7 +277,7 @@ class Player extends Living {
   }
   sendStats() {
     const w = this.equip.weapon;
-    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
+    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), up: Math.floor((Date.now() - D.startedAt) / 1000), pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
   }
   heart_beat() {
     if (this.primeUntil && Date.now() >= this.primeUntil) { this.primeUntil = 0; this.recalc(); this.hp = Math.min(this.hp, this.maxhp); this.mp = Math.min(this.mp, this.maxmp); this.msg('PRIME fades.', 'sys'); this.sendStats(); }
@@ -360,6 +364,11 @@ const PRE = Object.fromEntries(Object.entries(require('./config')().preTitles).m
 D.preTitle = (p) => PRE[String(p.name).toLowerCase()] || (p.wiz ? '(Administrator)' : p.architect ? '(Architect)' : ''); // e.g. Joe gets (Administrator) before the name
 D.genderLabel = (g) => (g === 'nonbinary' ? 'other' : g);
 D.setMute = (p, m) => { const k = { bounty: 'bounty', bounties: 'bounty', level: 'levels', levels: 'levels', quest: 'quests', quests: 'quests', weather: 'weather', taunts: 'taunts', taunt: 'taunts', deaths: 'deaths', death: 'deaths' }[String(m.key)]; if (!k) return; p.mute[k] = !!m.on; p.sendMutes(); if (k === 'weather') p.send({ t: 'wx', k: D.weatherFor ? D.weatherFor(p) : '' }); }; // muting weather stops its animation and sounds at once
+D.brawn = (p) => { // the passive bonuses of the brawn classes (no spells): Juggernaut, and its remort class the Titan, which grows with every remort
+  if (!p || (p.cls !== 'juggernaut' && p.cls !== 'titan')) return null; const L = p.level, T = p.cls === 'titan', R = T ? (p.remort || 0) : 0;
+  return { dmg: 1.10 + L * 0.002 + (T ? 0.05 + 0.04 * R + (R >= 40 ? 0.25 : 0) : 0), extra: Math.min(0.6, 0.12 + L * 0.004 + (T ? 0.01 * R : 0)), xlo: 0.5, xhi: R >= 5 ? 1.3 : 1.0, stun: R >= 10 ? 0.15 : 0, dr: Math.min(0.5, 0.06 + L * 0.003 + (T ? 0.005 * R + (R >= 20 ? 0.05 : 0) : 0)), steal: R >= 30 ? 0.04 : 0 };
+};
+D.startedAt = Date.now(); // for `uptime`
 D.primeOn = (p) => Date.now() < (p.primeUntil || 0);
 D.touchMilestone = (p, area) => { // touching a milestone attunes you and opens the travel window
   p.send({ t: 'sound', k: 'milestone' });
@@ -388,7 +397,7 @@ D.takeFloor = (p, it) => { // picking up an item from the floor
   return false;
 };
 // ---- shopkeepers: every shop, exchange and clinic has someone behind the counter (they cannot be fought) ----
-const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
+const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', castle: 'fantasy', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
 const SHOPKEEPERS = { west: [['Dusty Pete', 'a dusty old trader with a corncob pipe and sleeve garters'], ['Widow Mae', 'a sharp-eyed widow in a black bonnet who counts change twice'], ['Cactus Jack', 'a leathery old-timer with a bandana and a grin full of gold'], ['Honest Abe', 'a rumpled clerk in a green eyeshade who swears he is honest'], ['Silas the Peddler', 'a bent peddler with a pack that never seems to empty']],
   fantasy: [['Merchant Orlo', 'a round merchant in a velvet cap with rings on every finger'], ['Dame Hesper', 'a tall, calm trader in a hooded traveling cloak'], ['Old Fenwick', 'a gnarled old shopkeeper with spectacles on a chain'], ['Brindle the Trader', 'a cheerful halfling trader perched on a tall stool'], ['Quillon the Fence', 'a quick-eyed dealer who asks no questions']],
   scifi: [['Vendor-Bot 7', 'a dented vending droid with a flickering screen face'], ['Trader Zix', 'a six-armed trader in a patched jumpsuit, juggling inventory'], ['Quartermaster Nova', 'a brisk quartermaster in a crisp silver uniform'], ['Dealer K-9', 'a gruff cyborg dealer with a chrome jaw and a tablet'], ['Supply Officer Tam', 'a tired supply officer with a stylus behind each ear']],

@@ -10,6 +10,8 @@ const CLASSES = {
   alchemist:   { name: 'Alchemist',      icon: '⚗️', hpl: 10, mpl: 9,  rg: 1, str: -1, dex: 1,  con: 0,  kit: 'pestle',   desc: 'A brewer of acids, bombs, tonics and elixirs. Heals and hurts. (Fantasy)' },
   gunslinger:  { name: 'Gunslinger',       icon: '🤠', hpl: 11, mpl: 6,  rg: 1, str: 0,  dex: 3,  con: 0,  kit: 'revolver', desc: 'An Old West pistol-and-rifle specialist: rapid shots, stuns and a deadly crit rate. (Old West)' },
   barbarian:   { name: 'Space Marine',  icon: '🧔', hpl: 16, mpl: 5,  rg: 1, str: 4,  dex: 0,  con: 3,  kit: 'axe',      desc: 'A heavily augmented warrior from the star-cities with a huge health pool. Rage, cleave and brute force. (Sci-fi)' },
+  juggernaut:  { name: 'Juggernaut', icon: '\u{1F4AA}', brawn: true, hpl: 21, mpl: 2, rg: 4, str: 6, dex: -1, con: 6, kit: 'axe', desc: 'All brawn: a hulking wall of muscle with the biggest health pool and the hardest hits in the multiverse. No spells, only quick heals. Brute Force randomly makes a blow hit far harder, and Thick Skin shrugs off a share of every hit you take. (Any era)' },
+  titan:       { name: 'Titan', icon: '\u{1F5FF}', remort: true, brawn: true, pwr: 1, hpl: 28, mpl: 3, rg: 5, str: 9, dex: 0, con: 8, kit: 'axe', desc: 'The reborn Juggernaut: a walking mountain with no spells and a bigger bonus for every remort. Brute Force hits harder and more often, Thick Skin grows, and at the high remorts it stuns, drains life and doubles its fury. (Remort class)' },
   engineer:    { name: 'Engineer',       icon: '👷', hpl: 11, mpl: 8,  rg: 1, str: 0,  dex: 1,  con: 1,  kit: 'wrench',   desc: 'A sci-fi engineer: turrets, gadgets, deployables and a powered combat suit. (Sci-fi)' },
   necromancer: { name: 'Necromancer', icon: '🧛', hpl: 9,  mpl: 11, rg: 2, str: -2, dex: 0,  con: -1, kit: 'bonewand', desc: 'A death-magic specialist. Drains life, curses foes and binds the restless dead. (Fantasy)' },
   cleric:      { name: 'Preacher', icon: '👼', hpl: 12, mpl: 10, rg: 2, str: 1,  dex: -1, con: 2,  kit: 'mace',     desc: 'A frontier preacher and doctor with a bible, a medical bag and a sturdy constitution. The reliable support. (Old West)' },
@@ -31,6 +33,17 @@ Object.assign(CLASSES, {
 });
 
 const SPELLS = {
+  juggernaut: [ // no spells: only quick heals (the class's power is its passive bonuses: Brute Force, Thick Skin, Hulking)
+    S('second_wind', 'Second Wind', 1, 2, 'heal', '\u{1F4A8}', '#7be0a0', 'Catch your breath and shrug off the pain.', { heal: [18, 28], cd: 4 }),
+    S('shrug_it_off', 'Shrug It Off', 10, 5, 'heal', '\u{1F4AA}', '#7be0a0', 'Roll your shoulders and let the wounds close.', { heal: [60, 90], cd: 6 }),
+    S('unbreakable', 'Unbreakable', 25, 10, 'heal', '\u{1F6E1}\uFE0F', '#7be0a0', 'Plant your feet. Nothing is getting through.', { heal: [160, 230], cd: 8 }),
+  ],
+  titan: [
+    S('second_wind', 'Second Wind', 1, 2, 'heal', '\u{1F4A8}', '#7be0a0', 'Catch your breath and shrug off the pain.', { heal: [30, 44], cd: 4 }),
+    S('shrug_it_off', 'Shrug It Off', 8, 5, 'heal', '\u{1F4AA}', '#7be0a0', 'Roll your shoulders and let the wounds close.', { heal: [90, 130], cd: 6 }),
+    S('unbreakable', 'Unbreakable', 20, 10, 'heal', '\u{1F6E1}\uFE0F', '#7be0a0', 'Plant your feet. Nothing is getting through.', { heal: [220, 300], cd: 8 }),
+    S('mountain_heart', 'Heart of the Mountain', 35, 14, 'heal', '\u26F0\uFE0F', '#7be0a0', 'A mountain does not fall.', { heal: [380, 520], cd: 10 }),
+  ],
   magician: [
     S('magic_missile', 'Magic Missile', 1, 4, 'dmg', '✨', '#b69cff', 'Unerring bolts of force.', { dmg: [5, 9] }),
     S('frost_bolt', 'Frost Bolt', 2, 7, 'dmg', '❄️', '#7fd6ff', 'Chills and stuns the target for a turn.', { dmg: [6, 10], stun: 1 }),
@@ -294,7 +307,7 @@ SPELLS.pirate = [SP('cutlass_slash', 'Cutlass Slash', 1, 4, 'dmg', '\u{1F5E1}\uF
   SP('krakens_wrath', "Kraken's Wrath", 40, 140, 'dmg', '\u{1F419}', '#9a8cff', 'The deep answers your call.', { dmg: [190, 250], aoe: 1, stun: 1, cd: 10 })];
 // ---- every ability gets a one-word command (typed as it is, e.g. `fireball`, `song`), so nothing needs typing with underscores in a fight ----
 const ONEWORD_STOP = new Set(['of', 'the', 'a', 'to', 'in', 'and', 'for', 'on', 'at']), ONEWORD_DULL = new Set(['end', 'bolt', 'shot', 'blade', 'strike', 'storm', 'bomb', 'form', 'call', 'touch', 'burst', 'blast', 'wave', 'round']);
-const ONEWORD_PICK = { bullet_time: 'bullet', judgment_day: 'judgment', dead_eye: 'deadeye', wrath_of_heaven: 'wrath', army_of_the_dead: 'army', symphony_of_pain: 'symphony', all_in: 'allin', ace_in_the_sleeve: 'ace', quick_draw: 'quickdraw', scalpel_slash: 'scalpel', pistol_whip: 'pistolwhip', forage: 'gather', field_craft: 'fieldcraft', forge_work: 'forgework', master_craft: 'mastercraft', dragon_forge: 'dragonforge', deep_cast: 'deepcast', cast_line: 'castline', philosophers_fire: 'philosopher', nights_end: 'nightsend', transmute_armor: 'transmute', wrath_of_nature: 'wrath', cataclysmic_storm: 'cataclysm' }; // hand-picked words where the automatic choice would be vague
+const ONEWORD_PICK = { second_wind: 'secondwind', shrug_it_off: 'shrug', mountain_heart: 'mountain', bullet_time: 'bullet', judgment_day: 'judgment', dead_eye: 'deadeye', wrath_of_heaven: 'wrath', army_of_the_dead: 'army', symphony_of_pain: 'symphony', all_in: 'allin', ace_in_the_sleeve: 'ace', quick_draw: 'quickdraw', scalpel_slash: 'scalpel', pistol_whip: 'pistolwhip', forage: 'gather', field_craft: 'fieldcraft', forge_work: 'forgework', master_craft: 'mastercraft', dragon_forge: 'dragonforge', deep_cast: 'deepcast', cast_line: 'castline', philosophers_fire: 'philosopher', nights_end: 'nightsend', transmute_armor: 'transmute', wrath_of_nature: 'wrath', cataclysmic_storm: 'cataclysm' }; // hand-picked words where the automatic choice would be vague
 function oneWord() {
   const reserved = new Set(['n', 's', 'e', 'w', 'u', 'd', 'ne', 'nw', 'se', 'sw', 'in', 'out', 'north', 'south', 'east', 'west', 'up', 'down', 'i', 'inv', 'eq', 'equipment', 'k', 'l', 'sc', 'rc', 'run', 'cmds', 'cmd', 'top', 'bj', 'hit', 'stand', 'chat', 'gos', 'take', 'attack', 'say', 'look', 'kill', 'flee', 'get', 'drop', 'quit', 'save', 'push', 'pray', 'rest', 'eat', 'drink', 'wear', 'wield', 'remove', 'list', 'buy', 'sell', 'talk', 'accept', 'quests', 'help', 'who', 'score', 'class', 'luck', 'spells', 'cast', 'tell', 'shout', 'team', 'gossip']);
   try { const h = require('./helpdocs'); for (const k of [...Object.keys(h.H), ...Object.keys(h.T)]) reserved.add(k); } catch (e) { /* helpdocs missing: fine */ }

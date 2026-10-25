@@ -169,6 +169,7 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 #qlw{position:fixed;z-index:47;left:calc(50% - 300px);top:70px;width:600px;max-width:96vw;max-height:84vh;background:var(--panel);border:1px solid var(--lamp);border-radius:10px;box-shadow:0 12px 40px #000c;display:flex;flex-direction:column}#qlw[hidden]{display:none}#qltabs{display:flex;gap:6px;padding:8px 12px 0}#qltabs button{padding:5px 14px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg2);color:var(--text);cursor:pointer}#qltabs button.on{background:var(--panel);color:var(--lamp);border-color:var(--lamp)}#qlbody{overflow:auto;padding:10px 14px 14px;border-top:1px solid var(--line)}.qli{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:0 0 8px}.qli h5{margin:0 0 3px;font-size:15px;color:var(--lamp)}.qli small{color:var(--dim)}.qli .qo{margin:2px 0 0 12px}.qli .ok{color:#7be07a}
 .wg{margin:8px 0 4px;padding:2px 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--lamp);border-bottom:1px solid var(--line);grid-column:1/-1}
 #primebar{position:relative;height:20px;margin:0 0 6px;border:1px solid var(--line);border-radius:6px;background:#0008;overflow:hidden;cursor:pointer}#primebar[hidden]{display:none}#primebar i{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .9s linear}#primebar span{position:relative;display:block;text-align:center;font:700 12px/20px ui-sans-serif,system-ui;letter-spacing:.14em;color:#fff;text-shadow:0 0 4px #000}#primebar.rdy{box-shadow:0 0 10px #c77dff;border-color:#c77dff}
+#uptime{position:fixed;top:23px;right:218px;z-index:41;font-size:13px;color:var(--dim);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:5px 11px;white-space:nowrap}body:not(.in) #uptime{display:none}#uptime[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -207,7 +208,7 @@ body:not(.in) #cog,body:not(.in) #settings,body:not(.in) #winbtn,body:not(.in) #
 </div>
 
 <script src="portrait.js"></script>
-<button id="winbtn" type="button" title="Windows: show, hide and rearrange" aria-expanded="false">&#9635; Windows</button><div id="winmenu" hidden></div><div id="toast" role="status"></div><div id="mtip" hidden></div>
+<div id="uptime" title="How long the game has been online (type uptime)" hidden></div><button id="winbtn" type="button" title="Windows: show, hide and rearrange" aria-expanded="false">&#9635; Windows</button><div id="winmenu" hidden></div><div id="toast" role="status"></div><div id="mtip" hidden></div>
 <button id="cog" type="button" title="Settings: theme, volume, fonts, gossip window, keypad, triggers" aria-label="Settings" aria-expanded="false">&#9881;</button>
 <div id="settings" hidden><div class="sethd"><b>Settings</b><small id="ver" style="color:var(--dim)"></small><button id="setsave" data-x="1" type="button" title="Save your settings and close this panel">Save</button></div>
     <label>Theme <select id="sth"><option value="black">Black</option><option value="white">White</option><option value="darkgrey">Dark grey</option><option value="darkblue">Dark blue</option><option value="oldwest">Old West</option><option value="futuristic">Futuristic</option><option value="fantasy">Fantasy</option></select></label>
@@ -455,6 +456,8 @@ function primeTick(){ const bar=$('#primebar'); if(!PR.own){ bar.hidden=true; re
   else if(cd>0){ f.style.width=((1-cd/1800)*100)+'%'; f.style.background='linear-gradient(90deg,#4b2a78,#7a4fb8)'; t.textContent='PRIME  '+m(cd); }
   else { f.style.width='100%'; f.style.background='linear-gradient(90deg,#a02ad8,#e07aff)'; t.textContent='PRIME READY (type prime)'; } }
 $('#primebar').onclick=()=>send({t:'cmd',line:'prime'}); setInterval(primeTick,1000);
+let UPT=null; function uptimeTick(){ const e=$('#uptime'); if(!UPT){ e.hidden=true; return; } const s=UPT.s+Math.floor((Date.now()-UPT.at)/1000), d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60); e.hidden=false; e.textContent='\u23F1 Up '+(d?d+'d ':'')+(d||h?h+'h ':'')+m+'m'; }
+setInterval(uptimeTick,15000);
 function whoShow(list){ const w=$('#wwin'); w.hidden=false; $('#wcount').textContent=list.length+' online'; const B=$('#wbody'); B.innerHTML='';
   const card=p=>'<div class="wc" data-n="'+wesc(p.name)+'" title="Click to finger '+wesc(p.name)+'"><img alt="" loading="lazy" src="'+wesc(p.pic||genSrc(p.cls,p.g))+'" onerror="this.style.visibility=\'hidden\'"><b>'+(p.pre?'<em class="pre">'+wesc(p.pre)+'</em> ':'')+wesc(p.name)+(p.bot?' (bot)':'')+'</b>'+(p.title?'<small class="ttl">'+wesc(p.title)+'</small>':'')+'<small>'+(p.rm?'Remort '+p.rm+' \u00b7 ':'')+'L'+p.lv+' '+wesc(p.cn)+' \u00b7 '+wesc(p.gl||p.g)+'</small></div>';
   for(const [g,label] of [['admin','Administrators'],['arch','Architects and builders'],['player','Players'],['bot','Bots']]){ const l=list.filter(p=>(p.grp||(p.bot?'bot':'player'))===g); if(!l.length) continue; B.insertAdjacentHTML('beforeend','<h6 class="wg">'+label+' ('+l.length+')</h6>'+l.map(card).join('')); } }
@@ -538,7 +541,7 @@ function stats(s){
   me=s; $('#nm').textContent=s.name; $('#lv').textContent=(s.rm?'Remort '+s.rm+' · ':'')+'level '+s.level+' '+s.cls+(s.wiz?' · wizard':'');
   $('#mpf').style.width=(s.mp/s.mmp*100)+'%'; $('#mpt').textContent=(s.cls==='Prospector'?'Stamina ':'Mana ')+s.mp+' / '+s.mmp;
   enhRender(s.fx);
-  const r=s.hp/s.max; $('#hpf').style.width=(r*100)+'%'; $('#hpf').style.background=hpColor(r); $('#hpt').textContent=`HP ${Math.max(0,s.hp)} / ${s.max}`; $('#crt').textContent=(s.gold||0).toLocaleString()+' credits'; PR={own:!!s.pro,pa:s.pa||0,pc:s.pc||0,at:Date.now()}; primeTick();
+  const r=s.hp/s.max; $('#hpf').style.width=(r*100)+'%'; $('#hpf').style.background=hpColor(r); $('#hpt').textContent=`HP ${Math.max(0,s.hp)} / ${s.max}`; $('#crt').textContent=(s.gold||0).toLocaleString()+' credits'; PR={own:!!s.pro,pa:s.pa||0,pc:s.pc||0,at:Date.now()}; primeTick(); if(s.up!=null){ UPT={s:s.up,at:Date.now()}; uptimeTick(); }
   $('#xpf').style.width=Math.min(100,(s.xp-s.lo)/(s.hi-s.lo)*100)+'%'; $('#xpt').textContent=`XP ${s.xp} / ${s.hi}`;
   $('#wp').textContent=s.wpn; $('#ac').textContent='armor '+s.ac+' · '+s.gold+' credits · '+s.qp+' QP'; $('#lk').textContent='Luck '+s.lk+'/'+s.mlk+' · Aura '+s.aura.toFixed(1)+'/'+(s.amax||6).toFixed(1);
 }

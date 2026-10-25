@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-584 rooms:
+620 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -72,6 +72,42 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Outdoor Patio | Buckstars Coffee Shop (Modern) | `buck-5_2.jpg` |
 | Drive-Thru Window | Buckstars Coffee Shop (Modern) | `buck-5_3.jpg` |
 | The Roasting Room | Buckstars Coffee Shop (Modern) | `buck-5_4.jpg` |
+| Dungeon Stairs | Castle Frankenstein (Horror) | `castle-d_0_0.jpg` |
+| Flooded Tunnel | Castle Frankenstein (Horror) | `castle-d_0_1.jpg` |
+| Cell Block | Castle Frankenstein (Horror) | `castle-d_1_0.jpg` |
+| Bone Pit | Castle Frankenstein (Horror) | `castle-d_1_1.jpg` |
+| Torture Chamber | Castle Frankenstein (Horror) | `castle-d_2_0.jpg` |
+| The Monster's Chamber | Castle Frankenstein (Horror) | `castle-d_2_1.jpg` |
+| Drawbridge Gate | Castle Frankenstein (Horror) | `castle-g_0_0.jpg` |
+| Gatehouse Barracks | Castle Frankenstein (Horror) | `castle-g_0_1.jpg` |
+| Kitchen | Castle Frankenstein (Horror) | `castle-g_0_2.jpg` |
+| Wine Cellar | Castle Frankenstein (Horror) | `castle-g_0_3.jpg` |
+| Outer Courtyard | Castle Frankenstein (Horror) | `castle-g_1_0.jpg` |
+| Great Hall | Castle Frankenstein (Horror) | `castle-g_1_1.jpg` |
+| Servants' Quarters | Castle Frankenstein (Horror) | `castle-g_1_2.jpg` |
+| Storage Vault | Castle Frankenstein (Horror) | `castle-g_1_3.jpg` |
+| Stable Ruins | Castle Frankenstein (Horror) | `castle-g_2_0.jpg` |
+| Banquet Hall | Castle Frankenstein (Horror) | `castle-g_2_1.jpg` |
+| Grand Staircase | Castle Frankenstein (Horror) | `castle-g_2_2.jpg` |
+| Hall of Armor | Castle Frankenstein (Horror) | `castle-g_2_3.jpg` |
+| Graveyard Yard | Castle Frankenstein (Horror) | `castle-g_3_0.jpg` |
+| Portrait Gallery | Castle Frankenstein (Horror) | `castle-g_3_1.jpg` |
+| Conservatory of Dead Plants | Castle Frankenstein (Horror) | `castle-g_3_2.jpg` |
+| Doctor's Study | Castle Frankenstein (Horror) | `castle-g_3_3.jpg` |
+| Gargoyle Terrace | Castle Frankenstein (Horror) | `castle-g_4_0.jpg` |
+| Library of Horrors | Castle Frankenstein (Horror) | `castle-g_4_1.jpg` |
+| Chapel of Sorrows | Castle Frankenstein (Horror) | `castle-g_4_2.jpg` |
+| Bedchamber | Castle Frankenstein (Horror) | `castle-g_4_3.jpg` |
+| Watchtower Base | Castle Frankenstein (Horror) | `castle-g_5_0.jpg` |
+| Observatory Stairs | Castle Frankenstein (Horror) | `castle-g_5_1.jpg` |
+| Crypt Entrance | Castle Frankenstein (Horror) | `castle-g_5_2.jpg` |
+| Laboratory Stair | Castle Frankenstein (Horror) | `castle-g_5_3.jpg` |
+| Laboratory Landing | Castle Frankenstein (Horror) | `castle-l_0_0.jpg` |
+| Operating Theater | Castle Frankenstein (Horror) | `castle-l_0_1.jpg` |
+| Specimen Hall | Castle Frankenstein (Horror) | `castle-l_1_0.jpg` |
+| The Great Laboratory | Castle Frankenstein (Horror) | `castle-l_1_1.jpg` |
+| Lightning Rod Platform | Castle Frankenstein (Horror) | `castle-l_2_0.jpg` |
+| Reanimation Chamber | Castle Frankenstein (Horror) | `castle-l_2_1.jpg` |
 | Crystal Cavern | The Mammoth Caverns (Prehistoric) | `cave-crystal.jpg` |
 | Bear Den | The Mammoth Caverns (Prehistoric) | `cave-den.jpg` |
 | Fire Pit Cavern | The Mammoth Caverns (Prehistoric) | `cave-fire.jpg` |

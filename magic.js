@@ -4,7 +4,7 @@ const D = require('./lib');
 const FL = require('./flavor'); // spell messages that match the spell's name
 const { rnd } = D;
 
-D.spellsOf = (p) => { const base = D.K.SPELLS[p.cls] || [], r = Math.min(40, p.remort || 0); return r && D.K.REMORT_SPELLS ? [...base, ...D.K.REMORT_SPELLS.slice(0, r)] : base; }; // each remort level adds one new ability
+D.spellsOf = (p) => { const base = D.K.SPELLS[p.cls] || [], r = Math.min(40, p.remort || 0); return r && D.K.REMORT_SPELLS && !p.klass().brawn ? [...base, ...D.K.REMORT_SPELLS.slice(0, r)] : base; }; // each remort level adds one new ability
 D.findSpell = (p, w) => {
   w = String(w || '').toLowerCase().replace(/\s+/g, '_'); if (!w) return null;
   const l = D.spellsOf(p);

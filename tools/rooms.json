@@ -384,6 +384,222 @@
   "area": "Buckstars Coffee Shop (Modern)"
  },
  {
+  "id": "castle/d_0_0",
+  "key": "castle-d_0_0",
+  "name": "Dungeon Stairs",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/d_0_1",
+  "key": "castle-d_0_1",
+  "name": "Flooded Tunnel",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/d_1_0",
+  "key": "castle-d_1_0",
+  "name": "Cell Block",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/d_1_1",
+  "key": "castle-d_1_1",
+  "name": "Bone Pit",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/d_2_0",
+  "key": "castle-d_2_0",
+  "name": "Torture Chamber",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/d_2_1",
+  "key": "castle-d_2_1",
+  "name": "The Monster's Chamber",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_0_0",
+  "key": "castle-g_0_0",
+  "name": "Drawbridge Gate",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_0_1",
+  "key": "castle-g_0_1",
+  "name": "Gatehouse Barracks",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_0_2",
+  "key": "castle-g_0_2",
+  "name": "Kitchen",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_0_3",
+  "key": "castle-g_0_3",
+  "name": "Wine Cellar",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_1_0",
+  "key": "castle-g_1_0",
+  "name": "Outer Courtyard",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_1_1",
+  "key": "castle-g_1_1",
+  "name": "Great Hall",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_1_2",
+  "key": "castle-g_1_2",
+  "name": "Servants' Quarters",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_1_3",
+  "key": "castle-g_1_3",
+  "name": "Storage Vault",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_2_0",
+  "key": "castle-g_2_0",
+  "name": "Stable Ruins",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_2_1",
+  "key": "castle-g_2_1",
+  "name": "Banquet Hall",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_2_2",
+  "key": "castle-g_2_2",
+  "name": "Grand Staircase",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_2_3",
+  "key": "castle-g_2_3",
+  "name": "Hall of Armor",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_3_0",
+  "key": "castle-g_3_0",
+  "name": "Graveyard Yard",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_3_1",
+  "key": "castle-g_3_1",
+  "name": "Portrait Gallery",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_3_2",
+  "key": "castle-g_3_2",
+  "name": "Conservatory of Dead Plants",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_3_3",
+  "key": "castle-g_3_3",
+  "name": "Doctor's Study",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_4_0",
+  "key": "castle-g_4_0",
+  "name": "Gargoyle Terrace",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_4_1",
+  "key": "castle-g_4_1",
+  "name": "Library of Horrors",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_4_2",
+  "key": "castle-g_4_2",
+  "name": "Chapel of Sorrows",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_4_3",
+  "key": "castle-g_4_3",
+  "name": "Bedchamber",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_5_0",
+  "key": "castle-g_5_0",
+  "name": "Watchtower Base",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_5_1",
+  "key": "castle-g_5_1",
+  "name": "Observatory Stairs",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_5_2",
+  "key": "castle-g_5_2",
+  "name": "Crypt Entrance",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/g_5_3",
+  "key": "castle-g_5_3",
+  "name": "Laboratory Stair",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_0_0",
+  "key": "castle-l_0_0",
+  "name": "Laboratory Landing",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_0_1",
+  "key": "castle-l_0_1",
+  "name": "Operating Theater",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_1_0",
+  "key": "castle-l_1_0",
+  "name": "Specimen Hall",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_1_1",
+  "key": "castle-l_1_1",
+  "name": "The Great Laboratory",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_2_0",
+  "key": "castle-l_2_0",
+  "name": "Lightning Rod Platform",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "castle/l_2_1",
+  "key": "castle-l_2_1",
+  "name": "Reanimation Chamber",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
   "id": "cave/crystal",
   "key": "cave-crystal",
   "name": "Crystal Cavern",

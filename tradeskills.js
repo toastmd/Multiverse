@@ -31,6 +31,10 @@ const SKILLS = {
     { k: 'grilled_trout', lvl: 1, need: { fish: 1 }, out: 'grilled' }, { k: 'noodle_bowl', lvl: 5, need: { fish: 1, herb: 1 }, out: 'noodles' }, { k: 'fish_stew', lvl: 12, need: { fish: 2, herb: 2 }, out: 'fishstew' },
     { k: 'pearl_chowder', lvl: 22, need: { fish: 3, pearl: 1 }, out: 'pearlchowder' }, { k: 'hunters_feast', lvl: 32, need: { fish: 4, herb: 4, bloom: 2 }, out: 'huntersfeast' },
     { k: 'frontier_banquet', lvl: 44, need: { fish: 6, bloom: 4, pearl: 2 }, out: 'banquet' }] },
+  tilling: { name: 'Tilling', icon: '\u{1F69C}', kind: 'farm', verb: 'till', how: 'In a vegetable field at Sunny Acres Farm (type `farm` in Ashfall Square), `till` turns bare ground into plots ready for seeds (`till all` does every plot). More tilling skill gives you more plots: 4, plus 1 for every 5 levels.', desc: 'Turn bare ground into plots ready for seeds. More skill, more plots.' },
+  planting: { name: 'Planting', icon: '\u{1F331}', kind: 'farm', verb: 'plant', how: '`plant <crop>` (or `plant <crop> all`) sows seeds in your tilled plots; `harvest` collects ripe crops; `plots` shows how they are growing. Carrot, potato, lettuce, corn, tomato, pumpkin, strawberry and watermelon unlock as your Planting rises. Seeds are sold at the Farmer\'s Market.', desc: 'Sow seeds, watch them grow and harvest vegetables from carrots to watermelons.' },
+  milking: { name: 'Milking', icon: '\u{1F95B}', kind: 'farm', verb: 'milk', how: '`milk cow` in the Red Barn or the Cow Stalls. Every cow gives milk into your bucket every half a minute or so. Sell the milk to the old farmer.', desc: 'Milk the dairy cows in the barn into your bucket.' },
+  shearing: { name: 'Shearing', icon: '\u2702\uFE0F', kind: 'farm', verb: 'shear', how: '`shear sheep` in the two pastures. Every sheep gives a fleece of wool about every forty seconds. Sell the wool to the old farmer.', desc: 'Shear the woolly sheep in the pastures.' },
   salvaging: { name: 'Salvaging', icon: '♻️', kind: 'salvage', verb: 'salvage', desc: 'Break unwanted weapons and armor down into ore, silver, mithril and scale. Higher skill recovers more.' },
 };
 
@@ -43,6 +47,10 @@ const TOOLS = {
   hammer: { name: 'Smithing hammer', icon: '🔨', skill: 'smithing', desc: 'A chance to forge without using up the materials.' },
   alembic: { name: 'Portable alembic', icon: '⚗️', skill: 'brewing', desc: 'A chance to brew a double batch.' },
   skillet: { name: 'Cast-iron skillet', icon: '🍳', skill: 'cooking', desc: 'A chance to cook a double portion.' },
+  tillinghoe: { name: 'Tilling hoe', icon: '\u{1F69C}', skill: 'tilling', desc: 'More tilling XP with every Mark.' },
+  seedbag: { name: 'Seed bag', icon: '\u{1F331}', skill: 'planting', desc: 'Crops grow a little faster and bonus XP with every Mark.' },
+  milkpail: { name: 'Milking bucket', icon: '\u{1FAA3}', skill: 'milking', desc: 'A chance at an extra pail and more XP with every Mark.' },
+  shears: { name: 'Sheep shears', icon: '\u2702\uFE0F', skill: 'shearing', desc: 'A chance at an extra fleece and more XP with every Mark.' },
   crowbar: { name: 'Salvage crowbar', icon: '🪛', skill: 'salvaging', desc: 'More materials from every salvage, and a chance at double.' },
 };
 const TOOL_TIERS = [0, 25, 100, 250, 600]; // uses needed for Mk I, II, III, IV, V

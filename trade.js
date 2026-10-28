@@ -11,6 +11,7 @@ const findSkill = (w) => { w = String(w || '').trim().toLowerCase(); return w &&
 D.skillGain = (p, id, xp) => {
   const k = p.skills[id], s = D.T.SKILLS[id]; if (p.cls === 'scavenger') xp = Math.ceil(xp * 1.5); k.xp += xp;
   while (k.lvl < D.T.MAX && k.xp >= need(k.lvl)) { k.xp -= need(k.lvl); k.lvl++; p.msg(`*** Your ${s.name} skill rises to level ${k.lvl}! ***`, 'win'); p.send({ t: 'sound', k: 'skill' }); }
+  if (D.farmReward && ['tilling', 'planting', 'milking', 'shearing'].includes(id)) D.farmReward(p); // master farmer's reward
 };
 const gate = (p, id) => { if (p.skills[id]) return true; p.msg(`You have not learned ${D.T.SKILLS[id].name}. Type \`learn ${id}\` (it is free, any time).`); return false; };
 
@@ -20,6 +21,7 @@ D.tradeSkills = (p, arg) => {
   if (id) { // details for one skill
     const s = S[id], k = p.skills[id]; p.msg(`${s.icon} ${s.name}${k ? `: level ${k.lvl}/${D.T.MAX}, ${k.xp}/${need(k.lvl)} xp` : ': not learned (type `learn ' + id + '`)'}`, 'rname'); p.msg(s.desc, 'text');
     if (s.kind === 'gather') { p.msg(`Command: ${s.verb}. Works in rooms with ${s.nodeName}. Finds:`, 'sys'); for (const l of s.loot) p.msg(`  ${nm(l.id)}${l.min > 1 ? ` (from skill level ${l.min})` : ''}`, k && k.lvl >= l.min ? 'spell' : 'sys'); }
+    else if (s.kind === 'farm') p.msg(`Command: ${s.verb}. ${s.how}`, 'sys');
     else if (s.kind === 'salvage') p.msg('Command: salvage <item> or salvage all (everything unworn, not kept and not legendary).', 'sys');
     else { p.msg(`Command: ${s.verb} <recipe>. Recipes:`, 'sys'); for (const r of s.recipes) if (D.W.items[r.out]) p.msg(`  ${k && k.lvl >= r.lvl ? '✔' : '🔒'} lvl ${String(r.lvl).padStart(2)}  ${r.k}: ${listOf(r.need)} -> ${nm(r.out)}`, k && k.lvl >= r.lvl ? 'spell' : 'sys'); }
     return;
@@ -55,6 +57,7 @@ D.toolsList = (p) => {
 };
 const bonusText = (skill, t) => {
   const s = D.T.SKILLS[skill], xp = `+${10 * t}% skill XP`;
+  if (s.kind === 'farm') return `${xp}, ${10 * t}% chance of a bonus yield${skill === 'planting' ? `, crops grow ${4 * (t - 1)}% faster` : ''}`;
   if (s.kind === 'gather') return `${Math.round(3000 - Math.max(0, 300 * (t - 1))) / 1000}s between uses, ${10 * t}% chance of an extra find, better rare finds, ${xp}`;
   if (skill === 'smithing') return `${5 * t}% chance to save the materials, ${xp}`;
   if (skill === 'salvaging') return `+${Math.floor(t / 2)} to the main material, ${5 * t}% chance of double, ${xp}`;

@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-794 rooms:
+829 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -42,6 +42,26 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Vault Corridor | Dry Gulch Bank (Old West) | `bank-d.jpg` |
 | The Vault | Dry Gulch Bank (Old West) | `bank-e.jpg` |
 | Counting Room | Dry Gulch Bank (Old West) | `bank-f.jpg` |
+| Men's Locker Room | BroGym (Modern) | `brogym-0_0.jpg` |
+| Treadmill Row | BroGym (Modern) | `brogym-0_1.jpg` |
+| Free Weights: West | BroGym (Modern) | `brogym-0_2.jpg` |
+| Squat Rack Zone | BroGym (Modern) | `brogym-0_3.jpg` |
+| Steam Room | BroGym (Modern) | `brogym-1_0.jpg` |
+| Cardio Deck | BroGym (Modern) | `brogym-1_1.jpg` |
+| Dumbbell Alley | BroGym (Modern) | `brogym-1_2.jpg` |
+| Deadlift Corner | BroGym (Modern) | `brogym-1_3.jpg` |
+| BroGym Lobby | BroGym (Modern) | `brogym-2_0.jpg` |
+| Spin Studio | BroGym (Modern) | `brogym-2_1.jpg` |
+| Free Weights: Center | BroGym (Modern) | `brogym-2_2.jpg` |
+| Strongman Corner | BroGym (Modern) | `brogym-2_3.jpg` |
+| Women's Locker Room | BroGym (Modern) | `brogym-3_0.jpg` |
+| Yoga and Stretch Room | BroGym (Modern) | `brogym-3_1.jpg` |
+| Bench Press Alley | BroGym (Modern) | `brogym-3_2.jpg` |
+| Powerlifting Platform | BroGym (Modern) | `brogym-3_3.jpg` |
+| Juice and Protein Bar | BroGym (Modern) | `brogym-4_0.jpg` |
+| Pro Shop | BroGym (Modern) | `brogym-4_1.jpg` |
+| The Boxing Ring | BroGym (Modern) | `brogym-4_2.jpg` |
+| Champions' Wall | BroGym (Modern) | `brogym-4_3.jpg` |
 | Buckstars Entrance | Buckstars Coffee Shop (Modern) | `buck-0_0.jpg` |
 | Condiment Bar | Buckstars Coffee Shop (Modern) | `buck-0_1.jpg` |
 | Restroom Hall | Buckstars Coffee Shop (Modern) | `buck-0_2.jpg` |
@@ -193,6 +213,21 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Smoking Crater | Ember Wastes (Sci-fi) | `ember-smoking_crater.jpg` |
 | Sulfur Vent | Ember Wastes (Sci-fi) | `ember-sulfur_vent.jpg` |
 | Forge-Temple | Ember Wastes (Sci-fi) | `ember-temple.jpg` |
+| The Red Barn | Sunny Acres Farm (Old West) | `farm-barn.jpg` |
+| Vegetable Field: West | Sunny Acres Farm (Old West) | `farm-field1.jpg` |
+| Vegetable Field: Center | Sunny Acres Farm (Old West) | `farm-field2.jpg` |
+| Corn Rows | Sunny Acres Farm (Old West) | `farm-field3.jpg` |
+| Farm Gate | Sunny Acres Farm (Old West) | `farm-gate.jpg` |
+| Farmer's Market | Sunny Acres Farm (Old West) | `farm-market.jpg` |
+| Apple Orchard | Sunny Acres Farm (Old West) | `farm-orchard.jpg` |
+| Sheep Pasture | Sunny Acres Farm (Old West) | `farm-pasture1.jpg` |
+| Meadow Pasture | Sunny Acres Farm (Old West) | `farm-pasture2.jpg` |
+| Duck Pond | Sunny Acres Farm (Old West) | `farm-pond.jpg` |
+| Farmhouse Porch | Sunny Acres Farm (Old West) | `farm-porch.jpg` |
+| Tractor Shed | Sunny Acres Farm (Old West) | `farm-shed.jpg` |
+| Cow Stalls | Sunny Acres Farm (Old West) | `farm-stalls.jpg` |
+| Windmill Hill | Sunny Acres Farm (Old West) | `farm-windmill.jpg` |
+| Farmyard | Sunny Acres Farm (Old West) | `farm-yard.jpg` |
 | Moonlit Clearing | Whisperwood (Fantasy) | `forest-clearing.jpg` |
 | Deep Wood | Whisperwood (Fantasy) | `forest-deep.jpg` |
 | Fallen Giant | Whisperwood (Fantasy) | `forest-fallen_giant.jpg` |

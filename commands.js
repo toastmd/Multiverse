@@ -10,13 +10,13 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   concrete: 'CONCRETE. Poured, gray and flat, cracked in places and stained with oil and faded paint lines. It echoes. Weeds push up through the seams and old gum is pressed into it like tiny fossils. This ground was made by people, for people and wheels, and it is the same wherever you go.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-D.bones = require('./bones'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); D.farming = require('./farming'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
-const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (def.legend ? 1 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
+const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (def.legend ? 1 : def.farm && p.env.def.farmmarket ? 0.9 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
 const UPMAX = 10, upCost = (def, up) => Math.round((1000 + 300 * (def.lvl || 1)) * 1.75 ** up), upSpent = (i) => { let n = 0; for (let k = 0; k < (i.up || 0); k++) n += upCost(i.def, k); return n; }; // weapon upgrades: +1 to +10, each costs 1.75x the last
 const sellPrice = (p, i) => priceOf(p, i.def) + Math.round(0.35 * upSpent(i)); // a shop pays back 35% of what you spent on upgrades
 const BOUND = /^(bag|holding|bag of holding|tools?|fishing pole|pole|mining pick|herbalist|sickle|hammer|alembic|skillet|crowbar)$/i;
@@ -66,7 +66,7 @@ function go(p, d, typed) {
   if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
   if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
-  p.env.tell(`${p.name} leaves ${DIRS[d]}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
+  p.env.tell(`${p.name} leaves ${DIRS[d] || d}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
 }
 
 const C = {
@@ -265,7 +265,7 @@ const C = {
       const fit = cands.filter((c) => c.h >= need).sort((x, y) => x.h - y.h)[0] || cands.sort((x, y) => y.h - x.h)[0];
       if (fit.it) it = fit.it; else { p.bag[fit.id]--; if (p.bag[fit.id] <= 0) delete p.bag[fit.id]; it = D.cloneItem(fit.id); }
     } else { it = find(p.inv.filter((i) => i.type === 'potion'), a); if (!it) return p.msg('You have nothing to drink.'); if (it.def.smoke) return C.smoke(p, a); }
-    const h = Math.min(it.def.heal || 0, p.maxhp - p.hp), m = Math.min(it.def.mana || 0, p.maxmp - p.mp); p.hp += h; p.mp += m;
+    const h = Math.min(it.def.heal || it.def.mana || 0, p.maxhp - p.hp), m = Math.min(it.def.mana || it.def.heal || 0, p.maxmp - p.mp); p.hp += h; p.mp += m;
     p.msg(`You quaff ${it.short}${h ? ` and recover ${h} hit points` : ''}${m ? ` and ${m} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}` : ''}.`, 'win'); it.destroy();
     if (it.def.buff) { p.addFx({ k: 'buff', n: it.name, ...it.def.buff, src: p }); p.msg(`The ${it.name} gives you a boost for a while.`, 'win'); }
   },
@@ -273,8 +273,8 @@ const C = {
     const q = a.trim().toLowerCase(), pool = p.inv.filter((i) => i.def.smoke); let it = q ? find(pool, q) : pool[0];
     if (!it) { const id = Object.keys(p.bag).find((i) => D.W.items[i] && D.W.items[i].smoke && p.bag[i] > 0 && (!q || (D.W.items[i].ids || []).includes(q))); if (id) { p.bag[id]--; if (p.bag[id] <= 0) delete p.bag[id]; it = D.cloneItem(id); } }
     if (!it) return p.msg('You have nothing to smoke. The bosses of the Old West sometimes carry cigarillos.');
-    if (p.hp >= p.maxhp) { if (!pool.includes(it)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); } return p.msg('You are in perfect health. Save it for later.'); }
-    const h = Math.min(it.def.heal || 0, p.maxhp - p.hp); p.hp += h; it.destroy(); p.msg(`You light ${it.short} and take a long, slow drag. Smoke curls into the air, the aches fade and you recover ${h} hit points. (Ironic, we know.)`, 'win'); p.env.tell(`${p.name} lights a cigarillo and exhales a thin cloud of smoke.`, p);
+    if (p.hp >= p.maxhp && p.mp >= p.maxmp) { if (!pool.includes(it)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); } return p.msg('You are in perfect health. Save it for later.'); }
+    const h = Math.min(it.def.heal || 0, p.maxhp - p.hp), m = Math.min(it.def.mana || it.def.heal || 0, p.maxmp - p.mp); p.hp += h; p.mp += m; it.destroy(); p.msg(`You light ${it.short} and take a long, slow drag. Smoke curls into the air, the aches fade and you recover ${h} hit points and ${m} ${p.cls === 'scavenger' ? 'stamina' : 'mana'}. (Ironic, we know.)`, 'win'); p.env.tell(`${p.name} lights a cigarillo and exhales a thin cloud of smoke.`, p);
   },
   enter(p, a) { // enter portal / enter <doorway object>
     for (const o of p.env.inv) if (o.actions && o.actions.enter && o.actions.enter(p, a, o)) return;
@@ -314,6 +314,10 @@ const C = {
   sell(p, a) {
     if (!p.env.def.shop) return p.msg('Nobody here will buy your things.');
     const arg = a.trim(), sellable = (i) => !worn(p, i) && !i.kept && sellPrice(p, i) > 0, whole = arg === 'all' || arg === 'materials';
+    if (!whole && arg && !find(p.inv, arg)) { // `sell carrot`: a gathered material in your bag, by name (all of it)
+      const q = arg.toLowerCase(), bid = Object.keys(p.bag).find((id) => { const d = D.W.items[id]; return d && d.type === 'material' && !p.keepBag[id] && (id === q || d.name.toLowerCase().includes(q) || (d.ids || []).includes(q)); });
+      if (bid) { const d = D.W.items[bid], c = p.bag[bid], pr = priceOf(p, d); if (pr > 0) { delete p.bag[bid]; p.gold += pr * c; return p.msg(`You sell ${c} ${d.name} for ${pr * c} credits.`, 'win'); } }
+    }
     const items = arg === 'all' ? p.inv.filter((i) => sellable(i) && i.type !== 'potion') : arg === 'materials' ? p.inv.filter((i) => i.type === 'material' && !i.kept) : whole ? [] : [find(p.inv, arg)];
     let total = 0, n = 0;
     if (!whole && !items[0]) return p.msg(BOUND.test(arg) ? 'Your bag of holding and tools are bound to you: they cannot be dropped or sold.' : "You don't have that.");
@@ -560,6 +564,7 @@ const C = {
   anyquest(p, a) { // anyquest [on|off]: accept quests whatever your level (prerequisite quests still count)
     const w = a.trim().toLowerCase(); p.anyQuest = w === 'on' ? true : w === 'off' ? false : !p.anyQuest; p.msg(p.anyQuest ? 'Quests of ANY level can now be accepted (a quest that is too hard is still too hard, so be careful). Quests that need an earlier quest still need it.' : 'Quests are offered by level again.', 'win'); p.sendQuests(); p.sendStats();
   },
+  till: (p, a) => D.farm.till(p, a), plant: (p, a) => D.farm.plant(p, a), harvest: (p) => D.farm.harvest(p), plots: (p) => D.farm.plots(p), milk: (p, a) => D.farm.milk(p, a), shear: (p, a) => D.farm.shear(p, a),
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -859,7 +864,7 @@ D.command = (p, line) => {
   if (/^(drop|sell|salvage|auction|give|put|store|trade|junk|destroy|keep|unkeep)$/.test(v) && /\b(pineapple|phone)\b/i.test(a)) return p.msg('Your 🍍Phone Pro Max is glued to your hand: it cannot be dropped, sold, salvaged, given away or put in a bag. Use it with `phone <player> <message>`.', 'sys');
   if (v === 'enter' && /^(the\s+)?(taxi|cab)$/i.test(a.trim())) return D.taxi.board(p);
   if ((v === 'out' || v === 'exit' || v === 'leave') && p.env.path === 'town/taxi_cab' && !p.env.exits.out) return p.msg('The taxi is moving! Wait for the next stop.', 'sys');
-  if (DIRS[v]) return go(p, v, true); if (FULL[v]) return go(p, FULL[v], true);
+  if (DIRS[v]) return go(p, v, true); if (FULL[v]) return go(p, FULL[v], true); if (p.env.exits && p.env.exits[v] && !C[v]) return go(p, v, true);
   if (Object.hasOwn(C, v) && v !== 'huh') { if (TUTV[v]) D.tutEvent(p, TUTV[v]); return C[v](p, a); }
   if (D.spellsOf(p).some((s) => s.k === v)) return D.cast(p, v + ' ' + a);
   if (v === 'drink' && a.trim() && !/^(fountain|water)$/i.test(a.trim())) { // `drink champagne`: a potion in your pack, or one lying in the room (you pick it up first)
@@ -869,3 +874,4 @@ D.command = (p, line) => {
   if (SOCIALS.handle(p, v, a, find)) return;
   p.msg("What? (type 'help')");
 };
+for (const k of ['list', 'buy', 'sell', 'rsell', 'value']) { const f = C[k]; if (f) C[k] = function (p, a) { if (p.env && p.env.def.farmmarket && D.farmBlocked(p)) return; return f.call(this, p, a); }; } // banned from the farm (killed the farmer or his animals): no market either

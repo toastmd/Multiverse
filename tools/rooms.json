@@ -204,6 +204,126 @@
   "area": "Dry Gulch Bank (Old West)"
  },
  {
+  "id": "brogym/0_0",
+  "key": "brogym-0_0",
+  "name": "Men's Locker Room",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/0_1",
+  "key": "brogym-0_1",
+  "name": "Treadmill Row",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/0_2",
+  "key": "brogym-0_2",
+  "name": "Free Weights: West",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/0_3",
+  "key": "brogym-0_3",
+  "name": "Squat Rack Zone",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/1_0",
+  "key": "brogym-1_0",
+  "name": "Steam Room",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/1_1",
+  "key": "brogym-1_1",
+  "name": "Cardio Deck",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/1_2",
+  "key": "brogym-1_2",
+  "name": "Dumbbell Alley",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/1_3",
+  "key": "brogym-1_3",
+  "name": "Deadlift Corner",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/2_0",
+  "key": "brogym-2_0",
+  "name": "BroGym Lobby",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/2_1",
+  "key": "brogym-2_1",
+  "name": "Spin Studio",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/2_2",
+  "key": "brogym-2_2",
+  "name": "Free Weights: Center",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/2_3",
+  "key": "brogym-2_3",
+  "name": "Strongman Corner",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/3_0",
+  "key": "brogym-3_0",
+  "name": "Women's Locker Room",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/3_1",
+  "key": "brogym-3_1",
+  "name": "Yoga and Stretch Room",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/3_2",
+  "key": "brogym-3_2",
+  "name": "Bench Press Alley",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/3_3",
+  "key": "brogym-3_3",
+  "name": "Powerlifting Platform",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/4_0",
+  "key": "brogym-4_0",
+  "name": "Juice and Protein Bar",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/4_1",
+  "key": "brogym-4_1",
+  "name": "Pro Shop",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/4_2",
+  "key": "brogym-4_2",
+  "name": "The Boxing Ring",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "brogym/4_3",
+  "key": "brogym-4_3",
+  "name": "Champions' Wall",
+  "area": "BroGym (Modern)"
+ },
+ {
   "id": "buck/0_0",
   "key": "buck-0_0",
   "name": "Buckstars Entrance",
@@ -1108,6 +1228,96 @@
   "key": "ember-temple",
   "name": "Forge-Temple",
   "area": "Ember Wastes (Sci-fi)"
+ },
+ {
+  "id": "farm/barn",
+  "key": "farm-barn",
+  "name": "The Red Barn",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/field1",
+  "key": "farm-field1",
+  "name": "Vegetable Field: West",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/field2",
+  "key": "farm-field2",
+  "name": "Vegetable Field: Center",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/field3",
+  "key": "farm-field3",
+  "name": "Corn Rows",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/gate",
+  "key": "farm-gate",
+  "name": "Farm Gate",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/market",
+  "key": "farm-market",
+  "name": "Farmer's Market",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/orchard",
+  "key": "farm-orchard",
+  "name": "Apple Orchard",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/pasture1",
+  "key": "farm-pasture1",
+  "name": "Sheep Pasture",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/pasture2",
+  "key": "farm-pasture2",
+  "name": "Meadow Pasture",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/pond",
+  "key": "farm-pond",
+  "name": "Duck Pond",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/porch",
+  "key": "farm-porch",
+  "name": "Farmhouse Porch",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/shed",
+  "key": "farm-shed",
+  "name": "Tractor Shed",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/stalls",
+  "key": "farm-stalls",
+  "name": "Cow Stalls",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/windmill",
+  "key": "farm-windmill",
+  "name": "Windmill Hill",
+  "area": "Sunny Acres Farm (Old West)"
+ },
+ {
+  "id": "farm/yard",
+  "key": "farm-yard",
+  "name": "Farmyard",
+  "area": "Sunny Acres Farm (Old West)"
  },
  {
   "id": "forest/clearing",

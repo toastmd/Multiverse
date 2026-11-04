@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-829 rooms:
+919 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -42,6 +42,36 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Vault Corridor | Dry Gulch Bank (Old West) | `bank-d.jpg` |
 | The Vault | Dry Gulch Bank (Old West) | `bank-e.jpg` |
 | Counting Room | Dry Gulch Bank (Old West) | `bank-f.jpg` |
+| Blimble Gate | Blimble Hollow (Fantasy) | `blimble-0_0.jpg` |
+| Elder Bumbleberry's House | Blimble Hollow (Fantasy) | `blimble-0_1.jpg` |
+| Dewdrop's Cottage | Blimble Hollow (Fantasy) | `blimble-0_2.jpg` |
+| Breezy Patch | Blimble Hollow (Fantasy) | `blimble-0_3.jpg` |
+| Dewy Bank | Blimble Hollow (Fantasy) | `blimble-0_4.jpg` |
+| Toadstool Lane | Blimble Hollow (Fantasy) | `blimble-1_0.jpg` |
+| Village Green | Blimble Hollow (Fantasy) | `blimble-1_1.jpg` |
+| Acorn Cup Inn | Blimble Hollow (Fantasy) | `blimble-1_2.jpg` |
+| Sunny Patch | Blimble Hollow (Fantasy) | `blimble-1_3.jpg` |
+| Hushed Bend | Blimble Hollow (Fantasy) | `blimble-1_4.jpg` |
+| Fizzwick's Market | Blimble Hollow (Fantasy) | `blimble-2_0.jpg` |
+| Crumbles' Bakery | Blimble Hollow (Fantasy) | `blimble-2_1.jpg` |
+| Dewy Rise | Blimble Hollow (Fantasy) | `blimble-2_2.jpg` |
+| Gnarled Hollow | Blimble Hollow (Fantasy) | `blimble-2_3.jpg` |
+| Silent Bend | Blimble Hollow (Fantasy) | `blimble-2_4.jpg` |
+| Berry-sweet Meadow | Blimble Hollow (Fantasy) | `blimble-3_0.jpg` |
+| Sunny Hillock | Blimble Hollow (Fantasy) | `blimble-3_1.jpg` |
+| Hushed Tangle | Blimble Hollow (Fantasy) | `blimble-3_2.jpg` |
+| Dripping Hollow | Blimble Hollow (Fantasy) | `blimble-3_3.jpg` |
+| Thorny Rise | Blimble Hollow (Fantasy) | `blimble-3_4.jpg` |
+| Dewy Meadow | Blimble Hollow (Fantasy) | `blimble-4_0.jpg` |
+| Gnarled Thicket | Blimble Hollow (Fantasy) | `blimble-4_1.jpg` |
+| Silent Tangle | Blimble Hollow (Fantasy) | `blimble-4_2.jpg` |
+| Barren Hill | Blimble Hollow (Fantasy) | `blimble-4_3.jpg` |
+| Shadowpaw's Perch | Blimble Hollow (Fantasy) | `blimble-4_4.jpg` |
+| Hushed Wood | Blimble Hollow (Fantasy) | `blimble-5_0.jpg` |
+| Dripping Thicket | Blimble Hollow (Fantasy) | `blimble-5_1.jpg` |
+| Thorny Crag | Blimble Hollow (Fantasy) | `blimble-5_2.jpg` |
+| Tower Stairs | Blimble Hollow (Fantasy) | `blimble-5_3.jpg` |
+| Grimbold's Study | Blimble Hollow (Fantasy) | `blimble-5_4.jpg` |
 | Men's Locker Room | BroGym (Modern) | `brogym-0_0.jpg` |
 | Treadmill Row | BroGym (Modern) | `brogym-0_1.jpg` |
 | Free Weights: West | BroGym (Modern) | `brogym-0_2.jpg` |
@@ -168,6 +198,66 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Throne of the Dread Marshal | Shattered Citadel (Fantasy) | `cit-throne.jpg` |
 | War Room | Shattered Citadel (Fantasy) | `cit-war_room.jpg` |
 | Watchtower Top | Shattered Citadel (Fantasy) | `cit-watchtower_top.jpg` |
+| Top of the Beanstalk | Castle in the Clouds (Fantasy) | `cloud-0_0.jpg` |
+| Rising Bank | Castle in the Clouds (Fantasy) | `cloud-0_1.jpg` |
+| Airy Walk | Castle in the Clouds (Fantasy) | `cloud-0_2.jpg` |
+| Misty Terrace | Castle in the Clouds (Fantasy) | `cloud-0_3.jpg` |
+| Rainbow Balcony | Castle in the Clouds (Fantasy) | `cloud-0_4.jpg` |
+| Prismatic Bridge | Castle in the Clouds (Fantasy) | `cloud-0_5.jpg` |
+| Pale Steps | Castle in the Clouds (Fantasy) | `cloud-1_0.jpg` |
+| Drifting Bank | Castle in the Clouds (Fantasy) | `cloud-1_1.jpg` |
+| Soft Walk | Castle in the Clouds (Fantasy) | `cloud-1_2.jpg` |
+| Golden Arch | Castle in the Clouds (Fantasy) | `cloud-1_3.jpg` |
+| Golden Balcony | Castle in the Clouds (Fantasy) | `cloud-1_4.jpg` |
+| Golden Bridge | Castle in the Clouds (Fantasy) | `cloud-1_5.jpg` |
+| Airy Steps | Castle in the Clouds (Fantasy) | `cloud-2_0.jpg` |
+| Misty Bank | Castle in the Clouds (Fantasy) | `cloud-2_1.jpg` |
+| Dazzling Stair | Castle in the Clouds (Fantasy) | `cloud-2_2.jpg` |
+| Dazzling Arch | Castle in the Clouds (Fantasy) | `cloud-2_3.jpg` |
+| Dazzling Balcony | Castle in the Clouds (Fantasy) | `cloud-2_4.jpg` |
+| Charged Rampart | Castle in the Clouds (Fantasy) | `cloud-2_5.jpg` |
+| Soft Steps | Castle in the Clouds (Fantasy) | `cloud-3_0.jpg` |
+| Rainbow Bridge | Castle in the Clouds (Fantasy) | `cloud-3_1.jpg` |
+| Gleaming Stair | Castle in the Clouds (Fantasy) | `cloud-3_2.jpg` |
+| Gleaming Arch | Castle in the Clouds (Fantasy) | `cloud-3_3.jpg` |
+| Crackling Gate | Castle in the Clouds (Fantasy) | `cloud-3_4.jpg` |
+| Crackling Rampart | Castle in the Clouds (Fantasy) | `cloud-3_5.jpg` |
+| Shimmering Terrace | Castle in the Clouds (Fantasy) | `cloud-4_0.jpg` |
+| Shimmering Garden | Castle in the Clouds (Fantasy) | `cloud-4_1.jpg` |
+| The Thunder Roost | Castle in the Clouds (Fantasy) | `cloud-4_2.jpg` |
+| Iron Parapet | Castle in the Clouds (Fantasy) | `cloud-4_3.jpg` |
+| Iron Gate | Castle in the Clouds (Fantasy) | `cloud-4_4.jpg` |
+| Iron Rampart | Castle in the Clouds (Fantasy) | `cloud-4_5.jpg` |
+| Prismatic Terrace | Castle in the Clouds (Fantasy) | `cloud-5_0.jpg` |
+| Prismatic Garden | Castle in the Clouds (Fantasy) | `cloud-5_1.jpg` |
+| Black Bastion | Castle in the Clouds (Fantasy) | `cloud-5_2.jpg` |
+| The Ember Aerie | Castle in the Clouds (Fantasy) | `cloud-5_3.jpg` |
+| Black Gate | Castle in the Clouds (Fantasy) | `cloud-5_4.jpg` |
+| Echoing Gallery | Castle in the Clouds (Fantasy) | `cloud-5_5.jpg` |
+| Bright Terrace | Castle in the Clouds (Fantasy) | `cloud-6_0.jpg` |
+| Lightning Tower | Castle in the Clouds (Fantasy) | `cloud-6_1.jpg` |
+| Lightning Bastion | Castle in the Clouds (Fantasy) | `cloud-6_2.jpg` |
+| Lightning Parapet | Castle in the Clouds (Fantasy) | `cloud-6_3.jpg` |
+| Windswept Court | Castle in the Clouds (Fantasy) | `cloud-6_4.jpg` |
+| Windswept Gallery | Castle in the Clouds (Fantasy) | `cloud-6_5.jpg` |
+| Thundering Battlement | Castle in the Clouds (Fantasy) | `cloud-7_0.jpg` |
+| Thundering Tower | Castle in the Clouds (Fantasy) | `cloud-7_1.jpg` |
+| Thundering Bastion | Castle in the Clouds (Fantasy) | `cloud-7_2.jpg` |
+| Vaulted Chamber | Castle in the Clouds (Fantasy) | `cloud-7_3.jpg` |
+| Vaulted Court | Castle in the Clouds (Fantasy) | `cloud-7_4.jpg` |
+| Vaulted Gallery | Castle in the Clouds (Fantasy) | `cloud-7_5.jpg` |
+| Howling Battlement | Castle in the Clouds (Fantasy) | `cloud-8_0.jpg` |
+| Howling Tower | Castle in the Clouds (Fantasy) | `cloud-8_1.jpg` |
+| Grand Atrium | Castle in the Clouds (Fantasy) | `cloud-8_2.jpg` |
+| Grand Chamber | Castle in the Clouds (Fantasy) | `cloud-8_3.jpg` |
+| Grand Court | Castle in the Clouds (Fantasy) | `cloud-8_4.jpg` |
+| Gleaming Terrace | Castle in the Clouds (Fantasy) | `cloud-8_5.jpg` |
+| Charged Battlement | Castle in the Clouds (Fantasy) | `cloud-9_0.jpg` |
+| Radiant Colonnade | Castle in the Clouds (Fantasy) | `cloud-9_1.jpg` |
+| Radiant Atrium | Castle in the Clouds (Fantasy) | `cloud-9_2.jpg` |
+| Radiant Chamber | Castle in the Clouds (Fantasy) | `cloud-9_3.jpg` |
+| Crowned Gate | Castle in the Clouds (Fantasy) | `cloud-9_4.jpg` |
+| Throne of Storms | Castle in the Clouds (Fantasy) | `cloud-9_5.jpg` |
 | Altar of Ash | Barrow Crypts (Fantasy) | `crypt-altar_of_ash.jpg` |
 | Bone Gallery | Barrow Crypts (Fantasy) | `crypt-bone_gallery.jpg` |
 | Ossuary | Barrow Crypts (Fantasy) | `crypt-bones.jpg` |

@@ -66,7 +66,7 @@ function api(req, res) {
 }
 const file = (name) => path.join(DATA, name.toLowerCase() + '.json');
 // ---- achievements leaderboard: level (a remort counts as 40 more levels), quests completed and tradeskill levels raised ----
-const ach = (r) => { const lvl = (r.remort || 0) * 40 + (r.level || 1), q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); const b = r.bounty || 0; return { lvl, q, t, b, score: lvl * 100 + q * 250 + t * 40 + b * 40 }; };
+const ach = (r) => { const lvl = (r.remort || 0) * 40 + (r.level || 1), ex = Array.isArray(r.explored) ? r.explored.length : 0, q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); const b = r.bounty || 0; return { lvl, q, t, b, ex, score: lvl * 100 + q * 250 + t * 40 + b * 40 + ex * 5 }; };
 let boardCache = { at: 0, rows: [] };
 D.leaderboard = (force) => {
   if (!force && Date.now() - boardCache.at < 15000) return boardCache.rows; const rows = new Map();
@@ -92,6 +92,11 @@ D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' 
   return 'ok';
 };
 D.builderInfo = () => ({ url: `http://localhost:${PORT}/builder.html`, key: BKEY });
+D.legacyBirth = (name) => { try { const st = fs.statSync(path.join(DATA, name.toLowerCase() + '.json')); return Math.round(st.birthtimeMs && st.birthtimeMs > 0 ? Math.min(st.birthtimeMs, st.mtimeMs) : st.mtimeMs); } catch (e) { return Date.now(); } }; // characters from before ages were recorded: the date their save file was created
+D.initAge = (p, rec, fresh) => { // player age (since creation), total time logged in, and exploration points
+  p.loginAt = Date.now(); p.playMs = fresh ? 0 : Math.max(0, +rec.playMs || 0); p.created = fresh ? Date.now() : (+rec.created || D.legacyBirth(p.name));
+  const start = D.rooms.get(D.W.start).area; p.explored = new Set(Array.isArray(rec.explored) ? rec.explored.filter((x) => D.rooms.has(x)) : fresh ? [] : [...p.visited].filter((x) => D.rooms.has(x) && D.rooms.get(x).area !== start && D.explorable(D.rooms.get(x))));
+};
 D.fingerRec = (name) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, name.toLowerCase() + '.json'), 'utf8')); } catch (e) { return null; } };
 let mobPics = {}, mobAt = 0; // monster pictures in public/img/mob/<mob id>.jpg are shown in the combat view (rescanned every 30 seconds)
 D.mobPic = (id) => { if (Date.now() - mobAt > 30000) { mobAt = Date.now(); try { mobPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'mob')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { mobPics = {}; } } return mobPics[id] || 'default.jpg'; }; // monsters without their own picture get the hooded default
@@ -141,11 +146,11 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash, ip: conn.ip || rec.ip || '' }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
+  D.initAge(p, rec, fresh); D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
-  p.enter(room); room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in');
+  p._qx = true; p.enter(room); delete p._qx; room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in');
 }
 
 // ---- minimal RFC 6455 WebSocket ----

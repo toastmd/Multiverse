@@ -12,7 +12,7 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
 };
 D.bones = require('./bones'); D.farming = require('./farming'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
-const ALIAS = { dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
+const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
 const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
@@ -28,7 +28,7 @@ const scoreData = (p) => { // everything the graphical score window shows
   for (const it of p.inv) { if (it.type === 'material') mats[it.name] = (mats[it.name] || 0) + 1; if (!worn.has(it)) goods += sellPrice(p, it); }
   return { name: p.name, pre: D.preTitle(p), title: p.title || '', cls: k.name, ic: k.icon, ck: p.cls, gl: D.genderLabel(p.gender), rm: p.remort || 0, wiz: !!p.wiz, pic: D.playerPic(p), level: p.level, xp: p.xp, lo: p.level > 1 ? p.xpNeed(p.level - 1) : 0, hi: p.xpNeed(p.level),
     hp: p.hp, mhp: p.maxhp, mp: p.mp, mmp: p.maxmp, stam: p.cls === 'scavenger', luck: p.luck, mluck: p.maxLuck(), aura: p.aura(), amax: p.auraMax(), bp: p.bounty || 0, attrs: p.attrs(), atk: p.atkPool(), def: p.defPool(), ac: p.ac(), wpn: w ? { n: w.name, a: w.def.dmg[0], b: w.def.dmg[1] } : null,
-    gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
+    gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), ex: p.explored.size, exm: D.exploreTotal(), born: p.created, played: p.playTotal(), sess: Date.now() - p.loginAt, agems: Date.now() - p.created, qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
     skills: Object.entries(p.skills).map(([id, s]) => ({ n: D.T.SKILLS[id].name, i: D.T.SKILLS[id].icon || '', l: s.lvl })), chrome: p.cyber.map((id) => D.W.items[id].name), mats, equip: Object.fromEntries(Object.entries(p.equip).map(([sl, i]) => [sl, i.name])) };
 };
 const questCard = (p, q) => { // one quest as the pop-up shows it
@@ -110,7 +110,7 @@ const C = {
     it.move(p.env); p.msg(`You drop ${it.short}.`);
   },
   inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
-    const SL = [['weapon', 'Weapon (wielded)'], ['head', 'Head'], ['body', 'Body'], ['shield', 'Shield'], ['feet', 'Feet']];
+    const SL = [['weapon', 'Weapon (wielded)'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['feet', 'Feet']];
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
     for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.dmg[0]}-${it.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
@@ -248,10 +248,10 @@ const C = {
   },
   finger(p, a) { // finger <name>: name, level, picture and email (if they set one and did not hide it)
     const q = (a.trim() || p.name).toLowerCase(), all = [...D.players.values()], on = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
-    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
-    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
+    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, born: on.created, agems: Date.now() - on.created, played: on.playTotal(), ex: on.explored.size, exm: D.exploreTotal(), bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
+    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, born: +r.created || D.legacyBirth(r.name), agems: Date.now() - (+r.created || D.legacyBirth(r.name)), played: +r.playMs || 0, ex: Array.isArray(r.explored) ? r.explored.length : 0, exm: D.exploreTotal(), seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
     const seen = d.online ? '\u25CF online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
-    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
+    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Age: ${D.dur(Date.now() - d.born)}. Time played: ${D.dur(d.played)}${d.online ? '' : ' (when last on)'}. Explored ${d.ex} of ${d.exm} rooms.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
   },
   wield(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`); p.equip.weapon = it; p.msg(`You wield ${it.short}.`); },
   wear(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`); p.equip[it.slot] = it; p.msg(`You wear ${it.short}.`); },
@@ -539,6 +539,8 @@ const C = {
       : `Level ${D.MAXLV} (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
     p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`);
     p.msg(`Bounty points: ${n(p.bounty || 0)} (${n(p.bounties || 0)} bounties collected).`, 'items');
+    p.msg(`Exploration: ${n(p.explored.size)} of ${n(D.exploreTotal())} rooms explored (${(p.explored.size / D.exploreTotal() * 100).toFixed(1)}%): ${n(p.explored.size)} exploration points.`, 'items');
+    p.msg(`Age: ${D.dur(Date.now() - p.created)} (created ${new Date(p.created).toISOString().slice(0, 10)}). Time played: ${D.dur(p.playTotal())}, of which ${D.dur(Date.now() - p.loginAt)} this session.`, 'items');
     p.msg(`Wealth: ${n(p.gold)} credits${goods ? ` (plus about ${n(goods)} in goods you could sell)` : ''}.`, 'items');
     p.msg(`Materials (pack and bag): ${list(mats)}.`, 'items'); p.msg(`Consumables: ${list(cons)}.`, 'items');
     p.msg(`Attributes: ${Object.entries(at).map(([a, v]) => `${a} ${v}`).join(', ')}.`, 'sys');
@@ -565,6 +567,23 @@ const C = {
     const w = a.trim().toLowerCase(); p.anyQuest = w === 'on' ? true : w === 'off' ? false : !p.anyQuest; p.msg(p.anyQuest ? 'Quests of ANY level can now be accepted (a quest that is too hard is still too hard, so be careful). Quests that need an earlier quest still need it.' : 'Quests are offered by level again.', 'win'); p.sendQuests(); p.sendStats();
   },
   till: (p, a) => D.farm.till(p, a), plant: (p, a) => D.farm.plant(p, a), harvest: (p) => D.farm.harvest(p), plots: (p) => D.farm.plots(p), milk: (p, a) => D.farm.milk(p, a), shear: (p, a) => D.farm.shear(p, a),
+  age(p) { // age: how old your character is, how long you have played, and your exploration
+    const born = p.created, now = Date.now(); p.msg(`${p.name}: age and time played`, 'rname');
+    p.msg(`  Character age: ${D.dur(now - born)} (created ${new Date(born).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}).`, 'items'); p.msg(`  Total time logged in: ${D.dur(p.playTotal())}.`, 'items'); p.msg(`  This session: ${D.dur(now - p.loginAt)}.`, 'items');
+    p.msg(`  Time played is ${Math.min(100, p.playTotal() / Math.max(1, now - born) * 100).toFixed(1)}% of your character's age.`, 'sys'); p.msg(`  Exploration: ${p.explored.size} of ${D.exploreTotal()} rooms (type \`explore\`).`, 'sys');
+  },
+  explore(p) { // explore: exploration points, by area
+    const by = {}; for (const r of D.rooms.values()) { if (!D.explorable(r)) continue; const a = (by[r.area] = by[r.area] || { n: 0, e: 0 }); a.n++; if (p.explored.has(r.path)) a.e++; }
+    const tot = D.exploreTotal(); p.msg(`Exploration: ${p.explored.size} of ${tot} rooms (${(p.explored.size / tot * 100).toFixed(1)}%). You earn 1 exploration point for every new room you enter; points count toward the leaderboard (x5 each).`, 'rname');
+    const rows = Object.entries(by).sort((a, b) => b[1].e / b[1].n - a[1].e / a[1].n || b[1].e - a[1].e); let un = 0;
+    for (const [a, v] of rows) { if (!v.e) { un++; continue; } p.msg(`  ${(D.AREA_LABEL[a] || a).padEnd(34)} ${String(v.e).padStart(3)} / ${String(v.n).padEnd(3)} ${v.e === v.n ? ' complete!' : `${Math.round(v.e / v.n * 100)}%`}`, v.e === v.n ? 'win' : 'items'); }
+    if (un) p.msg(`  ${un} area${un === 1 ? '' : 's'} not yet visited. Explore them to earn more points.`, 'sys');
+  },
+  time(p) { // time: the real time. With a watch on your wrist you get the exact time; without one, a guess by the sun.
+    const w = p.equip.bracelet && p.equip.bracelet.def && p.equip.bracelet.def.isWatch, d = new Date();
+    if (w) return p.msg(`You glance at your ${p.equip.bracelet.name}: it is ${d.toLocaleTimeString('en-US')} server time, ${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}.`, 'win');
+    const h = d.getHours(); p.msg(`You squint at the sky: it looks like ${h < 5 ? 'the middle of the night' : h < 8 ? 'early morning' : h < 12 ? 'morning' : h < 14 ? 'around noon' : h < 17 ? 'afternoon' : h < 20 ? 'evening' : 'night'}. (Wear a watch on your wrist for the exact time: bracelets and watches are sold in shops.)`, 'sys');
+  },
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -579,8 +598,8 @@ const C = {
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
     p.send({ t: 'board', list: top, me, total: all.length }); if (a.trim() === 'window') return;
-    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40, plus bounty points x40; a remort counts as 40 levels):', 'rname');
-    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  bounty ${String(r.b).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
+    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40, plus bounty points x40, plus exploration points x5; a remort counts as 40 levels):', 'rname');
+    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  bounty ${String(r.b).padStart(3)}  explored ${String(r.ex || 0).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
     if (me && me.rank > 10) p.msg(`You are ranked #${me.rank} of ${all.length} with ${me.score} points.`, 'sys');
   },
   // ---- teams: kills split XP and credits between teammates standing in the same room (+10% for each extra member, up to 5 players) ----
@@ -728,7 +747,7 @@ const C = {
     const slotOf = (d) => (d.type === 'weapon' ? 'weapon' : d.slot), worn = new Set(Object.values(p.equip)), cand = [];
     for (const it of p.inv) if (!worn.has(it) && (it.def.type === 'weapon' || it.def.type === 'armor') && slotOf(it.def)) cand.push({ src: 'pack', it, def: it.def, slot: slotOf(it.def), s: score(it.def, it) });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
-    const slots = ['weapon', 'head', 'body', 'shield', 'feet'], out = [], later = [];
+    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'feet'], out = [], later = [];
     for (const sl of slots) {
       const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) <= p.level).sort((x, y) => y.s - x.s), best = ok[0];
       const tooHigh = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) > p.level && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);

@@ -204,6 +204,186 @@
   "area": "Dry Gulch Bank (Old West)"
  },
  {
+  "id": "blimble/0_0",
+  "key": "blimble-0_0",
+  "name": "Blimble Gate",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/0_1",
+  "key": "blimble-0_1",
+  "name": "Elder Bumbleberry's House",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/0_2",
+  "key": "blimble-0_2",
+  "name": "Dewdrop's Cottage",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/0_3",
+  "key": "blimble-0_3",
+  "name": "Breezy Patch",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/0_4",
+  "key": "blimble-0_4",
+  "name": "Dewy Bank",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/1_0",
+  "key": "blimble-1_0",
+  "name": "Toadstool Lane",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/1_1",
+  "key": "blimble-1_1",
+  "name": "Village Green",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/1_2",
+  "key": "blimble-1_2",
+  "name": "Acorn Cup Inn",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/1_3",
+  "key": "blimble-1_3",
+  "name": "Sunny Patch",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/1_4",
+  "key": "blimble-1_4",
+  "name": "Hushed Bend",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/2_0",
+  "key": "blimble-2_0",
+  "name": "Fizzwick's Market",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/2_1",
+  "key": "blimble-2_1",
+  "name": "Crumbles' Bakery",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/2_2",
+  "key": "blimble-2_2",
+  "name": "Dewy Rise",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/2_3",
+  "key": "blimble-2_3",
+  "name": "Gnarled Hollow",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/2_4",
+  "key": "blimble-2_4",
+  "name": "Silent Bend",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/3_0",
+  "key": "blimble-3_0",
+  "name": "Berry-sweet Meadow",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/3_1",
+  "key": "blimble-3_1",
+  "name": "Sunny Hillock",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/3_2",
+  "key": "blimble-3_2",
+  "name": "Hushed Tangle",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/3_3",
+  "key": "blimble-3_3",
+  "name": "Dripping Hollow",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/3_4",
+  "key": "blimble-3_4",
+  "name": "Thorny Rise",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/4_0",
+  "key": "blimble-4_0",
+  "name": "Dewy Meadow",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/4_1",
+  "key": "blimble-4_1",
+  "name": "Gnarled Thicket",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/4_2",
+  "key": "blimble-4_2",
+  "name": "Silent Tangle",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/4_3",
+  "key": "blimble-4_3",
+  "name": "Barren Hill",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/4_4",
+  "key": "blimble-4_4",
+  "name": "Shadowpaw's Perch",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/5_0",
+  "key": "blimble-5_0",
+  "name": "Hushed Wood",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/5_1",
+  "key": "blimble-5_1",
+  "name": "Dripping Thicket",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/5_2",
+  "key": "blimble-5_2",
+  "name": "Thorny Crag",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/5_3",
+  "key": "blimble-5_3",
+  "name": "Tower Stairs",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "blimble/5_4",
+  "key": "blimble-5_4",
+  "name": "Grimbold's Study",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
   "id": "brogym/0_0",
   "key": "brogym-0_0",
   "name": "Men's Locker Room",
@@ -958,6 +1138,366 @@
   "key": "cit-watchtower_top",
   "name": "Watchtower Top",
   "area": "Shattered Citadel (Fantasy)"
+ },
+ {
+  "id": "cloud/0_0",
+  "key": "cloud-0_0",
+  "name": "Top of the Beanstalk",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/0_1",
+  "key": "cloud-0_1",
+  "name": "Rising Bank",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/0_2",
+  "key": "cloud-0_2",
+  "name": "Airy Walk",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/0_3",
+  "key": "cloud-0_3",
+  "name": "Misty Terrace",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/0_4",
+  "key": "cloud-0_4",
+  "name": "Rainbow Balcony",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/0_5",
+  "key": "cloud-0_5",
+  "name": "Prismatic Bridge",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_0",
+  "key": "cloud-1_0",
+  "name": "Pale Steps",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_1",
+  "key": "cloud-1_1",
+  "name": "Drifting Bank",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_2",
+  "key": "cloud-1_2",
+  "name": "Soft Walk",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_3",
+  "key": "cloud-1_3",
+  "name": "Golden Arch",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_4",
+  "key": "cloud-1_4",
+  "name": "Golden Balcony",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/1_5",
+  "key": "cloud-1_5",
+  "name": "Golden Bridge",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_0",
+  "key": "cloud-2_0",
+  "name": "Airy Steps",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_1",
+  "key": "cloud-2_1",
+  "name": "Misty Bank",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_2",
+  "key": "cloud-2_2",
+  "name": "Dazzling Stair",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_3",
+  "key": "cloud-2_3",
+  "name": "Dazzling Arch",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_4",
+  "key": "cloud-2_4",
+  "name": "Dazzling Balcony",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/2_5",
+  "key": "cloud-2_5",
+  "name": "Charged Rampart",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_0",
+  "key": "cloud-3_0",
+  "name": "Soft Steps",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_1",
+  "key": "cloud-3_1",
+  "name": "Rainbow Bridge",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_2",
+  "key": "cloud-3_2",
+  "name": "Gleaming Stair",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_3",
+  "key": "cloud-3_3",
+  "name": "Gleaming Arch",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_4",
+  "key": "cloud-3_4",
+  "name": "Crackling Gate",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/3_5",
+  "key": "cloud-3_5",
+  "name": "Crackling Rampart",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_0",
+  "key": "cloud-4_0",
+  "name": "Shimmering Terrace",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_1",
+  "key": "cloud-4_1",
+  "name": "Shimmering Garden",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_2",
+  "key": "cloud-4_2",
+  "name": "The Thunder Roost",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_3",
+  "key": "cloud-4_3",
+  "name": "Iron Parapet",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_4",
+  "key": "cloud-4_4",
+  "name": "Iron Gate",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/4_5",
+  "key": "cloud-4_5",
+  "name": "Iron Rampart",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_0",
+  "key": "cloud-5_0",
+  "name": "Prismatic Terrace",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_1",
+  "key": "cloud-5_1",
+  "name": "Prismatic Garden",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_2",
+  "key": "cloud-5_2",
+  "name": "Black Bastion",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_3",
+  "key": "cloud-5_3",
+  "name": "The Ember Aerie",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_4",
+  "key": "cloud-5_4",
+  "name": "Black Gate",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/5_5",
+  "key": "cloud-5_5",
+  "name": "Echoing Gallery",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_0",
+  "key": "cloud-6_0",
+  "name": "Bright Terrace",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_1",
+  "key": "cloud-6_1",
+  "name": "Lightning Tower",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_2",
+  "key": "cloud-6_2",
+  "name": "Lightning Bastion",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_3",
+  "key": "cloud-6_3",
+  "name": "Lightning Parapet",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_4",
+  "key": "cloud-6_4",
+  "name": "Windswept Court",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/6_5",
+  "key": "cloud-6_5",
+  "name": "Windswept Gallery",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_0",
+  "key": "cloud-7_0",
+  "name": "Thundering Battlement",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_1",
+  "key": "cloud-7_1",
+  "name": "Thundering Tower",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_2",
+  "key": "cloud-7_2",
+  "name": "Thundering Bastion",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_3",
+  "key": "cloud-7_3",
+  "name": "Vaulted Chamber",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_4",
+  "key": "cloud-7_4",
+  "name": "Vaulted Court",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/7_5",
+  "key": "cloud-7_5",
+  "name": "Vaulted Gallery",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_0",
+  "key": "cloud-8_0",
+  "name": "Howling Battlement",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_1",
+  "key": "cloud-8_1",
+  "name": "Howling Tower",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_2",
+  "key": "cloud-8_2",
+  "name": "Grand Atrium",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_3",
+  "key": "cloud-8_3",
+  "name": "Grand Chamber",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_4",
+  "key": "cloud-8_4",
+  "name": "Grand Court",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/8_5",
+  "key": "cloud-8_5",
+  "name": "Gleaming Terrace",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_0",
+  "key": "cloud-9_0",
+  "name": "Charged Battlement",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_1",
+  "key": "cloud-9_1",
+  "name": "Radiant Colonnade",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_2",
+  "key": "cloud-9_2",
+  "name": "Radiant Atrium",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_3",
+  "key": "cloud-9_3",
+  "name": "Radiant Chamber",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_4",
+  "key": "cloud-9_4",
+  "name": "Crowned Gate",
+  "area": "Castle in the Clouds (Fantasy)"
+ },
+ {
+  "id": "cloud/9_5",
+  "key": "cloud-9_5",
+  "name": "Throne of Storms",
+  "area": "Castle in the Clouds (Fantasy)"
  },
  {
   "id": "crypt/altar_of_ash",

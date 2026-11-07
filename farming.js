@@ -9,6 +9,7 @@ const lvl = (p, id) => (p.skills[id] ? p.skills[id].lvl : 1);
 const nm = (id) => (D.W.items[id] || {}).name || id;
 const crop = (q) => { q = String(q || '').trim().toLowerCase(); return q ? CROPS.find((c) => c[0] === q || c[1] === q || c[0].startsWith(q) || c[1].includes(q)) : null; };
 
+D.harvestMs = (p) => { const f = p.farm; if (!f || !f.plots) return -1; const g = f.plots.filter((x) => x.s === 2); return g.length ? Math.max(0, Math.min(...g.map((x) => x.at)) - Date.now()) : -1; }; // ms until the next crop is ripe (0 = ripe now, -1 = nothing planted)
 function farm(p) { // the player's farm state: plots (they grow with your tilling skill), the ban and the reward flag
   if (!p.farm) p.farm = { plots: [], ban: 0, reward: false };
   const want = 4 + Math.floor(lvl(p, 'tilling') / 5); while (p.farm.plots.length < want) p.farm.plots.push({ s: 0 });

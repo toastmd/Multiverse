@@ -168,12 +168,6 @@
   "area": "Starship Aurora (Sci-fi)"
  },
  {
-  "id": "aurora/pod",
-  "key": "aurora-pod",
-  "name": "Escape Pod",
-  "area": "Starship Aurora (Sci-fi)"
- },
- {
   "id": "bank/a",
   "key": "bank-a",
   "name": "Bank Lobby",
@@ -2728,6 +2722,36 @@
   "key": "frost-windscoured_peak",
   "name": "Wind-Scoured Peak",
   "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "gates/fantasy",
+  "key": "gates-fantasy",
+  "name": "The Fantasy Gate",
+  "area": "gates"
+ },
+ {
+  "id": "gates/future",
+  "key": "gates-future",
+  "name": "The Future Gate",
+  "area": "gates"
+ },
+ {
+  "id": "gates/modern",
+  "key": "gates-modern",
+  "name": "The Modern Gate",
+  "area": "gates"
+ },
+ {
+  "id": "gates/oldwest",
+  "key": "gates-oldwest",
+  "name": "The Frontier Gate",
+  "area": "gates"
+ },
+ {
+  "id": "gates/prehistoric",
+  "key": "gates-prehistoric",
+  "name": "The Prehistoric Gate",
+  "area": "gates"
  },
  {
   "id": "grounds/f1",

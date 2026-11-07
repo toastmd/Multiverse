@@ -36,6 +36,6 @@ function board(p) {
 function leave(p) { // `out` works through the cab's exit; this is `taxi out`
   if (p.env.path !== CAB) return p.msg('You are not in the taxi.', 'sys'); if (T.phase !== 'stay') return p.msg('The taxi is moving! Wait for the next stop.', 'sys'); D.command(p, 'out');
 }
-const start = () => { if (!T.timer) { T.timer = setInterval(() => { try { tick(); } catch (e) { D.log('taxi', e.stack); } }, 1000); if (T.timer.unref) T.timer.unref(); } };
+const start = () => { if (!require('./config')().world.connectedTravel) return; if (!T.timer) { T.timer = setInterval(() => { try { tick(); } catch (e) { D.log('taxi', e.stack); } }, 1000); if (T.timer.unref) T.timer.unref(); } };
 const stopTimer = () => { clearInterval(T.timer); T.timer = null; };
 module.exports = { T, tick, start, stop: stopTimer, here, status, board, leave, label, FARE, STAY, DRIVE, CAB };

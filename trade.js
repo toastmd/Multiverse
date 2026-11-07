@@ -10,7 +10,7 @@ const findSkill = (w) => { w = String(w || '').trim().toLowerCase(); return w &&
 
 D.skillGain = (p, id, xp) => {
   const k = p.skills[id], s = D.T.SKILLS[id]; if (p.cls === 'scavenger') xp = Math.ceil(xp * 1.5); k.xp += xp;
-  while (k.lvl < D.T.MAX && k.xp >= need(k.lvl)) { k.xp -= need(k.lvl); k.lvl++; p.msg(`*** Your ${s.name} skill rises to level ${k.lvl}! ***`, 'win'); if (k.lvl > 25 && D.news) D.news.log('skill', p, { skill: s.name, lv: k.lvl }); p.send({ t: 'sound', k: 'skill' }); }
+  while (k.lvl < D.T.MAX && k.xp >= need(k.lvl)) { k.xp -= need(k.lvl); k.lvl++; p.msg(`*** Your ${s.name} skill rises to level ${k.lvl}! ***`, 'skillup'); if (k.lvl > 25 && D.news) D.news.log('skill', p, { skill: s.name, lv: k.lvl }); p.send({ t: 'sound', k: 'skill' }); }
   if (D.farmReward && ['tilling', 'planting', 'milking', 'shearing'].includes(id)) D.farmReward(p); // master farmer's reward
 };
 const gate = (p, id) => { if (p.skills[id]) return true; p.msg(`You have not learned ${D.T.SKILLS[id].name}. Type \`learn ${id}\` (it is free, any time).`); return false; };

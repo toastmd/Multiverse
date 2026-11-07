@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-1035 rooms:
+1039 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -36,7 +36,6 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Escape Pod Bay | Starship Aurora (Sci-fi) | `aurora-m.jpg` |
 | AI Core Antechamber | Starship Aurora (Sci-fi) | `aurora-n.jpg` |
 | Bridge | Starship Aurora (Sci-fi) | `aurora-o.jpg` |
-| Escape Pod | Starship Aurora (Sci-fi) | `aurora-pod.jpg` |
 | Bank Lobby | Dry Gulch Bank (Old West) | `bank-a.jpg` |
 | Teller Cages | Dry Gulch Bank (Old West) | `bank-b.jpg` |
 | Manager's Office | Dry Gulch Bank (Old West) | `bank-c.jpg` |
@@ -463,6 +462,11 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Starship Tharsis: Boarding Ramp | Frostpeak Station (Sci-fi) | `frost-ship_ramp.jpg` |
 | Snowdrift Hollow | Frostpeak Station (Sci-fi) | `frost-snowdrift_hollow.jpg` |
 | Wind-Scoured Peak | Frostpeak Station (Sci-fi) | `frost-windscoured_peak.jpg` |
+| The Fantasy Gate | gates | `gates-fantasy.jpg` |
+| The Future Gate | gates | `gates-future.jpg` |
+| The Modern Gate | gates | `gates-modern.jpg` |
+| The Frontier Gate | gates | `gates-oldwest.jpg` |
+| The Prehistoric Gate | gates | `gates-prehistoric.jpg` |
 | Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
 | Void Ring | The Proving Grounds (Bots) | `grounds-f10.jpg` |
 | Bone Yard | The Proving Grounds (Bots) | `grounds-f2.jpg` |

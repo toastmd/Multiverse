@@ -132,6 +132,7 @@ for (const r of Object.values(rooms)) if (r.saloon) { r.items = [...(r.items || 
 for (const k of ['modern/dol', 'modern/g1s', 'modern/g2s']) if (rooms[k]) rooms[k].sfx = 'chime'; // the door chime of a convenience store
 if (rooms['buck/0_0']) rooms['buck/0_0'].sfx = 'buckstars';
 for (const d of Object.values(items)) if (d.type === 'potion') { if (d.heal && !d.mana) d.mana = d.heal; else if (d.mana && !d.heal) d.heal = d.mana; } // every food, drink, stim and cigarillo restores both health and mana
+require('./hub')(rooms, items); // the worlds are separate: everything starts at Ashfall Square (after every area and its post step exists)
 delete require.cache[require.resolve('./milestones')]; const MS = require('./milestones')(items, rooms); // after every area exists, so each gets a milestone
 delete require.cache[require.resolve('./custom')]; require('./custom')(rooms, mobs, items, MS); // areas made with the grid builder
 

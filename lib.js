@@ -59,9 +59,9 @@ class Room extends GameObject {
   }
   fx(evt) { for (const o of this.inv) if (o.isPlayer) o.send({ t: 'fight', ...evt }); }
   look(p, full) { // brief mode (`brief on`) leaves out only the long description when you move: the room name, exits, items, resources and who is here still show
-    p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(this.long, 'text'); if (this.def.light) p.msg(this.def.light, 'brightlight'); if (this.path === 'town/square' && D.events) for (const t of D.events.decor()) p.msg(t, 'event'); if (D.taxi) { if (D.taxi.here(this.path)) p.msg(`\u{1F695} A yellow taxi idles at the curb with its door open: \`enter taxi\` (${D.taxi.FARE} credits). It leaves in ${Math.max(0, Math.ceil((D.taxi.T.until - Date.now()) / 1000))} seconds.`, 'event'); if (this.def.taxi) p.msg(D.taxi.status(), 'items'); }
+    p.msg(this.name, 'rname'); if (!(p.brief && !full)) p.msg(`${this.long} ${D.groundLine(this)}`, 'text'); if (this.def.light) p.msg(this.def.light, 'brightlight'); if (this.path === 'town/square' && D.events) for (const t of D.events.decor()) p.msg(t, 'event'); if (D.taxi) { if (D.taxi.here(this.path)) p.msg(`\u{1F695} A yellow taxi idles at the curb with its door open: \`enter taxi\` (${D.taxi.FARE} credits). It leaves in ${Math.max(0, Math.ceil((D.taxi.T.until - Date.now()) / 1000))} seconds.`, 'event'); if (this.def.taxi) p.msg(D.taxi.status(), 'items'); }
     const exs = Object.entries(this.exits); p.msg(exs.length ? 'Exits' : 'Exits (none)', 'exits'); // one line per exit: the direction and the name of the room that way
-    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d] || d}: ${r ? r.name : 'unknown'}`, 'exits'); } p.msg(`Ground: ${this.terrain}.`, 'exits'); if (this.def.shop || this.def.exchange) p.msg("Type 'list' or 'sell'", 'shophint');
+    for (const [d, to] of exs) { const r = D.rooms.get(to); p.msg(`${DIRS[d] || d}: ${r ? r.name : 'unknown'}`, 'exits'); } if (this.def.shop || this.def.exchange) p.msg("Type 'list' or 'sell'", 'shophint');
     const things = this.inv.filter((o) => !o.isLiving && !o.isNpc).map((o) => o.short);
     if (things.length) p.msg('You see: ' + things.join(', ') + '.', 'items');
     const nodes = Object.entries(this.nodes).filter(([, n]) => n > 0).map(([r, n]) => `${r} x${n}`);
@@ -278,6 +278,7 @@ class Player extends Living {
     if (D.deaths) D.deaths.record(this, killer); // the death tally (deaths.js)
     this.mount = null;
     if (!this.isBot && D.news) D.news.log('death', this, { by: killer && killer !== D.NOBODY && killer.name ? killer.name : '', where: this.env ? this.env.name : '' });
+    if (!this.isBot && D.skullFace) D.skullFace(this);
     if (!this.isBot) D.announce(`${this.name} (level ${this.level} ${this.klass().name}) ${killer && killer !== D.NOBODY && killer.name ? `was slain by ${killer.name}` : 'has died'}${this.env ? ` in ${this.env.name}` : ''}.`, 'deaths', 'deathmsg'); // the deaths channel
     this.send({ t: 'sound', k: this.gender === 'male' ? 'deathm' : this.gender === 'female' ? 'deathf' : (Math.random() < 0.5 ? 'deathm' : 'deathf') }); this.msg('You have died. Your vision fades to static...', 'hurt'); this.lastDeath = this.env.path; this.deaths = (this.deaths || 0) + 1; D.taunt(this);
     this.env.tell(`${this.name} has been slain by ${killer.the()}!`, this, 'combat');
@@ -291,7 +292,7 @@ class Player extends Living {
   }
   sendStats() {
     const w = this.equip.weapon;
-    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), up: Math.floor((Date.now() - D.startedAt) / 1000), aq: !!this.anyQuest, pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks, neg: e.status ? 1 : 0 })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
+    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), up: Math.floor((Date.now() - D.startedAt) / 1000), aq: !!this.anyQuest, pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, hv: D.harvestMs ? D.harvestMs(this) : -1, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks, neg: e.status ? 1 : 0 })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
   }
   heart_beat() {
     if (this.primeUntil && Date.now() >= this.primeUntil) { this.primeUntil = 0; this.recalc(); this.hp = Math.min(this.hp, this.maxhp); this.mp = Math.min(this.mp, this.maxmp); this.msg('PRIME fades.', 'sys'); this.sendStats(); }
@@ -345,7 +346,7 @@ D.mapFor = (p) => {
 };
 D.pushMaps = () => { for (const p of D.players.values()) if (p.env) p.send(D.mapFor(p)); };
 // ---- bag of holding and bound tools: automatic for every character, never droppable or sellable, saved with the player ----
-D.bagCap = (p) => 60 + 20 * (p.remort || 0); // each remort adds room
+D.bagCap = (p) => 120 + 20 * (p.remort || 0); // 120 items from level 1; each remort adds room
 D.bagUsed = (p) => Object.entries(p.bag).reduce((a, [id, c]) => a + (D.W.items[id] && D.W.items[id].type === 'material' ? 0 : c), 0); // gathered materials do not count: carry as many as you like
 D.ensureKit = (p) => { if (D.T) for (const id of Object.keys(D.T.TOOLS)) if (!p.tools[id]) p.tools[id] = { uses: 0 }; if (!p.bag) p.bag = {}; };
 const isWorn = (p, it) => Object.values(p.equip).includes(it);
@@ -440,6 +441,12 @@ D.ensureShopkeeper = (room) => { // registers a shopkeeper NPC for a shop, excha
 const MUTEKEY = { bounty: 'bounty', level: 'levels', milestone: 'levels', quest: 'quests', taunts: 'taunts', deaths: 'deaths' }; // players can mute these announcement types
 const TAGS = { bounty: '[bounty] ', deaths: '[death] ' }; // channel tags in front of announcements (other announcements keep the megaphone)
 D.announce = (text, kind, cls = 'announce') => { if (D.tweet) D.tweet(text, kind); for (const p of D.players.values()) if (!(p.mute && p.mute[MUTEKEY[kind]])) p.msg((TAGS[kind] || '📣 ') + text, cls); if (D.bridge && D.bridge.wantsAnnouncements()) D.bridge.out((TAGS[kind] || '📣 ') + text); }; // mud-wide announcements
+D.groundLine = (room) => room.terrain === 'water' ? 'The ground here is water: you wade and swim through it.' : `The ground here is ${room.terrain}.`; // the terrain is part of the room description now, not the exit list
+const SKULL_ROWS = ['..#######..', '.#########.', '###########', '##...#...##', '##...#...##', '###.#.#.###', '####...####', '.####.####.', '..#######..', '..#.#.#.#..', '..#######..', '...#####...'];
+D.skullFace = (p) => { // a player died: a giant skull made of skull emoji, for everyone
+  const art = SKULL_ROWS.map((r) => [...r].map((c) => (c === '#' ? '\u{1F480}' : '\u3000')).join('')).join('\n'), text = `${art}\n\u2620 ${p.name} (level ${p.level} ${p.klass().name}) has DIED! \u2620`;
+  for (const o of D.players.values()) if (!o.isBot && !(o.mute && o.mute[MUTEKEY.deaths])) o.msg(text, 'skull');
+};
 D.presence = (p, kind) => { if (kind === 'in' && D.news) D.news.log('login', p); // everyone online hears when a player logs in or out (players can mute it with `notify off`)
   const who = `${p.name} (${p.remort ? `Remort ${p.remort}, ` : ''}L${p.level} ${p.klass().name})`, text = `${who} has logged ${kind === 'in' ? 'in' : 'out'}.`;
   for (const o of D.players.values()) if (o !== p && !o.isBot && o.notify !== false) o.msg('🔔 ' + text, 'notify');

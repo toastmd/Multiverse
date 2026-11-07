@@ -33,5 +33,5 @@ module.exports = (items, mobs, rooms) => {
   } });
   rooms['blimble/0_0'].exits.out = 'town/square'; rooms['town/square'].exits.blimble = 'blimble/0_0'; // `blimble` from Ashfall Square
   return { post: () => { const Q = require('./lib').Q; if (Q && Q.NPCS) for (const k of ['bumbleberry', 'fizzwick', 'dewdrop', 'crumbles', 'wick']) if (Q.NPCS[k]) Q.NPCS[k].color = '#4cc24c'; // the Blimble folk are green
-    const s = rooms['town/square']; if (s && !s.long.includes('Blimble')) s.long += ' A trail of tiny green footprints leads off to Blimble Hollow, a village of little green folk (a good place for new runners): type `blimble`.'; } };
+  } }; // (the way in is the Fantasy Gate at Ashfall Square: see hub.js)
 };

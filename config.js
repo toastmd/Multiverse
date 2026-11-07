@@ -8,6 +8,7 @@ module.exports = () => {
   let f = {}; try { f = JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch (e) { /* no file yet */ }
   const e = process.env, d = f.discord || {}, g = f.github || {};
   return {
+    world: { connectedTravel: bool(e.CONNECTED_TRAVEL, bool(f.world && f.world.connectedTravel, false)) }, // false: the worlds are separate (no ships, escape pod, portals or taxi tours between them); true brings the old travel back
     discord: {
       webhookUrl: e.DISCORD_WEBHOOK_URL || d.webhookUrl || '',          // MUD gossip -> Discord (a channel webhook; no bot needed)
       botToken: e.DISCORD_BOT_TOKEN || d.botToken || '',                // Discord -> MUD gossip (needs a bot in the channel)

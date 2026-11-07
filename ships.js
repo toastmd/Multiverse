@@ -13,7 +13,9 @@ function dock(id, where) { // put the ship at one of its two ports: the port roo
   const c = SHIPS[id], ramp = D.rooms.get(c.ramp), dest = D.rooms.get(c.docks[where]); if (!ramp || !dest) return;
   for (const r of Object.values(c.docks)) { const x = D.rooms.get(r); if (x && x.exits.in === c.ramp) delete x.exits.in; } dest.exits.in = c.ramp; ramp.exits.out = c.docks[where]; state[id].at = where; state[id].flying = false;
 }
+const CONNECTED = require('./config')().world.connectedTravel; // the worlds are separate unless config world.connectedTravel is true
 function launch(p) {
+  if (!CONNECTED) return p.msg('The ship is grounded: the worlds are separate now. Every land is reached through the five gates at Ashfall Square (oldwest, fantasy, future, modern, prehistoric).', 'sys');
   const con = p.env.inv.find((o) => o.def && o.def.launchTo); if (!con) return p.msg('The launch console is in the cockpit of the Tharsis (at Frostpeak Station) or on the bridge of the Crimson Fang (at the Martian Fleet Dock): `in`, then find the console.', 'sys');
   const id = con.def.shipId || 'tharsis', c = SHIPS[id], st = state[id]; if (st.flying) return p.msg(`The ${c.name} is already in flight.`, 'sys');
   const ports = Object.keys(c.docks), from = st.at, to = ports.find((k) => k !== from), crew = aboard(id); st.flying = true; st.empty = 0;

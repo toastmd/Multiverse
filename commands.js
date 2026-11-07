@@ -15,7 +15,11 @@ D.bones = require('./bones'); D.farming = require('./farming'); const WPN = requ
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
-const find = (list, w) => w && list.find((o) => o.isId(w.trim()));
+const find = (list, w) => { // a name, or a name and a number when there are several: `teller 2` (or `2.teller`) is the second teller
+  if (!w) return undefined; w = w.trim(); const m = w.match(/^(\d+)\.(.+)$/) || w.match(/^(.+?)\s+(\d+)$/);
+  if (m) { const pre = /^\d+\./.test(w), name = (pre ? m[2] : m[1]).trim(), k = parseInt(pre ? m[1] : m[2], 10), hits = list.filter((o) => o.isId(name)); if (k >= 1 && hits[k - 1]) return hits[k - 1]; }
+  return list.find((o) => o.isId(w));
+};
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
 const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (def.legend ? 1 : def.farm && p.env.def.farmmarket ? 0.9 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
 const UPMAX = 10, upCost = (def, up) => Math.round((1000 + 300 * (def.lvl || 1)) * 1.75 ** up), upSpent = (i) => { let n = 0; for (let k = 0; k < (i.up || 0); k++) n += upCost(i.def, k); return n; }; // weapon upgrades: +1 to +10, each costs 1.75x the last
@@ -92,7 +96,7 @@ const C = {
       if (!p.autokill) return p.msg('Kill what? (Type `autokill on` and a bare `kill` attacks the first monster in the room.)');
       t = p.env.inv.find((o) => o.isLiving && !o.isPlayer && o.hp > 0); if (!t) return p.msg('There is nothing here to kill.');
     } else t = find(p.env.inv.filter((o) => o.isLiving && o !== p), a);
-    if (!t && a.trim()) { const n = p.env.inv.find((o) => o.isNpc && o.isId(a.trim())); if (n) return p.msg(n.npcId === 'dex' ? 'Engineer Dex is far too busy doing implants to fight, and anyway, nobody here would let you.' : `${n.name} is not someone you can fight.`, 'sys'); }
+    if (!t && a.trim()) { const n = find(p.env.inv.filter((o) => o.isNpc), a.trim()); if (n) return p.msg(n.npcId === 'dex' ? 'Engineer Dex is far too busy doing implants to fight, and anyway, nobody here would let you.' : `${n.name} is not someone you can fight.`, 'sys'); }
     if (!t) return p.msg('No such target here.');
     if (t.isPlayer) return p.msg('Player combat is disabled.'); if (!p.engage(t)) return p.msg('The innkeeper glares. No fighting here.');
     p.sendPortrait(t.name, 'mob_' + t.mobId); p.msg(`You attack ${t.the()}!`, 'combat'); p.env.tell(`${p.name} attacks ${t.the()}!`, p, 'combat2'); if (!t.enemy) t.engage(p); p.fight(t);
@@ -390,7 +394,7 @@ const C = {
     p.msg(`Warm light and a clean-smelling mist wash over you. You are fully healed and refreshed, and your Luck is restored.${cost ? ` (paid ${cost} credits)` : ''}`, 'win');
   },
   talk(p, a) {
-    const npcs = p.env.inv.filter((o) => o.isNpc), n = a.trim() ? npcs.find((o) => o.isId(a.trim())) : npcs[0];
+    const npcs = p.env.inv.filter((o) => o.isNpc), n = a.trim() ? find(npcs, a.trim()) : npcs[0];
     if (!n) return p.msg(npcs.length ? "They aren't here." : 'There is nobody to talk to here.');
     p.sendPortrait(n.name, n.npcId); p.msg(`${n.name} says: "${n.def.hi || 'Well met, traveler.'}"`, 'say'); D.qEvent(p, 'talk', n.npcId); let any = false;
     for (const q of D.Q.QUESTS.filter((x) => x.giver === n.npcId)) {
@@ -618,6 +622,23 @@ const C = {
   tattoo(p, a) { D.ink.apply(p, 'tattoo', a); }, brand(p, a) { D.ink.apply(p, 'brand', a); }, marks(p, a) { const t = a.trim() ? find(p.env.inv.filter((o) => o.isPlayer), a.trim()) : p; if (!t) return p.msg('You do not see them here.'); D.ink.show(p, t); },
   mount(p, a) { D.mounts.mount(p, a); }, dismount(p) { D.mounts.dismount(p); }, idle(p) { D.idler.status(p); },
   task(p, a) { if (!a.trim()) D.tasks.show(p); else D.tasks.spend(p, a); }, tasks(p, a) { C.task(p, a); },
+  search(p) { // search: look for a secret treasure or a trap (once a room every few minutes)
+    if (p.enemy) return p.msg('Not in the middle of a fight!', 'hurt'); const now = Date.now(); p.searched = p.searched || {};
+    if ((p.cd.search || 0) > now) return p.msg(`You are still catching your breath. Search again in ${Math.ceil((p.cd.search - now) / 1000)} seconds.`, 'sys');
+    if ((p.searched[p.env.path] || 0) > now) return p.msg('You already searched here recently: there is nothing more to find (for now). Try another room.', 'sys');
+    p.cd.search = now + 15000; p.searched[p.env.path] = now + 5 * 60000; const safe = !!p.env.def.safe, thief = p.cls === 'thief', lv = Math.max(1, Math.round((p.env.inv.filter((o) => o.isLiving && !o.isPlayer && !o.isNpc).reduce((s, o) => s + o.level, 0) / Math.max(1, p.env.inv.filter((o) => o.isLiving && !o.isPlayer && !o.isNpc).length)) || p.level)), r = Math.random();
+    p.msg('You search the room carefully, feeling along the walls and the floor...', 'sys');
+    if (r < (safe ? 0.08 : 0.2) + (thief ? 0.1 : 0)) { // treasure
+      const gold = D.rnd(12, 30) * lv + D.rnd(0, 40); p.gold += gold; let extra = ''; const tr = Object.entries(D.W.items).filter(([, d]) => d.type === 'treasure' && !d.legend && d.value > 0).sort((a, b) => a[1].value - b[1].value);
+      if (tr.length && Math.random() < 0.3) { const i = Math.min(tr.length - 1, Math.max(0, Math.floor(Math.min(1, lv / 100) * (tr.length - 1)) + D.rnd(-3, 3))); D.give(p, tr[i][0], 'normal'); extra = ` and ${tr[i][1].name}`; }
+      p.msg(`*** SECRET TREASURE! *** Behind a loose stone you find a hidden cache: ${gold} credits${extra}!`, 'win'); p.gainXp(lv * 5, true); p.send({ t: 'sound', k: 'chime' }); p.sendStats();
+    } else if (!safe && r < 0.2 + (thief ? 0.1 : 0) + 0.15) { // a trap
+      if (Math.random() < Math.min(0.7, 0.25 + p.dex / 200 + (thief ? 0.25 : 0))) { p.msg('You notice a hidden trap trigger just in time and carefully disarm it. Nicely done!', 'win'); p.gainXp(lv * 3, true); }
+      else { const kind = ['pit', 'darts', 'fire', 'snare', 'gas'][D.rnd(0, 4)], dmg = Math.max(2, Math.min(p.hp - 1, Math.round(p.maxhp * (0.05 + Math.random() * 0.07))));
+        p.hp -= dmg; const say = { pit: 'The floor gives way and you fall onto spikes!', darts: 'A tripwire! Poisoned darts hiss out of the wall!', fire: 'A jet of flame roars out of a hidden vent!', snare: 'A hidden snare snaps tight around your legs!', gas: 'A hidden vial shatters and a cloud of gas fills the room!' }[kind]; p.msg(`*** TRAP! *** ${say} (${dmg})`, 'hurt');
+        if (D.status && p.hp > 0) D.status.apply(D.NOBODY, p, { pit: 'bleeding', darts: 'poisoned', fire: 'burning', snare: 'grappled', gas: 'blinded' }[kind]); p.sendStats(); }
+    } else p.msg(['You find nothing but dust and an old cobweb.', 'Nothing here. Not even a good rumor.', 'You turn up nothing of interest.', 'A thorough search. A thoroughly empty one.'][D.rnd(0, 3)], 'sys');
+  },
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -697,10 +718,11 @@ const C = {
   },
   // ---- remote sell: all unworn weapons and armor, from anywhere, for 90% of the shop price (10% finder's fee) ----
   rsell(p, a) {
-    const sellable = (d) => d && (d.type === 'weapon' || d.type === 'armor' || d.type === 'material') && !d.legend && priceOf(p, d) > 0, rows = []; // gear and gathered materials (ore, herbs, fish...)
+    const tk = a.trim().toLowerCase().split(/\s+/).filter(Boolean), mode = tk.includes('all') ? 'all' : tk.some((t) => /^(heal|healing|potions?|food|meds)$/.test(t)) ? 'heal' : 'gear'; a = tk.includes('list') ? 'list' : ''; // rsell: gear and materials; rsell healing: only healing items; rsell all: everything
+    const sellable = (d) => d && (mode === 'heal' ? d.type === 'potion' : (d.type === 'weapon' || d.type === 'armor' || d.type === 'material' || (mode === 'all' && d.type === 'potion'))) && !d.legend && priceOf(p, d) > 0, rows = []; // gear and gathered materials (ore, herbs, fish...)
     for (const it of p.inv) if (!worn(p, it) && !it.kept && sellable(it.def)) rows.push({ name: it.name, price: priceOf(p, it.def), it });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (sellable(d) && !p.keepBag[id]) rows.push({ name: `${d.name}${c > 1 ? ' x' + c : ''}`, price: priceOf(p, d) * c, id }); }
-    if (!rows.length) return p.msg('You have no unworn weapons, armor or gathered materials to sell. (Legendary and kept items are never sold by rsell.)', 'sys');
+    if (!rows.length) return p.msg(mode === 'heal' ? 'You have no healing items to sell. (Kept items are never sold by rsell.)' : 'You have no unworn weapons, armor or gathered materials to sell. (`rsell healing` sells healing items, `rsell all` sells everything. Legendary and kept items are never sold.)', 'sys');
     const gross = rows.reduce((s, r) => s + r.price, 0), fee = Math.floor(gross * 0.1), net = gross - fee;
     if (a.trim().toLowerCase() === 'list') { rows.slice(0, 30).forEach((r) => p.msg(`  ${r.name.padEnd(28)} ${r.price}c`, 'sys')); if (rows.length > 30) p.msg(`  ...and ${rows.length - 30} more`, 'sys'); return p.msg(`rsell would sell ${rows.length} stack${rows.length > 1 ? 's' : ''} for ${gross} credits, minus a 10% finder's fee of ${fee}: you would receive ${net}. Type \`rsell\` to do it.`, 'win'); }
     for (const r of rows) { if (r.it) r.it.destroy(); else delete p.bag[r.id]; }
@@ -800,6 +822,7 @@ const C = {
     t.msg(`\u{1F4F1} ${p.name} texts you: ${m[2]}`, 'chat'); t.send({ t: 'sound', k: 'text' }); p.msg(`\u{1F4F1} You text ${t.name}: ${m[2]}`, 'chat');
   },
   taxi(p, a) { // taxi [enter|out]: the milestone taxi
+    if (!require('./config')().world.connectedTravel) return p.msg('The milestone taxi is parked: the worlds are separate now. Every land is reached through the five gates at Ashfall Square.', 'sys');
     const w = a.trim().toLowerCase(); if (/^(enter|board|in|ride)$/.test(w)) return D.taxi.board(p); if (/^(out|exit|leave)$/.test(w)) return D.taxi.leave(p);
     p.msg(`\u{1F695} The Milestone Taxi: ${D.taxi.status()}`, 'rname'); p.msg(`It tours every milestone in turn and waits ${D.taxi.STAY / 1000} seconds at each. \`enter taxi\` at a stop costs ${D.taxi.FARE} credits; riding on to the next stop is free; stepping out and boarding again costs ${D.taxi.FARE} again.`, 'sys');
     const r = D.taxi.T.route; if (r.length) p.msg('Route: ' + r.map((x) => (D.rooms.get(x) ? D.AREA_LABEL[D.rooms.get(x).area] || D.rooms.get(x).area : x).replace(/ \(.*\)$/, '')).join(' > ') + ' > (and around again)', 'sys');

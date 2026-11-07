@@ -15,11 +15,15 @@ const SOLO = { // custom lines when no target: [you, room]
 const phr = (t, pre) => (pre ? `${t} ${pre}` : t);
 const you = (v, pre) => { const base = v === 'cheerup' ? 'cheer up' : v === 'tipover' ? 'tip over' : v; return pre ? `${base} ${pre}` : base; };
 // Returns true when `v` was a social verb (and handled).
+const D = require('./lib');
 function handle(p, v, a, find) {
   const s = SOC[v]; if (!s) return false; const [third, pre] = s; a = (a || '').trim();
   if (!a) { const so = SOLO[v]; p.msg(so ? so[0] : `You ${you(v, '')}.`, 'social'); p.env.tell((so ? so[1] : `{n} ${third}.`).replace('{n}', p.name), p, 'social'); return true; }
   const t = find(p.env.inv.filter((o) => o.isLiving), a);
-  if (!t) { p.msg(`You don't see "${a}" here.`); return true; }
+  if (!t) { // not here: a player anywhere in the world can still get your social, from afar
+    const q = a.toLowerCase(), all = [...D.players.values()], r = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
+    if (r && r !== p) { if (D.isSilenced && D.isSilenced(p.name)) { p.msg('You have been silenced.'); return true; } if ((p.cd && p.cd.rsoc || 0) > Date.now()) { p.msg('Not so fast.'); return true; } if (p.cd) p.cd.rsoc = Date.now() + 1500; p.msg(`You ${you(v, pre)} ${r.name} from afar.${r.ld ? ' (They are linkdead and will not see it.)' : ''}`, 'social'); r.msg(`${p.name} ${phr(third, pre)} you from afar.`, 'social'); return true; }
+    p.msg(`You don't see "${a}" here.`); return true; }
   if (t === p) { p.msg(`You ${you(v, pre)} yourself.`, 'social'); p.env.tell(`${p.name} ${phr(third, pre)} themselves.`, p, 'social'); return true; }
   const tn = t.isPlayer ? t.name : t.the();
   p.msg(`You ${you(v, pre)} ${tn}.`, 'social'); if (t.isPlayer) t.msg(`${p.name} ${phr(third, pre)} you.`, 'social'); p.env.tell(`${p.name} ${phr(third, pre)} ${tn}.`, [p, t], 'social'); return true;

@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-919 rooms:
+1035 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -36,6 +36,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Escape Pod Bay | Starship Aurora (Sci-fi) | `aurora-m.jpg` |
 | AI Core Antechamber | Starship Aurora (Sci-fi) | `aurora-n.jpg` |
 | Bridge | Starship Aurora (Sci-fi) | `aurora-o.jpg` |
+| Escape Pod | Starship Aurora (Sci-fi) | `aurora-pod.jpg` |
 | Bank Lobby | Dry Gulch Bank (Old West) | `bank-a.jpg` |
 | Teller Cages | Dry Gulch Bank (Old West) | `bank-b.jpg` |
 | Manager's Office | Dry Gulch Bank (Old West) | `bank-c.jpg` |
@@ -183,6 +184,24 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Crossing of Tunnels | The Mammoth Caverns (Prehistoric) | `cave-t3.jpg` |
 | Grog's Throne Cavern | The Mammoth Caverns (Prehistoric) | `cave-throne.jpg` |
 | Totem Chamber | The Mammoth Caverns (Prehistoric) | `cave-totem.jpg` |
+| Restrooms | Multiverse Cinema 12 (Modern) | `cinema-0_0.jpg` |
+| Auditorium 1 | Multiverse Cinema 12 (Modern) | `cinema-0_1.jpg` |
+| Storage Room | Multiverse Cinema 12 (Modern) | `cinema-0_2.jpg` |
+| Arcade | Multiverse Cinema 12 (Modern) | `cinema-1_0.jpg` |
+| Auditorium 2 | Multiverse Cinema 12 (Modern) | `cinema-1_1.jpg` |
+| Popcorn Supply Room | Multiverse Cinema 12 (Modern) | `cinema-1_2.jpg` |
+| Lobby and Box Office | Multiverse Cinema 12 (Modern) | `cinema-2_0.jpg` |
+| Main Corridor | Multiverse Cinema 12 (Modern) | `cinema-2_1.jpg` |
+| Projection Booth | Multiverse Cinema 12 (Modern) | `cinema-2_2.jpg` |
+| Concession Stand | Multiverse Cinema 12 (Modern) | `cinema-3_0.jpg` |
+| Auditorium 3 | Multiverse Cinema 12 (Modern) | `cinema-3_1.jpg` |
+| VIP Lounge | Multiverse Cinema 12 (Modern) | `cinema-3_2.jpg` |
+| Employee Break Room | Multiverse Cinema 12 (Modern) | `cinema-4_0.jpg` |
+| Auditorium 4 | Multiverse Cinema 12 (Modern) | `cinema-4_1.jpg` |
+| Dumpster Alley | Multiverse Cinema 12 (Modern) | `cinema-4_2.jpg` |
+| Manager's Office | Multiverse Cinema 12 (Modern) | `cinema-5_0.jpg` |
+| IMAX Auditorium | Multiverse Cinema 12 (Modern) | `cinema-5_1.jpg` |
+| Film Vault | Multiverse Cinema 12 (Modern) | `cinema-5_2.jpg` |
 | Armory Ruins | Shattered Citadel (Fantasy) | `cit-armory_ruins.jpg` |
 | Banquet Hall | Shattered Citadel (Fantasy) | `cit-banquet_hall.jpg` |
 | Haunted Barracks | Shattered Citadel (Fantasy) | `cit-barracks.jpg` |
@@ -303,6 +322,97 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Smoking Crater | Ember Wastes (Sci-fi) | `ember-smoking_crater.jpg` |
 | Sulfur Vent | Ember Wastes (Sci-fi) | `ember-sulfur_vent.jpg` |
 | Forge-Temple | Ember Wastes (Sci-fi) | `ember-temple.jpg` |
+| Crash Beacon Camp | Exterminus (Sci-fi) | `exterminus-0_0.jpg` |
+| Scorched Debris Field | Exterminus (Sci-fi) | `exterminus-0_1.jpg` |
+| Collapsed Foundry | Exterminus (Sci-fi) | `exterminus-0_10.jpg` |
+| Molten Catwalk | Exterminus (Sci-fi) | `exterminus-0_11.jpg` |
+| Clanking Conveyor | Exterminus (Sci-fi) | `exterminus-0_12.jpg` |
+| Smoking Hull | Exterminus (Sci-fi) | `exterminus-0_2.jpg` |
+| Scorched Landing Strip | Exterminus (Sci-fi) | `exterminus-0_3.jpg` |
+| Junk-strewn Plain | Exterminus (Sci-fi) | `exterminus-0_4.jpg` |
+| Rusted Dune | Exterminus (Sci-fi) | `exterminus-0_5.jpg` |
+| Windy Plain | Exterminus (Sci-fi) | `exterminus-0_6.jpg` |
+| Grey Dune | Exterminus (Sci-fi) | `exterminus-0_7.jpg` |
+| Sagging Gantry | Exterminus (Sci-fi) | `exterminus-0_8.jpg` |
+| Cracked Hall | Exterminus (Sci-fi) | `exterminus-0_9.jpg` |
+| Ripperdoc's Tent | Exterminus (Sci-fi) | `exterminus-1_0.jpg` |
+| Smoking Wreckage | Exterminus (Sci-fi) | `exterminus-1_1.jpg` |
+| Buckled Gantry | Exterminus (Sci-fi) | `exterminus-1_10.jpg` |
+| Humming Gantry | Exterminus (Sci-fi) | `exterminus-1_11.jpg` |
+| Sterile Conveyor | Exterminus (Sci-fi) | `exterminus-1_12.jpg` |
+| Wrecked Debris Field | Exterminus (Sci-fi) | `exterminus-1_2.jpg` |
+| Endless Ridge | Exterminus (Sci-fi) | `exterminus-1_3.jpg` |
+| Windy Flat | Exterminus (Sci-fi) | `exterminus-1_4.jpg` |
+| Grey Ridge | Exterminus (Sci-fi) | `exterminus-1_5.jpg` |
+| Barren Flat | Exterminus (Sci-fi) | `exterminus-1_6.jpg` |
+| Molten Hall | Exterminus (Sci-fi) | `exterminus-1_7.jpg` |
+| Collapsed Gantry | Exterminus (Sci-fi) | `exterminus-1_8.jpg` |
+| Buckled Hall | Exterminus (Sci-fi) | `exterminus-1_9.jpg` |
+| Twisted Landing Strip | Exterminus (Sci-fi) | `exterminus-2_0.jpg` |
+| Wrecked Crater | Exterminus (Sci-fi) | `exterminus-2_1.jpg` |
+| Endless Press | Exterminus (Sci-fi) | `exterminus-2_10.jpg` |
+| Sterile Bay | Exterminus (Sci-fi) | `exterminus-2_11.jpg` |
+| Humming Press | Exterminus (Sci-fi) | `exterminus-2_12.jpg` |
+| Windy Scrapyard | Exterminus (Sci-fi) | `exterminus-2_2.jpg` |
+| Barren Gully | Exterminus (Sci-fi) | `exterminus-2_3.jpg` |
+| Junk-strewn Scrapyard | Exterminus (Sci-fi) | `exterminus-2_4.jpg` |
+| Rusted Gully | Exterminus (Sci-fi) | `exterminus-2_5.jpg` |
+| Buckled Smelter | Exterminus (Sci-fi) | `exterminus-2_6.jpg` |
+| Collapsed Furnace | Exterminus (Sci-fi) | `exterminus-2_7.jpg` |
+| Molten Smelter | Exterminus (Sci-fi) | `exterminus-2_8.jpg` |
+| Sagging Furnace | Exterminus (Sci-fi) | `exterminus-2_9.jpg` |
+| Sparking Hull | Exterminus (Sci-fi) | `exterminus-3_0.jpg` |
+| Barren Plain | Exterminus (Sci-fi) | `exterminus-3_1.jpg` |
+| Gleaming Weld Bay | Exterminus (Sci-fi) | `exterminus-3_10.jpg` |
+| Endless Assembly Line | Exterminus (Sci-fi) | `exterminus-3_11.jpg` |
+| Sterile Weld Bay | Exterminus (Sci-fi) | `exterminus-3_12.jpg` |
+| Junk-strewn Dune | Exterminus (Sci-fi) | `exterminus-3_2.jpg` |
+| Endless Plain | Exterminus (Sci-fi) | `exterminus-3_3.jpg` |
+| Windy Dune | Exterminus (Sci-fi) | `exterminus-3_4.jpg` |
+| Sagging Foundry | Exterminus (Sci-fi) | `exterminus-3_5.jpg` |
+| Cracked Catwalk | Exterminus (Sci-fi) | `exterminus-3_6.jpg` |
+| Buckled Foundry | Exterminus (Sci-fi) | `exterminus-3_7.jpg` |
+| Collapsed Catwalk | Exterminus (Sci-fi) | `exterminus-3_8.jpg` |
+| Clanking Assembly Line | Exterminus (Sci-fi) | `exterminus-3_9.jpg` |
+| Rusted Ridge | Exterminus (Sci-fi) | `exterminus-4_0.jpg` |
+| Endless Flat | Exterminus (Sci-fi) | `exterminus-4_1.jpg` |
+| Clanking Gantry | Exterminus (Sci-fi) | `exterminus-4_10.jpg` |
+| Gleaming Conveyor | Exterminus (Sci-fi) | `exterminus-4_11.jpg` |
+| Core Nexus | Exterminus (Sci-fi) | `exterminus-4_12.jpg` |
+| Windy Ridge | Exterminus (Sci-fi) | `exterminus-4_2.jpg` |
+| Grey Flat | Exterminus (Sci-fi) | `exterminus-4_3.jpg` |
+| Collapsed Hall | Exterminus (Sci-fi) | `exterminus-4_4.jpg` |
+| Molten Gantry | Exterminus (Sci-fi) | `exterminus-4_5.jpg` |
+| Sagging Hall | Exterminus (Sci-fi) | `exterminus-4_6.jpg` |
+| Cracked Gantry | Exterminus (Sci-fi) | `exterminus-4_7.jpg` |
+| Sterile Gantry | Exterminus (Sci-fi) | `exterminus-4_8.jpg` |
+| Humming Conveyor | Exterminus (Sci-fi) | `exterminus-4_9.jpg` |
+| Grey Gully | Exterminus (Sci-fi) | `exterminus-5_0.jpg` |
+| Barren Scrapyard | Exterminus (Sci-fi) | `exterminus-5_1.jpg` |
+| Humming Bay | Exterminus (Sci-fi) | `exterminus-5_10.jpg` |
+| Command Deck | Exterminus (Sci-fi) | `exterminus-5_11.jpg` |
+| Prime Command Deck | Exterminus (Sci-fi) | `exterminus-5_12.jpg` |
+| Junk-strewn Gully | Exterminus (Sci-fi) | `exterminus-5_2.jpg` |
+| Cracked Smelter | Exterminus (Sci-fi) | `exterminus-5_3.jpg` |
+| Buckled Furnace | Exterminus (Sci-fi) | `exterminus-5_4.jpg` |
+| Collapsed Smelter | Exterminus (Sci-fi) | `exterminus-5_5.jpg` |
+| Molten Furnace | Exterminus (Sci-fi) | `exterminus-5_6.jpg` |
+| Gleaming Press | Exterminus (Sci-fi) | `exterminus-5_7.jpg` |
+| Endless Bay | Exterminus (Sci-fi) | `exterminus-5_8.jpg` |
+| Sterile Press | Exterminus (Sci-fi) | `exterminus-5_9.jpg` |
+| Rusted Plain | Exterminus (Sci-fi) | `exterminus-6_0.jpg` |
+| Endless Dune | Exterminus (Sci-fi) | `exterminus-6_1.jpg` |
+| Reactor Reactor Hall | Exterminus (Sci-fi) | `exterminus-6_10.jpg` |
+| Blazing Core | Exterminus (Sci-fi) | `exterminus-6_11.jpg` |
+| The Exterminator Core | Exterminus (Sci-fi) | `exterminus-6_12.jpg` |
+| Molten Foundry | Exterminus (Sci-fi) | `exterminus-6_2.jpg` |
+| Sagging Catwalk | Exterminus (Sci-fi) | `exterminus-6_3.jpg` |
+| Cracked Foundry | Exterminus (Sci-fi) | `exterminus-6_4.jpg` |
+| Buckled Catwalk | Exterminus (Sci-fi) | `exterminus-6_5.jpg` |
+| Humming Assembly Line | Exterminus (Sci-fi) | `exterminus-6_6.jpg` |
+| Clanking Weld Bay | Exterminus (Sci-fi) | `exterminus-6_7.jpg` |
+| Gleaming Assembly Line | Exterminus (Sci-fi) | `exterminus-6_8.jpg` |
+| Endless Weld Bay | Exterminus (Sci-fi) | `exterminus-6_9.jpg` |
 | The Red Barn | Sunny Acres Farm (Old West) | `farm-barn.jpg` |
 | Vegetable Field: West | Sunny Acres Farm (Old West) | `farm-field1.jpg` |
 | Vegetable Field: Center | Sunny Acres Farm (Old West) | `farm-field2.jpg` |
@@ -590,6 +700,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Mirrored Lane | Mars (Sci-fi) | `mars-9_7.jpg` |
 | Royal Walk | Mars (Sci-fi) | `mars-9_8.jpg` |
 | Overlord's Throne Room | Mars (Sci-fi) | `mars-9_9.jpg` |
+| Zix Hoverbike Depot | Mars (Sci-fi) | `mars-depot.jpg` |
 | Crimson Fang: Bridge | Mars (Sci-fi) | `mars-fang_bridge.jpg` |
 | Crimson Fang: Crew Deck | Mars (Sci-fi) | `mars-fang_deck.jpg` |
 | Crimson Fang: Ramp | Mars (Sci-fi) | `mars-fang_ramp.jpg` |
@@ -642,6 +753,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Fuel Stop: Pumps | Modern District (Modern) | `modern-g2p.jpg` |
 | Fuel Stop: Restroom | Modern District (Modern) | `modern-g2r.jpg` |
 | Fuel Stop: Convenience Store | Modern District (Modern) | `modern-g2s.jpg` |
+| Rusty's Motorcycle Garage | Modern District (Modern) | `modern-garage.jpg` |
 | Portal Plaza | Modern District (Modern) | `modern-gate.jpg` |
 | Multi-Mart: Grocery | Modern District (Modern) | `modern-gro.jpg` |
 | Hot Dog Hut | Modern District (Modern) | `modern-hdh.jpg` |
@@ -793,6 +905,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Skyward Cliffs | The Primeval Rift (Prehistoric) | `prime-ridge2.jpg` |
 | The Eyrie | The Primeval Rift (Prehistoric) | `prime-ridge3.jpg` |
 | Roaring River | The Primeval Rift (Prehistoric) | `prime-river.jpg` |
+| Primeval Roost | The Primeval Rift (Prehistoric) | `prime-roost.jpg` |
 | Spinosaur Shallows | The Primeval Rift (Prehistoric) | `prime-shallows.jpg` |
 | Fern Swamp | The Primeval Rift (Prehistoric) | `prime-swamp.jpg` |
 | Tar Pits | The Primeval Rift (Prehistoric) | `prime-tar.jpg` |
@@ -889,6 +1002,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Crushing Depth | Poseidon's Realm (Fantasy) | `sea-9_2.jpg` |
 | Silver Court | Poseidon's Realm (Fantasy) | `sea-9_3.jpg` |
 | Poseidon's Throne Room | Poseidon's Realm (Fantasy) | `sea-9_4.jpg` |
+| Shark Pens | Poseidon's Realm (Fantasy) | `sea-pens.jpg` |
 | Briar Gate | Thornwild Court (Fantasy) | `thorn-a.jpg` |
 | Mushroom Ring | Thornwild Court (Fantasy) | `thorn-b.jpg` |
 | Moonwell | Thornwild Court (Fantasy) | `thorn-c.jpg` |
@@ -917,6 +1031,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Hall of Many Faces | Ashfall Junction (Old West) | `town-hall_of_faces.jpg` |
 | Hall of Rebirth | Ashfall Junction (Old West) | `town-hall_of_rebirth.jpg` |
 | Neural Implant Lab | Ashfall Junction (Old West) | `town-implant_lab.jpg` |
+| Ink & Iron Tattoo and Branding Parlor | Ashfall Junction (Old West) | `town-ink.jpg` |
 | Silver Spur Saloon | Ashfall Junction (Old West) | `town-inn.jpg` |
 | Market Row | Ashfall Junction (Old West) | `town-market.jpg` |
 | Old Well | Ashfall Junction (Old West) | `town-old_well.jpg` |
@@ -924,6 +1039,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Salvage Exchange | Ashfall Junction (Old West) | `town-salvage_exchange.jpg` |
 | Brann's Smithy | Ashfall Junction (Old West) | `town-smithy.jpg` |
 | Ashfall Square | Ashfall Junction (Old West) | `town-square.jpg` |
+| Ashfall Livery Stable | Ashfall Junction (Old West) | `town-stable.jpg` |
 | Stables | Ashfall Junction (Old West) | `town-stables.jpg` |
 | Temple of the Dawn | Ashfall Junction (Old West) | `town-temple.jpg` |
 | Watchtower | Ashfall Junction (Old West) | `town-watchtower.jpg` |

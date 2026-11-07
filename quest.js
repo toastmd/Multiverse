@@ -37,7 +37,7 @@ D.qComplete = (p, q) => {
   if (r.gold) { p.gold += r.gold; parts.push(`${r.gold} credits`); }
   for (const id of r.items || []) { D.give(p, id, 'normal'); parts.push(D.W.items[id].name); }
   p.msg(`*** Contract complete: ${q.name} ***  Reward: ${xp} XP${parts.length ? ', ' + parts.join(', ') : ''}.`, 'win');
-  p.send({ t: 'sound', k: 'quest' }); D.announce(`${p.name} has completed the contract "${q.name}"!`, 'quest'); p.gainXp(xp); p.sendQuests();
+  p.send({ t: 'sound', k: 'quest' }); D.announce(`${p.name} has completed the contract "${q.name}"!`, 'quest'); if (D.news) D.news.log('quest', p, { q: q.name }); p.gainXp(xp); p.sendQuests();
 };
 
 D.questLog = (p) => ({ t: 'qlog', qp: p.qp, qpt: D.qpTotal(), total: D.Q.QUESTS.length, current: D.Q.QUESTS.filter((q) => p.quests[q.id]).map((q) => ({ n: q.name, g: (D.Q.NPCS[q.giver] || {}).name || '', ready: !!D.qReady(p, q), obj: q.obj.map((o, i) => ({ t: D.objText(o), c: D.qCur(p, q, i), m: D.qNeed(o) })) })), done: D.Q.QUESTS.filter((q) => p.qdone.has(q.id)).map((q) => ({ n: q.name, g: (D.Q.NPCS[q.giver] || {}).name || '', qp: (q.rew && q.rew.qp) || 0, lv: q.min })) });

@@ -10,6 +10,7 @@ const CLASSES = {
   alchemist:   { name: 'Alchemist',      icon: '⚗️', hpl: 10, mpl: 9,  rg: 1, str: -1, dex: 1,  con: 0,  kit: 'pestle',   desc: 'A brewer of acids, bombs, tonics and elixirs. Heals and hurts. (Fantasy)' },
   gunslinger:  { name: 'Gunslinger',       icon: '🤠', hpl: 11, mpl: 6,  rg: 1, str: 0,  dex: 3,  con: 0,  kit: 'revolver', desc: 'An Old West pistol-and-rifle specialist: rapid shots, stuns and a deadly crit rate. (Old West)' },
   barbarian:   { name: 'Space Marine',  icon: '🧔', hpl: 16, mpl: 5,  rg: 1, str: 4,  dex: 0,  con: 3,  kit: 'axe',      desc: 'A heavily augmented warrior from the star-cities with a huge health pool. Rage, cleave and brute force. (Sci-fi)' },
+  idler:       { name: 'Idler',         icon: '\u{1F4A4}', hpl: 5,  mpl: 2,  rg: 2, str: -3, dex: -3, con: -2, kit: 'scrapknife', desc: 'A professional loafer with the weakest stats in the multiverse and the most patient plan: log in, do nothing, and watch the experience and credits roll in every minute. The longer you idle, the more each minute pays (up to 30x). Type a command and the clock starts over.' },
   juggernaut:  { name: 'Juggernaut', icon: '\u{1F4AA}', brawn: true, hpl: 21, mpl: 2, rg: 4, str: 6, dex: -1, con: 6, kit: 'axe', desc: 'All brawn: a hulking wall of muscle with the biggest health pool and the hardest hits in the multiverse. No spells, only quick heals. Two attacks every round, Brute Force randomly makes a blow hit far harder, and Thick Skin shrugs off a share of every hit you take. (Any era)' },
   titan:       { name: 'Titan', icon: '\u{1F5FF}', remort: true, brawn: true, pwr: 1, hpl: 28, mpl: 3, rg: 5, str: 9, dex: 0, con: 8, kit: 'axe', desc: 'The reborn Juggernaut: a walking mountain with no spells and a bigger bonus for every remort. Three attacks a round at Remort 1, rising to four, five and six; Brute Force hits harder and more often, Thick Skin grows, and at the high remorts it stuns and drains life. (Remort class)' },
   engineer:    { name: 'Engineer',       icon: '👷', hpl: 11, mpl: 8,  rg: 1, str: 0,  dex: 1,  con: 1,  kit: 'wrench',   desc: 'A sci-fi engineer: turrets, gadgets, deployables and a powered combat suit. (Sci-fi)' },
@@ -33,6 +34,10 @@ Object.assign(CLASSES, {
 });
 
 const SPELLS = {
+  idler: [ // one little heal: the class idles for a living
+    S('power_nap', 'Power Nap', 1, 2, 'heal', '\u{1F4A4}', '#9fb2c0', 'A quick catnap restores you.', { heal: [12, 20], cd: 8 }),
+    S('big_stretch', 'Big Stretch', 12, 6, 'heal', '\u{1F9D8}', '#9fb2c0', 'A long, luxurious stretch.', { heal: [70, 100], cd: 10 }),
+  ],
   juggernaut: [ // no spells: only quick heals (the class's power is its passive bonuses: Brute Force, Thick Skin, Hulking)
     S('second_wind', 'Second Wind', 1, 2, 'heal', '\u{1F4A8}', '#7be0a0', 'Catch your breath and shrug off the pain.', { heal: [18, 28], cd: 4 }),
     S('shrug_it_off', 'Shrug It Off', 10, 5, 'heal', '\u{1F4AA}', '#7be0a0', 'Roll your shoulders and let the wounds close.', { heal: [60, 90], cd: 6 }),

@@ -10,7 +10,7 @@ const findSkill = (w) => { w = String(w || '').trim().toLowerCase(); return w &&
 
 D.skillGain = (p, id, xp) => {
   const k = p.skills[id], s = D.T.SKILLS[id]; if (p.cls === 'scavenger') xp = Math.ceil(xp * 1.5); k.xp += xp;
-  while (k.lvl < D.T.MAX && k.xp >= need(k.lvl)) { k.xp -= need(k.lvl); k.lvl++; p.msg(`*** Your ${s.name} skill rises to level ${k.lvl}! ***`, 'win'); p.send({ t: 'sound', k: 'skill' }); }
+  while (k.lvl < D.T.MAX && k.xp >= need(k.lvl)) { k.xp -= need(k.lvl); k.lvl++; p.msg(`*** Your ${s.name} skill rises to level ${k.lvl}! ***`, 'win'); if (k.lvl > 25 && D.news) D.news.log('skill', p, { skill: s.name, lv: k.lvl }); p.send({ t: 'sound', k: 'skill' }); }
   if (D.farmReward && ['tilling', 'planting', 'milking', 'shearing'].includes(id)) D.farmReward(p); // master farmer's reward
 };
 const gate = (p, id) => { if (p.skills[id]) return true; p.msg(`You have not learned ${D.T.SKILLS[id].name}. Type \`learn ${id}\` (it is free, any time).`); return false; };
@@ -68,6 +68,7 @@ D.tradeGather = (p, id) => {
   const s = D.T.SKILLS[id]; if (!gate(p, id)) return; const k = p.skills[id], t = D.toolTier(p, id);
   if (p.enemy) return p.msg('You cannot concentrate while fighting!', 'hurt');
   const now = Date.now(); if ((p.cd['t_' + id] || 0) > now) return p.msg('Give it a moment.');
+  if (s.res === 'fish' && p.env.terrain !== 'water') return p.msg('You need water to fish: a pond, a stream, a pool or the sea.', 'sys');
   const nodes = p.env.nodes || {}; if (!(nodes[s.res] > 0)) return p.msg(`There are no ${s.nodeName} here.`);
   p.cd['t_' + id] = now + Math.max(1800, 3000 - 300 * (t - 1)); const got = {}; let xp = 4, bagged = 0, floor = 0;
   let n = rnd(1, 1 + Math.floor(k.lvl / 12)) + (p.cls === 'scavenger' ? 1 : 0) + (Math.random() < 0.1 * t ? 1 : 0);

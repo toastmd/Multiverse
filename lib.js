@@ -29,14 +29,14 @@ const roll = (n) => { n = Math.max(1, Math.round(n)); let h = 0, ones = 0; for (
 const KP_DEFAULT = { Numpad1: 'southwest', Numpad2: 'south', Numpad3: 'southeast', Numpad4: 'west', Numpad5: 'look', Numpad6: 'east', Numpad7: 'northwest', Numpad8: 'north', Numpad9: 'northeast', Numpad0: 'get all', NumpadDecimal: 'heal', NumpadAdd: 'down', NumpadSubtract: 'up', NumpadMultiply: 'out', NumpadDivide: 'kill', NumpadEnter: '' };
 const KP_OLD = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
 D.kpFromRec = (rec) => { const m = rec.kpMap && typeof rec.kpMap === 'object' ? rec.kpMap : {}; return rec.kpVer !== 2 && Object.keys(KP_OLD).every((k) => m[k] === undefined || m[k] === KP_OLD[k]) ? {} : m; }; // players who never changed the old keypad get the new defaults; custom keypads are kept
-D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', castle: 'Castle Frankenstein (Horror)', farm: 'Sunny Acres Farm (Old West)', blimble: 'Blimble Hollow (Fantasy)', cloud: 'Castle in the Clouds (Fantasy)', brogym: 'BroGym (Modern)', sea: "Poseidon's Realm (Fantasy)", hades: 'Hades (Fantasy)', pluto: 'Pluto (Sci-fi)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
+D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', castle: 'Castle Frankenstein (Horror)', farm: 'Sunny Acres Farm (Old West)', blimble: 'Blimble Hollow (Fantasy)', cinema: 'Multiverse Cinema 12 (Modern)', exterminus: 'Exterminus (Sci-fi)', cloud: 'Castle in the Clouds (Fantasy)', brogym: 'BroGym (Modern)', sea: "Poseidon's Realm (Fantasy)", hades: 'Hades (Fantasy)', pluto: 'Pluto (Sci-fi)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
 const need = (lvl) => lvl * lvl * 50; // xp required to leave this level
 // weapon styles: what you wield decides how a hit reads (clubs bash, guns shoot, blades slash, spears stab)
 const STYLES = { bash: { re: /club|bat\b|mace|hammer|staff|stick|cudgel|baton|truncheon|wrench|pipe|extinguisher|putter|crowbar|tire ?iron|maul|flail|bone|pike\b.*tusk|tusk/, noun: 'swing', set: [[0.05, 'tap', 'taps', ' lightly'], [0.15, 'bash', 'bashes', ''], [0.3, 'bash', 'bashes', ' hard'], [0.5, 'smash', 'smashes', ''], [9, 'pulverize', 'pulverizes', '']] },
   shoot: { re: /gun|revolver|pistol|rifle|shotgun|blaster|cannon|carbine|derringer|musket|launcher|injector|stapler|colt|winchester|repeater|six-?shooter/, noun: 'shot', set: [[0.05, 'graze', 'grazes', ''], [0.15, 'shoot', 'shoots', ''], [0.3, 'shoot', 'shoots', ' hard'], [0.5, 'blast', 'blasts', ''], [9, 'blow away', 'blows away', '']] },
   slash: { re: /sword|blade|saber|sabre|katana|axe|scimitar|cutlass|knife|dagger|machete|claw|scalpel|letter ?opener|sickle|shiv|razor|cleaver|moonblade/, noun: 'slash', set: [[0.05, 'nick', 'nicks', ''], [0.15, 'slash', 'slashes', ''], [0.3, 'slash', 'slashes', ' hard'], [0.5, 'slice', 'slices', ''], [9, 'cleave', 'cleaves', '']] },
   stab: { re: /spear|lance|pike|rapier|stake|trident|javelin|dart|pick/, noun: 'thrust', set: [[0.05, 'prick', 'pricks', ''], [0.15, 'stab', 'stabs', ''], [0.3, 'stab', 'stabs', ' hard'], [0.5, 'impale', 'impales', ''], [9, 'skewer', 'skewers', '']] } };
-const styleOf = (who) => { const w = who.equip && who.equip.weapon; if (!w) return null; const n = `${w.name || ''} ${(w.def && w.def.id) || ''}`.toLowerCase(); for (const k of ['shoot', 'stab', 'slash', 'bash']) if (STYLES[k].re.test(n)) return STYLES[k]; return null; };
+const styleOf = (who, wp) => { const w = wp !== undefined ? wp : who.equip && who.equip.weapon; if (!w) return null; const n = `${w.name || ''} ${(w.def && w.def.id) || ''}`.toLowerCase(); for (const k of ['shoot', 'stab', 'slash', 'bash']) if (STYLES[k].re.test(n)) return STYLES[k]; return null; };
 const VERBS = [[0.05, 'scratch', 'scratches', ' lightly'], [0.15, 'hit', 'hits', ''], [0.3, 'hit', 'hits', ' hard'],
   [0.5, 'smash', 'smashes', ''], [9, 'devastate', 'devastates', '']];
 Object.assign(D, { rnd, cap, DIRS, need, NOBODY, roll, KP_DEFAULT });
@@ -67,10 +67,10 @@ class Room extends GameObject {
     const nodes = Object.entries(this.nodes).filter(([, n]) => n > 0).map(([r, n]) => `${r} x${n}`);
     if (nodes.length) p.msg('Resources here: ' + nodes.join(', ') + (this.def.forge ? ', a working forge' : '') + '.', 'items'); else if (this.def.forge) p.msg('A working forge is here.', 'items');
     if (this.def.board) p.msg('A quest board hangs here. Type `board` to read it.', 'items');
-    for (const o of this.inv) if (o.isNpc) p.msg(`${o.name} is here. (talk ${o.ids[1]})`, 'living');
+    for (const o of this.inv) if (o.isNpc) { const nc = D.Q && D.Q.NPCS && D.Q.NPCS[o.npcId] && D.Q.NPCS[o.npcId].color; p.msg(`${nc ? `\u27e6${nc}|${o.name}\u27e7` : o.name} is here. (talk ${o.ids[1]})`, 'living'); }
     if (this.def.autoTalk && D.autoTalk && !p.isBot) setTimeout(() => D.autoTalk(p, this.def.autoTalk), 400); // a new runner is greeted with the quest offer
     const npc = this.inv.find((o) => o.isNpc); if (npc && p.sendPortrait) p.sendPortrait(npc.name, npc.npcId);
-    for (const o of this.inv) if (o.isLiving && o !== p) p.msg(o.isPlayer ? `${o.name} is here.` : `${cap(o.short)} (level ${o.level}) is here${o.enemy ? ', fighting' : ''}.`, 'living');
+    for (const o of this.inv) if (o.isLiving && o !== p) { const md = o.isPlayer && D.mountOf ? D.mountOf(o) : null, nm = !o.isPlayer && o.def && o.def.color ? `\u27e6${o.def.color}|${cap(o.short)}\u27e7` : cap(o.short); p.msg(o.isPlayer ? `${o.name} is here${md ? `, riding ${md.short || md.name}` : ''}.` : `${nm} (level ${o.level}) is here${o.enemy ? ', fighting' : ''}.`, 'living'); }
   }
 }
 
@@ -97,16 +97,17 @@ class Living extends GameObject {
   }
   msg() {}
   the() { return this.isPlayer || /^(the |[A-Z])/.test(this.name) ? this.name : 'the ' + this.name; }
-  ac() { return Object.values(this.equip).reduce((a, i) => a + i.ac, 0) + (this.natAc || 0) + this.fxVal('ac') + (this.cyberVal ? this.cyberVal('ac') : 0); }
-  atkPool() { return 5 + Math.floor(this.level * 0.5) + Math.floor(this.dex / 4) + this.fxVal('pool') + Math.floor(this.fxVal('crit') * 10) + (this.cyberVal ? this.cyberVal('pool') : 0) + Math.floor((this.remort || 0) / 4) + (this.isPlayer && D.brawn(this) ? 1 + Math.floor(this.level / 10) : 0); }
-  defPool() { return 2 + Math.floor(this.level * 0.25) + Math.floor(this.dex / 6) + Math.floor(this.ac() / 5) + Math.floor(this.fxVal('evade') * 20) + Math.floor((this.remort || 0) / 4); }
-  hurt(d) { // Luck: a player may spend a Luck point to halve a blow that would kill them
+  ac() { return D.equipAc(this) + (this.natAc || 0) + this.fxVal('ac') + (this.cyberVal ? this.cyberVal('ac') : 0); }
+  atkPool() { return 5 + Math.floor(this.level * 0.5) + Math.floor(this.dex / 4) + this.fxVal('pool') + (D.mountPool ? D.mountPool(this) : 0) + Math.floor(this.fxVal('crit') * 10) + (this.cyberVal ? this.cyberVal('pool') : 0) + Math.floor((this.remort || 0) / 4) + (this.isPlayer && D.brawn(this) ? 1 + Math.floor(this.level / 10) : 0); }
+  defPool() { return this.fxVal('dpool') + 2 + Math.floor(this.level * 0.25) + Math.floor(this.dex / 6) + Math.floor(this.ac() / 5) + Math.floor(this.fxVal('evade') * 20) + Math.floor((this.remort || 0) / 4); }
+  hurt(d) { if (this.isPlayer && D.relicOn && D.relicOn(this, 'invincible')) { this.msg('Your Ring of Invincibility flares: the blow does nothing!', 'win'); return 0; } // Luck: a player may spend a Luck point to halve a blow that would kill them
     if (this.isPlayer && d >= this.hp && this.luck > 0) { this.luck--; d = Math.floor(d / 2); this.msg('Luck holds! You ride out the blow, halving the damage.', 'win'); }
     this.hp -= d; return d;
   }
   fxVal(k) { return this.fx.reduce((s, e) => s + (e[k] || 0), 0); }
   addFx(e) { e.max = e.ticks; this.fx = this.fx.filter((x) => !(x.k === e.k && x.n === e.n)); this.fx.push(e); } // max: the full duration, so the ENHANCEMENTS bar can drain from full
-  weapon() { return this.equip.weapon ? this.equip.weapon.dmg : this.natDmg || [1, 3]; }
+  weapon(hand) { const w = hand === 'off' ? this.equip.offhand : this.equip.weapon; return w ? w.dmg : this.natDmg || [1, 3]; }
+  strEff() { return this.str * (this.isPlayer && D.relicOn && D.relicOn(this, 'strength') ? 2 : 1); } // Amulet of Strength doubles strength
   info() { return { id: this.id, name: cap(this.name), hp: Math.max(0, this.hp), max: this.maxhp, lvl: this.level, k: this.isPlayer ? 'p' : 'm', icon: this.icon, mp: this.isPlayer ? '' : (D.mobPic ? D.mobPic(this.mobId) : '') }; } // mp: this monster's picture file, if you supplied one
   engage(t) { if (this.env.def.safe) return false; this.enemy = t; if (t.isPlayer && this.mobId) t.sendPortrait(this.name, 'mob_' + this.mobId); return true; }
   tickFx() { // damage/heal over time, summons, expiry. Returns false if this object died.
@@ -115,7 +116,7 @@ class Living extends GameObject {
       if (e.k === 'dot') {
         const d = rnd(...e.dmg); this.hp -= d;
         if (this.env) this.env.fx({ a: src.info(), b: this.info(), dmg: d, hit: true, spell: { n: e.n, i: '☠️', c: '#8fd14f' } });
-        this.msg(`${e.n} burns you. (${d})`, 'hurt');
+        this.msg(`${e.n} ${e.verb || 'burns'} you. (${d})`, 'hurt');
         if (this.hp <= 0) { this.die(src); return false; }
       } else if (e.k === 'hot') this.hp = Math.min(this.maxhp, this.hp + e.heal);
       else if (e.k === 'buff' && e.regen) this.hp = Math.min(this.maxhp, this.hp + e.regen);
@@ -124,7 +125,7 @@ class Living extends GameObject {
         this.env.fx({ a: this.info(), b: t.info(), dmg: d, hit: true, spell: { n: e.n, i: e.i, c: '#cfd8dc' } });
         this.msg(`Your ${e.n} strikes ${t.the()}. (${d})`, 'spell'); if (t.hp <= 0) t.die(this);
       }
-      if (--e.ticks <= 0) { this.fx = this.fx.filter((x) => x !== e); if (e.k === 'buff' || e.k === 'summon') this.msg(`${e.n} fades.`, 'sys'); }
+      if (--e.ticks <= 0) { this.fx = this.fx.filter((x) => x !== e); if (e.k === 'buff' || e.k === 'summon') this.msg(`${e.n} fades.`, 'sys'); else if (e.status) this.msg(`You are no longer ${e.n}.`, 'sys'); }
     }
     return true;
   }
@@ -132,31 +133,37 @@ class Living extends GameObject {
     if (!this.env || !D.objects.has(this.id)) return; // destroyed earlier in this same tick
     const stunned = this.fx.some((e) => e.k === 'stun');
     if (!this.tickFx()) return;
+    if (this.isPlayer && D.relicOn && D.relicOn(this, 'regen') && this.hp < this.maxhp) this.hp = Math.min(this.maxhp, this.hp + 50); // Cloak of Regeneration: 50 hit points every round
     if (this.enemy && (this.enemy.env !== this.env || this.enemy.hp <= 0)) this.enemy = null;
-    if (stunned) { this.msg('You are stunned and cannot act!', 'hurt'); return; }
-    if (this.enemy) { const bw = this.isPlayer ? D.brawn(this) : null; for (let i = 0, n = bw ? bw.atk : 1; i < n && this.enemy && this.enemy.hp > 0 && this.enemy.env === this.env; i++) this.fight(this.enemy); return; } // the brawn classes strike several times a round
+    if (stunned) { const st = this.fx.find((e) => e.k === 'stun'); this.msg(`You are ${st && st.n === 'petrified' ? 'petrified' : 'stunned'} and cannot act!`, 'hurt'); return; }
+    const skip = this.fxVal('skip'); if (skip > 0 && Math.random() < skip) { this.msg('You hesitate and lose your turn!', 'hurt'); return; }
+    if (this.enemy) { const bw = this.isPlayer ? D.brawn(this) : null; for (let i = 0, n = (bw ? bw.atk : 1) * (this.isPlayer && D.relicOn && D.relicOn(this, 'speed') ? 2 : 1); i < n && this.enemy && this.enemy.hp > 0 && this.enemy.env === this.env; i++) { this.fight(this.enemy); if (this.isPlayer && this.equip.offhand && this.enemy && this.enemy.hp > 0) this.fight(this.enemy, 'off'); } return; } // the brawn classes strike several times a round
     if (this.hp < this.maxhp && this.beats++ % 2 === 0) this.hp = Math.min(this.maxhp, this.hp + 1 + Math.floor(this.con / 6) + (this.env && (this.env.def.inn || this.env.def.camp) ? 5 : 0) + (this.isPlayer && D.brawn(this) ? 2 + Math.floor(this.level / 5) : 0));
     this.idle();
   }
   idle() {}
-  fight(t) {
+  fight(t, hand) {
+    if (t.isPlayer && t.equip.shield && D.wxp) D.wxp(t, 'shield', 1); // blocking trains the shield skill
     const a = roll(this.atkPool()), d = roll(t.defPool()), net = a.h - d.h, hit = net > 0 && !a.f;
     let dmg = 0, crit = false, vi = 0, smash = false;
     if (hit) { // net hits add damage; six or more net hits is a critical
-      const [lo, hi] = this.weapon(); dmg = rnd(lo, hi) + Math.floor(this.str / 5) + this.fxVal('atk') + (this.cyberVal ? this.cyberVal('dmg') : 0);
+      const [lo, hi] = this.weapon(hand); dmg = rnd(lo, hi) + Math.floor(this.strEff() / 5) + this.fxVal('atk') + (this.cyberVal ? this.cyberVal('dmg') : 0);
+      if (this.isPlayer && D.wmod) dmg = Math.round(dmg * D.wmod(this, hand === 'off' ? this.equip.offhand : this.equip.weapon, hand)); // weapon class and weapon skill
       dmg = Math.floor(dmg * (1 + 0.06 * Math.min(net - 1, 8))); crit = net >= 6; if (crit) dmg = Math.floor(dmg * 1.4);
       dmg = Math.max(1, dmg - rnd(0, Math.floor(t.ac() * 0.6)));
       const bw = this.isPlayer ? D.brawn(this) : null, tb = t.isPlayer ? D.brawn(t) : null; // Juggernaut and Titan: Brute Force, Hulking, Thick Skin
       if (bw) { dmg = Math.round(dmg * bw.dmg); if (Math.random() < bw.extra) { dmg += Math.round(dmg * (bw.xlo + Math.random() * (bw.xhi - bw.xlo))); smash = true; if (bw.stun && t.addFx && Math.random() < bw.stun) t.addFx({ k: 'stun', n: 'stun', ticks: 2, src: this }); } }
+      if (this.isPlayer && this.align === 'evil') dmg = Math.round(dmg * 1.05); // evil alignment: +5% damage
       if (tb) dmg = Math.max(1, Math.round(dmg * (1 - tb.dr)));
       vi = VERBS.findIndex((v) => dmg / t.maxhp < v[0]); dmg = t.hurt(dmg);
+      if (this.isPlayer && D.wskillHit) D.wskillHit(this, hand); if (D.status && dmg > 0) D.status.maybe(this, t, hand);
       if (bw && bw.steal) this.hp = Math.min(this.maxhp, this.hp + Math.round(dmg * bw.steal));
     }
     if (!t.enemy && t.hp > 0) t.engage(this);
     if (t.isPlayer && t.autoheal && t.hp > 0) t.autoHealCheck(); if (t.isPlayer && t.autoflee && t.hp > 0) t.autoFleeCheck();
-    const sty = styleOf(this), [, v2, v3, adv] = (sty ? sty.set : VERBS)[vi] || [], c = (crit ? ' Critical hit!' : '') + (smash ? ' SMASH!' : '');
+    const sty = styleOf(this, hand === 'off' ? this.equip.offhand : undefined), [, v2, v3, adv] = (sty ? sty.set : VERBS)[vi] || [], c = (crit ? ' Critical hit!' : '') + (smash ? ' SMASH!' : '');
     if (hit) {
-      this.msg(`You ${v2} ${t.the()}${adv}.${c} (${dmg})`, 'combat');
+      this.msg(`${hand === 'off' ? '(off-hand) ' : ''}You ${v2} ${t.the()}${adv}.${c} (${dmg})`, 'combat');
       t.msg(`${cap(this.the())} ${v3} you${adv}.${c} (${dmg})`, 'hurt');
       this.env.tell(`${cap(this.the())} ${v3} ${t.the()}${adv}.`, [this, t], 'combat2');
     } else if (a.f) {
@@ -194,6 +201,7 @@ class Monster extends Living {
     killer = killer && D.objects.has(killer.id) ? killer : NOBODY;
     this.env.tell(`${cap(this.the())} dies.`, killer, 'combat'); killer.msg(`You have slain ${this.the()}!`, 'win'); if (killer.isPlayer && this.def && this.def.farmAnimal && D.farm) D.farm.punish(killer, this); // the farmer, the cows and the sheep: an hour's ban from farming
     if (killer.isPlayer && this.def.legend && Math.random() < this.def.legend.chance) D.legendFound(killer, this, this.def.legend.item);
+    if (D.relics) D.relics.roll(killer, this);
     for (const [id, p] of this.def.drops || []) if (Math.random() < p) { const it = D.cloneItem(id); it.move(this.env); killer.msg(`${cap(this.the())} dropped ${it.short}.`, 'items'); }
     this.env.fx({ a: killer.info(), b: { ...this.info(), hp: 0 }, dmg: 0, hit: false, dead: true });
     const g = rnd(...(this.def.gold || [this.level * 2, this.level * 5]));
@@ -209,23 +217,25 @@ class Monster extends Living {
 class Player extends Living {
   constructor(name, cls = 'barbarian') {
     super(); this.isPlayer = true; this.name = name; this.short = name; this.ids = [name.toLowerCase()];
-    this.cls = D.K.CLASSES[cls] ? cls : 'barbarian'; this.gender = 'nonbinary'; this.bounty = 0; this.bounties = 0; this.mute = {}; this.evk = {}; this.primeUntil = 0; this.primeReady = 0; this.farm = { plots: [], ban: 0, reward: false }; this.explored = new Set(); this.created = Date.now(); this.playMs = 0; this.loginAt = Date.now(); this.title = ''; this.autokill = false; this.fwd = { on: false }; this.architect = false; this.milestones = []; this.email = ''; this.emailHidden = false; this.brief = false; this.keepBag = {}; this.gag = false; this.triggers = []; this.tut = { off: false, seen: false, step: 0, done: {} }; this.team = null; this.autoflee = false; this.aliases = {}; this.kpOn = true; this.kpMap = { ...KP_DEFAULT }; this.notify = true; this.skills = {}; this.bag = {}; this.bagMode = 'loot'; this.tools = {}; this.remort = 0; this.luck = 3; this.cyber = []; this.xp = 0; this.gold = 25; this.quests = {}; this.qdone = new Set(); this.qp = 0; this.gos = true; this.visited = new Set(); this.wiz = false; this.send = () => {};
+    this.cls = D.K.CLASSES[cls] ? cls : 'barbarian'; this.gender = 'nonbinary'; this.bounty = 0; this.bounties = 0; this.mute = {}; this.evk = {}; this.primeUntil = 0; this.primeReady = 0; this.farm = { plots: [], ban: 0, reward: false }; this.explored = new Set(); this.created = Date.now(); this.playMs = 0; this.loginAt = Date.now(); this.align = 'neutral'; this.alignAt = 0; this.cyberUp = {}; this.dailyAt = 0; this.dailyStreak = 0; this.wskill = {}; this.tp = { pts: 0 }; this.marks = {}; this.mount = null; this.title = ''; this.autokill = false; this.fwd = { on: false }; this.architect = false; this.milestones = []; this.email = ''; this.emailHidden = false; this.brief = false; this.keepBag = {}; this.gag = false; this.triggers = []; this.tut = { off: false, seen: false, step: 0, done: {} }; this.team = null; this.autoflee = false; this.aliases = {}; this.kpOn = true; this.kpMap = { ...KP_DEFAULT }; this.notify = true; this.skills = {}; this.bag = {}; this.bagMode = 'loot'; this.tools = {}; this.remort = 0; this.luck = 3; this.cyber = []; this.xp = 0; this.gold = 25; this.quests = {}; this.qdone = new Set(); this.qp = 0; this.gos = true; this.visited = new Set(); this.wiz = false; this.send = () => {};
     this.recalc(); this.hp = this.maxhp; this.mp = this.maxmp; D.ensureKit(this);
   }
   klass() { return D.K.CLASSES[this.cls] || D.K.CLASSES.barbarian; }
-  cyberVal(k) { return this.cyber.reduce((s, id) => s + (((D.W.items[id] || {}).bonus || {})[k] || 0), 0) + Object.values(this.equip).reduce((s, i) => s + ((((i && i.def) || {}).bonus || {})[k] || 0), 0); } // chrome plus equipped gear bonuses
+  cyberBonus(id, k) { const b = (((D.W.items[id] || {}).bonus || {})[k] || 0), up = (this.cyberUp && this.cyberUp[id]) || 0; return b + (b > 0 && up ? up * Math.max(1, Math.round(b * 0.2)) : 0); } // augments (up to 5) add 20% of an implant's bonus each
+  taskBonus(k) { const m = { str: 'brawn', dex: 'reflex', con: 'grit', mind: 'mind', will: 'will', charm: 'charm' }[k]; return m && this.tp ? this.tp[m] || 0 : 0; } // task points
+  cyberVal(k) { return this.cyber.reduce((s, id) => s + this.cyberBonus(id, k), 0) + this.taskBonus(k) + Object.values(this.equip).reduce((s, i) => s + ((((i && i.def) || {}).bonus || {})[k] || 0), 0); } // chrome plus equipped gear bonuses
   playTotal() { return (this.playMs || 0) + (Date.now() - (this.loginAt || Date.now())); } // total time logged in, live
   auraMax() { return +(6 + 0.03 * Math.max(0, this.level - 1) + (this.remort || 0)).toFixed(2); } // 6.0, a little more with every level, and a full point for every remort
   aura() { return Math.max(0, +(this.auraMax() - this.cyber.reduce((s, id) => s + ((D.W.items[id] || {}).aura || 0), 0)).toFixed(2)); } // chrome erodes aura, and aura powers magic
   maxLuck() { return Math.round((3 + Math.floor(this.level / 10) + Math.floor(this.cyberVal('will') / 2)) * (D.primeOn(this) ? 1.5 : 1)); }
   xpNeed(l) { return Math.round(need(l) * (1 + 0.1 * this.remort)); } // each remort makes levelling 10% slower
-  attrs() { const k = this.klass(), L = this.level; return { Brawn: this.str, Reflex: this.dex, Grit: this.con, Mind: 6 + Math.floor(L * 0.6) + Math.floor(k.mpl / 3) + this.cyberVal('mind'), Will: 6 + Math.floor(L * 0.5) + k.rg * 2 + this.cyberVal('will'), Charm: 6 + Math.floor(L * 0.4) + (this.cls === 'bard' ? 4 : 0) + this.cyberVal('charm') }; }
+  attrs() { const k = this.klass(), L = this.level, mi = D.relicOn && D.relicOn(this, 'intellect') ? 2 : 1; return { Brawn: this.strEff(), Reflex: this.dex, Grit: this.con, Mind: (6 + Math.floor(L * 0.6) + Math.floor(k.mpl / 3) + this.cyberVal('mind')) * mi, Will: 6 + Math.floor(L * 0.5) + k.rg * 2 + this.cyberVal('will'), Charm: 6 + Math.floor(L * 0.4) + (this.cls === 'bard' ? 4 : 0) + this.cyberVal('charm') }; }
   cap() { return this.cls === 'scavenger' ? 30 : 15; }
   recalc() {
     const k = this.klass(), L = this.level; this.icon = k.icon;
     this.str = 10 + Math.floor(L * 0.8) + k.str + this.cyberVal('str'); this.dex = 10 + Math.floor(L * 0.5) + k.dex + this.cyberVal('dex'); this.con = 10 + Math.floor(L * 0.7) + k.con + this.cyberVal('con');
     const rm = 1 + 0.04 * (this.remort || 0), pm = D.primeOn(this) ? 1.5 : 1; // PRIME: +50% to the vitals while it burns // each remort adds 4% to maximum health and mana
-    this.maxhp = Math.round((30 + L * k.hpl + this.con * 2 + this.cyberVal('hp')) * rm * pm); this.maxmp = Math.round((15 + L * k.mpl + this.cyberVal('mp') + this.cyberVal('mind') * 4) * clamp(this.aura() / 6, 0.15, 1) * rm * pm); this.mp = Math.min(this.mp || 0, this.maxmp);
+    this.maxhp = Math.round((30 + L * k.hpl + this.con * 2 + this.cyberVal('hp')) * rm * pm * (this.align === 'good' ? 1.05 : 1)); this.maxmp = Math.round((15 + L * k.mpl + this.cyberVal('mp') + this.cyberVal('mind') * 4) * clamp(this.aura() / 6, 0.15, 1) * rm * pm * (D.relicOn && D.relicOn(this, 'intellect') ? 2 : 1)); this.mp = Math.min(this.mp || 0, this.maxmp);
     this.long = `${[D.preTitle(this), this.name].filter(Boolean).join(' ')}${this.title ? ', ' + this.title : ''}, a level ${L} ${D.genderLabel(this.gender)} ${k.name}.`;
   }
   sendQuests() {
@@ -258,13 +268,16 @@ class Player extends Living {
     this.send({ t: 'spells', cls: this.klass().name, level: this.level, list: D.spellsOf(this).map(({ k, n, lvl, mp, i, c, d, school, rem }) => ({ k, n, lvl, mp, i, c, d, school, rem })) });
   }
   msg(m, c = 'text') { if (c === 'miss' && this.gag) return; (this.recent || (this.recent = [])).push(D.stripColor(String(m)).slice(0, 200)); if (this.recent.length > 14) this.recent.shift(); this.send({ t: 'text', m, c }); } // recent: the last lines this player saw, attached to bug reports // `gag on` hides misses and fumbles
-  gainXp(n) {
-    this.xp += n; this.msg(`You gain ${n} experience.`, 'sys');
-    while (this.level < D.MAXLV && this.xp >= this.xpNeed(this.level)) { this.level++; this.recalc(); D.announce(`${this.name} has gained a level and is now level ${this.level}!`, this.level % 10 === 0 ? 'milestone' : 'level'); this.hp = this.maxhp; this.mp = this.maxmp; this.luck = this.maxLuck(); this.send({ t: 'sound', k: 'levelup' }); this.msg(`*** You reach level ${this.level}! You feel stronger. ***`, 'win');
+  gainXp(n, quiet) {
+    if (this.align === 'neutral' && this.isPlayer && !this.isBot) n = Math.round(n * 1.05); // neutral alignment: +5% experience
+    this.xp += n; if (!quiet) this.msg(`You gain ${n} experience.`, 'sys');
+    while (this.level < D.MAXLV && this.xp >= this.xpNeed(this.level)) { this.level++; this.recalc(); D.announce(`${this.name} has gained a level and is now level ${this.level}!`, this.level % 10 === 0 ? 'milestone' : 'level'); if (D.news) D.news.log('level', this, { lv: this.level }); if (D.tasks) D.tasks.onLevel(this); if (D.status) D.status.cure(this); this.hp = this.maxhp; this.mp = this.maxmp; this.luck = this.maxLuck(); this.send({ t: 'sound', k: 'levelup' }); this.msg(`*** You reach level ${this.level}! You feel stronger. ***`, 'win');
       for (const s of D.spellsOf(this)) if (s.lvl === this.level) this.msg(`New ability unlocked: ${s.n} (${s.d})`, 'win'); this.sendSpells(); }
   }
   die(killer) {
     if (D.deaths) D.deaths.record(this, killer); // the death tally (deaths.js)
+    this.mount = null;
+    if (!this.isBot && D.news) D.news.log('death', this, { by: killer && killer !== D.NOBODY && killer.name ? killer.name : '', where: this.env ? this.env.name : '' });
     if (!this.isBot) D.announce(`${this.name} (level ${this.level} ${this.klass().name}) ${killer && killer !== D.NOBODY && killer.name ? `was slain by ${killer.name}` : 'has died'}${this.env ? ` in ${this.env.name}` : ''}.`, 'deaths', 'deathmsg'); // the deaths channel
     this.send({ t: 'sound', k: this.gender === 'male' ? 'deathm' : this.gender === 'female' ? 'deathf' : (Math.random() < 0.5 ? 'deathm' : 'deathf') }); this.msg('You have died. Your vision fades to static...', 'hurt'); this.lastDeath = this.env.path; this.deaths = (this.deaths || 0) + 1; D.taunt(this);
     this.env.tell(`${this.name} has been slain by ${killer.the()}!`, this, 'combat');
@@ -278,7 +291,7 @@ class Player extends Living {
   }
   sendStats() {
     const w = this.equip.weapon;
-    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), up: Math.floor((Date.now() - D.startedAt) / 1000), aq: !!this.anyQuest, pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
+    this.send({ t: 'stats', name: this.name, ic: this.klass().icon, rm: this.remort, ck: this.cls, gd: this.gender, pic: D.playerPic ? D.playerPic(this) : '', gold: this.gold, qp: this.qp, lk: this.luck, mlk: this.maxLuck(), aura: this.aura(), amax: this.auraMax(), up: Math.floor((Date.now() - D.startedAt) / 1000), aq: !!this.anyQuest, pro: (this.remort || 0) >= 1, pa: Math.max(0, Math.ceil(((this.primeUntil || 0) - Date.now()) / 1000)), pc: Math.max(0, Math.ceil(((this.primeReady || 0) - Date.now()) / 1000)), bpts: this.bounty || 0, cls: this.klass().name, mp: this.mp, mmp: this.maxmp, fx: this.fx.filter((e) => e.k !== 'hot' || e.ticks > 0).map((e) => ({ n: e.n, k: e.k, t: e.ticks, m: e.max || e.ticks, neg: e.status ? 1 : 0 })), level: this.level, hp: this.hp, max: this.maxhp, xp: this.xp, lo: this.level > 1 ? this.xpNeed(this.level - 1) : 0, hi: this.xpNeed(this.level), ac: this.ac(), wpn: w ? w.name : 'bare hands', wiz: this.wiz });
   }
   heart_beat() {
     if (this.primeUntil && Date.now() >= this.primeUntil) { this.primeUntil = 0; this.recalc(); this.hp = Math.min(this.hp, this.maxhp); this.mp = Math.min(this.mp, this.maxmp); this.msg('PRIME fades.', 'sys'); this.sendStats(); }
@@ -287,11 +300,11 @@ class Player extends Living {
     this.sendStats(); if (Object.keys(this.quests).length && (this.qt = (this.qt || 0) + 1) % 3 === 0) this.sendQuests();
   }
   toRec() {
-    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, autoheal: this.autoheal, anyQuest: !!this.anyQuest, farm: this.farm, primeUntil: this.primeUntil || 0, primeReady: this.primeReady || 0, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, kpVer: 2, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited], explored: [...this.explored], created: this.created, playMs: this.playTotal(),
-      inv: this.inv.map((i) => i.itemId), ups: this.inv.map((i) => i.up || 0), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId, this.inv.indexOf(i)]) };
+    return { fwd: this.fwd, architect: !!this.architect, milestones: this.milestones, autokill: this.autokill, evk: this.evk, brief: this.brief, email: this.email, emailHidden: this.emailHidden, keepBag: this.keepBag, keep: this.keepCounts(), seen: Date.now(), mute: this.mute, title: this.title, bounty: this.bounty, bounties: this.bounties, gag: this.gag, triggers: this.triggers, tut: this.tut, autoflee: this.autoflee, autoheal: this.autoheal, anyQuest: !!this.anyQuest, farm: this.farm, primeUntil: this.primeUntil || 0, primeReady: this.primeReady || 0, aliases: this.aliases, kpOn: this.kpOn, kpSet: !!this.kpSet, kpMap: this.kpMap, kpVer: 2, notify: this.notify, bag: this.bag, bagMode: this.bagMode, tools: this.tools, skills: this.skills, remort: this.remort, gender: this.gender, luck: this.luck, cyber: this.cyber, qp: this.qp, quests: this.quests, qdone: [...this.qdone], gos: this.gos, gold: this.gold, cls: this.cls, mp: this.mp, level: this.level, xp: this.xp, hp: this.hp, wiz: this.wiz, room: this.env && this.env.path, visited: [...this.visited], explored: [...this.explored], created: this.created, playMs: this.playTotal(), align: this.align, alignAt: this.alignAt || 0, cyberUp: this.cyberUp, dailyAt: this.dailyAt || 0, dailyStreak: this.dailyStreak || 0, wskill: this.wskill, tp: this.tp, marks: this.marks, mount: this.mount,
+      inv: this.inv.map((i) => i.itemId), ups: this.inv.map((i) => i.up || 0), exps: this.inv.map((i) => i.exp || 0), rls: this.inv.map((i) => i.rl || 0), equip: Object.entries(this.equip).map(([s, i]) => [s, i.itemId, this.inv.indexOf(i)]) };
   }
   load(rec) {
-    Object.assign(this, { primeUntil: +rec.primeUntil || 0, primeReady: +rec.primeReady || 0, evk: Object.fromEntries(Object.entries(rec.evk && typeof rec.evk === 'object' ? rec.evk : {}).filter(([k, v]) => /^[a-z]{3,12}$/.test(k) && Number.isFinite(v)).map(([k, v]) => [k, Math.min(1e6, Math.max(0, v | 0))])), title: D.cleanTitle(rec.title), fwd: rec.fwd && typeof rec.fwd === 'object' ? { on: !!rec.fwd.on, email: String(rec.fwd.email || ''), pending: rec.fwd.pending || null } : { on: false }, architect: !!rec.architect, milestones: (Array.isArray(rec.milestones) ? rec.milestones : []).filter((a) => typeof a === 'string').slice(0, 40), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather, taunts: !!(rec.mute || {}).taunts, deaths: !!(rec.mute || {}).deaths }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, autoheal: !!rec.autoheal, anyQuest: !!rec.anyQuest, farm: { plots: ((rec.farm || {}).plots || []).map((x) => ({ s: x.s | 0, crop: x.crop, at: +x.at || 0 })).slice(0, 20), ban: +((rec.farm || {}).ban) || 0, reward: !!(rec.farm || {}).reward }, kpOn: rec.kpSet ? !!rec.kpOn : true, kpSet: !!rec.kpSet, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
+    Object.assign(this, { wskill: D.cleanWskill ? D.cleanWskill(rec.wskill) : {}, tp: D.cleanTp ? D.cleanTp(rec) : { pts: 0 }, marks: D.cleanMarks ? D.cleanMarks(rec.marks) : {}, dailyAt: +rec.dailyAt || 0, dailyStreak: Math.max(0, Math.min(10000, rec.dailyStreak | 0)), cyberUp: Object.fromEntries(Object.entries(rec.cyberUp && typeof rec.cyberUp === 'object' ? rec.cyberUp : {}).filter(([k, v]) => D.W.items[k] && v > 0).map(([k, v]) => [k, Math.min(5, v | 0)])), align: ['good', 'neutral', 'evil'].includes(rec.align) ? rec.align : 'neutral', alignAt: +rec.alignAt || 0, primeUntil: +rec.primeUntil || 0, primeReady: +rec.primeReady || 0, evk: Object.fromEntries(Object.entries(rec.evk && typeof rec.evk === 'object' ? rec.evk : {}).filter(([k, v]) => /^[a-z]{3,12}$/.test(k) && Number.isFinite(v)).map(([k, v]) => [k, Math.min(1e6, Math.max(0, v | 0))])), title: D.cleanTitle(rec.title), fwd: rec.fwd && typeof rec.fwd === 'object' ? { on: !!rec.fwd.on, email: String(rec.fwd.email || ''), pending: rec.fwd.pending || null } : { on: false }, architect: !!rec.architect, milestones: (Array.isArray(rec.milestones) ? rec.milestones : []).filter((a) => typeof a === 'string').slice(0, 40), autokill: !!rec.autokill, brief: !!rec.brief, email: D.cleanEmail(rec.email), emailHidden: !!rec.emailHidden, keepBag: Object.fromEntries(Object.keys(rec.keepBag || {}).filter((id) => D.W.items[id]).map((id) => [id, 1])), mute: { bounty: !!(rec.mute || {}).bounty, levels: !!(rec.mute || {}).levels, quests: !!(rec.mute || {}).quests, weather: !!(rec.mute || {}).weather, taunts: !!(rec.mute || {}).taunts, deaths: !!(rec.mute || {}).deaths }, bounty: Math.max(0, rec.bounty | 0), bounties: Math.max(0, rec.bounties | 0), gag: !!rec.gag, autoflee: !!rec.autoflee, autoheal: !!rec.autoheal, anyQuest: !!rec.anyQuest, farm: { plots: ((rec.farm || {}).plots || []).map((x) => ({ s: x.s | 0, crop: x.crop, at: +x.at || 0 })).slice(0, 20), ban: +((rec.farm || {}).ban) || 0, reward: !!(rec.farm || {}).reward }, kpOn: rec.kpSet ? !!rec.kpOn : true, kpSet: !!rec.kpSet, notify: rec.notify !== false, bagMode: ['loot', 'overflow', 'off'].includes(rec.bagMode) ? rec.bagMode : 'loot', skills: rec.skills && typeof rec.skills === 'object' ? rec.skills : {}, remort: Math.max(0, Math.min(40, rec.remort | 0)), gender: ['male', 'female', 'nonbinary'].includes(rec.gender) ? rec.gender : 'nonbinary', cyber: (rec.cyber || []).filter((id) => D.W.items[id]), luck: rec.luck ?? 3, cls: D.K.CLASSES[rec.cls] ? rec.cls : 'barbarian', level: rec.level || 1, xp: rec.xp || 0, gold: rec.gold ?? 25, quests: rec.quests || {}, qdone: new Set(rec.qdone || []), qp: rec.qp ?? (rec.qdone || []).reduce((s, id) => s + ((D.qDef(id) || { rew: {} }).rew.qp || 0), 0), gos: rec.gos !== false, wiz: !!rec.wiz, visited: new Set(rec.visited || []) }); this.recalc(); this.hp = clamp(rec.hp || this.maxhp, 1, this.maxhp); this.mp = clamp(rec.mp ?? this.maxmp, 0, this.maxmp);
     this.aliases = {}; for (const [k, v] of Object.entries(rec.aliases || {})) if (/^[a-z][a-z0-9_]{0,11}$/.test(k) && typeof v === 'string' && v.length <= 200) this.aliases[k] = v;
     this.triggers = D.cleanTriggers(rec.triggers); const tu = rec.tut || {}; this.tut = { off: !!tu.off, seen: !!tu.seen, step: Math.max(0, Math.min(30, tu.step | 0)), done: Object.fromEntries(Object.keys(tu.done || {}).filter((k) => /^[a-z]{2,12}$/.test(k)).map((k) => [k, 1])) };
     this.kpMap = { ...KP_DEFAULT }; for (const [k, v] of Object.entries(D.kpFromRec(rec))) if (k in KP_DEFAULT && typeof v === 'string') this.kpMap[k] = v.slice(0, 100);
@@ -299,6 +312,7 @@ class Player extends Living {
     this.tools = {}; for (const [id, t] of Object.entries(rec.tools || {})) if (D.T && D.T.TOOLS[id]) this.tools[id] = { uses: Math.max(0, t.uses | 0) }; D.ensureKit(this);
     for (const id of rec.inv || []) if (D.W.items[id]) D.cloneItem(id).move(this);
     for (const [id, n] of Object.entries(rec.keep || {})) { let c = n | 0; for (const it of this.inv) if (c > 0 && it.itemId === id) { it.kept = true; c--; } } // items marked with `keep`
+    (rec.exps || []).forEach((e, i) => { if (e && this.inv[i]) { this.inv[i].exp = +e; this.inv[i].rl = ((rec.rls || [])[i] | 0); if (D.applyRelic) D.applyRelic(this.inv[i]); } }); // relics that expire
     (rec.ups || []).forEach((u, i) => { if (u && this.inv[i]) { this.inv[i].up = Math.min(10, u | 0); D.applyUp(this.inv[i]); } }); // weapon upgrades
     for (const [slot, id, idx] of rec.equip || []) { const used = Object.values(this.equip), it = (this.inv[idx] && this.inv[idx].itemId === id && !used.includes(this.inv[idx]) ? this.inv[idx] : null) || this.inv.find((i) => i.itemId === id && !used.includes(i)); if (it) this.equip[slot] = it; }
   }
@@ -323,11 +337,11 @@ D.mapFor = (p) => {
   const z = p.env.z, rooms = [], shown = new Set([...p.visited, ...[...D.rooms.values()].filter((r) => r.area === p.env.area && r.z === z && !r.def.hidden).map((r) => r.path)]); // the whole map of the area you are in, plus anywhere you have been
   for (const path of shown) {
     const r = D.rooms.get(path); if (!r || r.z !== z) continue;
-    rooms.push({ p: path, x: r.x, y: r.y, n: r.name, t: r.terrain, ex: Object.entries(r.exits).map(([d, to]) => ({ d, to })) });
+    rooms.push({ p: path, x: r.x, y: r.y, n: r.name, t: r.terrain, npc: r.inv.some((o) => o.isNpc) ? 1 : 0, ex: Object.entries(r.exits).map(([d, to]) => ({ d, to })) });
   }
   const others = [...D.players.values()].filter((o) => o !== p && o.env).map((o) => o.env.path);
   const mobs = p.env.inv.filter((o) => o.isLiving && !o.isPlayer).length;
-  return { t: 'map', z, rooms, me: p.env.path, ra: p.env.area, rn: p.env.name, wx: D.weatherFor ? D.weatherFor(p) : '', rp: D.roomPic ? D.roomPic(p.env.path) : '', ap: D.areaPic ? D.areaPic(p.env.area) : '', others, mobs, area: D.AREA_LABEL[p.env.area] || cap(p.env.area) };
+  return { t: 'map', z, rooms, me: p.env.path, ra: p.env.area, rn: p.env.name, wx: D.weatherFor ? D.weatherFor(p) : '', rp: D.roomPic ? D.roomPic(p.env.path) : '', ap: D.areaPic ? D.areaPic(p.env.area) : '', others, mobs, jb: p.env.inv.some((o) => o.def && o.def.jukebox) ? 1 : 0, area: D.AREA_LABEL[p.env.area] || cap(p.env.area) };
 };
 D.pushMaps = () => { for (const p of D.players.values()) if (p.env) p.send(D.mapFor(p)); };
 // ---- bag of holding and bound tools: automatic for every character, never droppable or sellable, saved with the player ----
@@ -412,7 +426,7 @@ D.takeFloor = (p, it) => { // picking up an item from the floor
   return false;
 };
 // ---- shopkeepers: every shop, exchange and clinic has someone behind the counter (they cannot be fought) ----
-const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', castle: 'fantasy', farm: 'west', blimble: 'fantasy', cloud: 'fantasy', brogym: 'modern', sea: 'fantasy', hades: 'fantasy', pluto: 'scifi', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
+const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', castle: 'fantasy', farm: 'west', blimble: 'fantasy', cloud: 'fantasy', cinema: 'modern', exterminus: 'scifi', brogym: 'modern', sea: 'fantasy', hades: 'fantasy', pluto: 'scifi', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
 const SHOPKEEPERS = { west: [['Dusty Pete', 'a dusty old trader with a corncob pipe and sleeve garters'], ['Widow Mae', 'a sharp-eyed widow in a black bonnet who counts change twice'], ['Cactus Jack', 'a leathery old-timer with a bandana and a grin full of gold'], ['Honest Abe', 'a rumpled clerk in a green eyeshade who swears he is honest'], ['Silas the Peddler', 'a bent peddler with a pack that never seems to empty']],
   fantasy: [['Merchant Orlo', 'a round merchant in a velvet cap with rings on every finger'], ['Dame Hesper', 'a tall, calm trader in a hooded traveling cloak'], ['Old Fenwick', 'a gnarled old shopkeeper with spectacles on a chain'], ['Brindle the Trader', 'a cheerful halfling trader perched on a tall stool'], ['Quillon the Fence', 'a quick-eyed dealer who asks no questions']],
   scifi: [['Vendor-Bot 7', 'a dented vending droid with a flickering screen face'], ['Trader Zix', 'a six-armed trader in a patched jumpsuit, juggling inventory'], ['Quartermaster Nova', 'a brisk quartermaster in a crisp silver uniform'], ['Dealer K-9', 'a gruff cyborg dealer with a chrome jaw and a tablet'], ['Supply Officer Tam', 'a tired supply officer with a stylus behind each ear']],
@@ -426,7 +440,7 @@ D.ensureShopkeeper = (room) => { // registers a shopkeeper NPC for a shop, excha
 const MUTEKEY = { bounty: 'bounty', level: 'levels', milestone: 'levels', quest: 'quests', taunts: 'taunts', deaths: 'deaths' }; // players can mute these announcement types
 const TAGS = { bounty: '[bounty] ', deaths: '[death] ' }; // channel tags in front of announcements (other announcements keep the megaphone)
 D.announce = (text, kind, cls = 'announce') => { if (D.tweet) D.tweet(text, kind); for (const p of D.players.values()) if (!(p.mute && p.mute[MUTEKEY[kind]])) p.msg((TAGS[kind] || '📣 ') + text, cls); if (D.bridge && D.bridge.wantsAnnouncements()) D.bridge.out((TAGS[kind] || '📣 ') + text); }; // mud-wide announcements
-D.presence = (p, kind) => { // everyone online hears when a player logs in or out (players can mute it with `notify off`)
+D.presence = (p, kind) => { if (kind === 'in' && D.news) D.news.log('login', p); // everyone online hears when a player logs in or out (players can mute it with `notify off`)
   const who = `${p.name} (${p.remort ? `Remort ${p.remort}, ` : ''}L${p.level} ${p.klass().name})`, text = `${who} has logged ${kind === 'in' ? 'in' : 'out'}.`;
   for (const o of D.players.values()) if (o !== p && !o.isBot && o.notify !== false) o.msg('🔔 ' + text, 'notify');
   if (D.bridge && D.bridge.wantsPresence()) D.bridge.out('🔔 ' + text);

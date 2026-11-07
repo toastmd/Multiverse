@@ -93,7 +93,7 @@ D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' 
 };
 D.builderInfo = () => ({ url: `http://localhost:${PORT}/builder.html`, key: BKEY });
 D.legacyBirth = (name) => { try { const st = fs.statSync(path.join(DATA, name.toLowerCase() + '.json')); return Math.round(st.birthtimeMs && st.birthtimeMs > 0 ? Math.min(st.birthtimeMs, st.mtimeMs) : st.mtimeMs); } catch (e) { return Date.now(); } }; // characters from before ages were recorded: the date their save file was created
-D.initAge = (p, rec, fresh) => { // player age (since creation), total time logged in, and exploration points
+D.initAge = (p, rec, fresh) => { p.lastCmd = Date.now(); // player age (since creation), total time logged in, and exploration points
   p.loginAt = Date.now(); p.playMs = fresh ? 0 : Math.max(0, +rec.playMs || 0); p.created = fresh ? Date.now() : (+rec.created || D.legacyBirth(p.name));
   const start = D.rooms.get(D.W.start).area; p.explored = new Set(Array.isArray(rec.explored) ? rec.explored.filter((x) => D.rooms.has(x)) : fresh ? [] : [...p.visited].filter((x) => D.rooms.has(x) && D.rooms.get(x).area !== start && D.explorable(D.rooms.get(x))));
 };
@@ -122,8 +122,10 @@ D.deleteCharacter = (name) => { // completely removes a character: the save file
 };
 D.silenced = new Map(); // name -> until (ms); silenced players cannot send tells, gossips or shouts
 D.isSilenced = (name) => { const t = D.silenced.get(name); if (!t) return 0; if (t <= Date.now()) { D.silenced.delete(name); return 0; } return t; };
+const LD_MS = 5 * 60 * 1000; // a dropped connection leaves your character in the world, linkdead, for 5 minutes (or until you log back in)
+function linkLost(p) { if (!p || p.gone || p.ld) return; p.ld = Date.now(); p.conn = null; p.send = () => {}; D.savePlayer(p); if (p.env) p.env.tell(`${p.name} has lost their connection.`, p, 'sys'); p.ldTimer = setTimeout(() => drop(p), LD_MS); }
 function drop(p, silent) { // disconnect cleanup; silent when the same player simply reconnects
-  if (!p || p.gone) return; p.gone = true; if (p.team) D.teamLeave(p, 'disconnected'); try { auction.onDrop(p); } catch (e) { D.log('auction', e.message); } D.savePlayer(p); if (!silent && !p.isBot) D.presence(p, 'out');
+  if (!p || p.gone) return; p.gone = true; clearTimeout(p.ldTimer); if (p.team) D.teamLeave(p, 'disconnected'); try { auction.onDrop(p); } catch (e) { D.log('auction', e.message); } D.savePlayer(p); if (!silent && !p.isBot) D.presence(p, 'out');
   if (p.env) p.env.tell(`${p.name} fades from the world.`, p, 'sys');
   D.players.delete(p.name); p.destroy(); D.pushMaps();
 }
@@ -146,11 +148,11 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash, ip: conn.ip || rec.ip || '' }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.initAge(p, rec, fresh); D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
+  D.initAge(p, rec, fresh); if (fresh && D.news) D.news.log('new', p); D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
-  p._qx = true; p.enter(room); delete p._qx; room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in');
+  p._qx = true; p.enter(room); delete p._qx; room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in'); D.relics.sweep(p); D.fixHands(p); p.recalc(); D.daily.claim(p); D.jukebox.push(p);
 }
 
 // ---- minimal RFC 6455 WebSocket ----
@@ -169,7 +171,7 @@ function ws(req, socket) {
   c.send = (o) => c.raw(1, Buffer.from(JSON.stringify(o)));
   c.close = () => { if (c.closed) return; c.raw(8, Buffer.alloc(0)); c.closed = true; socket.end(); };
   const t = setInterval(() => (c.count = 0), 1000);
-  socket.on('close', () => { clearInterval(t); c.closed = true; drop(c.player); });
+  socket.on('close', () => { clearInterval(t); c.closed = true; const pl = c.player; if (pl && !pl.isBot && !pl.quitting && !pl.gone && pl.conn === c) linkLost(pl); else drop(pl); });
   socket.on('error', () => socket.destroy());
   socket.on('data', (d) => {
     c.buf = Buffer.concat([c.buf, d]);
@@ -202,6 +204,11 @@ function ws(req, socket) {
 
 const TYPES = { '.svg': 'image/svg+xml', '.json': 'application/json', '.wav': 'audio/wav', '.txt': 'text/plain; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css' };
 const server = http.createServer((req, res) => {
+  if (req.url.startsWith('/api/pub/')) { // public, read-only JSON for the website: the top players and who is online (no rooms, no private details)
+    const send = (obj) => { res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=10', 'Access-Control-Allow-Origin': '*' }); res.end(JSON.stringify(obj)); }, route = req.url.split('?')[0];
+    if (route === '/api/pub/top') { const rows = D.leaderboard().filter((r) => !r.bot).slice(0, 50).map((r, i) => ({ rank: i + 1, name: r.name, cls: r.cn, lv: r.lv, rm: r.rm, quests: r.q, skills: r.t, bounty: r.b, explored: r.ex || 0, score: r.score, online: r.on })); return send({ updated: Date.now(), players: rows }); }
+    if (route === '/api/pub/who') { const all = [...D.players.values()].map((p) => ({ name: p.name, cls: p.klass().name, lv: p.level, rm: p.remort || 0, align: p.align || 'neutral', status: p.ld ? 'linkdead' : 'online', bot: !!p.isBot, mins: Math.floor((Date.now() - (p.loginAt || Date.now())) / 60000) })); return send({ updated: Date.now(), online: all.filter((x) => x.status === 'online').length, linkdead: all.filter((x) => x.status === 'linkdead').length, players: all.sort((a, b) => (a.status === 'linkdead') - (b.status === 'linkdead') || a.name.localeCompare(b.name)) }); }
+    res.writeHead(404); return res.end('not found'); }
   if (req.url.startsWith('/api/')) return api(req, res);
   const url = req.url.split('?')[0]; let f = path.join(PUB, url === '/' ? 'index.html' : path.normalize(url));
   if (f.startsWith(PUB) && fs.existsSync(f) && fs.statSync(f).isDirectory()) { if (!url.endsWith('/')) { res.writeHead(301, { Location: url + '/' }); return res.end(); } f = path.join(f, 'index.html'); } // /guide/ serves the player guide

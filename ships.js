@@ -4,6 +4,7 @@
 const D = require('./lib');
 const SHIPS = {
   tharsis: { name: 'Tharsis', rooms: ['frost/ship_ramp', 'frost/ship_deck', 'frost/ship_cockpit'], ramp: 'frost/ship_ramp', docks: { frost: 'frost/lodge', mars: 'mars/0_0' }, home: 'frost', ports: { frost: 'Frostpeak Station', mars: 'the Martian Landing Pad' }, pilot: 'the autopilot' },
+  pod: { name: 'Escape Pod', rooms: ['aurora/pod'], ramp: 'aurora/pod', docks: { aurora: 'aurora/m', exterminus: 'exterminus/0_0' }, home: 'aurora', ports: { aurora: 'the Aurora Escape Pod Bay', exterminus: 'the Exterminus Crash Beacon' }, pilot: "the pod's autopilot" },
   fang: { name: 'Crimson Fang', rooms: ['mars/fang_ramp', 'mars/fang_deck', 'mars/fang_bridge'], ramp: 'mars/fang_ramp', docks: { mars: 'mars/fleet', pluto: 'pluto/0_0' }, home: 'mars', ports: { mars: 'the Martian Fleet Dock', pluto: 'the Pluto Beachhead' }, pilot: 'Helmsman Zorp' },
 };
 const state = Object.fromEntries(Object.entries(SHIPS).map(([id, c]) => [id, { at: c.home, flying: false, empty: 0 }]));

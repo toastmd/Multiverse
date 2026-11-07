@@ -8,9 +8,10 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   dirt: 'DIRT. Packed brown earth, hard and dry on top and gritty beneath. Wheel ruts and old boot prints crowd the surface. It rises as dust with every step and turns to sticky mud in the rain. Not much grows here, but it is easy to dig and easy to follow tracks across.',
   stone: 'STONE. Cold gray rock: flagstones worn smooth by years of feet, or the raw floor of a cave, damp in the corners and ringing under your heels. Water seeps along the cracks and pale moss clings in the dark. It is hard on a fall and good for building, and when something glints in it, it is usually ore.',
   concrete: 'CONCRETE. Poured, gray and flat, cracked in places and stained with oil and faded paint lines. It echoes. Weeds push up through the seams and old gum is pressed into it like tiny fossils. This ground was made by people, for people and wheels, and it is the same wherever you go.',
+  water: 'WATER. Cool, clear water all around you, green near the surface and darker below, full of drifting light. It pushes gently at your limbs, carries the sound of distant currents, and everything you drop or lose is gone in a swirl of bubbles. Fish flicker past and the sea-floor sand ripples under your feet.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-D.bones = require('./bones'); D.farming = require('./farming'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
@@ -28,7 +29,7 @@ const scoreData = (p) => { // everything the graphical score window shows
   for (const it of p.inv) { if (it.type === 'material') mats[it.name] = (mats[it.name] || 0) + 1; if (!worn.has(it)) goods += sellPrice(p, it); }
   return { name: p.name, pre: D.preTitle(p), title: p.title || '', cls: k.name, ic: k.icon, ck: p.cls, gl: D.genderLabel(p.gender), rm: p.remort || 0, wiz: !!p.wiz, pic: D.playerPic(p), level: p.level, xp: p.xp, lo: p.level > 1 ? p.xpNeed(p.level - 1) : 0, hi: p.xpNeed(p.level),
     hp: p.hp, mhp: p.maxhp, mp: p.mp, mmp: p.maxmp, stam: p.cls === 'scavenger', luck: p.luck, mluck: p.maxLuck(), aura: p.aura(), amax: p.auraMax(), bp: p.bounty || 0, attrs: p.attrs(), atk: p.atkPool(), def: p.defPool(), ac: p.ac(), wpn: w ? { n: w.name, a: w.def.dmg[0], b: w.def.dmg[1] } : null,
-    gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), ex: p.explored.size, exm: D.exploreTotal(), born: p.created, played: p.playTotal(), sess: Date.now() - p.loginAt, agems: Date.now() - p.created, qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
+    gold: p.gold, goods, bounty: p.bounty || 0, bounties: p.bounties || 0, qp: p.qp, qpt: D.qpTotal(), ex: p.explored.size, exm: D.exploreTotal(), born: p.created, played: p.playTotal(), sess: Date.now() - p.loginAt, tp: (p.tp && p.tp.pts) || 0, mount: D.mountOf(p) ? D.mountOf(p).name : '', ws: Object.entries(p.wskill || {}).filter(([, k]) => k.lvl > 1).sort((x, y) => y[1].lvl - x[1].lvl).slice(0, 4).map(([t, k]) => [D.WTYPES[t], k.lvl]), align: p.align || 'neutral', agems: Date.now() - p.created, qa: Object.keys(p.quests).length, qd: p.qdone.size, qt: D.Q.QUESTS.length, pack: p.inv.length, cap: p.cap(), bag: D.bagUsed(p), bcap: D.bagCap(p), deaths: p.deaths || 0,
     skills: Object.entries(p.skills).map(([id, s]) => ({ n: D.T.SKILLS[id].name, i: D.T.SKILLS[id].icon || '', l: s.lvl })), chrome: p.cyber.map((id) => D.W.items[id].name), mats, equip: Object.fromEntries(Object.entries(p.equip).map(([sl, i]) => [sl, i.name])) };
 };
 const questCard = (p, q) => { // one quest as the pop-up shows it
@@ -42,7 +43,7 @@ D.sendOffer = (p) => { // the quest pop-up: from `talk <npc>` (that NPC's quests
   if (!quests.length) { p.offer = null; return p.send({ t: 'offer', close: 1 }); }
   p.send({ t: 'offer', title, who, hi, pic, board: o.kind === 'board', quests: quests.map((q) => questCard(p, q)) });
 };
-const label = (p, it) => it.short + (worn(p, it) ? (it.type === 'weapon' ? ' (wielded)' : ' (worn)') : '');
+const label = (p, it) => it.short + (worn(p, it) ? (it.type === 'weapon' ? ' (wielded)' : ' (worn)') : '') + (it.exp ? ` [${D.relics.left(it)} min left]` : '');
 const health = (o) => { const r = o.hp / o.maxhp; return r > 0.9 ? 'in perfect health' : r > 0.6 ? 'lightly wounded' : r > 0.3 ? 'badly hurt' : 'near death'; };
 
 function walkSteps(p, steps, label) { // walks single steps one at a time; typing another command, a fight or a blocked exit stops it (speedwalk and the map's click-to-run use this)
@@ -60,11 +61,13 @@ D.pathDirs = (from, to) => { // the list of single directions from one room to a
   const prev = { [from]: null }, q = [from]; while (q.length) { const c = q.shift(); for (const [d, n] of Object.entries(D.rooms.get(c).exits)) { const r = D.rooms.get(n); if (!r || n in prev || (r.def.locked && !r.unlocked)) continue; prev[n] = [c, d]; if (n === to) { const out = []; let k = n; while (prev[k]) { out.unshift(prev[k][1]); k = prev[k][0]; } return out; } q.push(n); } } return null;
 };
 function go(p, d, typed) {
+  if (p.fxVal('grapple') > 0) return p.msg('You are grappled and cannot move!', 'hurt');
   let to = p.env.exits[d]; if (!to && d === 'out') { const ex = Object.entries(p.env.exits); if (ex.length === 1) [d, to] = ex[0]; } // `out` leaves a room that has only one way out
   if (!to) return p.msg(d === 'out' ? 'There is no single way out of here: pick a direction.' : 'You cannot go that way.');
   if (p.enemy) return typed ? C.flee(p, d) : p.msg('You are fighting! Try to flee.', 'hurt'); // typing an exit in a fight tries to flee that way
   if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
+  { const mb = D.mountBlock && D.mountBlock(p, dest); if (mb) return p.msg(mb, 'sys'); }
   if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
   p.env.tell(`${p.name} leaves ${DIRS[d] || d}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
 }
@@ -72,9 +75,11 @@ function go(p, d, typed) {
 const C = {
   look(p, a) {
     if (!a) return p.env.look(p, true);
+    if (/^(?:at\s+)?(?:the\s+)?(?:mag|magazine)$/i.test(a.trim()) && p.inv.some((i) => i.def && i.def.mag)) return D.news.read(p); // read magazine
     const w = a.replace(/^at\s+/, '').trim().toLowerCase(), gr = GROUND[p.env.terrain];
     if (/^(my\s+|the\s+)?(\u{1F34D}\s*)?(pineapple|phone)(\s+pro(\s+max)?)?$/iu.test(w)) return p.msg('\u{1F34D}Phone Pro Max. A sleek titanium smartphone shaped like a pineapple, with a leaf-green glow around the screen, a camera bump that looks like a pineapple crown and a battery that never dies. It is permanently attached to you: it is always listed in your `inventory` (outside your pack and bag), and it cannot be dropped, sold, salvaged, given away or stored.\nWHAT IT DOES: it lets you text any player who is online, wherever they are in the game. Type `phone <player> <message>` (or `tell <player> <message>`), for example `phone joe hello!`. If they are offline, use `mail <player>` instead.', 'items');
-    if (/^(in\s+|inside\s+)?(my\s+|the\s+)?bag( of holding)?$/.test(w)) return C.bag(p, 'list'); // look bag if (gr && /^(ground|floor|terrain|underfoot)$/.test(w)) return p.msg(gr, 'items');
+    if (/^(in\s+|inside\s+)?(my\s+|the\s+)?bag( of holding)?$/.test(w)) return C.bag(p, 'list'); // look bag
+    if (gr && /^(ground|floor|terrain|underfoot)$/.test(w)) return p.msg(gr, 'items');
     const t = find(p.env.inv, a.replace(/^at\s+/, '')) || find(p.inv, a.replace(/^at\s+/, ''));
     if (!t && gr && w === p.env.terrain) return p.msg(gr, 'items');
     if (!t) return p.msg("You don't see that here.");
@@ -94,10 +99,12 @@ const C = {
   },
   flee(p, dir) { // flee: runs off through a random exit; `flee north` (or just typing `north` in a fight) picks the way
     if (!p.enemy) return p.msg('You are not fighting.');
-    const exits = Object.entries(p.env.exits); if (Math.random() < 0.35 || !exits.length) return p.msg('You fail to get away!', 'hurt');
+    if (p.fxVal('grapple') > 0) return p.msg('You are grappled and cannot get away!', 'hurt');
+    const exits = Object.entries(p.env.exits); if (Math.random() < 0.35 - (D.mountFlee ? D.mountFlee(p) : 0) || !exits.length) return p.msg('You fail to get away!', 'hurt');
     const pick = dir && p.env.exits[FULL[dir] || dir] ? FULL[dir] || dir : exits[D.rnd(0, exits.length - 1)][0]; p.enemy = null; p.msg('You flee in panic!', 'sys'); go(p, pick);
   },
   get(p, a) {
+    if (/^(?:a\s+|the\s+)?(?:mag|magazine)(?:\s+from\s+(?:the\s+)?rack)?$/i.test(a.trim())) { const rack = p.env.inv.find((o) => o.def && o.def.rack); if (rack) { if (p.inv.some((i) => i.def && i.def.mag)) return p.msg('You already have a copy. Type `read magazine`.', 'sys'); D.give(p, 'magazine', 'normal'); return p.msg('You pull the latest Multiverse Magazine from the rack. Type `read magazine`.', 'win'); } }
     const fb = a.match(/^(.+?)\s+from\s+(?:my\s+|the\s+)?bag(?:\s+of\s+holding)?$/i); if (fb) return C.bag(p, 'get ' + fb[1]); // get <thing> from bag
     if (!a) return p.msg('Get what?');
     const list = a === 'all' ? p.env.inv.filter((o) => !o.isLiving && !o.isNpc && !o.fixed) : [find(p.env.inv.filter((o) => !o.isLiving && !o.isNpc), a)];
@@ -110,13 +117,13 @@ const C = {
     it.move(p.env); p.msg(`You drop ${it.short}.`);
   },
   inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
-    const SL = [['weapon', 'Weapon (wielded)'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['feet', 'Feet']];
+    const SL = [['weapon', 'Weapon (wielded)'], ['offhand', 'Off-hand weapon'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['ring', 'Ring'], ['cloak', 'Cloak'], ['feet', 'Feet']];
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
-    for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + (s === 'weapon' ? ` (damage ${it.dmg[0]}-${it.dmg[1]})` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
+    for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + ((s === 'weapon' || s === 'offhand') ? ` (damage ${it.dmg[0]}-${it.dmg[1]}; ${D.WTYPES[D.wtype(it)] || ''}, ${D.hands(it)}-handed)` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') + (it.exp ? ` [${D.relics.left(it)} min left]` : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
     p.msg(`  ${'Phone'.padEnd(17)}: 🍍Phone Pro Max  (always with you: it cannot be dropped, sold or salvaged; \`phone <player> <message>\` or \`tell <player> <message>\`)`, 'items');
     const pack = p.inv.filter((i) => !worn(p, i)), groups = new Map(); for (const it of pack) { const key = it.itemId + (it.kept ? '*' : ''); const g = groups.get(key) || { it, n: 0 }; g.n++; groups.set(key, g); }
-    p.msg(`Pack (${pack.length} carried, ${p.inv.length}/${p.cap()} with what you wear):`, 'rname'); p.msg(groups.size ? '  ' + [...groups.values()].map((g) => `${g.it.short}${g.n > 1 ? ' x' + g.n : ''}${g.it.kept ? ' [kept]' : ''}`).join(', ') + '.' : '  nothing.', 'items');
+    p.msg(`Pack (${pack.length} carried, ${p.inv.length}/${p.cap()} with what you wear):`, 'rname'); p.msg(groups.size ? '  ' + [...groups.values()].map((g) => `${g.it.short}${g.n > 1 ? ' x' + g.n : ''}${g.it.kept ? ' [kept]' : ''}${g.it.exp ? ` [${D.relics.left(g.it)} min left]` : ''}`).join(', ') + '.' : '  nothing.', 'items');
     p.msg(`Credits: ${p.gold}. Bag of holding: ${D.bagUsed(p)}/${D.bagCap(p)} (type \`bag\`). Tools: type \`tools\`. [kept] items are protected from sell and salvage (\`keep\`, \`unkeep\`).`, 'sys');
   },
   keep(p, a) { // keep <item>: protect it from sell, rsell, salvage and auction; keep (no argument) lists what is kept
@@ -248,10 +255,10 @@ const C = {
   },
   finger(p, a) { // finger <name>: name, level, picture and email (if they set one and did not hide it)
     const q = (a.trim() || p.name).toLowerCase(), all = [...D.players.values()], on = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
-    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, born: on.created, agems: Date.now() - on.created, played: on.playTotal(), ex: on.explored.size, exm: D.exploreTotal(), bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
-    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, born: +r.created || D.legacyBirth(r.name), agems: Date.now() - (+r.created || D.legacyBirth(r.name)), played: +r.playMs || 0, ex: Array.isArray(r.explored) ? r.explored.length : 0, exm: D.exploreTotal(), seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
+    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, marks: D.ink.lines(on.marks), align: on.align || 'neutral', born: on.created, agems: Date.now() - on.created, played: on.playTotal(), ex: on.explored.size, exm: D.exploreTotal(), bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
+    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, marks: D.ink.lines(D.cleanMarks(r.marks)), align: ['good', 'evil'].includes(r.align) ? r.align : 'neutral', born: +r.created || D.legacyBirth(r.name), agems: Date.now() - (+r.created || D.legacyBirth(r.name)), played: +r.playMs || 0, ex: Array.isArray(r.explored) ? r.explored.length : 0, exm: D.exploreTotal(), seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
     const seen = d.online ? '\u25CF online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
-    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Age: ${D.dur(Date.now() - d.born)}. Time played: ${D.dur(d.played)}${d.online ? '' : ' (when last on)'}. Explored ${d.ex} of ${d.exm} rooms.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
+    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Age: ${D.dur(Date.now() - d.born)}. Time played: ${D.dur(d.played)}${d.online ? '' : ' (when last on)'}. Explored ${d.ex} of ${d.exm} rooms.`, 'sys'); if (d.marks && d.marks.length) p.msg(`  Markings: ${d.marks.join('; ')}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
   },
   wield(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`); p.equip.weapon = it; p.msg(`You wield ${it.short}.`); },
   wear(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`); p.equip[it.slot] = it; p.msg(`You wear ${it.short}.`); },
@@ -441,7 +448,7 @@ const C = {
     p.msg(`${p.env.name}. You have ${p.gold} credits. Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}`, 'rname');
     const rows = p.env.def.clinic.stock.map((id) => { const d = D.W.items[id]; return { id, d, b: Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' '), have: p.cyber.includes(id), up: d.tier > 1 ? `upgrade of Mk ${['I', 'II', 'III', 'IV'][d.tier - 2]}` : '' }; });
     const NW = Math.max(...rows.map((r) => r.d.name.length)), BW = Math.max(...rows.map((r) => r.b.length)), UW = Math.max(...rows.map((r) => r.up.length)), CW = Math.max(...rows.map((r) => String(r.d.value).length));
-    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${r.d.name.padEnd(NW)}  aura -${r.d.aura.toFixed(1)}  ${r.b.padEnd(BW)}  (level ${String(r.d.lvl).padStart(2)})  ${r.up.padEnd(UW)}  Credits: ${String(r.d.value).padStart(CW)}${r.have ? '  [installed]' : ''}`, r.have ? 'shopn' : p.gold >= r.d.value && p.level >= r.d.lvl ? 'shopy' : 'shopn'));
+    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${r.d.name.padEnd(NW)}  aura -${r.d.aura.toFixed(1)}  ${r.b.padEnd(BW)}  (level ${String(r.d.lvl).padStart(2)})  ${r.up.padEnd(UW)}  Credits: ${String(r.d.value).padStart(CW)}${r.d.unob ? `  + ${r.d.unob} unobtainium` : ''}${r.have ? '  [installed]' : ''}`, r.have ? 'shopn' : p.gold >= r.d.value && p.level >= r.d.lvl ? 'shopy' : 'shopn'));
   },
   install(p, a) {
     const cl = p.env.def.clinic; if (!cl) return p.msg('You need a ripperdoc. Try the Chrome Clinic or the Neural Implant Lab in Ashfall.');
@@ -454,10 +461,11 @@ const C = {
       if (old && old.tier >= d.tier) return p.msg(`You already have an equal or better ${d.line} implant.`);
       if (d.tier > 1 && !(old && old.tier === d.tier - 1)) return p.msg(`Mk ${['I', 'II', 'III', 'IV', 'V'][d.tier - 1]} must be installed after Mk ${['I', 'II', 'III', 'IV', 'V'][d.tier - 2]}.`);
     }
+    if (d.unob && D.itemCount(p, 'unobtainium') < d.unob) return p.msg(`That implant needs ${d.unob} unobtainium (you have ${D.itemCount(p, 'unobtainium')}). Scavenge it from wreckage in the futuristic worlds, or take it from an Exterminator.`);
     const refund = old ? Math.floor(old.value / 2) : 0, freeAura = p.aura() + (old ? old.aura : 0);
     if (p.gold + refund < d.value) return p.msg(`You cannot afford the surgery (${d.value} credits${refund ? `, minus ${refund} for trading in your old implant` : ''}).`);
     if (freeAura < d.aura) return p.msg(`Your aura (${p.aura().toFixed(1)}) cannot take another ${d.aura.toFixed(1)} of chrome. Uninstall something first.`);
-    if (old) p.cyber = p.cyber.filter((i) => D.W.items[i] !== old); p.gold += refund - d.value; p.cyber.push(id); p.recalc();
+    if (old) p.cyber = p.cyber.filter((i) => D.W.items[i] !== old); p.gold += refund - d.value; if (d.unob) D.itemTake(p, 'unobtainium', d.unob); p.cyber.push(id); p.recalc();
     p.msg(`The doc fits your ${d.name}${old ? ` (trading in ${old.name} for ${refund} credits)` : ''}. Aura is now ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}. Max mana is ${p.maxmp}.`, 'win'); p.sendStats();
   },
   uninstall(p, a) {
@@ -469,7 +477,7 @@ const C = {
   },
   cyber(p) { // the chrome you carry, one implant to a line
     p.msg(`Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`, 'rname'); if (!p.cyber.length) return p.msg('You have no chrome installed.', 'sys');
-    p.msg(`Installed chrome (${p.cyber.length}):`, 'items'); for (const id of p.cyber) { const d = D.W.items[id]; p.msg(`  ${d.name}  ${Object.entries(d.bonus).map(([k, v]) => `+${v} ${k}`).join(' ')}  (aura -${(d.aura || 0).toFixed(1)})`, 'items'); }
+    p.msg(`Installed chrome (${p.cyber.length}):`, 'items'); for (const id of p.cyber) { const d = D.W.items[id]; p.msg(`  ${d.name}${(p.cyberUp && p.cyberUp[id]) ? ` [augmented +${p.cyberUp[id]}]` : ''}  ${Object.keys(d.bonus).map((k) => `+${p.cyberBonus(id, k)} ${k}`).join(' ')}  (aura -${(d.aura || 0).toFixed(1)})`, 'items'); }
   },
   luck(p) { p.msg(`Luck ${p.luck}/${p.maxLuck()}. A point of Luck saves you from a killing blow (halving it) automatically, or you can \`push\` to add six dice to your next two attacks. Luck returns slowly, on level-up, and at the clinic or inn.`); },
   push(p) { if (p.luck < 1) return p.msg('You have no Luck left.'); p.luck--; p.addFx({ k: 'buff', n: 'Pushed', ticks: 2, pool: 6, src: p }); p.msg('You push your luck: +6 attack dice for your next two rounds!', 'win'); p.sendStats(); },
@@ -539,6 +547,10 @@ const C = {
       : `Level ${D.MAXLV} (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
     p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`);
     p.msg(`Bounty points: ${n(p.bounty || 0)} (${n(p.bounties || 0)} bounties collected).`, 'items');
+    p.msg(`Task points: ${(p.tp && p.tp.pts) || 0} to spend (type \`task\`).${D.mountOf(p) ? ` Mounted on a ${D.mountOf(p).name}.` : ''}`, 'items');
+    { const top = Object.entries(p.wskill || {}).sort((x, y) => y[1].lvl - x[1].lvl).slice(0, 3).filter(([, k]) => k.lvl > 1); p.msg(`Weapon skills: ${top.length ? top.map(([t, k]) => `${D.WTYPES[t]} ${k.lvl}`).join(', ') : 'all at level 1'} (type \`weaponskills\`).`, 'items'); }
+    p.msg(`Daily reward streak: ${p.dailyStreak || 0} day${(p.dailyStreak || 0) === 1 ? '' : 's'} (type \`daily\`).`, 'items');
+    p.msg(`Alignment: ${({ good: 'Good (+5% health)', evil: 'Evil (+5% damage)' }[p.align] || 'Neutral (+5% experience)')}. Type \`alignment\` to see or change it.`, 'items');
     p.msg(`Exploration: ${n(p.explored.size)} of ${n(D.exploreTotal())} rooms explored (${(p.explored.size / D.exploreTotal() * 100).toFixed(1)}%): ${n(p.explored.size)} exploration points.`, 'items');
     p.msg(`Age: ${D.dur(Date.now() - p.created)} (created ${new Date(p.created).toISOString().slice(0, 10)}). Time played: ${D.dur(p.playTotal())}, of which ${D.dur(Date.now() - p.loginAt)} this session.`, 'items');
     p.msg(`Wealth: ${n(p.gold)} credits${goods ? ` (plus about ${n(goods)} in goods you could sell)` : ''}.`, 'items');
@@ -558,9 +570,9 @@ const C = {
   shout(p, a) { if (silenced(p)) return; if (!a) return p.msg('Shout what?'); for (const o of D.players.values()) o.msg(`[chat] ${p.name}: ${a}`, 'chat'); },
   who(p) { // grouped: administrators, architects and builders, players, bots
     const all = [...D.players.values()], grp = (o) => (o.isBot ? 'bot' : o.wiz ? 'admin' : o.architect ? 'arch' : 'player');
-    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, grp: grp(o), ic: o.klass().icon, pic: D.playerPic(o) })) });
-    const line = (o) => [[D.preTitle(o), D.fancyName(o.name)].filter(Boolean).join(' '), o.title || '', `${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level})`, D.genderLabel(o.gender)].filter(Boolean).join(' | ');
-    p.msg(`Online now (${all.length}):`, 'rname');
+    p.send({ t: 'who', list: all.map((o) => ({ name: o.name, pre: D.preTitle(o), title: o.title || '', cls: o.cls, cn: o.klass().name, g: o.gender, gl: D.genderLabel(o.gender), lv: o.level, rm: o.remort || 0, bot: !!o.isBot, ld: !!o.ld, al: o.align || 'neutral', grp: grp(o), ic: o.klass().icon, pic: D.playerPic(o) })) });
+    const line = (o) => [[D.preTitle(o), D.fancyName(o.name)].filter(Boolean).join(' '), o.title || '', `${o.klass().name} (${o.remort ? `Remort ${o.remort}, ` : ''}level ${o.level})`, D.genderLabel(o.gender), ({ good: 'Good', evil: 'Evil' }[o.align] || 'Neutral'), o.ld ? 'LINKDEAD' : ''].filter(Boolean).join(' | ');
+    p.msg(`Online now (${all.filter((o) => !o.ld).length}${all.some((o) => o.ld) ? `, plus ${all.filter((o) => o.ld).length} linkdead` : ''}):`, 'rname');
     for (const [g, label] of [['admin', 'Administrators'], ['arch', 'Architects and builders'], ['player', 'Players'], ['bot', 'Bots']]) { const l = all.filter((o) => grp(o) === g); if (l.length) { p.msg(`${label} (${l.length}):`, 'items'); for (const o of l) p.msg('  ' + line(o), 'sys'); } }
   },
   anyquest(p, a) { // anyquest [on|off]: accept quests whatever your level (prerequisite quests still count)
@@ -584,6 +596,28 @@ const C = {
     if (w) return p.msg(`You glance at your ${p.equip.bracelet.name}: it is ${d.toLocaleTimeString('en-US')} server time, ${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}.`, 'win');
     const h = d.getHours(); p.msg(`You squint at the sky: it looks like ${h < 5 ? 'the middle of the night' : h < 8 ? 'early morning' : h < 12 ? 'morning' : h < 14 ? 'around noon' : h < 17 ? 'afternoon' : h < 20 ? 'evening' : 'night'}. (Wear a watch on your wrist for the exact time: bracelets and watches are sold in shops.)`, 'sys');
   },
+  alignment(p, a) { // alignment [good|neutral|evil]
+    const w = a.trim().toLowerCase(), N = { good: 'Good', neutral: 'Neutral', evil: 'Evil' }, EF = { good: '+5% maximum health', neutral: '+5% experience from everything', evil: '+5% damage in combat' };
+    if (!w) { p.msg(`Your alignment is ${N[p.align]} (${EF[p.align]}).`, 'rname'); p.msg('Choose with `alignment good`, `alignment neutral` or `alignment evil`:', 'sys'); for (const k of ['good', 'neutral', 'evil']) p.msg(`  ${N[k].padEnd(8)} ${EF[k]}`, k === p.align ? 'win' : 'items'); return p.msg('You can change it once an hour. Your alignment shows in `score`, `finger` and `who`.', 'sys'); }
+    if (!N[w]) return p.msg('Choose good, neutral or evil.', 'sys'); if (p.align === w) return p.msg(`You are already ${N[w]}.`, 'sys');
+    const wait = (p.alignAt || 0) + 3600000 - Date.now(); if (p.alignAt && wait > 0) return p.msg(`You changed your alignment recently. You can change again in ${D.dur(wait)}.`, 'sys');
+    p.align = w; p.alignAt = Date.now(); p.recalc(); p.hp = Math.min(p.hp, p.maxhp); p.msg(`You are now ${N[w]}: ${EF[w]}.`, 'win'); p.sendStats();
+  },
+  augment(p, a) { // augment [<implant>]: upgrade an installed implant (up to 5 times) with unobtainium, at a ripperdoc
+    if (!p.env.def.clinic) return p.msg('You need a ripperdoc to augment implants (the Chrome Clinic, the Neural Implant Lab or the Ripperdoc\'s Tent on Exterminus).', 'sys'); p.cyberUp = p.cyberUp || {};
+    const cost = (id) => { const up = p.cyberUp[id] || 0; return { up, u: 2 + 2 * up, c: Math.round(D.W.items[id].value * 0.2 * (up + 1)) }; }, w = a.trim().toLowerCase();
+    if (!p.cyber.length) return p.msg('You have no implants to augment.', 'sys');
+    if (!w) { p.msg(`Augment an implant: each upgrade (up to 5) adds 20% of its bonus. You have ${D.itemCount(p, 'unobtainium')} unobtainium and ${p.gold} credits.`, 'rname'); p.cyber.forEach((id, i) => { const c = cost(id); p.msg(`  ${i + 1}. ${D.W.items[id].name}  [+${c.up}/5]  ${c.up >= 5 ? 'fully augmented' : `next: ${c.u} unobtainium + ${c.c} credits`}`, c.up >= 5 ? 'win' : 'items'); }); return p.msg('Type `augment <number>` or `augment <implant name>`.', 'sys'); }
+    const id = /^\d+$/.test(w) ? p.cyber[+w - 1] : p.cyber.find((i) => { const d = D.W.items[i]; return i === w || d.name === w || d.name.split(' ').includes(w); }); if (!id) return p.msg('Augment which implant? (type `augment` for the list)', 'sys');
+    const c = cost(id), d = D.W.items[id]; if (c.up >= 5) return p.msg(`${d.name} is fully augmented.`, 'sys'); if (D.itemCount(p, 'unobtainium') < c.u) return p.msg(`That upgrade needs ${c.u} unobtainium (you have ${D.itemCount(p, 'unobtainium')}).`, 'sys'); if (p.gold < c.c) return p.msg(`The surgery costs ${c.c} credits.`, 'sys');
+    D.itemTake(p, 'unobtainium', c.u); p.gold -= c.c; p.cyberUp[id] = c.up + 1; p.recalc(); p.msg(`The ripperdoc re-forges your ${d.name} with unobtainium: augmented +${c.up + 1}/5 (${Object.keys(d.bonus).map((k) => `+${p.cyberBonus(id, k)} ${k}`).join(' ')}).`, 'win'); p.sendStats();
+  },
+  scavenge: (p) => D.tradeGather(p, 'scavenging'), watch: (p, a) => D.cinema.watch(p, a), movies: (p) => D.cinema.movies(p),
+  daily(p) { if (D.daily.due(p)) { D.daily.claim(p); } else D.daily.status(p); }, // daily: your login-reward streak (rewards are paid automatically at login)
+  jukebox(p, a) { D.jukebox.command(p, a); },
+  tattoo(p, a) { D.ink.apply(p, 'tattoo', a); }, brand(p, a) { D.ink.apply(p, 'brand', a); }, marks(p, a) { const t = a.trim() ? find(p.env.inv.filter((o) => o.isPlayer), a.trim()) : p; if (!t) return p.msg('You do not see them here.'); D.ink.show(p, t); },
+  mount(p, a) { D.mounts.mount(p, a); }, dismount(p) { D.mounts.dismount(p); }, idle(p) { D.idler.status(p); },
+  task(p, a) { if (!a.trim()) D.tasks.show(p); else D.tasks.spend(p, a); }, tasks(p, a) { C.task(p, a); },
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -747,7 +781,7 @@ const C = {
     const slotOf = (d) => (d.type === 'weapon' ? 'weapon' : d.slot), worn = new Set(Object.values(p.equip)), cand = [];
     for (const it of p.inv) if (!worn.has(it) && (it.def.type === 'weapon' || it.def.type === 'armor') && slotOf(it.def)) cand.push({ src: 'pack', it, def: it.def, slot: slotOf(it.def), s: score(it.def, it) });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
-    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'feet'], out = [], later = [];
+    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'ring', 'cloak', 'feet'], out = [], later = [];
     for (const sl of slots) {
       const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) <= p.level).sort((x, y) => y.s - x.s), best = ok[0];
       const tooHigh = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) > p.level && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);
@@ -834,7 +868,7 @@ const C = {
     p.msg(`There is no help for "${(a || '').trim()}". Type \`commands\` to see everything you can use.`);
   },
   save(p) { D.savePlayer(p); p.msg('Saved.', 'sys'); },
-  quit(p) { D.savePlayer(p); p.msg('Farewell, traveler.', 'sys'); p.send({ t: 'quit' }); if (p.conn) p.conn.close(); },
+  quit(p) { p.quitting = true; D.savePlayer(p); p.msg('Farewell, traveler.', 'sys'); p.send({ t: 'quit' }); if (p.conn) p.conn.close(); },
   // ---- wizard commands ----
   update(p) { if (!p.wiz) return C.huh(p); try { D.loadWorld(); for (const o of D.players.values()) { o.recalc(); o.sendSpells(); } p.msg('World and classes reloaded.', 'sys'); D.pushMaps(); } catch (e) { p.msg('Error: ' + e.message, 'hurt'); } },
   goto(p, a) { if (!p.wiz) return C.huh(p); const r = D.rooms.get(a); if (!r) return p.msg('Rooms: ' + [...D.rooms.keys()].join(', ')); p.enemy = null; p.enter(r); },
@@ -871,9 +905,12 @@ const runAlias = (p, name, rest) => { // player aliases: "alias g get all" then 
   if ((p._ad || 0) >= 3) return; p._ad = (p._ad || 0) + 1;
   try { const segs = p.aliases[name].split(';').map((s) => s.trim()).filter(Boolean).slice(0, 8); segs.forEach((s, i) => D.command(p, i === segs.length - 1 && rest ? `${s} ${rest}` : s)); } finally { p._ad--; }
 };
+Object.assign(C, WPN.commands(find));
+{ const _look = C.look; C.look = function (p, a) { _look.call(C, p, a); if (a) { const w = a.replace(/^at\s+/, '').trim(); const t = /^(me|self|myself)$/i.test(w) ? p : find(p.env.inv.filter((o) => o.isPlayer), w); if (t && t.isPlayer) { if (t !== p && D.mountOf(t)) p.msg(`${t.name} is riding ${D.mountOf(t).short || D.mountOf(t).name}.`, 'sys'); if (Object.keys(t.marks || {}).length) D.ink.show(p, t); } } }; } // markings and mounts show when you look at someone
+{ const _eq = C.equip; C.equip = function (p, a) { _eq.call(C, p, a); if (!/^(list|check|preview)$/i.test((a || '').trim())) { D.fixHands(p); p.recalc(); } }; } // the auto-equip respects hands // wield / dual / wear / remove / weaponskills with hands and weapon skills
 D.command = (p, line) => {
   const m = line.trim().match(/^(\S+)\s*(.*)$/); if (!m) return;
-  let v = m[1].toLowerCase(), a = m[2];
+  let v = m[1].toLowerCase(), a = m[2]; if (!p.isBot) { p.prevCmd = p.lastCmd; p.lastCmd = Date.now(); }
   if (p.swTok && !p.swRunning && v !== 'speedwalk' && v !== 'run') { p.swTok = null; p.msg('Speedwalk cancelled.', 'sys'); } // typing anything else interrupts a speedwalk
   if (p.bj && (v === 'hit' || v === 'stand')) return D.blackjack[v](p); // answering the dealer in a blackjack hand
   if (v[0] === "'") { a = line.trim().slice(1); v = 'say'; }

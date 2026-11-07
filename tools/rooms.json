@@ -168,6 +168,12 @@
   "area": "Starship Aurora (Sci-fi)"
  },
  {
+  "id": "aurora/pod",
+  "key": "aurora-pod",
+  "name": "Escape Pod",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
   "id": "bank/a",
   "key": "bank-a",
   "name": "Bank Lobby",
@@ -1050,6 +1056,114 @@
   "area": "The Mammoth Caverns (Prehistoric)"
  },
  {
+  "id": "cinema/0_0",
+  "key": "cinema-0_0",
+  "name": "Restrooms",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/0_1",
+  "key": "cinema-0_1",
+  "name": "Auditorium 1",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/0_2",
+  "key": "cinema-0_2",
+  "name": "Storage Room",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/1_0",
+  "key": "cinema-1_0",
+  "name": "Arcade",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/1_1",
+  "key": "cinema-1_1",
+  "name": "Auditorium 2",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/1_2",
+  "key": "cinema-1_2",
+  "name": "Popcorn Supply Room",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/2_0",
+  "key": "cinema-2_0",
+  "name": "Lobby and Box Office",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/2_1",
+  "key": "cinema-2_1",
+  "name": "Main Corridor",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/2_2",
+  "key": "cinema-2_2",
+  "name": "Projection Booth",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/3_0",
+  "key": "cinema-3_0",
+  "name": "Concession Stand",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/3_1",
+  "key": "cinema-3_1",
+  "name": "Auditorium 3",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/3_2",
+  "key": "cinema-3_2",
+  "name": "VIP Lounge",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/4_0",
+  "key": "cinema-4_0",
+  "name": "Employee Break Room",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/4_1",
+  "key": "cinema-4_1",
+  "name": "Auditorium 4",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/4_2",
+  "key": "cinema-4_2",
+  "name": "Dumpster Alley",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/5_0",
+  "key": "cinema-5_0",
+  "name": "Manager's Office",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/5_1",
+  "key": "cinema-5_1",
+  "name": "IMAX Auditorium",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "cinema/5_2",
+  "key": "cinema-5_2",
+  "name": "Film Vault",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
   "id": "cit/armory_ruins",
   "key": "cit-armory_ruins",
   "name": "Armory Ruins",
@@ -1768,6 +1882,552 @@
   "key": "ember-temple",
   "name": "Forge-Temple",
   "area": "Ember Wastes (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_0",
+  "key": "exterminus-0_0",
+  "name": "Crash Beacon Camp",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_1",
+  "key": "exterminus-0_1",
+  "name": "Scorched Debris Field",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_10",
+  "key": "exterminus-0_10",
+  "name": "Collapsed Foundry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_11",
+  "key": "exterminus-0_11",
+  "name": "Molten Catwalk",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_12",
+  "key": "exterminus-0_12",
+  "name": "Clanking Conveyor",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_2",
+  "key": "exterminus-0_2",
+  "name": "Smoking Hull",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_3",
+  "key": "exterminus-0_3",
+  "name": "Scorched Landing Strip",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_4",
+  "key": "exterminus-0_4",
+  "name": "Junk-strewn Plain",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_5",
+  "key": "exterminus-0_5",
+  "name": "Rusted Dune",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_6",
+  "key": "exterminus-0_6",
+  "name": "Windy Plain",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_7",
+  "key": "exterminus-0_7",
+  "name": "Grey Dune",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_8",
+  "key": "exterminus-0_8",
+  "name": "Sagging Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/0_9",
+  "key": "exterminus-0_9",
+  "name": "Cracked Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_0",
+  "key": "exterminus-1_0",
+  "name": "Ripperdoc's Tent",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_1",
+  "key": "exterminus-1_1",
+  "name": "Smoking Wreckage",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_10",
+  "key": "exterminus-1_10",
+  "name": "Buckled Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_11",
+  "key": "exterminus-1_11",
+  "name": "Humming Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_12",
+  "key": "exterminus-1_12",
+  "name": "Sterile Conveyor",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_2",
+  "key": "exterminus-1_2",
+  "name": "Wrecked Debris Field",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_3",
+  "key": "exterminus-1_3",
+  "name": "Endless Ridge",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_4",
+  "key": "exterminus-1_4",
+  "name": "Windy Flat",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_5",
+  "key": "exterminus-1_5",
+  "name": "Grey Ridge",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_6",
+  "key": "exterminus-1_6",
+  "name": "Barren Flat",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_7",
+  "key": "exterminus-1_7",
+  "name": "Molten Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_8",
+  "key": "exterminus-1_8",
+  "name": "Collapsed Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/1_9",
+  "key": "exterminus-1_9",
+  "name": "Buckled Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_0",
+  "key": "exterminus-2_0",
+  "name": "Twisted Landing Strip",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_1",
+  "key": "exterminus-2_1",
+  "name": "Wrecked Crater",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_10",
+  "key": "exterminus-2_10",
+  "name": "Endless Press",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_11",
+  "key": "exterminus-2_11",
+  "name": "Sterile Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_12",
+  "key": "exterminus-2_12",
+  "name": "Humming Press",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_2",
+  "key": "exterminus-2_2",
+  "name": "Windy Scrapyard",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_3",
+  "key": "exterminus-2_3",
+  "name": "Barren Gully",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_4",
+  "key": "exterminus-2_4",
+  "name": "Junk-strewn Scrapyard",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_5",
+  "key": "exterminus-2_5",
+  "name": "Rusted Gully",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_6",
+  "key": "exterminus-2_6",
+  "name": "Buckled Smelter",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_7",
+  "key": "exterminus-2_7",
+  "name": "Collapsed Furnace",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_8",
+  "key": "exterminus-2_8",
+  "name": "Molten Smelter",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/2_9",
+  "key": "exterminus-2_9",
+  "name": "Sagging Furnace",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_0",
+  "key": "exterminus-3_0",
+  "name": "Sparking Hull",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_1",
+  "key": "exterminus-3_1",
+  "name": "Barren Plain",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_10",
+  "key": "exterminus-3_10",
+  "name": "Gleaming Weld Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_11",
+  "key": "exterminus-3_11",
+  "name": "Endless Assembly Line",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_12",
+  "key": "exterminus-3_12",
+  "name": "Sterile Weld Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_2",
+  "key": "exterminus-3_2",
+  "name": "Junk-strewn Dune",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_3",
+  "key": "exterminus-3_3",
+  "name": "Endless Plain",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_4",
+  "key": "exterminus-3_4",
+  "name": "Windy Dune",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_5",
+  "key": "exterminus-3_5",
+  "name": "Sagging Foundry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_6",
+  "key": "exterminus-3_6",
+  "name": "Cracked Catwalk",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_7",
+  "key": "exterminus-3_7",
+  "name": "Buckled Foundry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_8",
+  "key": "exterminus-3_8",
+  "name": "Collapsed Catwalk",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/3_9",
+  "key": "exterminus-3_9",
+  "name": "Clanking Assembly Line",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_0",
+  "key": "exterminus-4_0",
+  "name": "Rusted Ridge",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_1",
+  "key": "exterminus-4_1",
+  "name": "Endless Flat",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_10",
+  "key": "exterminus-4_10",
+  "name": "Clanking Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_11",
+  "key": "exterminus-4_11",
+  "name": "Gleaming Conveyor",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_12",
+  "key": "exterminus-4_12",
+  "name": "Core Nexus",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_2",
+  "key": "exterminus-4_2",
+  "name": "Windy Ridge",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_3",
+  "key": "exterminus-4_3",
+  "name": "Grey Flat",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_4",
+  "key": "exterminus-4_4",
+  "name": "Collapsed Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_5",
+  "key": "exterminus-4_5",
+  "name": "Molten Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_6",
+  "key": "exterminus-4_6",
+  "name": "Sagging Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_7",
+  "key": "exterminus-4_7",
+  "name": "Cracked Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_8",
+  "key": "exterminus-4_8",
+  "name": "Sterile Gantry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/4_9",
+  "key": "exterminus-4_9",
+  "name": "Humming Conveyor",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_0",
+  "key": "exterminus-5_0",
+  "name": "Grey Gully",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_1",
+  "key": "exterminus-5_1",
+  "name": "Barren Scrapyard",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_10",
+  "key": "exterminus-5_10",
+  "name": "Humming Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_11",
+  "key": "exterminus-5_11",
+  "name": "Command Deck",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_12",
+  "key": "exterminus-5_12",
+  "name": "Prime Command Deck",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_2",
+  "key": "exterminus-5_2",
+  "name": "Junk-strewn Gully",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_3",
+  "key": "exterminus-5_3",
+  "name": "Cracked Smelter",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_4",
+  "key": "exterminus-5_4",
+  "name": "Buckled Furnace",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_5",
+  "key": "exterminus-5_5",
+  "name": "Collapsed Smelter",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_6",
+  "key": "exterminus-5_6",
+  "name": "Molten Furnace",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_7",
+  "key": "exterminus-5_7",
+  "name": "Gleaming Press",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_8",
+  "key": "exterminus-5_8",
+  "name": "Endless Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/5_9",
+  "key": "exterminus-5_9",
+  "name": "Sterile Press",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_0",
+  "key": "exterminus-6_0",
+  "name": "Rusted Plain",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_1",
+  "key": "exterminus-6_1",
+  "name": "Endless Dune",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_10",
+  "key": "exterminus-6_10",
+  "name": "Reactor Reactor Hall",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_11",
+  "key": "exterminus-6_11",
+  "name": "Blazing Core",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_12",
+  "key": "exterminus-6_12",
+  "name": "The Exterminator Core",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_2",
+  "key": "exterminus-6_2",
+  "name": "Molten Foundry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_3",
+  "key": "exterminus-6_3",
+  "name": "Sagging Catwalk",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_4",
+  "key": "exterminus-6_4",
+  "name": "Cracked Foundry",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_5",
+  "key": "exterminus-6_5",
+  "name": "Buckled Catwalk",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_6",
+  "key": "exterminus-6_6",
+  "name": "Humming Assembly Line",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_7",
+  "key": "exterminus-6_7",
+  "name": "Clanking Weld Bay",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_8",
+  "key": "exterminus-6_8",
+  "name": "Gleaming Assembly Line",
+  "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "exterminus/6_9",
+  "key": "exterminus-6_9",
+  "name": "Endless Weld Bay",
+  "area": "Exterminus (Sci-fi)"
  },
  {
   "id": "farm/barn",
@@ -3492,6 +4152,12 @@
   "area": "Mars (Sci-fi)"
  },
  {
+  "id": "mars/depot",
+  "key": "mars-depot",
+  "name": "Zix Hoverbike Depot",
+  "area": "Mars (Sci-fi)"
+ },
+ {
   "id": "mars/fang_bridge",
   "key": "mars-fang_bridge",
   "name": "Crimson Fang: Bridge",
@@ -3801,6 +4467,12 @@
   "id": "modern/g2s",
   "key": "modern-g2s",
   "name": "Fuel Stop: Convenience Store",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/garage",
+  "key": "modern-garage",
+  "name": "Rusty's Motorcycle Garage",
   "area": "Modern District (Modern)"
  },
  {
@@ -4710,6 +5382,12 @@
   "area": "The Primeval Rift (Prehistoric)"
  },
  {
+  "id": "prime/roost",
+  "key": "prime-roost",
+  "name": "Primeval Roost",
+  "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
   "id": "prime/shallows",
   "key": "prime-shallows",
   "name": "Spinosaur Shallows",
@@ -5286,6 +5964,12 @@
   "area": "Poseidon's Realm (Fantasy)"
  },
  {
+  "id": "sea/pens",
+  "key": "sea-pens",
+  "name": "Shark Pens",
+  "area": "Poseidon's Realm (Fantasy)"
+ },
+ {
   "id": "thorn/a",
   "key": "thorn-a",
   "name": "Briar Gate",
@@ -5454,6 +6138,12 @@
   "area": "Ashfall Junction (Old West)"
  },
  {
+  "id": "town/ink",
+  "key": "town-ink",
+  "name": "Ink & Iron Tattoo and Branding Parlor",
+  "area": "Ashfall Junction (Old West)"
+ },
+ {
   "id": "town/inn",
   "key": "town-inn",
   "name": "Silver Spur Saloon",
@@ -5493,6 +6183,12 @@
   "id": "town/square",
   "key": "town-square",
   "name": "Ashfall Square",
+  "area": "Ashfall Junction (Old West)"
+ },
+ {
+  "id": "town/stable",
+  "key": "town-stable",
+  "name": "Ashfall Livery Stable",
   "area": "Ashfall Junction (Old West)"
  },
  {

@@ -35,6 +35,8 @@ const SKILLS = {
   planting: { name: 'Planting', icon: '\u{1F331}', kind: 'farm', verb: 'plant', how: '`plant <crop>` (or `plant <crop> all`) sows seeds in your tilled plots; `harvest` collects ripe crops; `plots` shows how they are growing. Carrot, potato, lettuce, corn, tomato, pumpkin, strawberry and watermelon unlock as your Planting rises. Seeds are sold at the Farmer\'s Market.', desc: 'Sow seeds, watch them grow and harvest vegetables from carrots to watermelons.' },
   milking: { name: 'Milking', icon: '\u{1F95B}', kind: 'farm', verb: 'milk', how: '`milk cow` in the Red Barn or the Cow Stalls. Every cow gives milk into your bucket every half a minute or so. Sell the milk to the old farmer.', desc: 'Milk the dairy cows in the barn into your bucket.' },
   shearing: { name: 'Shearing', icon: '\u2702\uFE0F', kind: 'farm', verb: 'shear', how: '`shear sheep` in the two pastures. Every sheep gives a fleece of wool about every forty seconds. Sell the wool to the old farmer.', desc: 'Shear the woolly sheep in the pastures.' },
+  scavenging: { name: 'Scavenging', icon: '\u{1F50D}', kind: 'gather', verb: 'scavenge', res: 'wreck', nodeName: 'salvageable wreckage', desc: 'Scavenge scrap, wire, circuits and power cells from wrecks in the futuristic worlds (Exterminus, Mars, Pluto, the Aurora). With practice (level 20) you can find the impossible metal unobtainium, which builds and upgrades implants.',
+    loot: [{ id: 'scrapmetal', w: 20, min: 1 }, { id: 'copperwire', w: 12, min: 3 }, { id: 'circuitboard', w: 6, min: 8 }, { id: 'powercell', w: 3, min: 14 }, { id: 'unobtainium', w: 1, min: 20 }] },
   salvaging: { name: 'Salvaging', icon: '♻️', kind: 'salvage', verb: 'salvage', desc: 'Break unwanted weapons and armor down into ore, silver, mithril and scale. Higher skill recovers more.' },
 };
 
@@ -51,6 +53,7 @@ const TOOLS = {
   seedbag: { name: 'Seed bag', icon: '\u{1F331}', skill: 'planting', desc: 'Crops grow a little faster and bonus XP with every Mark.' },
   milkpail: { name: 'Milking bucket', icon: '\u{1FAA3}', skill: 'milking', desc: 'A chance at an extra pail and more XP with every Mark.' },
   shears: { name: 'Sheep shears', icon: '\u2702\uFE0F', skill: 'shearing', desc: 'A chance at an extra fleece and more XP with every Mark.' },
+  wreckscanner: { name: 'Wreck scanner', icon: '\u{1F4E1}', skill: 'scavenging', desc: 'Finds more in the wreckage: a chance at an extra find and more XP with every Mark.' },
   crowbar: { name: 'Salvage crowbar', icon: '🪛', skill: 'salvaging', desc: 'More materials from every salvage, and a chance at double.' },
 };
 const TOOL_TIERS = [0, 25, 100, 250, 600]; // uses needed for Mk I, II, III, IV, V

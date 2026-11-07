@@ -24,7 +24,7 @@ const pick = (p, rest) => {
   const t = rest ? foes(p).find((o) => o.isId(rest)) : (p.enemy && p.enemy.env === p.env ? p.enemy : foes(p)[0]);
   if (!t) p.msg(rest ? "You don't see that here." : 'There is nothing to target.'); return t;
 };
-const mult = (p) => (1 + Math.max(0, p.level - 10) * 0.12) * (p.klass().pwr || 1) * (1 + 0.03 * (p.remort || 0)) * (D.primeOn(p) ? 1.5 : 1); // PRIME adds 50% spell power // levels 10-40, remort classes (pwr) and each remort add power
+const mult = (p) => (1 + Math.max(0, p.level - 10) * 0.12) * (p.klass().pwr || 1) * (1 + 0.03 * (p.remort || 0)) * (D.primeOn(p) ? 1.5 : 1) * (D.relicOn && D.relicOn(p, 'intellect') ? 1.5 : 1); // Helmet of Intellect: x1.5 spell power. PRIME adds 50% spell power // levels 10-40, remort classes (pwr) and each remort add power
 const power = (p, sp, r) => Math.round((rnd(r[0], r[1]) + Math.floor(p.level * (sp.sc ?? 1))) * mult(p)) + p.fxVal('atk');
 const evt = (p, t, sp, o) => p.env.fx({ a: p.info(), b: t.info(), hit: true, crit: false, dmg: 0, spell: { n: sp.n, i: sp.i, c: sp.c }, ...o });
 

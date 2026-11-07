@@ -1,5 +1,5 @@
 'use strict';
-// Blimble Hollow: a newbie area (levels 1-10, 30 rooms in a 6 x 5 grid). A village of cheerful little blue folk, the Blimbles, with a gloomy wizard
+// Blimble Hollow: a newbie area (levels 1-10, 30 rooms in a 6 x 5 grid). A village of cheerful little green folk, the Blimbles, with a gloomy wizard
 // (Grimbold the Gloom) and his evil cat familiar (Shadowpaw) in the tower at the far corner. Reached with `blimble` from Ashfall Square.
 module.exports = (items, mobs, rooms) => {
   const { item, gear, mob } = require('./gen')(items, mobs);
@@ -9,7 +9,7 @@ module.exports = (items, mobs, rooms) => {
   item('gloomberry', 'gloom berry', 'treasure', { value: 12, long: 'A shriveled black berry that hums an unhappy tune.' }); item('wizardpin', 'wizard\'s hat pin', 'treasure', { value: 40, long: 'A star-shaped hat pin with a faint purple glow.' });
   const R = (id, name, icon, lv, ids, drops, o = {}) => mob(id, name, icon, lv, { ids, drops, aggro: false, ...o });
   R('gloom_rat', 'gloom rat', '\u{1F400}', 1, ['rat', 'gloom'], [['dewdrop', 0.2], ['gloomberry', 0.2]]); R('hexed_toadstool', 'hexed toadstool', '\u{1F344}', 2, ['toadstool', 'hexed', 'mushroom'], [['acornbread', 0.2], ['whitecap', 0.06], ['gloomberry', 0.2]]);
-  R('raven_spy', 'raven spy', '\u{1F426}\u200D\u2B1B', 3, ['raven', 'spy'], [['leafboots', 0.08], ['dewdrop', 0.2]]); R('hexed_blimble', 'hexed blimble', '\u{1F9DD}', 4, ['blimble', 'hexed'], [['thornpin', 0.08], ['mossvest', 0.08], ['honeycake', 0.12]]);
+  R('raven_spy', 'raven spy', '\u{1F426}\u200D\u2B1B', 3, ['raven', 'spy'], [['leafboots', 0.08], ['dewdrop', 0.2]]); R('hexed_blimble', 'hexed blimble', '\u{1F9DD}', 4, ['blimble', 'hexed'], [['thornpin', 0.08], ['mossvest', 0.08], ['honeycake', 0.12]], { x: { color: '#4cc24c' } }); // hexed, but still green
   R('bog_imp', 'bog imp', '\u{1F47A}', 5, ['imp', 'bog'], [['acornblade', 0.08], ['shellshield', 0.08], ['berryband', 0.08]]); R('dark_apprentice', 'dark apprentice', '\u{1F9D9}', 7, ['apprentice', 'dark'], [['brambleblade', 0.08], ['wizardpin', 0.15], ['honeycake', 0.15]]);
   R('gargoyle_gnome', 'gargoyle gnome', '\u{1F5FF}', 8, ['gnome', 'gargoyle'], [['brambleblade', 0.1], ['shellshield', 0.1], ['wizardpin', 0.2]], { big: 1.15 });
   mob('shadowpaw', 'Shadowpaw, the evil cat', '\u{1F408}\u200D\u2B1B', 9, { ids: ['shadowpaw', 'cat', 'familiar'], drops: [['honeycake', 0.5], ['wizardpin', 0.4]], big: 1.2, x: { guard: true } }); // the wizard's familiar guards the study
@@ -19,8 +19,8 @@ module.exports = (items, mobs, rooms) => {
     [8, 'Witherwood Hill', 'dirt', ['hexed_blimble', 'bog_imp', 'dark_apprentice'], ['Withered', 'Barren', 'Crooked', 'Ashen', 'Bleak', 'Thorny', 'Stony', 'Weeping'], ['Slope', 'Ridge', 'Hill', 'Path', 'Bog', 'Rise', 'Crag'], 'Dead grass and bare thorn trees climb toward a dark tower. Purple mist curls around your boots.'],
     [9, "Grimbold's Tower", 'stone', ['dark_apprentice', 'gargoyle_gnome'], ['Cold', 'Echoing', 'Dusty', 'Dark', 'Narrow'], ['Corridor', 'Landing', 'Stair', 'Hall', 'Passage'], 'Cold stone, crooked candles and a sound like a very large cat purring somewhere above.']];
   require('./gridgen')(rooms, { area: 'blimble', cols: 6, rows: 5, z: 130, zones: Z, specials: {
-    '0_0': ['Blimble Gate', 'A cheerful little gate of woven branches painted bright blue, under a sign that reads WELCOME, BIG FRIEND. Toadstool houses with round doors glow warmly beyond it, and tiny blue folk in white pointed hats wave at you. (out: back to Ashfall.) A safe place.', { safe: true, camp: true }],
-    '1_0': ['Toadstool Lane', 'A lane of mushroom-cap houses with round blue doors and chimneys puffing smoke that smells of baking. Blimbles hurry past with baskets of berries. Safe.', { safe: true }],
+    '0_0': ['Blimble Gate', 'A cheerful little gate of woven branches painted bright green, under a sign that reads WELCOME, BIG FRIEND. Toadstool houses with round doors glow warmly beyond it, and tiny green folk in white pointed hats wave at you. (out: back to Ashfall.) A safe place.', { safe: true, camp: true }],
+    '1_0': ['Toadstool Lane', 'A lane of mushroom-cap houses with round green doors and chimneys puffing smoke that smells of baking. Blimbles hurry past with baskets of berries. Safe.', { safe: true }],
     '2_0': ['Fizzwick\'s Market', 'A market of tiny stalls under striped toadstool umbrellas, selling hats, tonics and acorn-sized sword. Tinker Fizzwick will sell you gear that fits (`list`, `buy <number>`) and buy your finds (`sell`). A safe place.', { safe: true, shop: { stock: ['dewdrop', 'acornbread', 'honeycake', 'thornpin', 'acornblade', 'whitecap', 'mossvest', 'leafboots', 'shellshield', 'berryband'] } }],
     '0_1': ["Elder Bumbleberry's House", 'The biggest toadstool in the village, with a round green door and a crooked chimney. Inside, shelves of tiny books and a rocking chair. Elder Bumbleberry sits by the fire and smiles at you. Talk to him for quests. A safe place.', { safe: true }],
     '1_1': ['Village Green', 'The heart of Blimble Hollow: a round green lawn with a bubbling little fountain, a maypole and picnic blankets covered in cake. Blimbles dance in rings and sing about berries. A safe place to rest.', { safe: true, camp: true }],
@@ -32,5 +32,6 @@ module.exports = (items, mobs, rooms) => {
     '5_3': ['Tower Stairs', 'A crooked spiral stair up the wizard\'s tower. The candles are all burning the wrong color.', {}, ['dark_apprentice', 'gargoyle_gnome']],
   } });
   rooms['blimble/0_0'].exits.out = 'town/square'; rooms['town/square'].exits.blimble = 'blimble/0_0'; // `blimble` from Ashfall Square
-  return { post: () => { const s = rooms['town/square']; if (s && !s.long.includes('Blimble')) s.long += ' A trail of tiny blue footprints leads off to Blimble Hollow, a village of little blue folk (a good place for new runners): type `blimble`.'; } };
+  return { post: () => { const Q = require('./lib').Q; if (Q && Q.NPCS) for (const k of ['bumbleberry', 'fizzwick', 'dewdrop', 'crumbles', 'wick']) if (Q.NPCS[k]) Q.NPCS[k].color = '#4cc24c'; // the Blimble folk are green
+    const s = rooms['town/square']; if (s && !s.long.includes('Blimble')) s.long += ' A trail of tiny green footprints leads off to Blimble Hollow, a village of little green folk (a good place for new runners): type `blimble`.'; } };
 };

@@ -47,7 +47,7 @@ const TAUNTS = {
 
 // Quest XP grows with quest level: one level's worth of XP at the quest's level, scaled by the kind of quest (boss x2.5, kill x1, fetch x0.7, visit/talk x0.5, follow-ups +25%).
 const XPGAP = (l) => 50 * (2 * l - 1), XPKIND = (id, obj) => (BOSS_QP[id] ? 2.5 : obj.some((o) => o[0] === 'kill') ? 1 : obj.some((o) => o[0] === 'get') ? 0.7 : 0.5);
-const Q = (id, name, giver, min, text, obj, rew, after) => ({ id, name, giver, min, text, obj, rew: { ...rew, xp: Math.round(XPGAP(min) * XPKIND(id, obj) * (after ? 1.25 : 1)), qp: rew.qp ?? BOSS_QP[id] ?? Math.max(1, Math.ceil(min / 4)) }, after });
+const Q = (id, name, giver, min, text, obj, rew, after) => ({ id, name, giver, min, text, obj, rew: { ...rew, xp: Math.round(XPGAP(min) * XPKIND(id, obj) * (after ? 1.25 : 1)), qp: rew.qp ?? BOSS_QP[id] ?? Math.max(1, Math.ceil(min / 4)) }, after: undefined });
 const QUESTS = [
   // Ashfall
   Q('q_first', 'First Steps', 'torv', 1, 'Meet Doc Elara at the Dawn Clinic (the Temple of the Dawn), just north of the inn. She patches up new runners for free.', [['talk', 'elara']], { xp: 40, gold: 20 }),

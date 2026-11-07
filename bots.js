@@ -85,7 +85,7 @@ function think(bot) {
     const atk = ready.filter((s) => s.kind === 'dmg' && (!s.aoe || foes.length > 1)).sort((a, b) => b.lvl - a.lvl)[0]; if (atk) return D.cast(p, atk.k);
     return;
   }
-  if (now > bot.nextChat) { bot.nextChat = now + 150000 + Math.random() * 270000; return D.command(p, 'gossip ' + pickLine(bot)); }
+  if (now > bot.nextChat) { bot.nextChat = now + 150000 + Math.random() * 270000; return D.botSay(p, pickLine(bot)); }
   if (p.inv.length < p.cap() - 2 && p.env.inv.some((o) => !o.isLiving && !o.isNpc && !o.fixed && o.def.type !== 'material') && !p.env.def.safe) { D.command(p, 'get all'); autoEquip(p); return; }
   if (bot.tick % 15 === 0) autoEquip(p);
   const here = p.env.path;
@@ -171,7 +171,7 @@ function onGossip(from, msg) {
   const named = bots.find((b) => new RegExp('\\b' + b.spec.name + '\\b', 'i').test(msg)), hit = REPLIES.find(([re]) => re.test(msg));
   if (!named && !(hit && Math.random() < 0.6) && Math.random() > 0.12) return;
   const bot = named || bots[D.rnd(0, bots.length - 1)], pool = hit ? hit[1] : ['Interesting, {name}.', 'Is that right, {name}?', 'Ha, {name}. Tell me more.', 'I was just thinking the same, {name}.'];
-  lastReply = Date.now(); setTimeout(() => { try { if (bot.p && !bot.p.gone) D.command(bot.p, 'gossip ' + pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, from)); } catch (e) { D.log('bot reply error', e.message); } }, 3000 + Math.random() * 5000);
+  lastReply = Date.now(); setTimeout(() => { try { if (bot.p && !bot.p.gone) D.botSay(bot.p, pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, from)); } catch (e) { D.log('bot reply error', e.message); } }, 3000 + Math.random() * 5000);
 }
 function save() {
   const o = {}; for (const b of bots) o[b.spec.name] = b.p.toRec();

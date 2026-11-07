@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-1039 rooms:
+1143 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -21,6 +21,46 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | The Black Stair | The Abyss (Sci-fi) | `abyss-stair.jpg` |
 | Weeping Chasm | The Abyss (Sci-fi) | `abyss-weeping_chasm.jpg` |
 | Whispering Void | The Abyss (Sci-fi) | `abyss-whispering_void.jpg` |
+| Gate of Atlantis | Atlantis (Fantasy) | `atlantis-0_0.jpg` |
+| Quiet Reef | Atlantis (Fantasy) | `atlantis-0_1.jpg` |
+| Coral Walk | Atlantis (Fantasy) | `atlantis-0_2.jpg` |
+| Quiet Lane | Atlantis (Fantasy) | `atlantis-0_3.jpg` |
+| Gilded Colonnade | Atlantis (Fantasy) | `atlantis-0_4.jpg` |
+| Shimmering Terrace | Atlantis (Fantasy) | `atlantis-1_0.jpg` |
+| Coral Gardens | Atlantis (Fantasy) | `atlantis-1_1.jpg` |
+| Shimmering Reef | Atlantis (Fantasy) | `atlantis-1_2.jpg` |
+| Pearl Plaza | Atlantis (Fantasy) | `atlantis-1_3.jpg` |
+| Marble Market | Atlantis (Fantasy) | `atlantis-1_4.jpg` |
+| Kelp-hung Lane | Atlantis (Fantasy) | `atlantis-2_0.jpg` |
+| Sunken Terrace | Atlantis (Fantasy) | `atlantis-2_1.jpg` |
+| Grand Boulevard | Atlantis (Fantasy) | `atlantis-2_2.jpg` |
+| Echoing Arcade | Atlantis (Fantasy) | `atlantis-2_3.jpg` |
+| Gilded Plaza | Atlantis (Fantasy) | `atlantis-2_4.jpg` |
+| Sunken Walk | Atlantis (Fantasy) | `atlantis-3_0.jpg` |
+| Gilded Market | Atlantis (Fantasy) | `atlantis-3_1.jpg` |
+| Temple of the Tides | Atlantis (Fantasy) | `atlantis-3_2.jpg` |
+| Pearl Boulevard | Atlantis (Fantasy) | `atlantis-3_3.jpg` |
+| Prismatic Observatory | Atlantis (Fantasy) | `atlantis-3_4.jpg` |
+| Pearl Arcade | Atlantis (Fantasy) | `atlantis-4_0.jpg` |
+| Marble Plaza | Atlantis (Fantasy) | `atlantis-4_1.jpg` |
+| Grand Market | Atlantis (Fantasy) | `atlantis-4_2.jpg` |
+| Orichalcum Foundry | Atlantis (Fantasy) | `atlantis-4_3.jpg` |
+| Humming Quarter | Atlantis (Fantasy) | `atlantis-4_4.jpg` |
+| Echoing Boulevard | Atlantis (Fantasy) | `atlantis-5_0.jpg` |
+| The Great Library | Atlantis (Fantasy) | `atlantis-5_1.jpg` |
+| Orichalcum Hall | Atlantis (Fantasy) | `atlantis-5_2.jpg` |
+| Humming Gallery | Atlantis (Fantasy) | `atlantis-5_3.jpg` |
+| Crystal Foundry | Atlantis (Fantasy) | `atlantis-5_4.jpg` |
+| Pearl Colonnade | Atlantis (Fantasy) | `atlantis-6_0.jpg` |
+| Crystal Quarter | Atlantis (Fantasy) | `atlantis-6_1.jpg` |
+| Humming Observatory | Atlantis (Fantasy) | `atlantis-6_2.jpg` |
+| Crystal Hall | Atlantis (Fantasy) | `atlantis-6_3.jpg` |
+| Throne Gate | Atlantis (Fantasy) | `atlantis-6_4.jpg` |
+| Glowing Gallery | Atlantis (Fantasy) | `atlantis-7_0.jpg` |
+| Prismatic Foundry | Atlantis (Fantasy) | `atlantis-7_1.jpg` |
+| Glowing Quarter | Atlantis (Fantasy) | `atlantis-7_2.jpg` |
+| Vaulted Stair | Atlantis (Fantasy) | `atlantis-7_3.jpg` |
+| Throne of Atlantis | Atlantis (Fantasy) | `atlantis-7_4.jpg` |
 | Breach Hatch | Starship Aurora (Sci-fi) | `aurora-a.jpg` |
 | Cargo Bay | Starship Aurora (Sci-fi) | `aurora-b.jpg` |
 | Corridor Alpha | Starship Aurora (Sci-fi) | `aurora-c.jpg` |
@@ -412,6 +452,19 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Clanking Weld Bay | Exterminus (Sci-fi) | `exterminus-6_7.jpg` |
 | Gleaming Assembly Line | Exterminus (Sci-fi) | `exterminus-6_8.jpg` |
 | Endless Weld Bay | Exterminus (Sci-fi) | `exterminus-6_9.jpg` |
+| Winding Path | Poseidon's Realm (Fantasy) | `fantasy-trail_atlantis_1.jpg` |
+| Winding Path | Sunscorch Dunes (Fantasy) | `fantasy-trail_castle_1.jpg` |
+| Winding Path | Nightfall Hollow (Fantasy) | `fantasy-trail_citadel_1.jpg` |
+| Winding Path | Hades (Fantasy) | `fantasy-trail_cloud_1.jpg` |
+| Winding Path | Whisperwood (Fantasy) | `fantasy-trail_crypt_1.jpg` |
+| Winding Path | Thornwild Court (Fantasy) | `fantasy-trail_dunes_1.jpg` |
+| Winding Path | Blimble Hollow (Fantasy) | `fantasy-trail_forest_1.jpg` |
+| Winding Path | Atlantis (Fantasy) | `fantasy-trail_hades_1.jpg` |
+| Winding Path | Castle Frankenstein (Horror) | `fantasy-trail_hollow_1.jpg` |
+| Winding Path | Barrow Crypts (Fantasy) | `fantasy-trail_marsh_1.jpg` |
+| Winding Path | Shattered Citadel (Fantasy) | `fantasy-trail_reach_1.jpg` |
+| Winding Path | The Drowned Reach (Fantasy) | `fantasy-trail_sea_1.jpg` |
+| Winding Path | Sunken Marsh (Fantasy) | `fantasy-trail_thorn_1.jpg` |
 | The Red Barn | Sunny Acres Farm (Old West) | `farm-barn.jpg` |
 | Vegetable Field: West | Sunny Acres Farm (Old West) | `farm-field1.jpg` |
 | Vegetable Field: Center | Sunny Acres Farm (Old West) | `farm-field2.jpg` |
@@ -462,11 +515,13 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Starship Tharsis: Boarding Ramp | Frostpeak Station (Sci-fi) | `frost-ship_ramp.jpg` |
 | Snowdrift Hollow | Frostpeak Station (Sci-fi) | `frost-snowdrift_hollow.jpg` |
 | Wind-Scoured Peak | Frostpeak Station (Sci-fi) | `frost-windscoured_peak.jpg` |
-| The Fantasy Gate | gates | `gates-fantasy.jpg` |
-| The Future Gate | gates | `gates-future.jpg` |
-| The Modern Gate | gates | `gates-modern.jpg` |
-| The Frontier Gate | gates | `gates-oldwest.jpg` |
-| The Prehistoric Gate | gates | `gates-prehistoric.jpg` |
+| Service Walkway | Mars (Sci-fi) | `future-trail_abyss_1.jpg` |
+| Service Walkway | The Proving Grounds (Bots) | `future-trail_aurora_1.jpg` |
+| Service Walkway | Frostpeak Station (Sci-fi) | `future-trail_ember_1.jpg` |
+| Service Walkway | The Abyss (Sci-fi) | `future-trail_exterminus_1.jpg` |
+| Service Walkway | Starship Aurora (Sci-fi) | `future-trail_frost_1.jpg` |
+| Service Walkway | Ember Wastes (Sci-fi) | `future-trail_mars_1.jpg` |
+| Service Walkway | Exterminus (Sci-fi) | `future-trail_pluto_1.jpg` |
 | Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
 | Void Ring | The Proving Grounds (Bots) | `grounds-f10.jpg` |
 | Bone Yard | The Proving Grounds (Bots) | `grounds-f2.jpg` |
@@ -833,7 +888,16 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Sunset Acres: Lot Road | Modern District (Modern) | `modern-tpr1.jpg` |
 | Sunset Acres: Middle Row | Modern District (Modern) | `modern-tpr2.jpg` |
 | Sunset Acres: East Row | Modern District (Modern) | `modern-tpr3.jpg` |
+| City Block | Multiverse Cinema 12 (Modern) | `modern-trail_brogym_1.jpg` |
+| City Block | Modern District (Modern) | `modern-trail_cinema_1.jpg` |
+| City Block | BroGym (Modern) | `modern-trail_manor_1.jpg` |
+| City Block | Golden Years Manor (Modern) | `modern-trail_stripclub_1.jpg` |
+| City Block | The Pink Flamingo (Modern) | `modern-trail_wrestling_1.jpg` |
 | Meridian Tower Plaza | Modern District (Modern) | `modern-tw_front.jpg` |
+| Dusty Trail | Silverado Mines (Old West) | `oldwest-trail_bank_1.jpg` |
+| Dusty Trail | Redrock Trail (Old West) | `oldwest-trail_mines_1.jpg` |
+| Dusty Trail | Dry Gulch Bank (Old West) | `oldwest-trail_rail_1.jpg` |
+| Dusty Trail | Tombstone Gulch (Old West) | `oldwest-trail_road_1.jpg` |
 | Martian Beachhead | Pluto (Sci-fi) | `pluto-0_0.jpg` |
 | Pale Crater Rim | Pluto (Sci-fi) | `pluto-0_1.jpg` |
 | Wind-scoured Gulch | Pluto (Sci-fi) | `pluto-0_2.jpg` |
@@ -894,6 +958,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Silent War Room | Pluto (Sci-fi) | `pluto-9_3.jpg` |
 | Grim Bridge | Pluto (Sci-fi) | `pluto-9_4.jpg` |
 | The Warlord's Frozen Throne | Pluto (Sci-fi) | `pluto-9_5.jpg` |
+| Game Trail | The Primeval Rift (Prehistoric) | `prehistoric-trail_cave_1.jpg` |
 | Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
 | The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
 | Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |
@@ -1007,6 +1072,21 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Silver Court | Poseidon's Realm (Fantasy) | `sea-9_3.jpg` |
 | Poseidon's Throne Room | Poseidon's Realm (Fantasy) | `sea-9_4.jpg` |
 | Shark Pens | Poseidon's Realm (Fantasy) | `sea-pens.jpg` |
+| Velvet Rope Entrance | The Pink Flamingo (Modern) | `stripclub-0_0.jpg` |
+| Pink Flamingo Bar | The Pink Flamingo (Modern) | `stripclub-0_1.jpg` |
+| Dressing Room | The Pink Flamingo (Modern) | `stripclub-0_2.jpg` |
+| Coat Check | The Pink Flamingo (Modern) | `stripclub-1_0.jpg` |
+| The Dance Floor | The Pink Flamingo (Modern) | `stripclub-1_1.jpg` |
+| Back Hallway | The Pink Flamingo (Modern) | `stripclub-1_2.jpg` |
+| Main Floor | The Pink Flamingo (Modern) | `stripclub-2_0.jpg` |
+| The Runway | The Pink Flamingo (Modern) | `stripclub-2_1.jpg` |
+| Storage and Green Room | The Pink Flamingo (Modern) | `stripclub-2_2.jpg` |
+| The Main Stage | The Pink Flamingo (Modern) | `stripclub-3_0.jpg` |
+| VIP Lounge | The Pink Flamingo (Modern) | `stripclub-3_1.jpg` |
+| Back Room: High Stakes | The Pink Flamingo (Modern) | `stripclub-3_2.jpg` |
+| DJ Booth | The Pink Flamingo (Modern) | `stripclub-4_0.jpg` |
+| Champagne Room | The Pink Flamingo (Modern) | `stripclub-4_1.jpg` |
+| The Owner's Office | The Pink Flamingo (Modern) | `stripclub-4_2.jpg` |
 | Briar Gate | Thornwild Court (Fantasy) | `thorn-a.jpg` |
 | Mushroom Ring | Thornwild Court (Fantasy) | `thorn-b.jpg` |
 | Moonwell | Thornwild Court (Fantasy) | `thorn-c.jpg` |
@@ -1047,3 +1127,27 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Stables | Ashfall Junction (Old West) | `town-stables.jpg` |
 | Temple of the Dawn | Ashfall Junction (Old West) | `town-temple.jpg` |
 | Watchtower | Ashfall Junction (Old West) | `town-watchtower.jpg` |
+| Arena Lobby and Box Office | Championship Wrestling Federation (Modern) | `wrestling-0_0.jpg` |
+| Fan Entrance | Championship Wrestling Federation (Modern) | `wrestling-0_1.jpg` |
+| Parking Lot and Tour Buses | Championship Wrestling Federation (Modern) | `wrestling-0_2.jpg` |
+| Valet Lounge | Championship Wrestling Federation (Modern) | `wrestling-0_3.jpg` |
+| Merchandise Stand | Championship Wrestling Federation (Modern) | `wrestling-1_0.jpg` |
+| Arena Seats: Section A | Championship Wrestling Federation (Modern) | `wrestling-1_1.jpg` |
+| Gorilla Position | Championship Wrestling Federation (Modern) | `wrestling-1_2.jpg` |
+| Managers Office Row | Championship Wrestling Federation (Modern) | `wrestling-1_3.jpg` |
+| North Concourse | Championship Wrestling Federation (Modern) | `wrestling-2_0.jpg` |
+| Ringside | Championship Wrestling Federation (Modern) | `wrestling-2_1.jpg` |
+| The Entrance Ramp | Championship Wrestling Federation (Modern) | `wrestling-2_2.jpg` |
+| Equipment Room | Championship Wrestling Federation (Modern) | `wrestling-2_3.jpg` |
+| Concessions Court | Championship Wrestling Federation (Modern) | `wrestling-3_0.jpg` |
+| The Ring | Championship Wrestling Federation (Modern) | `wrestling-3_1.jpg` |
+| Faces Locker Room | Championship Wrestling Federation (Modern) | `wrestling-3_2.jpg` |
+| Championship Trophy Room | Championship Wrestling Federation (Modern) | `wrestling-3_3.jpg` |
+| VIP Skybox | Championship Wrestling Federation (Modern) | `wrestling-4_0.jpg` |
+| Arena Seats: Section B | Championship Wrestling Federation (Modern) | `wrestling-4_1.jpg` |
+| Heels Locker Room | Championship Wrestling Federation (Modern) | `wrestling-4_2.jpg` |
+| Tag Team Corridor | Championship Wrestling Federation (Modern) | `wrestling-4_3.jpg` |
+| Announce Table | Championship Wrestling Federation (Modern) | `wrestling-5_0.jpg` |
+| Hard Camera Pit | Championship Wrestling Federation (Modern) | `wrestling-5_1.jpg` |
+| Training Ring | Championship Wrestling Federation (Modern) | `wrestling-5_2.jpg` |
+| The World Champion's Locker Room | Championship Wrestling Federation (Modern) | `wrestling-5_3.jpg` |

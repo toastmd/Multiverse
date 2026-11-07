@@ -78,6 +78,246 @@
   "area": "The Abyss (Sci-fi)"
  },
  {
+  "id": "atlantis/0_0",
+  "key": "atlantis-0_0",
+  "name": "Gate of Atlantis",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/0_1",
+  "key": "atlantis-0_1",
+  "name": "Quiet Reef",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/0_2",
+  "key": "atlantis-0_2",
+  "name": "Coral Walk",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/0_3",
+  "key": "atlantis-0_3",
+  "name": "Quiet Lane",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/0_4",
+  "key": "atlantis-0_4",
+  "name": "Gilded Colonnade",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/1_0",
+  "key": "atlantis-1_0",
+  "name": "Shimmering Terrace",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/1_1",
+  "key": "atlantis-1_1",
+  "name": "Coral Gardens",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/1_2",
+  "key": "atlantis-1_2",
+  "name": "Shimmering Reef",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/1_3",
+  "key": "atlantis-1_3",
+  "name": "Pearl Plaza",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/1_4",
+  "key": "atlantis-1_4",
+  "name": "Marble Market",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/2_0",
+  "key": "atlantis-2_0",
+  "name": "Kelp-hung Lane",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/2_1",
+  "key": "atlantis-2_1",
+  "name": "Sunken Terrace",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/2_2",
+  "key": "atlantis-2_2",
+  "name": "Grand Boulevard",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/2_3",
+  "key": "atlantis-2_3",
+  "name": "Echoing Arcade",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/2_4",
+  "key": "atlantis-2_4",
+  "name": "Gilded Plaza",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/3_0",
+  "key": "atlantis-3_0",
+  "name": "Sunken Walk",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/3_1",
+  "key": "atlantis-3_1",
+  "name": "Gilded Market",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/3_2",
+  "key": "atlantis-3_2",
+  "name": "Temple of the Tides",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/3_3",
+  "key": "atlantis-3_3",
+  "name": "Pearl Boulevard",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/3_4",
+  "key": "atlantis-3_4",
+  "name": "Prismatic Observatory",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/4_0",
+  "key": "atlantis-4_0",
+  "name": "Pearl Arcade",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/4_1",
+  "key": "atlantis-4_1",
+  "name": "Marble Plaza",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/4_2",
+  "key": "atlantis-4_2",
+  "name": "Grand Market",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/4_3",
+  "key": "atlantis-4_3",
+  "name": "Orichalcum Foundry",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/4_4",
+  "key": "atlantis-4_4",
+  "name": "Humming Quarter",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/5_0",
+  "key": "atlantis-5_0",
+  "name": "Echoing Boulevard",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/5_1",
+  "key": "atlantis-5_1",
+  "name": "The Great Library",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/5_2",
+  "key": "atlantis-5_2",
+  "name": "Orichalcum Hall",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/5_3",
+  "key": "atlantis-5_3",
+  "name": "Humming Gallery",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/5_4",
+  "key": "atlantis-5_4",
+  "name": "Crystal Foundry",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/6_0",
+  "key": "atlantis-6_0",
+  "name": "Pearl Colonnade",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/6_1",
+  "key": "atlantis-6_1",
+  "name": "Crystal Quarter",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/6_2",
+  "key": "atlantis-6_2",
+  "name": "Humming Observatory",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/6_3",
+  "key": "atlantis-6_3",
+  "name": "Crystal Hall",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/6_4",
+  "key": "atlantis-6_4",
+  "name": "Throne Gate",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/7_0",
+  "key": "atlantis-7_0",
+  "name": "Glowing Gallery",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/7_1",
+  "key": "atlantis-7_1",
+  "name": "Prismatic Foundry",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/7_2",
+  "key": "atlantis-7_2",
+  "name": "Glowing Quarter",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/7_3",
+  "key": "atlantis-7_3",
+  "name": "Vaulted Stair",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "atlantis/7_4",
+  "key": "atlantis-7_4",
+  "name": "Throne of Atlantis",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
   "id": "aurora/a",
   "key": "aurora-a",
   "name": "Breach Hatch",
@@ -2424,6 +2664,84 @@
   "area": "Exterminus (Sci-fi)"
  },
  {
+  "id": "fantasy/trail_atlantis_1",
+  "key": "fantasy-trail_atlantis_1",
+  "name": "Winding Path",
+  "area": "Poseidon's Realm (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_castle_1",
+  "key": "fantasy-trail_castle_1",
+  "name": "Winding Path",
+  "area": "Sunscorch Dunes (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_citadel_1",
+  "key": "fantasy-trail_citadel_1",
+  "name": "Winding Path",
+  "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_cloud_1",
+  "key": "fantasy-trail_cloud_1",
+  "name": "Winding Path",
+  "area": "Hades (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_crypt_1",
+  "key": "fantasy-trail_crypt_1",
+  "name": "Winding Path",
+  "area": "Whisperwood (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_dunes_1",
+  "key": "fantasy-trail_dunes_1",
+  "name": "Winding Path",
+  "area": "Thornwild Court (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_forest_1",
+  "key": "fantasy-trail_forest_1",
+  "name": "Winding Path",
+  "area": "Blimble Hollow (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_hades_1",
+  "key": "fantasy-trail_hades_1",
+  "name": "Winding Path",
+  "area": "Atlantis (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_hollow_1",
+  "key": "fantasy-trail_hollow_1",
+  "name": "Winding Path",
+  "area": "Castle Frankenstein (Horror)"
+ },
+ {
+  "id": "fantasy/trail_marsh_1",
+  "key": "fantasy-trail_marsh_1",
+  "name": "Winding Path",
+  "area": "Barrow Crypts (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_reach_1",
+  "key": "fantasy-trail_reach_1",
+  "name": "Winding Path",
+  "area": "Shattered Citadel (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_sea_1",
+  "key": "fantasy-trail_sea_1",
+  "name": "Winding Path",
+  "area": "The Drowned Reach (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_thorn_1",
+  "key": "fantasy-trail_thorn_1",
+  "name": "Winding Path",
+  "area": "Sunken Marsh (Fantasy)"
+ },
+ {
   "id": "farm/barn",
   "key": "farm-barn",
   "name": "The Red Barn",
@@ -2724,34 +3042,46 @@
   "area": "Frostpeak Station (Sci-fi)"
  },
  {
-  "id": "gates/fantasy",
-  "key": "gates-fantasy",
-  "name": "The Fantasy Gate",
-  "area": "gates"
+  "id": "future/trail_abyss_1",
+  "key": "future-trail_abyss_1",
+  "name": "Service Walkway",
+  "area": "Mars (Sci-fi)"
  },
  {
-  "id": "gates/future",
-  "key": "gates-future",
-  "name": "The Future Gate",
-  "area": "gates"
+  "id": "future/trail_aurora_1",
+  "key": "future-trail_aurora_1",
+  "name": "Service Walkway",
+  "area": "The Proving Grounds (Bots)"
  },
  {
-  "id": "gates/modern",
-  "key": "gates-modern",
-  "name": "The Modern Gate",
-  "area": "gates"
+  "id": "future/trail_ember_1",
+  "key": "future-trail_ember_1",
+  "name": "Service Walkway",
+  "area": "Frostpeak Station (Sci-fi)"
  },
  {
-  "id": "gates/oldwest",
-  "key": "gates-oldwest",
-  "name": "The Frontier Gate",
-  "area": "gates"
+  "id": "future/trail_exterminus_1",
+  "key": "future-trail_exterminus_1",
+  "name": "Service Walkway",
+  "area": "The Abyss (Sci-fi)"
  },
  {
-  "id": "gates/prehistoric",
-  "key": "gates-prehistoric",
-  "name": "The Prehistoric Gate",
-  "area": "gates"
+  "id": "future/trail_frost_1",
+  "key": "future-trail_frost_1",
+  "name": "Service Walkway",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "future/trail_mars_1",
+  "key": "future-trail_mars_1",
+  "name": "Service Walkway",
+  "area": "Ember Wastes (Sci-fi)"
+ },
+ {
+  "id": "future/trail_pluto_1",
+  "key": "future-trail_pluto_1",
+  "name": "Service Walkway",
+  "area": "Exterminus (Sci-fi)"
  },
  {
   "id": "grounds/f1",
@@ -4950,10 +5280,64 @@
   "area": "Modern District (Modern)"
  },
  {
+  "id": "modern/trail_brogym_1",
+  "key": "modern-trail_brogym_1",
+  "name": "City Block",
+  "area": "Multiverse Cinema 12 (Modern)"
+ },
+ {
+  "id": "modern/trail_cinema_1",
+  "key": "modern-trail_cinema_1",
+  "name": "City Block",
+  "area": "Modern District (Modern)"
+ },
+ {
+  "id": "modern/trail_manor_1",
+  "key": "modern-trail_manor_1",
+  "name": "City Block",
+  "area": "BroGym (Modern)"
+ },
+ {
+  "id": "modern/trail_stripclub_1",
+  "key": "modern-trail_stripclub_1",
+  "name": "City Block",
+  "area": "Golden Years Manor (Modern)"
+ },
+ {
+  "id": "modern/trail_wrestling_1",
+  "key": "modern-trail_wrestling_1",
+  "name": "City Block",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
   "id": "modern/tw_front",
   "key": "modern-tw_front",
   "name": "Meridian Tower Plaza",
   "area": "Modern District (Modern)"
+ },
+ {
+  "id": "oldwest/trail_bank_1",
+  "key": "oldwest-trail_bank_1",
+  "name": "Dusty Trail",
+  "area": "Silverado Mines (Old West)"
+ },
+ {
+  "id": "oldwest/trail_mines_1",
+  "key": "oldwest-trail_mines_1",
+  "name": "Dusty Trail",
+  "area": "Redrock Trail (Old West)"
+ },
+ {
+  "id": "oldwest/trail_rail_1",
+  "key": "oldwest-trail_rail_1",
+  "name": "Dusty Trail",
+  "area": "Dry Gulch Bank (Old West)"
+ },
+ {
+  "id": "oldwest/trail_road_1",
+  "key": "oldwest-trail_road_1",
+  "name": "Dusty Trail",
+  "area": "Tombstone Gulch (Old West)"
  },
  {
   "id": "pluto/0_0",
@@ -5314,6 +5698,12 @@
   "key": "pluto-9_5",
   "name": "The Warlord's Frozen Throne",
   "area": "Pluto (Sci-fi)"
+ },
+ {
+  "id": "prehistoric/trail_cave_1",
+  "key": "prehistoric-trail_cave_1",
+  "name": "Game Trail",
+  "area": "The Primeval Rift (Prehistoric)"
  },
  {
   "id": "prime/amber",
@@ -5994,6 +6384,96 @@
   "area": "Poseidon's Realm (Fantasy)"
  },
  {
+  "id": "stripclub/0_0",
+  "key": "stripclub-0_0",
+  "name": "Velvet Rope Entrance",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/0_1",
+  "key": "stripclub-0_1",
+  "name": "Pink Flamingo Bar",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/0_2",
+  "key": "stripclub-0_2",
+  "name": "Dressing Room",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/1_0",
+  "key": "stripclub-1_0",
+  "name": "Coat Check",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/1_1",
+  "key": "stripclub-1_1",
+  "name": "The Dance Floor",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/1_2",
+  "key": "stripclub-1_2",
+  "name": "Back Hallway",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/2_0",
+  "key": "stripclub-2_0",
+  "name": "Main Floor",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/2_1",
+  "key": "stripclub-2_1",
+  "name": "The Runway",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/2_2",
+  "key": "stripclub-2_2",
+  "name": "Storage and Green Room",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/3_0",
+  "key": "stripclub-3_0",
+  "name": "The Main Stage",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/3_1",
+  "key": "stripclub-3_1",
+  "name": "VIP Lounge",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/3_2",
+  "key": "stripclub-3_2",
+  "name": "Back Room: High Stakes",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/4_0",
+  "key": "stripclub-4_0",
+  "name": "DJ Booth",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/4_1",
+  "key": "stripclub-4_1",
+  "name": "Champagne Room",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
+  "id": "stripclub/4_2",
+  "key": "stripclub-4_2",
+  "name": "The Owner's Office",
+  "area": "The Pink Flamingo (Modern)"
+ },
+ {
   "id": "thorn/a",
   "key": "thorn-a",
   "name": "Briar Gate",
@@ -6232,5 +6712,149 @@
   "key": "town-watchtower",
   "name": "Watchtower",
   "area": "Ashfall Junction (Old West)"
+ },
+ {
+  "id": "wrestling/0_0",
+  "key": "wrestling-0_0",
+  "name": "Arena Lobby and Box Office",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/0_1",
+  "key": "wrestling-0_1",
+  "name": "Fan Entrance",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/0_2",
+  "key": "wrestling-0_2",
+  "name": "Parking Lot and Tour Buses",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/0_3",
+  "key": "wrestling-0_3",
+  "name": "Valet Lounge",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/1_0",
+  "key": "wrestling-1_0",
+  "name": "Merchandise Stand",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/1_1",
+  "key": "wrestling-1_1",
+  "name": "Arena Seats: Section A",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/1_2",
+  "key": "wrestling-1_2",
+  "name": "Gorilla Position",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/1_3",
+  "key": "wrestling-1_3",
+  "name": "Managers Office Row",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/2_0",
+  "key": "wrestling-2_0",
+  "name": "North Concourse",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/2_1",
+  "key": "wrestling-2_1",
+  "name": "Ringside",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/2_2",
+  "key": "wrestling-2_2",
+  "name": "The Entrance Ramp",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/2_3",
+  "key": "wrestling-2_3",
+  "name": "Equipment Room",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/3_0",
+  "key": "wrestling-3_0",
+  "name": "Concessions Court",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/3_1",
+  "key": "wrestling-3_1",
+  "name": "The Ring",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/3_2",
+  "key": "wrestling-3_2",
+  "name": "Faces Locker Room",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/3_3",
+  "key": "wrestling-3_3",
+  "name": "Championship Trophy Room",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/4_0",
+  "key": "wrestling-4_0",
+  "name": "VIP Skybox",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/4_1",
+  "key": "wrestling-4_1",
+  "name": "Arena Seats: Section B",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/4_2",
+  "key": "wrestling-4_2",
+  "name": "Heels Locker Room",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/4_3",
+  "key": "wrestling-4_3",
+  "name": "Tag Team Corridor",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/5_0",
+  "key": "wrestling-5_0",
+  "name": "Announce Table",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/5_1",
+  "key": "wrestling-5_1",
+  "name": "Hard Camera Pit",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/5_2",
+  "key": "wrestling-5_2",
+  "name": "Training Ring",
+  "area": "Championship Wrestling Federation (Modern)"
+ },
+ {
+  "id": "wrestling/5_3",
+  "key": "wrestling-5_3",
+  "name": "The World Champion's Locker Room",
+  "area": "Championship Wrestling Federation (Modern)"
  }
 ]

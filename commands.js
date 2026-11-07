@@ -121,7 +121,7 @@ const C = {
     it.move(p.env); p.msg(`You drop ${it.short}.`);
   },
   inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
-    const SL = [['weapon', 'Weapon (wielded)'], ['offhand', 'Off-hand weapon'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['ring', 'Ring'], ['cloak', 'Cloak'], ['feet', 'Feet']];
+    const SL = [['weapon', 'Weapon (wielded)'], ['offhand', 'Off-hand weapon'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['ring', 'Ring'], ['cloak', 'Cloak'], ['belt', 'Belt'], ['feet', 'Feet']];
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
     for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + ((s === 'weapon' || s === 'offhand') ? ` (damage ${it.dmg[0]}-${it.dmg[1]}; ${D.WTYPES[D.wtype(it)] || ''}, ${D.hands(it)}-handed)` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') + (it.exp ? ` [${D.relics.left(it)} min left]` : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
@@ -639,6 +639,14 @@ const C = {
         if (D.status && p.hp > 0) D.status.apply(D.NOBODY, p, { pit: 'bleeding', darts: 'poisoned', fire: 'burning', snare: 'grappled', gas: 'blinded' }[kind]); p.sendStats(); }
     } else p.msg(['You find nothing but dust and an old cobweb.', 'Nothing here. Not even a good rumor.', 'You turn up nothing of interest.', 'A thorough search. A thoroughly empty one.'][D.rnd(0, 3)], 'sys');
   },
+  bot(p, a) { // bot [on|off|<message>]: the channel where the resident bots chat
+    a = a.trim(); p.mute = p.mute || {};
+    if (/^off$/i.test(a)) { p.mute.bot = true; return p.msg('Bot channel muted: you will not hear the resident bots. (`bot on` brings them back.)', 'sys'); }
+    if (/^on$/i.test(a)) { delete p.mute.bot; return p.msg('Bot channel on: the resident bots chat here.', 'sys'); }
+    if (!a) return p.msg(`Bot channel: ${p.mute.bot ? 'MUTED' : 'on'}. The resident bots (${[...D.players.values()].filter((o) => o.isBot).map((o) => o.name).join(', ')}) chat here instead of on gossip. \`bot off\` mutes it, \`bot on\` unmutes, and \`bot <message>\` talks to them.`, 'sys');
+    if (p.mute.bot) return p.msg('You have muted the bot channel: `bot on` first.', 'sys'); if (silenced(p)) return;
+    for (const o of D.players.values()) if (!o.isBot && o.send && !(o.mute && o.mute.bot)) o.msg(`[bot] ${p.name}: ${a}`, 'bot'); if (D.onGossip) D.onGossip(p.name, a);
+  },
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -803,7 +811,7 @@ const C = {
     const slotOf = (d) => (d.type === 'weapon' ? 'weapon' : d.slot), worn = new Set(Object.values(p.equip)), cand = [];
     for (const it of p.inv) if (!worn.has(it) && (it.def.type === 'weapon' || it.def.type === 'armor') && slotOf(it.def)) cand.push({ src: 'pack', it, def: it.def, slot: slotOf(it.def), s: score(it.def, it) });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
-    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'ring', 'cloak', 'feet'], out = [], later = [];
+    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'ring', 'cloak', 'belt', 'feet'], out = [], later = [];
     for (const sl of slots) {
       const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) <= p.level).sort((x, y) => y.s - x.s), best = ok[0];
       const tooHigh = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) > p.level && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);

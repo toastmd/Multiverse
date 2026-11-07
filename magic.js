@@ -30,7 +30,6 @@ const evt = (p, t, sp, o) => p.env.fx({ a: p.info(), b: t.info(), hit: true, cri
 
 const KIND = {
   dmg(p, sp, rest) {
-    if (p.env.def.safe) return p.msg('Violence is not welcome here.'), false;
     const ts = sp.aoe ? foes(p) : [pick(p, rest)]; if (!ts[0]) return sp.aoe ? (p.msg('There is nothing to hit.'), false) : false;
     p.msg(`${sp.i} ${sp.n}: ${FL.castLine(sp, sp.aoe ? 'your enemies' : ts[0].the())}`, p.enemy ? 'spellfx' : 'spell'); p.env.tell(`${p.name} casts ${sp.n}!`, p, 'combat2');
     for (const t of ts) {

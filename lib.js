@@ -29,7 +29,7 @@ const roll = (n) => { n = Math.max(1, Math.round(n)); let h = 0, ones = 0; for (
 const KP_DEFAULT = { Numpad1: 'southwest', Numpad2: 'south', Numpad3: 'southeast', Numpad4: 'west', Numpad5: 'look', Numpad6: 'east', Numpad7: 'northwest', Numpad8: 'north', Numpad9: 'northeast', Numpad0: 'get all', NumpadDecimal: 'heal', NumpadAdd: 'down', NumpadSubtract: 'up', NumpadMultiply: 'out', NumpadDivide: 'kill', NumpadEnter: '' };
 const KP_OLD = { Numpad8: 'north', Numpad2: 'south', Numpad4: 'west', Numpad6: 'east', Numpad9: 'up', Numpad3: 'down', Numpad5: 'look', Numpad0: 'inventory', Numpad1: 'flee', Numpad7: 'score', NumpadAdd: 'spells', NumpadSubtract: 'quests', NumpadDivide: 'who', NumpadMultiply: 'bag', NumpadDecimal: 'recall', NumpadEnter: '' };
 D.kpFromRec = (rec) => { const m = rec.kpMap && typeof rec.kpMap === 'object' ? rec.kpMap : {}; return rec.kpVer !== 2 && Object.keys(KP_OLD).every((k) => m[k] === undefined || m[k] === KP_OLD[k]) ? {} : m; }; // players who never changed the old keypad get the new defaults; custom keypads are kept
-D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', castle: 'Castle Frankenstein (Horror)', farm: 'Sunny Acres Farm (Old West)', blimble: 'Blimble Hollow (Fantasy)', cinema: 'Multiverse Cinema 12 (Modern)', exterminus: 'Exterminus (Sci-fi)', cloud: 'Castle in the Clouds (Fantasy)', brogym: 'BroGym (Modern)', sea: "Poseidon's Realm (Fantasy)", hades: 'Hades (Fantasy)', pluto: 'Pluto (Sci-fi)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
+D.AREA_LABEL = { town: 'Ashfall Junction (Old West)', forest: 'Whisperwood (Fantasy)', crypt: 'Barrow Crypts (Fantasy)', marsh: 'Sunken Marsh (Fantasy)', road: 'Redrock Trail (Old West)', mines: 'Silverado Mines (Old West)', dunes: 'Sunscorch Dunes (Fantasy)', frost: 'Frostpeak Station (Sci-fi)', ember: 'Ember Wastes (Sci-fi)', citadel: 'Shattered Citadel (Fantasy)', cit: 'Shattered Citadel (Fantasy)', abyss: 'The Abyss (Sci-fi)', modern: 'Modern District (Modern)', cave: 'The Mammoth Caverns (Prehistoric)', buck: 'Buckstars Coffee Shop (Modern)', manor: 'Golden Years Manor (Modern)', castle: 'Castle Frankenstein (Horror)', farm: 'Sunny Acres Farm (Old West)', blimble: 'Blimble Hollow (Fantasy)', atlantis: 'Atlantis (Fantasy)', stripclub: 'The Pink Flamingo (Modern)', wrestling: 'Championship Wrestling Federation (Modern)', cinema: 'Multiverse Cinema 12 (Modern)', exterminus: 'Exterminus (Sci-fi)', cloud: 'Castle in the Clouds (Fantasy)', brogym: 'BroGym (Modern)', sea: "Poseidon's Realm (Fantasy)", hades: 'Hades (Fantasy)', pluto: 'Pluto (Sci-fi)', mars: 'Mars (Sci-fi)', grounds: 'The Proving Grounds (Bots)', prime: 'The Primeval Rift (Prehistoric)', hollow: 'Nightfall Hollow (Fantasy)', bank: 'Dry Gulch Bank (Old West)', gulch: 'Tombstone Gulch (Old West)', thorn: 'Thornwild Court (Fantasy)', aurora: 'Starship Aurora (Sci-fi)', reach: 'The Drowned Reach (Fantasy)', rail: 'Brimstone Rail Yard (Old West)' };
 const need = (lvl) => lvl * lvl * 50; // xp required to leave this level
 // weapon styles: what you wield decides how a hit reads (clubs bash, guns shoot, blades slash, spears stab)
 const STYLES = { bash: { re: /club|bat\b|mace|hammer|staff|stick|cudgel|baton|truncheon|wrench|pipe|extinguisher|putter|crowbar|tire ?iron|maul|flail|bone|pike\b.*tusk|tusk/, noun: 'swing', set: [[0.05, 'tap', 'taps', ' lightly'], [0.15, 'bash', 'bashes', ''], [0.3, 'bash', 'bashes', ' hard'], [0.5, 'smash', 'smashes', ''], [9, 'pulverize', 'pulverizes', '']] },
@@ -45,7 +45,7 @@ class Room extends GameObject {
   constructor(path, def) { super(); this.path = path; this.configure(def); }
   configure(def) {
     this.def = def; this.name = this.short = def.name; this.long = def.long; this.exits = def.exits || {};
-    this.area = def.area; this.terrain = def.terrain || 'concrete'; this.x = def.x; this.y = def.y; this.z = def.z || 0; this.nodes = { ...(def.res || {}) };
+    this.area = def.area; this.realm = def.realm || def.area; this.terrain = def.terrain || 'concrete'; this.x = def.x; this.y = def.y; this.z = def.z || 0; this.nodes = { ...(def.res || {}) };
   }
   reset() { // LPMud-style reset(): respawn missing monsters and floor items, refill resource nodes
     this.nodes = { ...(this.def.res || {}) };
@@ -109,7 +109,7 @@ class Living extends GameObject {
   weapon(hand) { const w = hand === 'off' ? this.equip.offhand : this.equip.weapon; return w ? w.dmg : this.natDmg || [1, 3]; }
   strEff() { return this.str * (this.isPlayer && D.relicOn && D.relicOn(this, 'strength') ? 2 : 1); } // Amulet of Strength doubles strength
   info() { return { id: this.id, name: cap(this.name), hp: Math.max(0, this.hp), max: this.maxhp, lvl: this.level, k: this.isPlayer ? 'p' : 'm', icon: this.icon, mp: this.isPlayer ? '' : (D.mobPic ? D.mobPic(this.mobId) : '') }; } // mp: this monster's picture file, if you supplied one
-  engage(t) { if (this.env.def.safe) return false; this.enemy = t; if (t.isPlayer && this.mobId) t.sendPortrait(this.name, 'mob_' + this.mobId); return true; }
+  engage(t) { this.enemy = t; if (t.isPlayer && this.mobId) t.sendPortrait(this.name, 'mob_' + this.mobId); return true; }
   tickFx() { // damage/heal over time, summons, expiry. Returns false if this object died.
     for (const e of [...this.fx]) {
       const src = e.src && D.objects.has(e.src.id) ? e.src : NOBODY;
@@ -202,7 +202,9 @@ class Monster extends Living {
     this.env.tell(`${cap(this.the())} dies.`, killer, 'combat'); killer.msg(`You have slain ${this.the()}!`, 'win'); if (killer.isPlayer && this.def && this.def.farmAnimal && D.farm) D.farm.punish(killer, this); // the farmer, the cows and the sheep: an hour's ban from farming
     if (killer.isPlayer && this.def.legend && Math.random() < this.def.legend.chance) D.legendFound(killer, this, this.def.legend.item);
     if (D.relics) D.relics.roll(killer, this);
-    for (const [id, p] of this.def.drops || []) if (Math.random() < p) { const it = D.cloneItem(id); it.move(this.env); killer.msg(`${cap(this.the())} dropped ${it.short}.`, 'items'); }
+    for (const [id, p] of this.def.drops || []) if (Math.random() < p) { // bag auto loot: EVERYTHING a monster drops (stims, weapons, armor, miscellaneous) goes straight into the bag
+      if (killer.isPlayer && killer.bagMode === 'loot') { const w = D.give(killer, id, 'loot'); killer.msg(`${cap(this.the())} dropped ${D.W.items[id].short}${w === 'bag' ? ': auto-looted into your bag.' : w === 'pack' ? ': you pick it up.' : '.'}`, 'items'); }
+      else { const it = D.cloneItem(id); it.move(this.env); killer.msg(`${cap(this.the())} dropped ${it.short}.`, 'items'); } }
     this.env.fx({ a: killer.info(), b: { ...this.info(), hp: 0 }, dmg: 0, hit: false, dead: true });
     const g = rnd(...(this.def.gold || [this.level * 2, this.level * 5]));
     const mates = killer.isPlayer ? D.teamHere(killer) : [killer], n = mates.length, share = 1 + 0.1 * (n - 1); // a team splits credits and XP (with a 10% bonus per extra member) among members in the room
@@ -335,7 +337,7 @@ D.loadWorld = () => { // also used by the wizard `update` command to hot-reload 
   for (const r of D.rooms.values()) r.reset();
 };
 D.mapFor = (p) => {
-  const z = p.env.z, rooms = [], shown = new Set([...p.visited, ...[...D.rooms.values()].filter((r) => r.area === p.env.area && r.z === z && !r.def.hidden).map((r) => r.path)]); // the whole map of the area you are in, plus anywhere you have been
+  const z = p.env.z, rooms = [], realm = p.env.realm, ex = p.env.x, ey = p.env.y, shown = new Set([...D.rooms.values()].filter((r) => r.realm === realm && r.z === z && !r.def.hidden && Math.abs(r.x - ex) <= 13 && Math.abs(r.y - ey) <= 9).map((r) => r.path)); // the map of the realm you are in, a window around you (every realm is one big grid)
   for (const path of shown) {
     const r = D.rooms.get(path); if (!r || r.z !== z) continue;
     rooms.push({ p: path, x: r.x, y: r.y, n: r.name, t: r.terrain, npc: r.inv.some((o) => o.isNpc) ? 1 : 0, ex: Object.entries(r.exits).map(([d, to]) => ({ d, to })) });
@@ -421,13 +423,13 @@ D.give = (p, id, how) => { // where a new item goes: loot-like items go to the b
 };
 D.takeFloor = (p, it) => { // picking up an item from the floor
   if (!it.itemId) return false;
-  const room = it.type === 'material' ? Infinity : D.bagCap(p) - D.bagUsed(p), lootish = ['material', 'weapon', 'armor'].includes(it.type);
+  const room = it.type === 'material' ? Infinity : D.bagCap(p) - D.bagUsed(p), lootish = it.type !== 'fixture'; // with auto loot on, anything you pick up goes to the bag
   if ((lootish && p.bagMode === 'loot' && room > 0) || (p.inv.length >= p.cap() && (p.bagMode !== 'off' || it.type === 'material') && room > 0)) { p.bag[it.itemId] = (p.bag[it.itemId] || 0) + 1; it.destroy(); return 'bag'; }
   if (p.inv.length < p.cap()) { it.move(p); return 'pack'; }
   return false;
 };
 // ---- shopkeepers: every shop, exchange and clinic has someone behind the counter (they cannot be fought) ----
-const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', castle: 'fantasy', farm: 'west', blimble: 'fantasy', cloud: 'fantasy', cinema: 'modern', exterminus: 'scifi', brogym: 'modern', sea: 'fantasy', hades: 'fantasy', pluto: 'scifi', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
+const AREA_GENRE = { town: 'west', road: 'west', mines: 'west', gulch: 'west', bank: 'west', rail: 'west', forest: 'fantasy', crypt: 'fantasy', marsh: 'fantasy', dunes: 'fantasy', citadel: 'fantasy', cit: 'fantasy', thorn: 'fantasy', reach: 'fantasy', hollow: 'fantasy', castle: 'fantasy', farm: 'west', blimble: 'fantasy', atlantis: 'fantasy', stripclub: 'modern', wrestling: 'modern', cloud: 'fantasy', cinema: 'modern', exterminus: 'scifi', brogym: 'modern', sea: 'fantasy', hades: 'fantasy', pluto: 'scifi', frost: 'scifi', ember: 'scifi', abyss: 'scifi', aurora: 'scifi', mars: 'scifi', grounds: 'scifi', prime: 'stone', cave: 'stone' };
 const SHOPKEEPERS = { west: [['Dusty Pete', 'a dusty old trader with a corncob pipe and sleeve garters'], ['Widow Mae', 'a sharp-eyed widow in a black bonnet who counts change twice'], ['Cactus Jack', 'a leathery old-timer with a bandana and a grin full of gold'], ['Honest Abe', 'a rumpled clerk in a green eyeshade who swears he is honest'], ['Silas the Peddler', 'a bent peddler with a pack that never seems to empty']],
   fantasy: [['Merchant Orlo', 'a round merchant in a velvet cap with rings on every finger'], ['Dame Hesper', 'a tall, calm trader in a hooded traveling cloak'], ['Old Fenwick', 'a gnarled old shopkeeper with spectacles on a chain'], ['Brindle the Trader', 'a cheerful halfling trader perched on a tall stool'], ['Quillon the Fence', 'a quick-eyed dealer who asks no questions']],
   scifi: [['Vendor-Bot 7', 'a dented vending droid with a flickering screen face'], ['Trader Zix', 'a six-armed trader in a patched jumpsuit, juggling inventory'], ['Quartermaster Nova', 'a brisk quartermaster in a crisp silver uniform'], ['Dealer K-9', 'a gruff cyborg dealer with a chrome jaw and a tablet'], ['Supply Officer Tam', 'a tired supply officer with a stylus behind each ear']],
@@ -447,6 +449,7 @@ D.skullFace = (p) => { // a player died: a giant skull made of skull emoji, for 
   const art = SKULL_ROWS.map((r) => [...r].map((c) => (c === '#' ? '\u{1F480}' : '\u3000')).join('')).join('\n'), text = `${art}\n\u2620 ${p.name} (level ${p.level} ${p.klass().name}) has DIED! \u2620`;
   for (const o of D.players.values()) if (!o.isBot && !(o.mute && o.mute[MUTEKEY.deaths])) o.msg(text, 'skull');
 };
+D.botSay = (bot, text) => { for (const o of D.players.values()) if (!o.isBot && o.send && !(o.mute && o.mute.bot)) o.msg(`[bot] ${bot.name}: ${text}`, 'bot'); }; // the bots chat on their own channel, which players can mute (bot off)
 D.presence = (p, kind) => { if (kind === 'in' && D.news) D.news.log('login', p); // everyone online hears when a player logs in or out (players can mute it with `notify off`)
   const who = `${p.name} (${p.remort ? `Remort ${p.remort}, ` : ''}L${p.level} ${p.klass().name})`, text = `${who} has logged ${kind === 'in' ? 'in' : 'out'}.`;
   for (const o of D.players.values()) if (o !== p && !o.isBot && o.notify !== false) o.msg('🔔 ' + text, 'notify');

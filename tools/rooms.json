@@ -78,6 +78,366 @@
   "area": "The Abyss (Sci-fi)"
  },
  {
+  "id": "asgard/0_0",
+  "key": "asgard-0_0",
+  "name": "Bifrost Landing",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/0_1",
+  "key": "asgard-0_1",
+  "name": "Windswept Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/0_2",
+  "key": "asgard-0_2",
+  "name": "Frosty Landing",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/0_3",
+  "key": "asgard-0_3",
+  "name": "Shining Terrace",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/0_4",
+  "key": "asgard-0_4",
+  "name": "Whispering Grove",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/0_5",
+  "key": "asgard-0_5",
+  "name": "Evergreen Orchard",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_0",
+  "key": "asgard-1_0",
+  "name": "Shining Causeway",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_1",
+  "key": "asgard-1_1",
+  "name": "Heimdall's Watch",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_2",
+  "key": "asgard-1_2",
+  "name": "Starlit Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_3",
+  "key": "asgard-1_3",
+  "name": "Golden Meadow",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_4",
+  "key": "asgard-1_4",
+  "name": "Evergreen Glade",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/1_5",
+  "key": "asgard-1_5",
+  "name": "Golden Grove",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_0",
+  "key": "asgard-2_0",
+  "name": "Rainbow Terrace",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_1",
+  "key": "asgard-2_1",
+  "name": "Windswept Causeway",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_2",
+  "key": "asgard-2_2",
+  "name": "Golden Orchard",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_3",
+  "key": "asgard-2_3",
+  "name": "Sunlit Garden",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_4",
+  "key": "asgard-2_4",
+  "name": "Noatun Docks",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/2_5",
+  "key": "asgard-2_5",
+  "name": "Rune-lit Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_0",
+  "key": "asgard-3_0",
+  "name": "Shining Landing",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_1",
+  "key": "asgard-3_1",
+  "name": "Idunn's Orchard",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_2",
+  "key": "asgard-3_2",
+  "name": "Sunlit Grove",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_3",
+  "key": "asgard-3_3",
+  "name": "Folkvangr",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_4",
+  "key": "asgard-3_4",
+  "name": "Echoing Hearth",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/3_5",
+  "key": "asgard-3_5",
+  "name": "Golden Gallery",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_0",
+  "key": "asgard-4_0",
+  "name": "Blooming Garden",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_1",
+  "key": "asgard-4_1",
+  "name": "Whispering Meadow",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_2",
+  "key": "asgard-4_2",
+  "name": "Mead Hall of Heroes",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_3",
+  "key": "asgard-4_3",
+  "name": "Echoing Gallery",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_4",
+  "key": "asgard-4_4",
+  "name": "Gate of Alfheim",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/4_5",
+  "key": "asgard-4_5",
+  "name": "Great Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_0",
+  "key": "asgard-5_0",
+  "name": "Bragi's Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_1",
+  "key": "asgard-5_1",
+  "name": "Fensalir",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_2",
+  "key": "asgard-5_2",
+  "name": "Great Court",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_3",
+  "key": "asgard-5_3",
+  "name": "Golden Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_4",
+  "key": "asgard-5_4",
+  "name": "Great Gallery",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/5_5",
+  "key": "asgard-5_5",
+  "name": "Endless Feast Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_0",
+  "key": "asgard-6_0",
+  "name": "Breidablik",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_1",
+  "key": "asgard-6_1",
+  "name": "Great Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_2",
+  "key": "asgard-6_2",
+  "name": "Rune-lit Hearth",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_3",
+  "key": "asgard-6_3",
+  "name": "Roaring Court",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_4",
+  "key": "asgard-6_4",
+  "name": "Loki's Folly",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/6_5",
+  "key": "asgard-6_5",
+  "name": "Glorious Training Ground",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_0",
+  "key": "asgard-7_0",
+  "name": "Roaring Stair",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_1",
+  "key": "asgard-7_1",
+  "name": "Rune-lit Gallery",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_2",
+  "key": "asgard-7_2",
+  "name": "Bilskirnir",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_3",
+  "key": "asgard-7_3",
+  "name": "Feasting Gate",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_4",
+  "key": "asgard-7_4",
+  "name": "Glorious Mead Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/7_5",
+  "key": "asgard-7_5",
+  "name": "Feasting Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_0",
+  "key": "asgard-8_0",
+  "name": "Echoing Court",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_1",
+  "key": "asgard-8_1",
+  "name": "Tyr's Battleground",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_2",
+  "key": "asgard-8_2",
+  "name": "Thundering Training Ground",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_3",
+  "key": "asgard-8_3",
+  "name": "Glorious Feast Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_4",
+  "key": "asgard-8_4",
+  "name": "Thundering Gate",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/8_5",
+  "key": "asgard-8_5",
+  "name": "Gate of Helheim",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_0",
+  "key": "asgard-9_0",
+  "name": "Golden Hearth",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_1",
+  "key": "asgard-9_1",
+  "name": "Shield-roofed Mead Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_2",
+  "key": "asgard-9_2",
+  "name": "Endless Hall",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_3",
+  "key": "asgard-9_3",
+  "name": "Shield-roofed Training Ground",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_4",
+  "key": "asgard-9_4",
+  "name": "High Gate",
+  "area": "Asgard (Fantasy)"
+ },
+ {
+  "id": "asgard/9_5",
+  "key": "asgard-9_5",
+  "name": "Hlidskjalf: the High Seat of Odin",
+  "area": "Asgard (Fantasy)"
+ },
+ {
   "id": "atlantis/0_0",
   "key": "atlantis-0_0",
   "name": "Gate of Atlantis",
@@ -922,6 +1282,306 @@
   "key": "buck-5_4",
   "name": "The Roasting Room",
   "area": "Buckstars Coffee Shop (Modern)"
+ },
+ {
+  "id": "camelot/0_0",
+  "key": "camelot-0_0",
+  "name": "Camelot Gate",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/0_1",
+  "key": "camelot-0_1",
+  "name": "Bustling Market",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/0_2",
+  "key": "camelot-0_2",
+  "name": "Sunny Green",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/0_3",
+  "key": "camelot-0_3",
+  "name": "Cobbled Bridge",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/0_4",
+  "key": "camelot-0_4",
+  "name": "Royal Gallery",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/1_0",
+  "key": "camelot-1_0",
+  "name": "Cobbled Cottages",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/1_1",
+  "key": "camelot-1_1",
+  "name": "Quiet Lane",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/1_2",
+  "key": "camelot-1_2",
+  "name": "Ivy-covered Market",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/1_3",
+  "key": "camelot-1_3",
+  "name": "Royal Hall",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/1_4",
+  "key": "camelot-1_4",
+  "name": "Echoing Stair",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/2_0",
+  "key": "camelot-2_0",
+  "name": "Thatched Bridge",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/2_1",
+  "key": "camelot-2_1",
+  "name": "Camelot Market",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/2_2",
+  "key": "camelot-2_2",
+  "name": "Banner-hung Court",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/2_3",
+  "key": "camelot-2_3",
+  "name": "Royal Battlement",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/2_4",
+  "key": "camelot-2_4",
+  "name": "Grand Hall",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/3_0",
+  "key": "camelot-3_0",
+  "name": "Cobbled Green",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/3_1",
+  "key": "camelot-3_1",
+  "name": "Banner-hung Stair",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/3_2",
+  "key": "camelot-3_2",
+  "name": "Echoing Gallery",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/3_3",
+  "key": "camelot-3_3",
+  "name": "Merlin's Tower",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/3_4",
+  "key": "camelot-3_4",
+  "name": "Blossoming Path",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/4_0",
+  "key": "camelot-4_0",
+  "name": "Torchlit Battlement",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/4_1",
+  "key": "camelot-4_1",
+  "name": "The Round Table",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/4_2",
+  "key": "camelot-4_2",
+  "name": "Torchlit Stair",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/4_3",
+  "key": "camelot-4_3",
+  "name": "Apple-scented Glade",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/4_4",
+  "key": "camelot-4_4",
+  "name": "Hushed Orchard",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/5_0",
+  "key": "camelot-5_0",
+  "name": "Grand Court",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/5_1",
+  "key": "camelot-5_1",
+  "name": "Echoing Battlement",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/5_2",
+  "key": "camelot-5_2",
+  "name": "The Great Hall",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/5_3",
+  "key": "camelot-5_3",
+  "name": "Misty Mere",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/5_4",
+  "key": "camelot-5_4",
+  "name": "Lake of the Lady",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/6_0",
+  "key": "camelot-6_0",
+  "name": "Guinevere's Garden",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/6_1",
+  "key": "camelot-6_1",
+  "name": "Blossoming Orchard",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/6_2",
+  "key": "camelot-6_2",
+  "name": "Silver Path",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/6_3",
+  "key": "camelot-6_3",
+  "name": "The Black Knight's Ford",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/6_4",
+  "key": "camelot-6_4",
+  "name": "Hushed Mere",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/7_0",
+  "key": "camelot-7_0",
+  "name": "Apple-scented Mere",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/7_1",
+  "key": "camelot-7_1",
+  "name": "The Green Chapel",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/7_2",
+  "key": "camelot-7_2",
+  "name": "Pale Orchard",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/7_3",
+  "key": "camelot-7_3",
+  "name": "Misty Path",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/7_4",
+  "key": "camelot-7_4",
+  "name": "Standing Circle",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/8_0",
+  "key": "camelot-8_0",
+  "name": "Misty Shore",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/8_1",
+  "key": "camelot-8_1",
+  "name": "Blossoming Mere",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/8_2",
+  "key": "camelot-8_2",
+  "name": "Silver Glade",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/8_3",
+  "key": "camelot-8_3",
+  "name": "Avalon's Orchard of Apples",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/8_4",
+  "key": "camelot-8_4",
+  "name": "Silent Barrow",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/9_0",
+  "key": "camelot-9_0",
+  "name": "Apple-scented Path",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/9_1",
+  "key": "camelot-9_1",
+  "name": "Hushed Shore",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/9_2",
+  "key": "camelot-9_2",
+  "name": "Forest of the Questing Beast",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/9_3",
+  "key": "camelot-9_3",
+  "name": "Windswept Down",
+  "area": "Avalon and Camelot (Fantasy)"
+ },
+ {
+  "id": "camelot/9_4",
+  "key": "camelot-9_4",
+  "name": "Stonehenge: the Circle of Stones",
+  "area": "Avalon and Camelot (Fantasy)"
  },
  {
   "id": "castle/d_0_0",
@@ -2664,10 +3324,22 @@
   "area": "Exterminus (Sci-fi)"
  },
  {
+  "id": "fantasy/trail_asgard_1",
+  "key": "fantasy-trail_asgard_1",
+  "name": "Winding Path",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
   "id": "fantasy/trail_atlantis_1",
   "key": "fantasy-trail_atlantis_1",
   "name": "Winding Path",
   "area": "Poseidon's Realm (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_camelot_1",
+  "key": "fantasy-trail_camelot_1",
+  "name": "Winding Path",
+  "area": "Atlantis (Fantasy)"
  },
  {
   "id": "fantasy/trail_castle_1",
@@ -2685,7 +3357,7 @@
   "id": "fantasy/trail_cloud_1",
   "key": "fantasy-trail_cloud_1",
   "name": "Winding Path",
-  "area": "Hades (Fantasy)"
+  "area": "Asgard (Fantasy)"
  },
  {
   "id": "fantasy/trail_crypt_1",
@@ -2709,7 +3381,7 @@
   "id": "fantasy/trail_hades_1",
   "key": "fantasy-trail_hades_1",
   "name": "Winding Path",
-  "area": "Atlantis (Fantasy)"
+  "area": "The Otherworld (Fantasy)"
  },
  {
   "id": "fantasy/trail_hollow_1",
@@ -2722,6 +3394,18 @@
   "key": "fantasy-trail_marsh_1",
   "name": "Winding Path",
   "area": "Barrow Crypts (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_olympus_1",
+  "key": "fantasy-trail_olympus_1",
+  "name": "Winding Path",
+  "area": "Hades (Fantasy)"
+ },
+ {
+  "id": "fantasy/trail_otherworld_1",
+  "key": "fantasy-trail_otherworld_1",
+  "name": "Winding Path",
+  "area": "Avalon and Camelot (Fantasy)"
  },
  {
   "id": "fantasy/trail_reach_1",
@@ -5338,6 +6022,666 @@
   "key": "oldwest-trail_road_1",
   "name": "Dusty Trail",
   "area": "Tombstone Gulch (Old West)"
+ },
+ {
+  "id": "olympus/0_0",
+  "key": "olympus-0_0",
+  "name": "Foot of Mount Olympus",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/0_1",
+  "key": "olympus-0_1",
+  "name": "Sunlit Path",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/0_2",
+  "key": "olympus-0_2",
+  "name": "Windy Meadow",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/0_3",
+  "key": "olympus-0_3",
+  "name": "Rocky Terrace",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/0_4",
+  "key": "olympus-0_4",
+  "name": "Blooming Grove",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/0_5",
+  "key": "olympus-0_5",
+  "name": "Immortal Garden",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_0",
+  "key": "olympus-1_0",
+  "name": "Rocky Olive Grove",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_1",
+  "key": "olympus-1_1",
+  "name": "Olive-scented Foothill",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_2",
+  "key": "olympus-1_2",
+  "name": "Camp of the Heroes",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_3",
+  "key": "olympus-1_3",
+  "name": "Shimmering Orchard",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_4",
+  "key": "olympus-1_4",
+  "name": "Golden Vineyard",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/1_5",
+  "key": "olympus-1_5",
+  "name": "Fragrant Fountain Court",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_0",
+  "key": "olympus-2_0",
+  "name": "Flowering Terrace",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_1",
+  "key": "olympus-2_1",
+  "name": "Satyr Glade",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_2",
+  "key": "olympus-2_2",
+  "name": "Blooming Garden",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_3",
+  "key": "olympus-2_3",
+  "name": "Shimmering Fountain Court",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_4",
+  "key": "olympus-2_4",
+  "name": "Blooming Orchard",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/2_5",
+  "key": "olympus-2_5",
+  "name": "Echoing Hall",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_0",
+  "key": "olympus-3_0",
+  "name": "Rocky Meadow",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_1",
+  "key": "olympus-3_1",
+  "name": "Fragrant Vineyard",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_2",
+  "key": "olympus-3_2",
+  "name": "Shimmering Grove",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_3",
+  "key": "olympus-3_3",
+  "name": "Fragrant Garden",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_4",
+  "key": "olympus-3_4",
+  "name": "Radiant Atrium",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/3_5",
+  "key": "olympus-3_5",
+  "name": "Gilded Colonnade",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_0",
+  "key": "olympus-4_0",
+  "name": "Immortal Fountain Court",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_1",
+  "key": "olympus-4_1",
+  "name": "Temple of Aphrodite",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_2",
+  "key": "olympus-4_2",
+  "name": "Immortal Vineyard",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_3",
+  "key": "olympus-4_3",
+  "name": "Grove of Artemis",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_4",
+  "key": "olympus-4_4",
+  "name": "Gilded Hall",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/4_5",
+  "key": "olympus-4_5",
+  "name": "Echoing Atrium",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_0",
+  "key": "olympus-5_0",
+  "name": "Forge of Hephaestus",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_1",
+  "key": "olympus-5_1",
+  "name": "Golden Fountain Court",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_2",
+  "key": "olympus-5_2",
+  "name": "Marble Portico",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_3",
+  "key": "olympus-5_3",
+  "name": "Radiant Stair",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_4",
+  "key": "olympus-5_4",
+  "name": "Radiant Colonnade",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/5_5",
+  "key": "olympus-5_5",
+  "name": "Thundering Temple",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_0",
+  "key": "olympus-6_0",
+  "name": "Golden Grove",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_1",
+  "key": "olympus-6_1",
+  "name": "Marble Hall",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_2",
+  "key": "olympus-6_2",
+  "name": "Hall of Apollo",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_3",
+  "key": "olympus-6_3",
+  "name": "Colonnaded Portico",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_4",
+  "key": "olympus-6_4",
+  "name": "Fields of Demeter",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/6_5",
+  "key": "olympus-6_5",
+  "name": "Blazing Sanctum",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_0",
+  "key": "olympus-7_0",
+  "name": "Colonnaded Stair",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_1",
+  "key": "olympus-7_1",
+  "name": "Arena of Ares",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_2",
+  "key": "olympus-7_2",
+  "name": "Colonnaded Hall",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_3",
+  "key": "olympus-7_3",
+  "name": "Winged Gate of Hermes",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_4",
+  "key": "olympus-7_4",
+  "name": "Sacred Altar",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/7_5",
+  "key": "olympus-7_5",
+  "name": "Burning Shrine",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_0",
+  "key": "olympus-8_0",
+  "name": "Echoing Portico",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_1",
+  "key": "olympus-8_1",
+  "name": "Gilded Stair",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_2",
+  "key": "olympus-8_2",
+  "name": "Vineyards of Dionysus",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_3",
+  "key": "olympus-8_3",
+  "name": "Sacred Temple",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_4",
+  "key": "olympus-8_4",
+  "name": "Hearth of Hestia",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/8_5",
+  "key": "olympus-8_5",
+  "name": "Pit of Tartarus",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_0",
+  "key": "olympus-9_0",
+  "name": "Gilded Atrium",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_1",
+  "key": "olympus-9_1",
+  "name": "Eternal Altar",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_2",
+  "key": "olympus-9_2",
+  "name": "Thundering Shrine",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_3",
+  "key": "olympus-9_3",
+  "name": "Hera's Chamber",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_4",
+  "key": "olympus-9_4",
+  "name": "Crowned Gate",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "olympus/9_5",
+  "key": "olympus-9_5",
+  "name": "Throne of Olympus",
+  "area": "Mount Olympus (Fantasy)"
+ },
+ {
+  "id": "otherworld/0_0",
+  "key": "otherworld-0_0",
+  "name": "Mist Gate of the Otherworld",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/0_1",
+  "key": "otherworld-0_1",
+  "name": "Emerald Clover Patch",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/0_2",
+  "key": "otherworld-0_2",
+  "name": "Shimmering Glen",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/0_3",
+  "key": "otherworld-0_3",
+  "name": "Dewy Knoll",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/0_4",
+  "key": "otherworld-0_4",
+  "name": "Enchanted Grove",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/1_0",
+  "key": "otherworld-1_0",
+  "name": "Dewy Hollow",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/1_1",
+  "key": "otherworld-1_1",
+  "name": "Fairy-ringed Meadow",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/1_2",
+  "key": "otherworld-1_2",
+  "name": "Pixie Grove",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/1_3",
+  "key": "otherworld-1_3",
+  "name": "Silver Glade",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/1_4",
+  "key": "otherworld-1_4",
+  "name": "Whispering Mere",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/2_0",
+  "key": "otherworld-2_0",
+  "name": "Misty Knoll",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/2_1",
+  "key": "otherworld-2_1",
+  "name": "Leprechaun Glen",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/2_2",
+  "key": "otherworld-2_2",
+  "name": "Moonlit Wood",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/2_3",
+  "key": "otherworld-2_3",
+  "name": "Silver Ford",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/2_4",
+  "key": "otherworld-2_4",
+  "name": "Enchanted Glade",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/3_0",
+  "key": "otherworld-3_0",
+  "name": "Dewy Glen",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/3_1",
+  "key": "otherworld-3_1",
+  "name": "Moonlit Mere",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/3_2",
+  "key": "otherworld-3_2",
+  "name": "Silver Grove",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/3_3",
+  "key": "otherworld-3_3",
+  "name": "Brugh na Bóinne",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/3_4",
+  "key": "otherworld-3_4",
+  "name": "Carved Passage",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/4_0",
+  "key": "otherworld-4_0",
+  "name": "Whispering Ford",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/4_1",
+  "key": "otherworld-4_1",
+  "name": "Hall of the Fae",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/4_2",
+  "key": "otherworld-4_2",
+  "name": "Brigid's Forge",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/4_3",
+  "key": "otherworld-4_3",
+  "name": "Carved Hall",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/4_4",
+  "key": "otherworld-4_4",
+  "name": "Ancient Mound",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/5_0",
+  "key": "otherworld-5_0",
+  "name": "Enchanted Wood",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/5_1",
+  "key": "otherworld-5_1",
+  "name": "Thorny Ford",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/5_2",
+  "key": "otherworld-5_2",
+  "name": "Grassy Barrow",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/5_3",
+  "key": "otherworld-5_3",
+  "name": "Hollow Cairn",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/5_4",
+  "key": "otherworld-5_4",
+  "name": "Island of Manannán",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/6_0",
+  "key": "otherworld-6_0",
+  "name": "Thorny Grove",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/6_1",
+  "key": "otherworld-6_1",
+  "name": "Hall of the Silver Hand",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/6_2",
+  "key": "otherworld-6_2",
+  "name": "Hollow Passage",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/6_3",
+  "key": "otherworld-6_3",
+  "name": "Ancient Barrow",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/6_4",
+  "key": "otherworld-6_4",
+  "name": "Golden Gate",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/7_0",
+  "key": "otherworld-7_0",
+  "name": "Ancient Cairn",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/7_1",
+  "key": "otherworld-7_1",
+  "name": "Hollow Hall",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/7_2",
+  "key": "otherworld-7_2",
+  "name": "Grassy Mound",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/7_3",
+  "key": "otherworld-7_3",
+  "name": "Glittering Gate",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/7_4",
+  "key": "otherworld-7_4",
+  "name": "Battlefield of the Mórrígan",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/8_0",
+  "key": "otherworld-8_0",
+  "name": "Carved Barrow",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/8_1",
+  "key": "otherworld-8_1",
+  "name": "Glowing Cairn",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/8_2",
+  "key": "otherworld-8_2",
+  "name": "Hall of Lugh",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/8_3",
+  "key": "otherworld-8_3",
+  "name": "Royal Hall",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/8_4",
+  "key": "otherworld-8_4",
+  "name": "Glittering Court",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/9_0",
+  "key": "otherworld-9_0",
+  "name": "Glowing Passage",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/9_1",
+  "key": "otherworld-9_1",
+  "name": "Timeless Gate",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/9_2",
+  "key": "otherworld-9_2",
+  "name": "Tower of Balor",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/9_3",
+  "key": "otherworld-9_3",
+  "name": "Thundering Court",
+  "area": "The Otherworld (Fantasy)"
+ },
+ {
+  "id": "otherworld/9_4",
+  "key": "otherworld-9_4",
+  "name": "The Dagda's Cauldron Hall",
+  "area": "The Otherworld (Fantasy)"
  },
  {
   "id": "pluto/0_0",

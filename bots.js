@@ -166,12 +166,25 @@ const REPLIES = [
   [/\?\s*$/, ['Good question, {name}. I have no idea.', 'Ask the Guide, {name}. Or ask me again after a drink.', 'Hmm. Try the tutorial command, {name}.', 'I think so, {name}. Probably.']],
 ];
 let lastReply = 0;
+const GIFQ = [[/\b(hi|hello|hey|yo|sup|howdy|greetings|hiya)\b/i, 'hello wave'], [/\b(thanks|thank you|thx|ty|cheers)\b/i, 'you are welcome'], [/\b(lol|lmao|haha|rofl)\b/i, 'laughing'], [/\b(died|dead|rip|killed|slain)\b/i, 'oops'], [/\b(help|stuck|lost|confused)\b/i, 'here to help']];
+const QUEST_LINES = ['Nice one, {name}! Contract complete.', 'Grats on the quest, {name}!', '{name} finishing contracts like a pro.', 'Another one done: well played, {name}.'], BOSS_LINES = ['{name} took down a boss! Respect.', 'Boss down. {name} is not messing around.', 'Whoa, {name} beat a boss! Legendary.', 'That is how it is done, {name}. Bow to the boss-slayer.'], DEATH_LINES = ['Ouch, {name}. Better luck next time.', 'Rest in pieces, {name}.', 'F in chat for {name}.', 'Shake it off, {name}. The taunts are only temporary.'];
+function speak(bot, text, topic) { // bots talk in the gossip channel only when answering a player or a broadcast (the rest of the time they use the bot channel); some replies add a GIF
+  let line = text; try { const G = require('./giphy'); if (topic && G.enabled() && Math.random() < 0.3) line += ' ;' + topic; } catch (e) { /* no gifs */ }
+  bot.p.cd = bot.p.cd || {}; D.command(bot.p, 'gossip ' + line);
+}
 function onGossip(from, msg) {
-  const sp = D.players.get(from); if (!sp || sp.isBot || !bots.length || Date.now() - lastReply < 12000) return;
+  const sp = D.players.get(from); if (!sp || sp.isBot || !bots.length) return; const greet = /\b(hi|hello|hey|yo|sup|howdy|greetings|hiya|help)\b/i.test(msg); if (!greet && Date.now() - lastReply < 12000) return; if (greet && Date.now() - lastReply < 3000) return;
   const named = bots.find((b) => new RegExp('\\b' + b.spec.name + '\\b', 'i').test(msg)), hit = REPLIES.find(([re]) => re.test(msg));
-  if (!named && !(hit && Math.random() < 0.6) && Math.random() > 0.12) return;
-  const bot = named || bots[D.rnd(0, bots.length - 1)], pool = hit ? hit[1] : ['Interesting, {name}.', 'Is that right, {name}?', 'Ha, {name}. Tell me more.', 'I was just thinking the same, {name}.'];
-  lastReply = Date.now(); setTimeout(() => { try { if (bot.p && !bot.p.gone) D.botSay(bot.p, pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, from)); } catch (e) { D.log('bot reply error', e.message); } }, 3000 + Math.random() * 5000);
+  if (!named && !greet && !(hit && Math.random() < 0.6) && Math.random() > 0.12) return;
+  const bot = named || bots[D.rnd(0, bots.length - 1)], pool = hit ? hit[1] : ['Interesting, {name}.', 'Is that right, {name}?', 'Ha, {name}. Tell me more.', 'I was just thinking the same, {name}.'], gq = (GIFQ.find(([re]) => re.test(msg)) || [])[1];
+  lastReply = Date.now(); setTimeout(() => { try { if (bot.p && !bot.p.gone) speak(bot, pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, from), gq); } catch (e) { D.log('bot reply error', e.message); } }, 2000 + Math.random() * 4000);
+}
+let lastReact = 0;
+function onBroadcast(kind, text) { // a player completed a quest, defeated a boss or died: a bot reacts in the gossip channel
+  if (!bots.length || Date.now() - lastReact < 25000) return; let pool, gq, m;
+  if (kind === 'quest' && (m = text.match(/(\w+) has completed the contract/))) { pool = QUEST_LINES; gq = 'celebrate'; } else if (kind === 'boss' && (m = text.match(/(\w+) has defeated the boss/))) { pool = BOSS_LINES; gq = 'victory'; } else if ((kind === 'deaths' || kind === 'death') && (m = text.match(/^\W*(\w+) \(level/))) { pool = DEATH_LINES; gq = 'oops'; }
+  if (!pool) return; const who = D.players.get(m[1]); if (!who || who.isBot || Math.random() > 0.6) return; const bot = bots[D.rnd(0, bots.length - 1)]; lastReact = Date.now();
+  setTimeout(() => { try { if (bot.p && !bot.p.gone) speak(bot, pool[D.rnd(0, pool.length - 1)].replace(/\{name\}/g, who.name), gq); } catch (e) { D.log('bot react error', e.message); } }, 3000 + Math.random() * 4000);
 }
 function save() {
   const o = {}; for (const b of bots) o[b.spec.name] = b.p.toRec();
@@ -180,9 +193,9 @@ function save() {
 function start() {
   let saved = {}; try { saved = JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch (e) { /* first run */ }
   for (const s of SPECS) spawn(s, saved[s.name]);
-  D.onGossip = onGossip; ticker = setInterval(() => { for (const b of bots) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 9000);
+  D.onGossip = onGossip; D.onBroadcast = onBroadcast; ticker = setInterval(() => { for (const b of bots) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 9000);
   saver = setInterval(save, 60000); D.log(`bots online: ${NAMES.join(', ')}`);
 }
-function stop() { D.onGossip = null; clearInterval(ticker); clearInterval(saver); for (const b of bots) { D.players.delete(b.spec.name); b.p.destroy(); } bots.length = 0; }
+function stop() { D.onGossip = null; D.onBroadcast = null; clearInterval(ticker); clearInterval(saver); for (const b of bots) { D.players.delete(b.spec.name); b.p.destroy(); } bots.length = 0; }
 
 module.exports = { NAMES, start, save, stop, think, spawn, bots };

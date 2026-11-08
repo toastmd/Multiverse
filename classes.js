@@ -11,6 +11,7 @@ const CLASSES = {
   gunslinger:  { name: 'Gunslinger',       icon: '🤠', hpl: 11, mpl: 6,  rg: 1, str: 0,  dex: 3,  con: 0,  kit: 'revolver', desc: 'An Old West pistol-and-rifle specialist: rapid shots, stuns and a deadly crit rate. (Old West)' },
   barbarian:   { name: 'Space Marine',  icon: '🧔', hpl: 16, mpl: 5,  rg: 1, str: 4,  dex: 0,  con: 3,  kit: 'axe',      desc: 'A heavily augmented warrior from the star-cities with a huge health pool. Rage, cleave and brute force. (Sci-fi)' },
   idler:       { name: 'Idler',         icon: '\u{1F4A4}', hpl: 5,  mpl: 2,  rg: 2, str: -3, dex: -3, con: -2, kit: 'scrapknife', desc: 'A professional loafer with the weakest stats in the multiverse and the most patient plan: log in, do nothing, and watch the experience and credits roll in every minute. The longer you idle, the more each minute pays (up to 30x). Type a command and the clock starts over.' },
+  idlemaster:  { name: 'Idle Master',   icon: '\u{1F9D8}', remort: true, from: 'idler', pwr: 1, hpl: 7, mpl: 4, rg: 3, str: -2, dex: -2, con: -1, kit: 'scrapknife', desc: 'The enlightened Idler. Every remort level adds +25% to your idle experience and credits (an Idler can remort all the way to Remort 40 as an Idle Master, for up to x11 idle pay), on top of the idle bonus that grows the longer you idle. Only Idlers and Idle Masters can choose this class.' },
   juggernaut:  { name: 'Juggernaut', icon: '\u{1F4AA}', brawn: true, hpl: 21, mpl: 2, rg: 4, str: 6, dex: -1, con: 6, kit: 'axe', desc: 'All brawn: a hulking wall of muscle with the biggest health pool and the hardest hits in the multiverse. No spells, only quick heals. Two attacks every round, Brute Force randomly makes a blow hit far harder, and Thick Skin shrugs off a share of every hit you take. (Any era)' },
   titan:       { name: 'Titan', icon: '\u{1F5FF}', remort: true, brawn: true, pwr: 1, hpl: 28, mpl: 3, rg: 5, str: 9, dex: 0, con: 8, kit: 'axe', desc: 'The reborn Juggernaut: a walking mountain with no spells and a bigger bonus for every remort. Three attacks a round at Remort 1, rising to four, five and six; Brute Force hits harder and more often, Thick Skin grows, and at the high remorts it stuns and drains life. (Remort class)' },
   engineer:    { name: 'Engineer',       icon: '👷', hpl: 11, mpl: 8,  rg: 1, str: 0,  dex: 1,  con: 1,  kit: 'wrench',   desc: 'A sci-fi engineer: turrets, gadgets, deployables and a powered combat suit. (Sci-fi)' },
@@ -34,6 +35,11 @@ Object.assign(CLASSES, {
 });
 
 const SPELLS = {
+  idlemaster: [ // the Idler's heals and a deeper one
+    S('zen_nap', 'Power Nap', 1, 2, 'heal', '\u{1F4A4}', '#9fb2c0', 'A quick catnap restores you.', { heal: [14, 22], cd: 8 }),
+    S('zen_stretch', 'Big Stretch', 12, 6, 'heal', '\u{1F9D8}', '#9fb2c0', 'A long, luxurious stretch.', { heal: [80, 120], cd: 10 }),
+    S('zen_med', 'Deep Meditation', 25, 12, 'heal', '\u{1F54A}\uFE0F', '#9fb2c0', 'You settle into perfect stillness.', { heal: [200, 320], cd: 14 }),
+  ],
   idler: [ // one little heal: the class idles for a living
     S('power_nap', 'Power Nap', 1, 2, 'heal', '\u{1F4A4}', '#9fb2c0', 'A quick catnap restores you.', { heal: [12, 20], cd: 8 }),
     S('big_stretch', 'Big Stretch', 12, 6, 'heal', '\u{1F9D8}', '#9fb2c0', 'A long, luxurious stretch.', { heal: [70, 100], cd: 10 }),
@@ -340,4 +346,5 @@ const REMORT_SPELLS = REMORT_NAMES.map(([k, n], i) => { const r = i + 1, a = Mat
   return { ...base, kind: 'buff', d, ticks: 14 + Math.floor(r / 10), atk: Math.round(4 + r * 0.9), ac: Math.round(3 + r * 0.6), crit: Math.min(0.35, 0.1 + r * 0.005), regen: Math.round(r / 2), heal: [Math.round(a * 1.6), Math.round(b * 1.6)], cd: 12 };
 });
 { const taken = new Set(); for (const l of Object.values(SPELLS)) for (const s of l) taken.add(s.k); for (const s of REMORT_SPELLS) if (taken.has(s.k)) s.k = s.k + 'x'; } // never clash with a class ability
+require('./spells75')(SPELLS, S); // three more spells for every class at levels 55, 65 and 75
 module.exports = { CLASSES, SPELLS, RECIPES, REMORT_SPELLS };

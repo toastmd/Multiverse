@@ -19,7 +19,7 @@ function post(force) {
 function claim(m, killer, mates) { // called from Monster.die for a bounty target
   const b = m.bounty, i = active.indexOf(b); if (i >= 0) active.splice(i, 1); clearTimeout(b.timer); nextAt = Date.now() + 30000; /* the next bounty follows shortly */ if (!killer.isPlayer) return D.announce(`The bounty on ${m.name} was settled by someone else.`, 'bounty', 'wanted');
   const n = mates.length, share = 1 + 0.1 * (n - 1);
-  for (const p of mates) { const got = Math.round(b.reward * share / n); p.gold += got; p.bounty = (p.bounty || 0) + b.bp; p.bounties = (p.bounties || 0) + 1; p.msg(`*** BOUNTY COLLECTED: ${m.name}! +${got} credits and +${b.bp} bounty point${b.bp > 1 ? 's' : ''} (total ${p.bounty}). ***`, 'win'); p.send({ t: 'sound', k: 'quest' }); }
+  for (const p of mates) { const got = Math.round(b.reward * share / n); p.gold += got; p.bounty = (p.bounty || 0) + b.bp; p.bounties = (p.bounties || 0) + 1; if (D.bountyRewards) setTimeout(() => D.bountyRewards(p), 600); p.msg(`*** BOUNTY COLLECTED: ${m.name}! +${got} credits and +${b.bp} bounty point${b.bp > 1 ? 's' : ''} (total ${p.bounty}). ***`, 'win'); p.send({ t: 'sound', k: 'quest' }); }
   D.announce(`${killer.name}${n > 1 ? ' and team' : ''} collected the bounty on ${m.name} (+${b.reward} credits).`, 'bounty', 'wanted');
 }
 const list = () => active.map((b) => ({ name: b.mob.name, level: b.mob.level, where: where(b), poster: b.poster, reward: b.reward, bp: b.bp, mins: Math.max(1, Math.ceil((b.until - Date.now()) / 60000)) }));

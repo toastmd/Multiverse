@@ -76,4 +76,4 @@ function command(p, a) {
 }
 const start = () => { timer = setInterval(flush, 60000); setTimeout(flush, 20000); }, stop = () => { clearInterval(timer); };
 const purge = (n) => { boxes.delete(key(n)); try { fs.unlinkSync(boxFile(n)); } catch (e) { /* no mailbox */ } }; // used when a character is deleted
-module.exports = { purge, command, sendFrom, sync, deliver, start, stop, flush, enqueue, exists, unread: (n) => box(n).inbox.filter((m) => !m.read).length, state: () => ({ outbox: outbox.length }) };
+module.exports = { purge, command, sendFrom, sync, deliver, start, stop, flush, enqueue, exists, unread: (n) => box(n).inbox.filter((m) => !m.read).length, total: (n) => box(n).inbox.length, state: () => ({ outbox: outbox.length }) };

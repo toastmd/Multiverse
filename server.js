@@ -82,7 +82,7 @@ D.build = () => { try { const t = fs.statSync(path.join(PUB, 'index.html')); ret
 let areaPics = {}, areaAt = 0; // default room picture per area: public/img/areas/<area id>.jpg
 D.areaPic = (area) => { if (Date.now() - areaAt > 30000) { areaAt = Date.now(); try { areaPics = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'areas')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, ''), f])); } catch (e) { areaPics = {}; } } return areaPics[area === 'cit' ? 'citadel' : area] || ''; };
 let people = {}, peopleAt = 0; // custom pictures for particular players (public/img/people/<name>.jpg, e.g. zeph.jpg); everyone else gets the class + gender portrait
-D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || ((() => { let h = 0; for (const ch of String(p.name || 'x')) h = (h * 31 + ch.charCodeAt(0)) | 0; return h & 1 ? 'm' : 'f'; })())}.jpg`; }; // 'other' gets the male or female picture, chosen steadily from the name (same rule as the client)
+D.playerPic = (p) => { if (Date.now() - peopleAt > 30000) { peopleAt = Date.now(); try { people = Object.fromEntries(fs.readdirSync(path.join(PUB, 'img', 'people')).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).map((f) => [f.replace(/\.[^.]+$/, '').toLowerCase(), f])); } catch (e) { people = {}; } } const f = people[String(p.name || '').toLowerCase()]; return f ? `img/people/${f}` : p.isBot ? 'img/mob/default.jpg' : `img/player/${p.cls}-${{ male: 'm', female: 'f' }[p.gender] || ((() => { let h = 0; for (const ch of String(p.name || 'x')) h = (h * 31 + ch.charCodeAt(0)) | 0; return h & 1 ? 'm' : 'f'; })())}.jpg`; }; // 'other' gets the male or female picture, chosen steadily from the name (same rule as the client)
 D.listRoles = () => { const admins = [], architects = []; for (const f of fs.readdirSync(DATA)) { if (!f.endsWith('.json')) continue; const n = f.slice(0, -5); let r; try { r = JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch (e) { continue; } const on = D.players.get(n[0].toUpperCase() + n.slice(1)), w = on ? !!on.wiz : !!r.wiz, a = on ? !!on.architect : !!r.architect, nm = n[0].toUpperCase() + n.slice(1); if (w) admins.push(nm); if (a) architects.push(nm); } return { admins, architects }; };
 D.setRole = (name, role, on) => { // role: 'wiz' (administrator) or 'architect' (builder). Works for players who are offline too.
   const key = role === 'wiz' ? 'wiz' : 'architect', p = D.players.get(name), f = file(name); if (!p && !fs.existsSync(f)) return 'none';
@@ -152,7 +152,7 @@ function login(conn, m) {
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
-  p._qx = true; p.enter(room); delete p._qx; room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in'); D.relics.sweep(p); D.fixHands(p); p.recalc(); D.daily.claim(p); D.jukebox.push(p);
+  p._qx = true; p.enter(room); delete p._qx; room.tell(`${name} enters the world.`, p, 'sys'); if (!old) D.presence(p, 'in'); D.relics.sweep(p); D.bountyRewards(p, true); D.fixHands(p); p.recalc(); D.daily.claim(p); D.jukebox.push(p);
 }
 
 // ---- minimal RFC 6455 WebSocket ----
@@ -189,6 +189,7 @@ function ws(req, socket) {
       try {
         if (m.t === 'login' && !c.player) login(c, m);
         else if (m.t === 'cmd' && c.player) D.command(c.player, String(m.line || '').slice(0, 300));
+        else if (m.t === 'mapview' && c.player) { c.player.mapW = Math.max(9, Math.min(60, m.cols | 0)); c.player.mapH = Math.max(7, Math.min(40, m.rows | 0)); c.player.send(D.mapFor(c.player)); } // the client says how many squares of map it can show
         else if (m.t === 'kp' && c.player) D.kp(c.player, m);
         else if (m.t === 'tr' && c.player) D.setTriggers(c.player, m);
         else if (m.t === 'mute' && c.player) D.setMute(c.player, m);

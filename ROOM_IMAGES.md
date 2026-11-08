@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-1143 rooms:
+1367 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -21,6 +21,66 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | The Black Stair | The Abyss (Sci-fi) | `abyss-stair.jpg` |
 | Weeping Chasm | The Abyss (Sci-fi) | `abyss-weeping_chasm.jpg` |
 | Whispering Void | The Abyss (Sci-fi) | `abyss-whispering_void.jpg` |
+| Bifrost Landing | Asgard (Fantasy) | `asgard-0_0.jpg` |
+| Windswept Stair | Asgard (Fantasy) | `asgard-0_1.jpg` |
+| Frosty Landing | Asgard (Fantasy) | `asgard-0_2.jpg` |
+| Shining Terrace | Asgard (Fantasy) | `asgard-0_3.jpg` |
+| Whispering Grove | Asgard (Fantasy) | `asgard-0_4.jpg` |
+| Evergreen Orchard | Asgard (Fantasy) | `asgard-0_5.jpg` |
+| Shining Causeway | Asgard (Fantasy) | `asgard-1_0.jpg` |
+| Heimdall's Watch | Asgard (Fantasy) | `asgard-1_1.jpg` |
+| Starlit Stair | Asgard (Fantasy) | `asgard-1_2.jpg` |
+| Golden Meadow | Asgard (Fantasy) | `asgard-1_3.jpg` |
+| Evergreen Glade | Asgard (Fantasy) | `asgard-1_4.jpg` |
+| Golden Grove | Asgard (Fantasy) | `asgard-1_5.jpg` |
+| Rainbow Terrace | Asgard (Fantasy) | `asgard-2_0.jpg` |
+| Windswept Causeway | Asgard (Fantasy) | `asgard-2_1.jpg` |
+| Golden Orchard | Asgard (Fantasy) | `asgard-2_2.jpg` |
+| Sunlit Garden | Asgard (Fantasy) | `asgard-2_3.jpg` |
+| Noatun Docks | Asgard (Fantasy) | `asgard-2_4.jpg` |
+| Rune-lit Stair | Asgard (Fantasy) | `asgard-2_5.jpg` |
+| Shining Landing | Asgard (Fantasy) | `asgard-3_0.jpg` |
+| Idunn's Orchard | Asgard (Fantasy) | `asgard-3_1.jpg` |
+| Sunlit Grove | Asgard (Fantasy) | `asgard-3_2.jpg` |
+| Folkvangr | Asgard (Fantasy) | `asgard-3_3.jpg` |
+| Echoing Hearth | Asgard (Fantasy) | `asgard-3_4.jpg` |
+| Golden Gallery | Asgard (Fantasy) | `asgard-3_5.jpg` |
+| Blooming Garden | Asgard (Fantasy) | `asgard-4_0.jpg` |
+| Whispering Meadow | Asgard (Fantasy) | `asgard-4_1.jpg` |
+| Mead Hall of Heroes | Asgard (Fantasy) | `asgard-4_2.jpg` |
+| Echoing Gallery | Asgard (Fantasy) | `asgard-4_3.jpg` |
+| Gate of Alfheim | Asgard (Fantasy) | `asgard-4_4.jpg` |
+| Great Stair | Asgard (Fantasy) | `asgard-4_5.jpg` |
+| Bragi's Hall | Asgard (Fantasy) | `asgard-5_0.jpg` |
+| Fensalir | Asgard (Fantasy) | `asgard-5_1.jpg` |
+| Great Court | Asgard (Fantasy) | `asgard-5_2.jpg` |
+| Golden Stair | Asgard (Fantasy) | `asgard-5_3.jpg` |
+| Great Gallery | Asgard (Fantasy) | `asgard-5_4.jpg` |
+| Endless Feast Hall | Asgard (Fantasy) | `asgard-5_5.jpg` |
+| Breidablik | Asgard (Fantasy) | `asgard-6_0.jpg` |
+| Great Hall | Asgard (Fantasy) | `asgard-6_1.jpg` |
+| Rune-lit Hearth | Asgard (Fantasy) | `asgard-6_2.jpg` |
+| Roaring Court | Asgard (Fantasy) | `asgard-6_3.jpg` |
+| Loki's Folly | Asgard (Fantasy) | `asgard-6_4.jpg` |
+| Glorious Training Ground | Asgard (Fantasy) | `asgard-6_5.jpg` |
+| Roaring Stair | Asgard (Fantasy) | `asgard-7_0.jpg` |
+| Rune-lit Gallery | Asgard (Fantasy) | `asgard-7_1.jpg` |
+| Bilskirnir | Asgard (Fantasy) | `asgard-7_2.jpg` |
+| Feasting Gate | Asgard (Fantasy) | `asgard-7_3.jpg` |
+| Glorious Mead Hall | Asgard (Fantasy) | `asgard-7_4.jpg` |
+| Feasting Hall | Asgard (Fantasy) | `asgard-7_5.jpg` |
+| Echoing Court | Asgard (Fantasy) | `asgard-8_0.jpg` |
+| Tyr's Battleground | Asgard (Fantasy) | `asgard-8_1.jpg` |
+| Thundering Training Ground | Asgard (Fantasy) | `asgard-8_2.jpg` |
+| Glorious Feast Hall | Asgard (Fantasy) | `asgard-8_3.jpg` |
+| Thundering Gate | Asgard (Fantasy) | `asgard-8_4.jpg` |
+| Gate of Helheim | Asgard (Fantasy) | `asgard-8_5.jpg` |
+| Golden Hearth | Asgard (Fantasy) | `asgard-9_0.jpg` |
+| Shield-roofed Mead Hall | Asgard (Fantasy) | `asgard-9_1.jpg` |
+| Endless Hall | Asgard (Fantasy) | `asgard-9_2.jpg` |
+| Shield-roofed Training Ground | Asgard (Fantasy) | `asgard-9_3.jpg` |
+| High Gate | Asgard (Fantasy) | `asgard-9_4.jpg` |
+| Hlidskjalf: the High Seat of Odin | Asgard (Fantasy) | `asgard-9_5.jpg` |
 | Gate of Atlantis | Atlantis (Fantasy) | `atlantis-0_0.jpg` |
 | Quiet Reef | Atlantis (Fantasy) | `atlantis-0_1.jpg` |
 | Coral Walk | Atlantis (Fantasy) | `atlantis-0_2.jpg` |
@@ -162,6 +222,56 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Outdoor Patio | Buckstars Coffee Shop (Modern) | `buck-5_2.jpg` |
 | Drive-Thru Window | Buckstars Coffee Shop (Modern) | `buck-5_3.jpg` |
 | The Roasting Room | Buckstars Coffee Shop (Modern) | `buck-5_4.jpg` |
+| Camelot Gate | Avalon and Camelot (Fantasy) | `camelot-0_0.jpg` |
+| Bustling Market | Avalon and Camelot (Fantasy) | `camelot-0_1.jpg` |
+| Sunny Green | Avalon and Camelot (Fantasy) | `camelot-0_2.jpg` |
+| Cobbled Bridge | Avalon and Camelot (Fantasy) | `camelot-0_3.jpg` |
+| Royal Gallery | Avalon and Camelot (Fantasy) | `camelot-0_4.jpg` |
+| Cobbled Cottages | Avalon and Camelot (Fantasy) | `camelot-1_0.jpg` |
+| Quiet Lane | Avalon and Camelot (Fantasy) | `camelot-1_1.jpg` |
+| Ivy-covered Market | Avalon and Camelot (Fantasy) | `camelot-1_2.jpg` |
+| Royal Hall | Avalon and Camelot (Fantasy) | `camelot-1_3.jpg` |
+| Echoing Stair | Avalon and Camelot (Fantasy) | `camelot-1_4.jpg` |
+| Thatched Bridge | Avalon and Camelot (Fantasy) | `camelot-2_0.jpg` |
+| Camelot Market | Avalon and Camelot (Fantasy) | `camelot-2_1.jpg` |
+| Banner-hung Court | Avalon and Camelot (Fantasy) | `camelot-2_2.jpg` |
+| Royal Battlement | Avalon and Camelot (Fantasy) | `camelot-2_3.jpg` |
+| Grand Hall | Avalon and Camelot (Fantasy) | `camelot-2_4.jpg` |
+| Cobbled Green | Avalon and Camelot (Fantasy) | `camelot-3_0.jpg` |
+| Banner-hung Stair | Avalon and Camelot (Fantasy) | `camelot-3_1.jpg` |
+| Echoing Gallery | Avalon and Camelot (Fantasy) | `camelot-3_2.jpg` |
+| Merlin's Tower | Avalon and Camelot (Fantasy) | `camelot-3_3.jpg` |
+| Blossoming Path | Avalon and Camelot (Fantasy) | `camelot-3_4.jpg` |
+| Torchlit Battlement | Avalon and Camelot (Fantasy) | `camelot-4_0.jpg` |
+| The Round Table | Avalon and Camelot (Fantasy) | `camelot-4_1.jpg` |
+| Torchlit Stair | Avalon and Camelot (Fantasy) | `camelot-4_2.jpg` |
+| Apple-scented Glade | Avalon and Camelot (Fantasy) | `camelot-4_3.jpg` |
+| Hushed Orchard | Avalon and Camelot (Fantasy) | `camelot-4_4.jpg` |
+| Grand Court | Avalon and Camelot (Fantasy) | `camelot-5_0.jpg` |
+| Echoing Battlement | Avalon and Camelot (Fantasy) | `camelot-5_1.jpg` |
+| The Great Hall | Avalon and Camelot (Fantasy) | `camelot-5_2.jpg` |
+| Misty Mere | Avalon and Camelot (Fantasy) | `camelot-5_3.jpg` |
+| Lake of the Lady | Avalon and Camelot (Fantasy) | `camelot-5_4.jpg` |
+| Guinevere's Garden | Avalon and Camelot (Fantasy) | `camelot-6_0.jpg` |
+| Blossoming Orchard | Avalon and Camelot (Fantasy) | `camelot-6_1.jpg` |
+| Silver Path | Avalon and Camelot (Fantasy) | `camelot-6_2.jpg` |
+| The Black Knight's Ford | Avalon and Camelot (Fantasy) | `camelot-6_3.jpg` |
+| Hushed Mere | Avalon and Camelot (Fantasy) | `camelot-6_4.jpg` |
+| Apple-scented Mere | Avalon and Camelot (Fantasy) | `camelot-7_0.jpg` |
+| The Green Chapel | Avalon and Camelot (Fantasy) | `camelot-7_1.jpg` |
+| Pale Orchard | Avalon and Camelot (Fantasy) | `camelot-7_2.jpg` |
+| Misty Path | Avalon and Camelot (Fantasy) | `camelot-7_3.jpg` |
+| Standing Circle | Avalon and Camelot (Fantasy) | `camelot-7_4.jpg` |
+| Misty Shore | Avalon and Camelot (Fantasy) | `camelot-8_0.jpg` |
+| Blossoming Mere | Avalon and Camelot (Fantasy) | `camelot-8_1.jpg` |
+| Silver Glade | Avalon and Camelot (Fantasy) | `camelot-8_2.jpg` |
+| Avalon's Orchard of Apples | Avalon and Camelot (Fantasy) | `camelot-8_3.jpg` |
+| Silent Barrow | Avalon and Camelot (Fantasy) | `camelot-8_4.jpg` |
+| Apple-scented Path | Avalon and Camelot (Fantasy) | `camelot-9_0.jpg` |
+| Hushed Shore | Avalon and Camelot (Fantasy) | `camelot-9_1.jpg` |
+| Forest of the Questing Beast | Avalon and Camelot (Fantasy) | `camelot-9_2.jpg` |
+| Windswept Down | Avalon and Camelot (Fantasy) | `camelot-9_3.jpg` |
+| Stonehenge: the Circle of Stones | Avalon and Camelot (Fantasy) | `camelot-9_4.jpg` |
 | Dungeon Stairs | Castle Frankenstein (Horror) | `castle-d_0_0.jpg` |
 | Flooded Tunnel | Castle Frankenstein (Horror) | `castle-d_0_1.jpg` |
 | Cell Block | Castle Frankenstein (Horror) | `castle-d_1_0.jpg` |
@@ -452,16 +562,20 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Clanking Weld Bay | Exterminus (Sci-fi) | `exterminus-6_7.jpg` |
 | Gleaming Assembly Line | Exterminus (Sci-fi) | `exterminus-6_8.jpg` |
 | Endless Weld Bay | Exterminus (Sci-fi) | `exterminus-6_9.jpg` |
+| Winding Path | Mount Olympus (Fantasy) | `fantasy-trail_asgard_1.jpg` |
 | Winding Path | Poseidon's Realm (Fantasy) | `fantasy-trail_atlantis_1.jpg` |
+| Winding Path | Atlantis (Fantasy) | `fantasy-trail_camelot_1.jpg` |
 | Winding Path | Sunscorch Dunes (Fantasy) | `fantasy-trail_castle_1.jpg` |
 | Winding Path | Nightfall Hollow (Fantasy) | `fantasy-trail_citadel_1.jpg` |
-| Winding Path | Hades (Fantasy) | `fantasy-trail_cloud_1.jpg` |
+| Winding Path | Asgard (Fantasy) | `fantasy-trail_cloud_1.jpg` |
 | Winding Path | Whisperwood (Fantasy) | `fantasy-trail_crypt_1.jpg` |
 | Winding Path | Thornwild Court (Fantasy) | `fantasy-trail_dunes_1.jpg` |
 | Winding Path | Blimble Hollow (Fantasy) | `fantasy-trail_forest_1.jpg` |
-| Winding Path | Atlantis (Fantasy) | `fantasy-trail_hades_1.jpg` |
+| Winding Path | The Otherworld (Fantasy) | `fantasy-trail_hades_1.jpg` |
 | Winding Path | Castle Frankenstein (Horror) | `fantasy-trail_hollow_1.jpg` |
 | Winding Path | Barrow Crypts (Fantasy) | `fantasy-trail_marsh_1.jpg` |
+| Winding Path | Hades (Fantasy) | `fantasy-trail_olympus_1.jpg` |
+| Winding Path | Avalon and Camelot (Fantasy) | `fantasy-trail_otherworld_1.jpg` |
 | Winding Path | Shattered Citadel (Fantasy) | `fantasy-trail_reach_1.jpg` |
 | Winding Path | The Drowned Reach (Fantasy) | `fantasy-trail_sea_1.jpg` |
 | Winding Path | Sunken Marsh (Fantasy) | `fantasy-trail_thorn_1.jpg` |
@@ -898,6 +1012,116 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Dusty Trail | Redrock Trail (Old West) | `oldwest-trail_mines_1.jpg` |
 | Dusty Trail | Dry Gulch Bank (Old West) | `oldwest-trail_rail_1.jpg` |
 | Dusty Trail | Tombstone Gulch (Old West) | `oldwest-trail_road_1.jpg` |
+| Foot of Mount Olympus | Mount Olympus (Fantasy) | `olympus-0_0.jpg` |
+| Sunlit Path | Mount Olympus (Fantasy) | `olympus-0_1.jpg` |
+| Windy Meadow | Mount Olympus (Fantasy) | `olympus-0_2.jpg` |
+| Rocky Terrace | Mount Olympus (Fantasy) | `olympus-0_3.jpg` |
+| Blooming Grove | Mount Olympus (Fantasy) | `olympus-0_4.jpg` |
+| Immortal Garden | Mount Olympus (Fantasy) | `olympus-0_5.jpg` |
+| Rocky Olive Grove | Mount Olympus (Fantasy) | `olympus-1_0.jpg` |
+| Olive-scented Foothill | Mount Olympus (Fantasy) | `olympus-1_1.jpg` |
+| Camp of the Heroes | Mount Olympus (Fantasy) | `olympus-1_2.jpg` |
+| Shimmering Orchard | Mount Olympus (Fantasy) | `olympus-1_3.jpg` |
+| Golden Vineyard | Mount Olympus (Fantasy) | `olympus-1_4.jpg` |
+| Fragrant Fountain Court | Mount Olympus (Fantasy) | `olympus-1_5.jpg` |
+| Flowering Terrace | Mount Olympus (Fantasy) | `olympus-2_0.jpg` |
+| Satyr Glade | Mount Olympus (Fantasy) | `olympus-2_1.jpg` |
+| Blooming Garden | Mount Olympus (Fantasy) | `olympus-2_2.jpg` |
+| Shimmering Fountain Court | Mount Olympus (Fantasy) | `olympus-2_3.jpg` |
+| Blooming Orchard | Mount Olympus (Fantasy) | `olympus-2_4.jpg` |
+| Echoing Hall | Mount Olympus (Fantasy) | `olympus-2_5.jpg` |
+| Rocky Meadow | Mount Olympus (Fantasy) | `olympus-3_0.jpg` |
+| Fragrant Vineyard | Mount Olympus (Fantasy) | `olympus-3_1.jpg` |
+| Shimmering Grove | Mount Olympus (Fantasy) | `olympus-3_2.jpg` |
+| Fragrant Garden | Mount Olympus (Fantasy) | `olympus-3_3.jpg` |
+| Radiant Atrium | Mount Olympus (Fantasy) | `olympus-3_4.jpg` |
+| Gilded Colonnade | Mount Olympus (Fantasy) | `olympus-3_5.jpg` |
+| Immortal Fountain Court | Mount Olympus (Fantasy) | `olympus-4_0.jpg` |
+| Temple of Aphrodite | Mount Olympus (Fantasy) | `olympus-4_1.jpg` |
+| Immortal Vineyard | Mount Olympus (Fantasy) | `olympus-4_2.jpg` |
+| Grove of Artemis | Mount Olympus (Fantasy) | `olympus-4_3.jpg` |
+| Gilded Hall | Mount Olympus (Fantasy) | `olympus-4_4.jpg` |
+| Echoing Atrium | Mount Olympus (Fantasy) | `olympus-4_5.jpg` |
+| Forge of Hephaestus | Mount Olympus (Fantasy) | `olympus-5_0.jpg` |
+| Golden Fountain Court | Mount Olympus (Fantasy) | `olympus-5_1.jpg` |
+| Marble Portico | Mount Olympus (Fantasy) | `olympus-5_2.jpg` |
+| Radiant Stair | Mount Olympus (Fantasy) | `olympus-5_3.jpg` |
+| Radiant Colonnade | Mount Olympus (Fantasy) | `olympus-5_4.jpg` |
+| Thundering Temple | Mount Olympus (Fantasy) | `olympus-5_5.jpg` |
+| Golden Grove | Mount Olympus (Fantasy) | `olympus-6_0.jpg` |
+| Marble Hall | Mount Olympus (Fantasy) | `olympus-6_1.jpg` |
+| Hall of Apollo | Mount Olympus (Fantasy) | `olympus-6_2.jpg` |
+| Colonnaded Portico | Mount Olympus (Fantasy) | `olympus-6_3.jpg` |
+| Fields of Demeter | Mount Olympus (Fantasy) | `olympus-6_4.jpg` |
+| Blazing Sanctum | Mount Olympus (Fantasy) | `olympus-6_5.jpg` |
+| Colonnaded Stair | Mount Olympus (Fantasy) | `olympus-7_0.jpg` |
+| Arena of Ares | Mount Olympus (Fantasy) | `olympus-7_1.jpg` |
+| Colonnaded Hall | Mount Olympus (Fantasy) | `olympus-7_2.jpg` |
+| Winged Gate of Hermes | Mount Olympus (Fantasy) | `olympus-7_3.jpg` |
+| Sacred Altar | Mount Olympus (Fantasy) | `olympus-7_4.jpg` |
+| Burning Shrine | Mount Olympus (Fantasy) | `olympus-7_5.jpg` |
+| Echoing Portico | Mount Olympus (Fantasy) | `olympus-8_0.jpg` |
+| Gilded Stair | Mount Olympus (Fantasy) | `olympus-8_1.jpg` |
+| Vineyards of Dionysus | Mount Olympus (Fantasy) | `olympus-8_2.jpg` |
+| Sacred Temple | Mount Olympus (Fantasy) | `olympus-8_3.jpg` |
+| Hearth of Hestia | Mount Olympus (Fantasy) | `olympus-8_4.jpg` |
+| Pit of Tartarus | Mount Olympus (Fantasy) | `olympus-8_5.jpg` |
+| Gilded Atrium | Mount Olympus (Fantasy) | `olympus-9_0.jpg` |
+| Eternal Altar | Mount Olympus (Fantasy) | `olympus-9_1.jpg` |
+| Thundering Shrine | Mount Olympus (Fantasy) | `olympus-9_2.jpg` |
+| Hera's Chamber | Mount Olympus (Fantasy) | `olympus-9_3.jpg` |
+| Crowned Gate | Mount Olympus (Fantasy) | `olympus-9_4.jpg` |
+| Throne of Olympus | Mount Olympus (Fantasy) | `olympus-9_5.jpg` |
+| Mist Gate of the Otherworld | The Otherworld (Fantasy) | `otherworld-0_0.jpg` |
+| Emerald Clover Patch | The Otherworld (Fantasy) | `otherworld-0_1.jpg` |
+| Shimmering Glen | The Otherworld (Fantasy) | `otherworld-0_2.jpg` |
+| Dewy Knoll | The Otherworld (Fantasy) | `otherworld-0_3.jpg` |
+| Enchanted Grove | The Otherworld (Fantasy) | `otherworld-0_4.jpg` |
+| Dewy Hollow | The Otherworld (Fantasy) | `otherworld-1_0.jpg` |
+| Fairy-ringed Meadow | The Otherworld (Fantasy) | `otherworld-1_1.jpg` |
+| Pixie Grove | The Otherworld (Fantasy) | `otherworld-1_2.jpg` |
+| Silver Glade | The Otherworld (Fantasy) | `otherworld-1_3.jpg` |
+| Whispering Mere | The Otherworld (Fantasy) | `otherworld-1_4.jpg` |
+| Misty Knoll | The Otherworld (Fantasy) | `otherworld-2_0.jpg` |
+| Leprechaun Glen | The Otherworld (Fantasy) | `otherworld-2_1.jpg` |
+| Moonlit Wood | The Otherworld (Fantasy) | `otherworld-2_2.jpg` |
+| Silver Ford | The Otherworld (Fantasy) | `otherworld-2_3.jpg` |
+| Enchanted Glade | The Otherworld (Fantasy) | `otherworld-2_4.jpg` |
+| Dewy Glen | The Otherworld (Fantasy) | `otherworld-3_0.jpg` |
+| Moonlit Mere | The Otherworld (Fantasy) | `otherworld-3_1.jpg` |
+| Silver Grove | The Otherworld (Fantasy) | `otherworld-3_2.jpg` |
+| Brugh na Bóinne | The Otherworld (Fantasy) | `otherworld-3_3.jpg` |
+| Carved Passage | The Otherworld (Fantasy) | `otherworld-3_4.jpg` |
+| Whispering Ford | The Otherworld (Fantasy) | `otherworld-4_0.jpg` |
+| Hall of the Fae | The Otherworld (Fantasy) | `otherworld-4_1.jpg` |
+| Brigid's Forge | The Otherworld (Fantasy) | `otherworld-4_2.jpg` |
+| Carved Hall | The Otherworld (Fantasy) | `otherworld-4_3.jpg` |
+| Ancient Mound | The Otherworld (Fantasy) | `otherworld-4_4.jpg` |
+| Enchanted Wood | The Otherworld (Fantasy) | `otherworld-5_0.jpg` |
+| Thorny Ford | The Otherworld (Fantasy) | `otherworld-5_1.jpg` |
+| Grassy Barrow | The Otherworld (Fantasy) | `otherworld-5_2.jpg` |
+| Hollow Cairn | The Otherworld (Fantasy) | `otherworld-5_3.jpg` |
+| Island of Manannán | The Otherworld (Fantasy) | `otherworld-5_4.jpg` |
+| Thorny Grove | The Otherworld (Fantasy) | `otherworld-6_0.jpg` |
+| Hall of the Silver Hand | The Otherworld (Fantasy) | `otherworld-6_1.jpg` |
+| Hollow Passage | The Otherworld (Fantasy) | `otherworld-6_2.jpg` |
+| Ancient Barrow | The Otherworld (Fantasy) | `otherworld-6_3.jpg` |
+| Golden Gate | The Otherworld (Fantasy) | `otherworld-6_4.jpg` |
+| Ancient Cairn | The Otherworld (Fantasy) | `otherworld-7_0.jpg` |
+| Hollow Hall | The Otherworld (Fantasy) | `otherworld-7_1.jpg` |
+| Grassy Mound | The Otherworld (Fantasy) | `otherworld-7_2.jpg` |
+| Glittering Gate | The Otherworld (Fantasy) | `otherworld-7_3.jpg` |
+| Battlefield of the Mórrígan | The Otherworld (Fantasy) | `otherworld-7_4.jpg` |
+| Carved Barrow | The Otherworld (Fantasy) | `otherworld-8_0.jpg` |
+| Glowing Cairn | The Otherworld (Fantasy) | `otherworld-8_1.jpg` |
+| Hall of Lugh | The Otherworld (Fantasy) | `otherworld-8_2.jpg` |
+| Royal Hall | The Otherworld (Fantasy) | `otherworld-8_3.jpg` |
+| Glittering Court | The Otherworld (Fantasy) | `otherworld-8_4.jpg` |
+| Glowing Passage | The Otherworld (Fantasy) | `otherworld-9_0.jpg` |
+| Timeless Gate | The Otherworld (Fantasy) | `otherworld-9_1.jpg` |
+| Tower of Balor | The Otherworld (Fantasy) | `otherworld-9_2.jpg` |
+| Thundering Court | The Otherworld (Fantasy) | `otherworld-9_3.jpg` |
+| The Dagda's Cauldron Hall | The Otherworld (Fantasy) | `otherworld-9_4.jpg` |
 | Martian Beachhead | Pluto (Sci-fi) | `pluto-0_0.jpg` |
 | Pale Crater Rim | Pluto (Sci-fi) | `pluto-0_1.jpg` |
 | Wind-scoured Gulch | Pluto (Sci-fi) | `pluto-0_2.jpg` |

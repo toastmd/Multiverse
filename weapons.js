@@ -26,18 +26,18 @@ D.weaponSkills = (p) => { p.msg('WEAPON SKILLS (1 to 100: +0.6% damage per level
 module.exports = { TYPES, BASE, commands: (find) => ({
   wield(p, a) {
     const arg = a.trim(); const m = arg.match(/^(.+?)\s+(?:in\s+)?(?:the\s+)?(off-?hand|left|second)$/i); if (m) return module.exports.commands(find).dual(p, m[1]);
-    const it = find(p.inv, arg); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`);
+    const it = find(p.inv, arg); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (!D.gearOk(p, it.def.lvl)) return p.msg(`You need level ${it.def.lvl} to wield that.`);
     if (p.equip.offhand === it) delete p.equip.offhand; p.equip.weapon = it; const two = D.hands(it) === 2; D.fixHands(p, false); p.recalc();
     p.msg(`You wield ${it.short}${two ? ' in both hands' : ''}. (${TYPES[D.wtype(it)]}: your skill is ${D.wlvl(p, D.wtype(it))}${p.equip.offhand ? '; dual wielding' : ''})`);
   },
   dual(p, a) { // dual <weapon>: a second weapon in the other hand (an extra attack every round)
-    const it = find(p.inv, a.trim()); if (!it || it.type !== 'weapon') return p.msg('Dual wield what? (a weapon in your pack: `dual <weapon>`)'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`);
+    const it = find(p.inv, a.trim()); if (!it || it.type !== 'weapon') return p.msg('Dual wield what? (a weapon in your pack: `dual <weapon>`)'); if (!D.gearOk(p, it.def.lvl)) return p.msg(`You need level ${it.def.lvl} to wield that.`);
     if (!p.equip.weapon) return p.msg('Wield a main weapon first, then `dual <second weapon>`.'); if (p.equip.weapon === it) return p.msg('That is already your main weapon.');
     const brawn = D.brawn(p); if (!brawn && D.hands(it) === 2) return p.msg('A two-handed weapon takes both hands: only Juggernauts and Titans can dual wield them.'); if (!brawn && D.hands(p.equip.weapon) === 2) return p.msg('Your main weapon needs both hands. Wield a one-handed weapon first.');
     delete p.equip.shield; p.equip.offhand = it; p.msg(`You also wield ${it.short} in your off-hand: an extra attack every round (off-hand blows do ${brawn ? 'full' : '80%'} damage).`, 'win');
   },
   wear(p, a) {
-    const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`);
+    const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (!D.gearOk(p, it.def.lvl)) return p.msg(`You need level ${it.def.lvl} to wear that.`);
     if (it.slot === 'shield') { if (p.equip.weapon && D.hands(p.equip.weapon) === 2) return p.msg('Your weapon needs both hands. Wield a one-handed weapon to use a shield.'); if (p.equip.offhand) { p.msg(`You put away ${p.equip.offhand.short} to hold the shield.`, 'sys'); delete p.equip.offhand; } }
     p.equip[it.slot] = it; p.recalc(); p.msg(`You wear ${it.short}.`);
   },

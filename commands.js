@@ -11,7 +11,7 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   water: 'WATER. Cool, clear water all around you, green near the surface and darker below, full of drifting light. It pushes gently at your limbs, carries the sound of distant currents, and everything you drop or lose is gone in a swirl of bubbles. Fish flicker past and the sea-floor sand ripples under your feet.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); require('./deities'); require('./align'); require('./fingerinfo'); require('./rewards'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
@@ -154,7 +154,7 @@ const C = {
     if (!def) { const id = Object.keys(p.bag).find((i) => { const d = D.W.items[i]; return d && (d.name.toLowerCase().includes(q) || (d.ids || []).includes(q)); }); if (id) { def = D.W.items[id]; name = def.name; } }
     if (!def) return p.msg("You don't have that, and it isn't here.");
     if (def.type !== 'weapon' && def.type !== 'armor') return p.msg("This isn't a piece of equipment.");
-    const lvl = def.lvl || 1, need = lvl > p.level ? ` You need level ${lvl} to use it (you are level ${p.level}).` : ` Requires level ${lvl}.`, using = inst && Object.values(p.equip).includes(inst), bonus = def.bonus ? ` Bonus: ${[def.bonus.pool ? `+${def.bonus.pool} attack dice` : '', def.bonus.dmg ? `+${def.bonus.dmg} damage` : ''].filter(Boolean).join(', ')}.` : '', f1 = (n) => (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/, '');
+    const lvl = def.lvl || 1, need = !D.gearOk(p, lvl) ? ` You need level ${lvl} to use it (you are level ${p.level}).` : ` Requires level ${lvl}.`, using = inst && Object.values(p.equip).includes(inst), bonus = def.bonus ? ` Bonus: ${[def.bonus.pool ? `+${def.bonus.pool} attack dice` : '', def.bonus.dmg ? `+${def.bonus.dmg} damage` : ''].filter(Boolean).join(', ')}.` : '', f1 = (n) => (n > 0 ? '+' : '') + n.toFixed(1).replace(/\.0$/, '');
     if (def.type === 'weapon') {
       const dm = (inst && inst.dmg) || def.dmg, avg = (dm[0] + dm[1]) / 2, cur = p.equip.weapon, ca = cur ? (cur.dmg[0] + cur.dmg[1]) / 2 : 0, up = inst && inst.up ? ` Upgraded +${inst.up} of ${UPMAX}.` : '';
       p.msg(`${cap(name)}: weapon class ${dm[0]}-${dm[1]} damage (average ${avg}).${up}${need}${bonus}${using ? ' You are wielding it.' : cur ? ` Compared with your ${cur.name} (${cur.dmg[0]}-${cur.dmg[1]}): ${f1(avg - ca)} average damage.` : ' You are wielding nothing.'}`, 'items');
@@ -259,10 +259,11 @@ const C = {
   },
   finger(p, a) { // finger <name>: name, level, picture and email (if they set one and did not hide it)
     const q = (a.trim() || p.name).toLowerCase(), all = [...D.players.values()], on = all.find((o) => o.name.toLowerCase() === q) || all.find((o) => o.name.toLowerCase().startsWith(q));
-    let d; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, marks: D.ink.lines(on.marks), align: on.align || 'neutral', born: on.created, agems: Date.now() - on.created, played: on.playTotal(), ex: on.explored.size, exm: D.exploreTotal(), bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
-    else { const r = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, marks: D.ink.lines(D.cleanMarks(r.marks)), align: ['good', 'evil'].includes(r.align) ? r.align : 'neutral', born: +r.created || D.legacyBirth(r.name), agems: Date.now() - (+r.created || D.legacyBirth(r.name)), played: +r.playMs || 0, ex: Array.isArray(r.explored) ? r.explored.length : 0, exm: D.exploreTotal(), seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
+    let d, rec = null; if (on) d = { name: on.name, pre: D.preTitle(on), title: on.title || '', lv: on.level, rm: on.remort || 0, cn: on.klass().name, ic: on.klass().icon, gl: D.genderLabel(on.gender), pic: D.playerPic(on), email: on.emailHidden ? '' : on.email, hid: !!(on.email && on.emailHidden), online: true, marks: D.ink.lines(on.marks), align: on.align || 'neutral', born: on.created, agems: Date.now() - on.created, played: on.playTotal(), ex: on.explored.size, exm: D.exploreTotal(), bot: !!on.isBot, fwd: !!(on.fwd && on.fwd.on && on.email) };
+    else { const r = rec = /^[a-z]{2,16}$/i.test(q) ? D.fingerRec(q) : null; if (!r) return p.msg(`Nobody called "${a.trim()}" has played here.`); const k = D.K.CLASSES[r.cls] || D.K.CLASSES.barbarian; d = { name: r.name, pre: D.preTitle({ name: r.name, wiz: r.wiz, architect: r.architect }), title: D.cleanTitle(r.title), lv: r.level || 1, rm: r.remort || 0, cn: k.name, ic: k.icon, gl: D.genderLabel(r.gender), pic: D.playerPic({ name: r.name, cls: r.cls, gender: r.gender }), email: r.emailHidden ? '' : D.cleanEmail(r.email), hid: !!(r.email && r.emailHidden), online: false, marks: D.ink.lines(D.cleanMarks(r.marks)), align: ['good', 'evil'].includes(r.align) ? r.align : 'neutral', born: +r.created || D.legacyBirth(r.name), agems: Date.now() - (+r.created || D.legacyBirth(r.name)), played: +r.playMs || 0, ex: Array.isArray(r.explored) ? r.explored.length : 0, exm: D.exploreTotal(), seen: r.seen || 0, fwd: !!(r.fwd && r.fwd.on && r.email) }; }
+    D.fingerExtra(d, on, rec);
     const seen = d.online ? '\u25CF online now' : d.seen ? `last seen ${new Date(d.seen).toISOString().slice(0, 16).replace('T', ' ')} UTC` : 'not online';
-    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); p.msg(`  Level ${d.lv}${d.rm ? ` (Remort ${d.rm})` : ''} ${d.cn} (${d.gl}), ${seen}.`, 'sys'); p.msg(`  Age: ${D.dur(Date.now() - d.born)}. Time played: ${D.dur(d.played)}${d.online ? '' : ' (when last on)'}. Explored ${d.ex} of ${d.exm} rooms.`, 'sys'); if (d.marks && d.marks.length) p.msg(`  Markings: ${d.marks.join('; ')}.`, 'sys'); p.msg(`  Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); if (d.fwd) p.msg('  Forwards their mudmail to a personal email address.', 'sys'); p.send({ t: 'finger', d });
+    p.msg(`Finger: ${[d.pre, D.fancyName(d.name)].filter(Boolean).join(' ')}${d.title ? ', ' + d.title : ''}`, 'rname'); d.lines.forEach((l) => p.msg(/^Name: GROG$/.test(l) ? l.replace('GROG', D.fancyName(d.name)) : l, 'mono')); if (d.marks && d.marks.length) p.msg(`Markings: ${d.marks.join('; ')}.`, 'sys'); p.msg(`Email: ${d.email || (d.hid ? 'hidden' : 'none given')}`, 'sys'); p.send({ t: 'finger', d });
   },
   wield(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'weapon') return p.msg('You cannot wield that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wield that.`); p.equip.weapon = it; p.msg(`You wield ${it.short}.`); },
   wear(p, a) { const it = find(p.inv, a); if (!it || it.type !== 'armor') return p.msg('You cannot wear that.'); if (it.def.lvl > p.level) return p.msg(`You need level ${it.def.lvl} to wear that.`); p.equip[it.slot] = it; p.msg(`You wear ${it.short}.`); },
@@ -469,14 +470,14 @@ const C = {
     const refund = old ? Math.floor(old.value / 2) : 0, freeAura = p.aura() + (old ? old.aura : 0);
     if (p.gold + refund < d.value) return p.msg(`You cannot afford the surgery (${d.value} credits${refund ? `, minus ${refund} for trading in your old implant` : ''}).`);
     if (freeAura < d.aura) return p.msg(`Your aura (${p.aura().toFixed(1)}) cannot take another ${d.aura.toFixed(1)} of chrome. Uninstall something first.`);
-    if (old) p.cyber = p.cyber.filter((i) => D.W.items[i] !== old); p.gold += refund - d.value; if (d.unob) D.itemTake(p, 'unobtainium', d.unob); p.cyber.push(id); p.recalc();
+    if (old) p.cyber = p.cyber.filter((i) => D.W.items[i] !== old); p.gold += refund - d.value; if (d.unob) D.itemTake(p, 'unobtainium', d.unob); p.cyber.push(id); p.recalc(); D.savePlayer(p);
     p.msg(`The doc fits your ${d.name}${old ? ` (trading in ${old.name} for ${refund} credits)` : ''}. Aura is now ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}. Max mana is ${p.maxmp}.`, 'win'); p.sendStats();
   },
   uninstall(p, a) {
     const cl = p.env.def.clinic; if (!cl) return p.msg('You need a ripperdoc for that.');
     const w = a.trim().toLowerCase(), id = p.cyber.find((i) => { const d = D.W.items[i]; return i === w || d.name === w || d.name.split(' ').includes(w); });
     if (!w || !id) return p.msg('Uninstall what? (see `cyber`)'); const d = D.W.items[id];
-    p.cyber = p.cyber.filter((i) => i !== id); p.gold += Math.floor(d.value / 2); p.recalc(); p.hp = Math.min(p.hp, p.maxhp);
+    p.cyber = p.cyber.filter((i) => i !== id); p.gold += Math.floor(d.value / 2); p.recalc(); p.hp = Math.min(p.hp, p.maxhp); D.savePlayer(p);
     p.msg(`The doc removes your ${d.name} and pays you ${Math.floor(d.value / 2)} credits. Aura is now ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`, 'win'); p.sendStats();
   },
   cyber(p) { // the chrome you carry, one implant to a line
@@ -487,7 +488,7 @@ const C = {
   push(p) { if (p.luck < 1) return p.msg('You have no Luck left.'); p.luck--; p.addFx({ k: 'buff', n: 'Pushed', ticks: 2, pool: 6, src: p }); p.msg('You push your luck: +6 attack dice for your next two rounds!', 'win'); p.sendStats(); },
   remort(p, a) {
     if (!p.env.def.rebirth) return p.msg('Remorting is done at the Hall of Rebirth in Ashfall, west of the Temple of the Dawn.');
-    const R = p.remort || 0, opts = Object.entries(D.K.CLASSES).filter(([, k]) => k.remort);
+    const R = p.remort || 0, opts = Object.entries(D.K.CLASSES).filter(([, k]) => k.remort && (!k.from || p.cls === k.from || p.cls === 'idlemaster'));
     if (R >= 40) return p.msg('You have reached Remort 40, the pinnacle. There is nothing left to be reborn into.', 'win');
     if (p.level < 40) return p.msg(`Only level 40 adventurers can remort. You are level ${p.level}.`);
     const args = a.trim().toLowerCase().split(/\s+/), confirm = args[0] === 'confirm', key = confirm ? args[1] : args[0];
@@ -551,6 +552,7 @@ const C = {
       : `Level ${D.MAXLV} (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
     p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`);
     p.msg(`Bounty points: ${n(p.bounty || 0)} (${n(p.bounties || 0)} bounties collected).`, 'items');
+    p.msg(`Deity: ${D.deityLine(p)}. Bag: ${D.bagCap(p)} slots (${p.bagBonus || 0} from bounty rewards). (type \`vow\`)`, 'items');
     p.msg(`Task points: ${(p.tp && p.tp.pts) || 0} to spend (type \`task\`).${D.mountOf(p) ? ` Mounted on a ${D.mountOf(p).name}.` : ''}`, 'items');
     { const top = Object.entries(p.wskill || {}).sort((x, y) => y[1].lvl - x[1].lvl).slice(0, 3).filter(([, k]) => k.lvl > 1); p.msg(`Weapon skills: ${top.length ? top.map(([t, k]) => `${D.WTYPES[t]} ${k.lvl}`).join(', ') : 'all at level 1'} (type \`weaponskills\`).`, 'items'); }
     p.msg(`Daily reward streak: ${p.dailyStreak || 0} day${(p.dailyStreak || 0) === 1 ? '' : 's'} (type \`daily\`).`, 'items');
@@ -614,13 +616,14 @@ const C = {
     if (!w) { p.msg(`Augment an implant: each upgrade (up to 5) adds 20% of its bonus. You have ${D.itemCount(p, 'unobtainium')} unobtainium and ${p.gold} credits.`, 'rname'); p.cyber.forEach((id, i) => { const c = cost(id); p.msg(`  ${i + 1}. ${D.W.items[id].name}  [+${c.up}/5]  ${c.up >= 5 ? 'fully augmented' : `next: ${c.u} unobtainium + ${c.c} credits`}`, c.up >= 5 ? 'win' : 'items'); }); return p.msg('Type `augment <number>` or `augment <implant name>`.', 'sys'); }
     const id = /^\d+$/.test(w) ? p.cyber[+w - 1] : p.cyber.find((i) => { const d = D.W.items[i]; return i === w || d.name === w || d.name.split(' ').includes(w); }); if (!id) return p.msg('Augment which implant? (type `augment` for the list)', 'sys');
     const c = cost(id), d = D.W.items[id]; if (c.up >= 5) return p.msg(`${d.name} is fully augmented.`, 'sys'); if (D.itemCount(p, 'unobtainium') < c.u) return p.msg(`That upgrade needs ${c.u} unobtainium (you have ${D.itemCount(p, 'unobtainium')}).`, 'sys'); if (p.gold < c.c) return p.msg(`The surgery costs ${c.c} credits.`, 'sys');
-    D.itemTake(p, 'unobtainium', c.u); p.gold -= c.c; p.cyberUp[id] = c.up + 1; p.recalc(); p.msg(`The ripperdoc re-forges your ${d.name} with unobtainium: augmented +${c.up + 1}/5 (${Object.keys(d.bonus).map((k) => `+${p.cyberBonus(id, k)} ${k}`).join(' ')}).`, 'win'); p.sendStats();
+    D.itemTake(p, 'unobtainium', c.u); p.gold -= c.c; p.cyberUp[id] = c.up + 1; p.recalc(); D.savePlayer(p); p.msg(`The ripperdoc re-forges your ${d.name} with unobtainium: augmented +${c.up + 1}/5 (${Object.keys(d.bonus).map((k) => `+${p.cyberBonus(id, k)} ${k}`).join(' ')}).`, 'win'); p.sendStats();
   },
   scavenge: (p) => D.tradeGather(p, 'scavenging'), watch: (p, a) => D.cinema.watch(p, a), movies: (p) => D.cinema.movies(p),
   daily(p) { if (D.daily.due(p)) { D.daily.claim(p); } else D.daily.status(p); }, // daily: your login-reward streak (rewards are paid automatically at login)
   jukebox(p, a) { D.jukebox.command(p, a); },
   tattoo(p, a) { D.ink.apply(p, 'tattoo', a); }, brand(p, a) { D.ink.apply(p, 'brand', a); }, marks(p, a) { const t = a.trim() ? find(p.env.inv.filter((o) => o.isPlayer), a.trim()) : p; if (!t) return p.msg('You do not see them here.'); D.ink.show(p, t); },
   mount(p, a) { D.mounts.mount(p, a); }, dismount(p) { D.mounts.dismount(p); }, idle(p) { D.idler.status(p); },
+  vow(p, a) { D.vow(p, a); }, deity(p, a) { D.vow(p, a); },
   task(p, a) { if (!a.trim()) D.tasks.show(p); else D.tasks.spend(p, a); }, tasks(p, a) { C.task(p, a); },
   search(p) { // search: look for a secret treasure or a trap (once a room every few minutes)
     if (p.enemy) return p.msg('Not in the middle of a fight!', 'hurt'); const now = Date.now(); p.searched = p.searched || {};
@@ -647,16 +650,29 @@ const C = {
     if (p.mute.bot) return p.msg('You have muted the bot channel: `bot on` first.', 'sys'); if (silenced(p)) return;
     for (const o of D.players.values()) if (!o.isBot && o.send && !(o.mute && o.mute.bot)) o.msg(`[bot] ${p.name}: ${a}`, 'bot'); if (D.onGossip) D.onGossip(p.name, a);
   },
+  auto(p, a) { // auto [heal|flee|kill|loot|gag|anyquest|brief|notify <on|off>]: every automatic setting and every mute and gag in one list
+    const w = a.trim().toLowerCase().split(/\s+/), name = w[0], val = w[1], MAP = { heal: 'autoheal', autoheal: 'autoheal', flee: 'autoflee', autoflee: 'autoflee', kill: 'autokill', autokill: 'autokill', gag: 'gag', anyquest: 'anyquest', brief: 'brief', notify: 'notify', gossip: 'gossip', bot: 'bot' };
+    if (name === 'loot' || name === 'bag') { return C.bag(p, 'auto ' + ({ on: 'loot', loot: 'loot', overflow: 'overflow', off: 'off' }[val] || '')); }
+    if (MAP[name] && ['on', 'off'].includes(val)) return C[MAP[name]](p, val);
+    const on = (b) => (b ? 'ON ' : 'OFF'), mu = p.mute || {}, line = (cmd, state, what) => p.msg(`  ${cmd.padEnd(14)} ${state.padEnd(9)} ${what}`, state.trim() === 'ON' || /^(loot|overflow)/.test(state.trim()) ? 'win' : 'items');
+    p.msg('AUTO COMMANDS (change one with `auto <name> on|off`, for example `auto heal off`)', 'rname');
+    line('autoheal', on(p.autoheal), 'eat or drink your best healing item at 40% health (autoheal on|off)'); line('autoflee', on(p.autoflee), 'run away at 30% health (autoflee on|off)'); line('autokill', on(p.autokill), 'a bare `kill` attacks the first monster in the room (autokill on|off)');
+    line('bag auto loot', String(p.bagMode || 'overflow'), 'loot: monster drops and pickups go straight to the bag; overflow: only when the pack is full; off (bag auto loot|overflow|off, or `auto loot on|off`)'); line('anyquest', on(p.anyQuest), 'accept any quest whatever your level (anyquest on|off)'); line('brief', on(p.brief), 'moving shows only the room name and exits (brief on|off)');
+    p.msg('MUTE AND GAG', 'rname'); line('gag', on(p.gag), 'combat gag: hide misses and fumbles (gag on|off)'); line('gossip', on(p.gos !== false), 'the gossip channel (gossip on|off)'); line('bot', on(!mu.bot), 'the resident bots channel (bot on|off)'); line('notify', on(p.notify !== false), 'login and logout notices (notify on|off)');
+    for (const [k, label] of [['bounty', 'bounty announcements'], ['levels', 'level-up announcements'], ['quests', 'quest-completion announcements'], ['taunts', 'death taunts'], ['deaths', 'death broadcasts'], ['weather', 'weather events']]) line('mute ' + k, mu[k] ? 'MUTED' : 'heard', label + ' (mute ' + k + ' on|off)');
+    p.msg('Type `help <name>` for details on any of these.', 'sys');
+  },
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
   },
-  prime(p) { // prime: every 30 minutes, a major buff to all vitals and spells for 5 minutes (unlocked at Remort 1, kept forever)
+  prime(p) { // prime: a major buff to all vitals and spells for one hour, then one hour of downtime (unlocked at Remort 1, kept forever)
     if ((p.remort || 0) < 1) return p.msg('PRIME is a gift of rebirth: it unlocks the moment you reach Remort 1 (at the Hall of Rebirth) and stays with you forever.', 'sys');
-    const now = Date.now(), mmss = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
-    if (now < (p.primeUntil || 0)) return p.msg(`PRIME is burning: ${mmss(p.primeUntil - now)} left.`, 'win'); if (now < (p.primeReady || 0)) return p.msg(`PRIME is recharging: ready in ${mmss(p.primeReady - now)}.`, 'sys');
-    p.primeUntil = now + 5 * 60000; p.primeReady = now + 30 * 60000; p.recalc(); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck();
-    p.msg('*** PRIME! *** Power from every rebirth floods through you. For 5 minutes: +50% health, mana and luck (all refilled), +50% spell power and half-price spells. It will be ready again in 30 minutes.', 'win'); p.env.tell(`${p.name} blazes with PRIME energy!`, p, 'event'); p.send({ t: 'sound', k: 'skill' }); p.sendStats();
+    const now = Date.now(), hms = (ms) => `${Math.floor(ms / 3600000)}:${String(Math.floor(ms % 3600000 / 60000)).padStart(2, '0')}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
+    if (now < (p.primeUntil || 0)) return p.msg(`PRIME is burning: ${hms(p.primeUntil - now)} left.`, 'win'); if (now < (p.primeReady || 0)) return p.msg(`PRIME is recharging: ready in ${hms(p.primeReady - now)}.`, 'sys');
+    p.primeUntil = now + 60 * 60000; p.primeReady = p.primeUntil + 60 * 60000; // one hour of PRIME, then one hour of downtime after it expires
+    p.recalc(); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck();
+    p.msg('*** PRIME! *** Power from every rebirth floods through you. For ONE HOUR: +50% health, mana and luck (all refilled), +50% spell power and half-price spells. After it expires there is one hour of downtime before it is ready again.', 'win'); p.env.tell(`${p.name} blazes with PRIME energy!`, p, 'event'); p.send({ t: 'sound', k: 'skill' }); p.sendStats();
   },
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
@@ -813,8 +829,8 @@ const C = {
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
     const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'ring', 'cloak', 'belt', 'feet'], out = [], later = [];
     for (const sl of slots) {
-      const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) <= p.level).sort((x, y) => y.s - x.s), best = ok[0];
-      const tooHigh = cand.filter((c) => c.slot === sl && (c.def.lvl || 1) > p.level && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);
+      const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && D.gearOk(p, c.def.lvl || 1)).sort((x, y) => y.s - x.s), best = ok[0];
+      const tooHigh = cand.filter((c) => c.slot === sl && !D.gearOk(p, c.def.lvl || 1) && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);
       if (!best || best.s <= curS + 0.001) continue;
       const nm = best.def.name, st = best.def.type === 'weapon' ? `damage ${((best.it && best.it.dmg) || best.def.dmg).join('-')}` : `armor ${(best.it ? best.it.ac : best.def.ac) || 0}`;
       if (preview) { out.push(`  would ${best.def.type === 'weapon' ? 'wield' : 'wear'} ${nm} (${st})${cur ? ` instead of ${cur.name}` : ''}`); continue; }
@@ -937,11 +953,13 @@ const runAlias = (p, name, rest) => { // player aliases: "alias g get all" then 
   try { const segs = p.aliases[name].split(';').map((s) => s.trim()).filter(Boolean).slice(0, 8); segs.forEach((s, i) => D.command(p, i === segs.length - 1 && rest ? `${s} ${rest}` : s)); } finally { p._ad--; }
 };
 Object.assign(C, WPN.commands(find));
+{ const _help = C.help; C.help = function (p, a) { _help.call(C, p, a); const q = (a || '').trim().toLowerCase().split(/\s+/)[0]; if (/^(vow|deity|deities|goddess|goddesses|seraphina|elyndra|morgath|lagatha)$/.test(q)) D.showDeityPic(p, D.DEITIES[q] ? q : ''); } } // the goddesses' pictures appear with their help
 { const _look = C.look; C.look = function (p, a) { _look.call(C, p, a); if (a) { const w = a.replace(/^at\s+/, '').trim(); const t = /^(me|self|myself)$/i.test(w) ? p : find(p.env.inv.filter((o) => o.isPlayer), w); if (t && t.isPlayer) { if (t !== p && D.mountOf(t)) p.msg(`${t.name} is riding ${D.mountOf(t).short || D.mountOf(t).name}.`, 'sys'); if (Object.keys(t.marks || {}).length) D.ink.show(p, t); } } }; } // markings and mounts show when you look at someone
 { const _eq = C.equip; C.equip = function (p, a) { _eq.call(C, p, a); if (!/^(list|check|preview)$/i.test((a || '').trim())) { D.fixHands(p); p.recalc(); } }; } // the auto-equip respects hands // wield / dual / wear / remove / weaponskills with hands and weapon skills
 D.command = (p, line) => {
   const m = line.trim().match(/^(\S+)\s*(.*)$/); if (!m) return;
   let v = m[1].toLowerCase(), a = m[2]; if (!p.isBot) { p.prevCmd = p.lastCmd; p.lastCmd = Date.now(); }
+  if (a && /^(gossip|say|tell|phone|bot|yell|shout|emote|reply|whisper)$/.test(ALIAS[v] || v)) a = D.emoji(a);
   if (p.swTok && !p.swRunning && v !== 'speedwalk' && v !== 'run') { p.swTok = null; p.msg('Speedwalk cancelled.', 'sys'); } // typing anything else interrupts a speedwalk
   if (p.bj && (v === 'hit' || v === 'stand')) return D.blackjack[v](p); // answering the dealer in a blackjack hand
   if (v[0] === "'") { a = line.trim().slice(1); v = 'say'; }

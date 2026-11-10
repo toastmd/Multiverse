@@ -1,0 +1,18 @@
+'use strict';
+// New armor slots: HANDS (gloves, gauntlets, bracers), LEGS (leggings, pants, breeches) and FACE (sunglasses, visors, glasses, masks, goggles, monocles, bandanas, balaclavas), in every era and
+// level from 1 to 100, sold in shops and sometimes dropped by monsters. (The old bracelet slot is now the WRIST slot: see jewelry.js.)
+const T = {
+  hands: [[1, 'leather gloves'], [3, 'leather bracers'], [6, 'work gloves'], [10, 'studded gauntlets'], [14, 'bronze bracers'], [18, 'iron gauntlets'], [22, 'driving gloves'], [26, 'mail gloves'], [31, 'silver bracers'], [36, 'steel gauntlets'], [40, 'tactical gloves'], [46, 'plate gauntlets'], [52, 'kevlar combat gloves'], [58, 'mithril gauntlets'], [64, 'cyber-grip gloves'], [70, 'orichalcum bracers'], [76, 'exosuit gauntlets'], [82, 'dragonscale gauntlets'], [88, 'valkyrie bracers'], [94, 'Olympian gauntlets'], [100, 'godforged gauntlets']],
+  legs: [[1, 'patched breeches'], [5, 'leather leggings'], [9, 'denim pants'], [14, 'cargo pants'], [19, 'studded leggings'], [24, 'riding breeches'], [29, 'mail leggings'], [34, 'tactical pants'], [39, 'steel leggings'], [45, 'plate leggings'], [51, 'kevlar leggings'], [57, 'mithril breeches'], [63, 'cyber-weave pants'], [69, 'pearl-scale leggings'], [75, 'exo-leggings'], [81, 'dragonscale leggings'], [87, 'chainmail breeches of Valhalla'], [93, 'ambrosial leggings'], [99, 'godforged leggings']],
+  face: [[1, 'cheap sunglasses'], [2, 'red bandana'], [4, 'reading glasses'], [8, 'leather goggles'], [11, 'cloth mask'], [15, 'cotton balaclava'], [19, 'aviator sunglasses'], [23, 'monocle of insight'], [28, 'iron visor'], [33, 'welding goggles'], [38, 'tactical balaclava'], [44, 'smart glasses'], [50, 'night-vision goggles'], [57, 'HUD visor'], [64, 'mithril mask'], [71, 'orichalcum visor'], [77, 'cyber-eye monocle'], [84, 'quantum goggles'], [91, 'dragonbone mask'], [98, 'godforged mask']],
+};
+// shops and the level each one suits
+const SHOPS = [['town/market', 4], ['town/armory', 12], ['gulch/f', 14], ['modern/spo', 16], ['modern/tec', 24], ['manor/0_0', 15], ['thorn/d', 18], ['aurora/h', 24], ['reach/d', 28], ['mars/0_0', 36], ['blimble/2_0', 3], ['camelot/0_0', 70], ['atlantis/0_0', 66], ['otherworld/0_0', 78], ['exterminus/0_0', 68], ['sea/0_0', 60], ['hades/0_0', 90], ['pluto/0_0', 96], ['olympus/0_0', 94], ['asgard/0_0', 94], ['cloud/0_0', 98], ['cinema/2_0', 14], ['wrestling/1_0', 82]];
+module.exports = (items, mobs, rooms) => {
+  const { gear } = require('./gen')(items, mobs), id = (slot, i) => `${slot}_${i}`, price = (lv) => Math.round(lv * lv * 5 + lv * 30 + 20), made = [];
+  for (const [slot, list] of Object.entries(T)) list.forEach(([lv, name], i) => { gear(id(slot, i), name, slot, lv, price(lv), `${name.replace(/^./, (c) => c.toUpperCase())}: ${slot === 'hands' ? 'for your hands' : slot === 'legs' ? 'for your legs' : 'for your face'}.`); made.push({ id: id(slot, i), slot, lv }); });
+  return { made, post: () => {
+    for (const [path, lv] of SHOPS) { const r = rooms[path]; if (!r || !r.shop || !Array.isArray(r.shop.stock)) continue; for (const slot of Object.keys(T)) for (const m of made.filter((x) => x.slot === slot && Math.abs(x.lv - lv) <= 14).slice(0, 5)) if (!r.shop.stock.includes(m.id)) r.shop.stock.push(m.id); }
+    for (const [mid, m] of Object.entries(mobs)) { if ((m.level || 0) < 3) continue; m.drops = m.drops || []; for (const slot of Object.keys(T)) { const best = made.filter((x) => x.slot === slot && x.lv <= m.level + 4).sort((a, b) => b.lv - a.lv)[0]; if (best && !m.drops.some((d) => d[0] === best.id)) m.drops.push([best.id, 0.015]); } }
+  } };
+};

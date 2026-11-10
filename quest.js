@@ -5,7 +5,7 @@ const D = require('./lib');
 const iname = (id) => (D.W.items[id] || {}).name || id, mname = (id) => (D.W.mobs[id] || {}).name || id;
 const need = (o) => (o[0] === 'kill' || o[0] === 'get' || o[0] === 'rob' ? o[2] : 1);
 D.objText = (o) => o[0] === 'kill' ? `Kill ${mname(o[1])} x${o[2]}` : o[0] === 'get' ? `Bring ${iname(o[1])} x${o[2]}`
-  : o[0] === 'visit' ? `Visit ${(D.rooms.get(o[1]) || {}).name || o[1]}` : o[0] === 'rob' ? `Rob ${o[2]} people at the bank (rob <person>)` : o[0] === 'vault' ? 'Unlock and loot the bank vault' : o[0] === 'tutorial' ? 'Finish the newbie tutorial' : `Talk to ${(D.Q.NPCS[o[1]] || {}).name || o[1]}`;
+  : o[0] === 'do' ? (o[2] || o[1]) : o[0] === 'visit' ? `Visit ${(D.rooms.get(o[1]) || {}).name || o[1]}` : o[0] === 'rob' ? `Rob ${o[2]} people at the bank (rob <person>)` : o[0] === 'vault' ? 'Unlock and loot the bank vault' : o[0] === 'tutorial' ? 'Finish the newbie tutorial' : `Talk to ${(D.Q.NPCS[o[1]] || {}).name || o[1]}`;
 D.qNeed = need;
 D.autoTalk = (p, npcId) => { // the first time you enter a room with a quest giver who has one for you, open the conversation
   const q = D.Q.QUESTS.find((x) => x.giver === npcId); if (!q || !p.env || !p.env.inv.some((o) => o.npcId === npcId) || D.qState(p, q) !== 'avail' || (p._at || (p._at = {}))[q.id]) return; p._at[q.id] = 1; D.command(p, 'talk ' + npcId);

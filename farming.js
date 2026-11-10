@@ -9,6 +9,7 @@ const lvl = (p, id) => (p.skills[id] ? p.skills[id].lvl : 1);
 const nm = (id) => (D.W.items[id] || {}).name || id;
 const crop = (q) => { q = String(q || '').trim().toLowerCase(); return q ? CROPS.find((c) => c[0] === q || c[1] === q || c[0].startsWith(q) || c[1].includes(q)) : null; };
 
+D.harvestTot = (p) => { const f = p.farm; if (!f || !f.plots) return 0; const g = f.plots.filter((x) => x.s === 2).sort((a, b) => a.at - b.at)[0]; if (!g) return 0; try { const row = require('./farmdata').CROPS.find((c) => c[0] === g.crop); return row ? row[3] * 1000 : 0; } catch (e) { return 0; } }; // total grow time of the next crop to ripen
 D.harvestMs = (p) => { const f = p.farm; if (!f || !f.plots) return -1; const g = f.plots.filter((x) => x.s === 2); return g.length ? Math.max(0, Math.min(...g.map((x) => x.at)) - Date.now()) : -1; }; // ms until the next crop is ripe (0 = ripe now, -1 = nothing planted)
 function farm(p) { // the player's farm state: plots (they grow with your tilling skill), the ban and the reward flag
   if (!p.farm) p.farm = { plots: [], ban: 0, reward: false };
@@ -80,3 +81,5 @@ D.farm = {
     const f = farm(p); f.ban = Date.now() + BAN_MS; p.msg(`\u26A0\uFE0F The farm hands saw that. You are banned from farming for ONE HOUR (no tilling, planting, harvesting, milking, shearing or the market), and your plots keep growing without you.`, 'hurt');
   },
 };
+
+setInterval(() => { for (const p of D.players.values()) { if (p.isBot || p.ld || !p.send) continue; const ms = D.harvestMs(p); if (ms === 0) { if (!p._hvDone) { p._hvDone = true; p.msg('*** Your crops are ripe! Walk to your plots at Sunny Acres Farm and type `harvest`. ***', 'win'); p.send({ t: 'sound', k: 'quest' }); } } else p._hvDone = false; } }, 5000).unref(); // the harvest timer: tell the player when a crop is ready

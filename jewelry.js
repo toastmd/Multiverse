@@ -21,6 +21,6 @@ module.exports = (items, mobs, rooms) => {
     ['soulchain', 'soul-chain bracelet', 85, 280000, ['hades/0_0'], 'A bracelet of black links, each one holding a quiet whisper.', { bonus: { hp: 250, mp: 120 } }],
     ['cryowrist', 'cryo wristband', 95, 450000, ['pluto/0_0'], 'A Plutonian wristband that keeps your pulse cool and your temper cooler.', { bonus: { hp: 300, mp: 150 } }],
   ];
-  for (const [id, name, lv, price, shops, long, extra] of L) { gear(id, name, 'bracelet', lv, price, long, extra || {}); items[id].isWatch = /watch|communicator/.test(name); }
+  for (const [id, name, lv, price, shops, long, extra] of L) { gear(id, name, 'wrist', lv, price, long, extra || {}); items[id].isWatch = /watch|communicator/.test(name); }
   return { post: () => { for (const [id, , , , shops] of L) for (const sh of shops) { const r = rooms[sh]; if (r && r.shop && Array.isArray(r.shop.stock) && !r.shop.stock.includes(id)) r.shop.stock.push(id); } } };
 };

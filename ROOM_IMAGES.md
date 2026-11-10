@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-1367 rooms:
+1652 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -136,6 +136,41 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Escape Pod Bay | Starship Aurora (Sci-fi) | `aurora-m.jpg` |
 | AI Core Antechamber | Starship Aurora (Sci-fi) | `aurora-n.jpg` |
 | Bridge | Starship Aurora (Sci-fi) | `aurora-o.jpg` |
+| Dim Cargo Hold | Starship Aurora (Sci-fi) | `aurora2-0_0.jpg` |
+| Cluttered Crate Row | Starship Aurora (Sci-fi) | `aurora2-0_1.jpg` |
+| Dim Freight Lane | Starship Aurora (Sci-fi) | `aurora2-0_2.jpg` |
+| Cluttered Service Duct | Starship Aurora (Sci-fi) | `aurora2-0_3.jpg` |
+| Bent Generator Hall | Starship Aurora (Sci-fi) | `aurora2-0_4.jpg` |
+| Flooded Loading Bay | Starship Aurora (Sci-fi) | `aurora2-1_0.jpg` |
+| Rusted Cargo Hold | Starship Aurora (Sci-fi) | `aurora2-1_1.jpg` |
+| Flooded Crate Row | Starship Aurora (Sci-fi) | `aurora2-1_2.jpg` |
+| Humming Pump Room | Starship Aurora (Sci-fi) | `aurora2-1_3.jpg` |
+| Overheated Maintenance Bay | Starship Aurora (Sci-fi) | `aurora2-1_4.jpg` |
+| Rusted Service Duct | Starship Aurora (Sci-fi) | `aurora2-2_0.jpg` |
+| Sparking Loading Bay | Starship Aurora (Sci-fi) | `aurora2-2_1.jpg` |
+| Greasy Machine Shop | Starship Aurora (Sci-fi) | `aurora2-2_2.jpg` |
+| Bent Coolant Loop | Starship Aurora (Sci-fi) | `aurora2-2_3.jpg` |
+| Greasy Pump Room | Starship Aurora (Sci-fi) | `aurora2-2_4.jpg` |
+| Sparking Freight Lane | Starship Aurora (Sci-fi) | `aurora2-3_0.jpg` |
+| Greasy Maintenance Bay | Starship Aurora (Sci-fi) | `aurora2-3_1.jpg` |
+| Crew Mess Hall | Starship Aurora (Sci-fi) | `aurora2-3_2.jpg` |
+| Rattling Machine Shop | Starship Aurora (Sci-fi) | `aurora2-3_3.jpg` |
+| Sealed Gym | Starship Aurora (Sci-fi) | `aurora2-3_4.jpg` |
+| Rattling Coolant Loop | Starship Aurora (Sci-fi) | `aurora2-4_0.jpg` |
+| Bent Pump Room | Starship Aurora (Sci-fi) | `aurora2-4_1.jpg` |
+| Rattling Maintenance Bay | Starship Aurora (Sci-fi) | `aurora2-4_2.jpg` |
+| Sealed Rec Room | Starship Aurora (Sci-fi) | `aurora2-4_3.jpg` |
+| Ransacked Berth Corridor | Starship Aurora (Sci-fi) | `aurora2-4_4.jpg` |
+| Humming Machine Shop | Starship Aurora (Sci-fi) | `aurora2-5_0.jpg` |
+| Overheated Coolant Loop | Starship Aurora (Sci-fi) | `aurora2-5_1.jpg` |
+| Overgrown Mess Hall | Starship Aurora (Sci-fi) | `aurora2-5_2.jpg` |
+| Ransacked Barracks | Starship Aurora (Sci-fi) | `aurora2-5_3.jpg` |
+| Red-lit Comms Room | Starship Aurora (Sci-fi) | `aurora2-5_4.jpg` |
+| Overheated Generator Hall | Starship Aurora (Sci-fi) | `aurora2-6_0.jpg` |
+| Abandoned Berth Corridor | Starship Aurora (Sci-fi) | `aurora2-6_1.jpg` |
+| Cramped Gym | Starship Aurora (Sci-fi) | `aurora2-6_2.jpg` |
+| Frozen Navigation Deck | Starship Aurora (Sci-fi) | `aurora2-6_3.jpg` |
+| Aft Singularity Chamber | Starship Aurora (Sci-fi) | `aurora2-6_4.jpg` |
 | Bank Lobby | Dry Gulch Bank (Old West) | `bank-a.jpg` |
 | Teller Cages | Dry Gulch Bank (Old West) | `bank-b.jpg` |
 | Manager's Office | Dry Gulch Bank (Old West) | `bank-c.jpg` |
@@ -629,6 +664,38 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Starship Tharsis: Boarding Ramp | Frostpeak Station (Sci-fi) | `frost-ship_ramp.jpg` |
 | Snowdrift Hollow | Frostpeak Station (Sci-fi) | `frost-snowdrift_hollow.jpg` |
 | Wind-Scoured Peak | Frostpeak Station (Sci-fi) | `frost-windscoured_peak.jpg` |
+| Frozen Tunnel | Frostpeak Station (Sci-fi) | `frost2-0_0.jpg` |
+| Narrow Cavern | Frostpeak Station (Sci-fi) | `frost2-0_1.jpg` |
+| Frozen Ice Gallery | Frostpeak Station (Sci-fi) | `frost2-0_2.jpg` |
+| Narrow Drift | Frostpeak Station (Sci-fi) | `frost2-0_3.jpg` |
+| Echoing Crawlway | Frostpeak Station (Sci-fi) | `frost2-1_0.jpg` |
+| Glittering Tunnel | Frostpeak Station (Sci-fi) | `frost2-1_1.jpg` |
+| Echoing Cavern | Frostpeak Station (Sci-fi) | `frost2-1_2.jpg` |
+| Frosted Cryo Lab | Frostpeak Station (Sci-fi) | `frost2-1_3.jpg` |
+| Glittering Drift | Frostpeak Station (Sci-fi) | `frost2-2_0.jpg` |
+| Blue-lit Crawlway | Frostpeak Station (Sci-fi) | `frost2-2_1.jpg` |
+| Abandoned Laboratory | Frostpeak Station (Sci-fi) | `frost2-2_2.jpg` |
+| Shattered Sample Vault | Frostpeak Station (Sci-fi) | `frost2-2_3.jpg` |
+| Blue-lit Ice Gallery | Frostpeak Station (Sci-fi) | `frost2-3_0.jpg` |
+| Frostpeak Warming Hut | Frostpeak Station (Sci-fi) | `frost2-3_1.jpg` |
+| Shattered Specimen Room | Frostpeak Station (Sci-fi) | `frost2-3_2.jpg` |
+| Humming Generator Hall | Frostpeak Station (Sci-fi) | `frost2-3_3.jpg` |
+| Sealed Sample Vault | Frostpeak Station (Sci-fi) | `frost2-4_0.jpg` |
+| Dripping Cryo Lab | Frostpeak Station (Sci-fi) | `frost2-4_1.jpg` |
+| Frost-rimed Pump House | Frostpeak Station (Sci-fi) | `frost2-4_2.jpg` |
+| Shaking Fuel Store | Frostpeak Station (Sci-fi) | `frost2-4_3.jpg` |
+| Frosted Laboratory | Frostpeak Station (Sci-fi) | `frost2-5_0.jpg` |
+| Frost-rimed Heat Exchanger | Frostpeak Station (Sci-fi) | `frost2-5_1.jpg` |
+| Shaking Turbine Room | Frostpeak Station (Sci-fi) | `frost2-5_2.jpg` |
+| Wind-blasted Landing Pad | Frostpeak Station (Sci-fi) | `frost2-5_3.jpg` |
+| Dark Fuel Store | Frostpeak Station (Sci-fi) | `frost2-6_0.jpg` |
+| Groaning Generator Hall | Frostpeak Station (Sci-fi) | `frost2-6_1.jpg` |
+| Windswept Antenna Field | Frostpeak Station (Sci-fi) | `frost2-6_2.jpg` |
+| Exposed Ridge | Frostpeak Station (Sci-fi) | `frost2-6_3.jpg` |
+| Humming Pump House | Frostpeak Station (Sci-fi) | `frost2-7_0.jpg` |
+| Barren Observation Deck | Frostpeak Station (Sci-fi) | `frost2-7_1.jpg` |
+| Howling Summit | Frostpeak Station (Sci-fi) | `frost2-7_2.jpg` |
+| Frostpeak Summit Observatory | Frostpeak Station (Sci-fi) | `frost2-7_3.jpg` |
 | Service Walkway | Mars (Sci-fi) | `future-trail_abyss_1.jpg` |
 | Service Walkway | The Proving Grounds (Bots) | `future-trail_aurora_1.jpg` |
 | Service Walkway | Frostpeak Station (Sci-fi) | `future-trail_ember_1.jpg` |
@@ -636,6 +703,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Service Walkway | Starship Aurora (Sci-fi) | `future-trail_frost_1.jpg` |
 | Service Walkway | Ember Wastes (Sci-fi) | `future-trail_mars_1.jpg` |
 | Service Walkway | Exterminus (Sci-fi) | `future-trail_pluto_1.jpg` |
+| Service Walkway | Pluto (Sci-fi) | `future-trail_sol_1.jpg` |
 | Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
 | Void Ring | The Proving Grounds (Bots) | `grounds-f10.jpg` |
 | Bone Yard | The Proving Grounds (Bots) | `grounds-f2.jpg` |
@@ -749,6 +817,56 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Hollowmoor Square | Nightfall Hollow (Fantasy) | `hollow-square.jpg` |
 | Bat Tower | Nightfall Hollow (Fantasy) | `hollow-tower.jpg` |
 | Howling Woods | Nightfall Hollow (Fantasy) | `hollow-woods1.jpg` |
+| Megalithic Jungle Gate | The Megalithic Jungle (Prehistoric) | `jungle-0_0.jpg` |
+| Humid Stream Bank | The Megalithic Jungle (Prehistoric) | `jungle-0_1.jpg` |
+| Steaming Clearing | The Megalithic Jungle (Prehistoric) | `jungle-0_2.jpg` |
+| Humid Trail | The Megalithic Jungle (Prehistoric) | `jungle-0_3.jpg` |
+| Mist-hung Game Trail | The Megalithic Jungle (Prehistoric) | `jungle-0_4.jpg` |
+| Buzzing Thicket | The Megalithic Jungle (Prehistoric) | `jungle-1_0.jpg` |
+| Steaming Fern Path | The Megalithic Jungle (Prehistoric) | `jungle-1_1.jpg` |
+| Buzzing Stream Bank | The Megalithic Jungle (Prehistoric) | `jungle-1_2.jpg` |
+| Dense Hollow | The Megalithic Jungle (Prehistoric) | `jungle-1_3.jpg` |
+| Overgrown Fern Glade | The Megalithic Jungle (Prehistoric) | `jungle-1_4.jpg` |
+| Dripping Trail | The Megalithic Jungle (Prehistoric) | `jungle-2_0.jpg` |
+| Tangled Thicket | The Megalithic Jungle (Prehistoric) | `jungle-2_1.jpg` |
+| Shadowy Thicket | The Megalithic Jungle (Prehistoric) | `jungle-2_2.jpg` |
+| Overgrown Mud Flat | The Megalithic Jungle (Prehistoric) | `jungle-2_3.jpg` |
+| Shadowy Hollow | The Megalithic Jungle (Prehistoric) | `jungle-2_4.jpg` |
+| Tangled Clearing | The Megalithic Jungle (Prehistoric) | `jungle-3_0.jpg` |
+| Shadowy Fern Glade | The Megalithic Jungle (Prehistoric) | `jungle-3_1.jpg` |
+| The First Stone Circle | The Megalithic Jungle (Prehistoric) | `jungle-3_2.jpg` |
+| Humming Thicket | The Megalithic Jungle (Prehistoric) | `jungle-3_3.jpg` |
+| Spiral-carved Avenue of Stones | The Megalithic Jungle (Prehistoric) | `jungle-3_4.jpg` |
+| Humming Mud Flat | The Megalithic Jungle (Prehistoric) | `jungle-4_0.jpg` |
+| Mist-hung Hollow | The Megalithic Jungle (Prehistoric) | `jungle-4_1.jpg` |
+| Humming Fern Glade | The Megalithic Jungle (Prehistoric) | `jungle-4_2.jpg` |
+| Spiral-carved Dolmen | The Megalithic Jungle (Prehistoric) | `jungle-4_3.jpg` |
+| Moss-covered Standing Stones | The Megalithic Jungle (Prehistoric) | `jungle-4_4.jpg` |
+| Dense Thicket | The Megalithic Jungle (Prehistoric) | `jungle-5_0.jpg` |
+| Dolmen of the Ancestors | The Megalithic Jungle (Prehistoric) | `jungle-5_1.jpg` |
+| Ancient Stone Circle | The Megalithic Jungle (Prehistoric) | `jungle-5_2.jpg` |
+| Moss-covered Monolith | The Megalithic Jungle (Prehistoric) | `jungle-5_3.jpg` |
+| Ancient Dolmen | The Megalithic Jungle (Prehistoric) | `jungle-5_4.jpg` |
+| Overgrown Game Trail | The Megalithic Jungle (Prehistoric) | `jungle-6_0.jpg` |
+| Ancient Standing Stones | The Megalithic Jungle (Prehistoric) | `jungle-6_1.jpg` |
+| Towering Avenue of Stones | The Megalithic Jungle (Prehistoric) | `jungle-6_2.jpg` |
+| Monolith Plaza | The Megalithic Jungle (Prehistoric) | `jungle-6_3.jpg` |
+| Primeval Ridge | The Megalithic Jungle (Prehistoric) | `jungle-6_4.jpg` |
+| Carved Monolith | The Megalithic Jungle (Prehistoric) | `jungle-7_0.jpg` |
+| Towering Dolmen | The Megalithic Jungle (Prehistoric) | `jungle-7_1.jpg` |
+| Carved Standing Stones | The Megalithic Jungle (Prehistoric) | `jungle-7_2.jpg` |
+| Primeval Stone Gate | The Megalithic Jungle (Prehistoric) | `jungle-7_3.jpg` |
+| Thundering Giant Plain | The Megalithic Jungle (Prehistoric) | `jungle-7_4.jpg` |
+| Spiral-carved Stone Circle | The Megalithic Jungle (Prehistoric) | `jungle-8_0.jpg` |
+| Spinosaurus Swamp | The Megalithic Jungle (Prehistoric) | `jungle-8_1.jpg` |
+| Trampled Bone Field | The Megalithic Jungle (Prehistoric) | `jungle-8_2.jpg` |
+| The Giants' Grazing Ground | The Megalithic Jungle (Prehistoric) | `jungle-8_3.jpg` |
+| Trampled Stone Gate | The Megalithic Jungle (Prehistoric) | `jungle-8_4.jpg` |
+| Moss-covered Avenue of Stones | The Megalithic Jungle (Prehistoric) | `jungle-9_0.jpg` |
+| Endless Giant Plain | The Megalithic Jungle (Prehistoric) | `jungle-9_1.jpg` |
+| Colossal Ridge | The Megalithic Jungle (Prehistoric) | `jungle-9_2.jpg` |
+| Endless Bone Field | The Megalithic Jungle (Prehistoric) | `jungle-9_3.jpg` |
+| The Great Megalith: the Imperator's Lair | The Megalithic Jungle (Prehistoric) | `jungle-9_4.jpg` |
 | Manor Lobby | Golden Years Manor (Modern) | `manor-0_0.jpg` |
 | Activity Room | Golden Years Manor (Modern) | `manor-0_1.jpg` |
 | East Wing Corridor | Golden Years Manor (Modern) | `manor-0_2.jpg` |
@@ -1002,9 +1120,10 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Sunset Acres: Lot Road | Modern District (Modern) | `modern-tpr1.jpg` |
 | Sunset Acres: Middle Row | Modern District (Modern) | `modern-tpr2.jpg` |
 | Sunset Acres: East Row | Modern District (Modern) | `modern-tpr3.jpg` |
-| City Block | Multiverse Cinema 12 (Modern) | `modern-trail_brogym_1.jpg` |
+| City Block | Pizza Palace (Modern) | `modern-trail_brogym_1.jpg` |
 | City Block | Modern District (Modern) | `modern-trail_cinema_1.jpg` |
 | City Block | BroGym (Modern) | `modern-trail_manor_1.jpg` |
+| City Block | Multiverse Cinema 12 (Modern) | `modern-trail_pizza_1.jpg` |
 | City Block | Golden Years Manor (Modern) | `modern-trail_stripclub_1.jpg` |
 | City Block | The Pink Flamingo (Modern) | `modern-trail_wrestling_1.jpg` |
 | Meridian Tower Plaza | Modern District (Modern) | `modern-tw_front.jpg` |
@@ -1122,6 +1241,21 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Tower of Balor | The Otherworld (Fantasy) | `otherworld-9_2.jpg` |
 | Thundering Court | The Otherworld (Fantasy) | `otherworld-9_3.jpg` |
 | The Dagda's Cauldron Hall | The Otherworld (Fantasy) | `otherworld-9_4.jpg` |
+| Pizza Palace Entrance | Pizza Palace (Modern) | `pizza-0_0.jpg` |
+| Birthday Party Room | Pizza Palace (Modern) | `pizza-0_1.jpg` |
+| Delivery Garage | Pizza Palace (Modern) | `pizza-0_2.jpg` |
+| Dining Room | Pizza Palace (Modern) | `pizza-1_0.jpg` |
+| Kitchen Pass | Pizza Palace (Modern) | `pizza-1_1.jpg` |
+| Back Alley | Pizza Palace (Modern) | `pizza-1_2.jpg` |
+| Order Counter | Pizza Palace (Modern) | `pizza-2_0.jpg` |
+| Prep Station | Pizza Palace (Modern) | `pizza-2_1.jpg` |
+| Dumpster Row | Pizza Palace (Modern) | `pizza-2_2.jpg` |
+| Soda Fountain and Sides Bar | Pizza Palace (Modern) | `pizza-3_0.jpg` |
+| Brick Oven Room | Pizza Palace (Modern) | `pizza-3_1.jpg` |
+| Manager's Office | Pizza Palace (Modern) | `pizza-3_2.jpg` |
+| Arcade Corner | Pizza Palace (Modern) | `pizza-4_0.jpg` |
+| Walk-in Pantry | Pizza Palace (Modern) | `pizza-4_1.jpg` |
+| Delivery Address: 42 Elm Street | Pizza Palace (Modern) | `pizza-4_2.jpg` |
 | Martian Beachhead | Pluto (Sci-fi) | `pluto-0_0.jpg` |
 | Pale Crater Rim | Pluto (Sci-fi) | `pluto-0_1.jpg` |
 | Wind-scoured Gulch | Pluto (Sci-fi) | `pluto-0_2.jpg` |
@@ -1183,6 +1317,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Grim Bridge | Pluto (Sci-fi) | `pluto-9_4.jpg` |
 | The Warlord's Frozen Throne | Pluto (Sci-fi) | `pluto-9_5.jpg` |
 | Game Trail | The Primeval Rift (Prehistoric) | `prehistoric-trail_cave_1.jpg` |
+| Game Trail | The Mammoth Caverns (Prehistoric) | `prehistoric-trail_jungle_1.jpg` |
 | Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
 | The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
 | Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |
@@ -1296,6 +1431,156 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Silver Court | Poseidon's Realm (Fantasy) | `sea-9_3.jpg` |
 | Poseidon's Throne Room | Poseidon's Realm (Fantasy) | `sea-9_4.jpg` |
 | Shark Pens | Poseidon's Realm (Fantasy) | `sea-pens.jpg` |
+| Mercury Landing Pad | Sol and Mercury (Sci-fi) | `sol-0_0.jpg` |
+| Cratered Ridge | Sol and Mercury (Sci-fi) | `sol-0_1.jpg` |
+| Glittering Plain | Sol and Mercury (Sci-fi) | `sol-0_2.jpg` |
+| Baked Ridge | Sol and Mercury (Sci-fi) | `sol-0_3.jpg` |
+| Silent Plain | Sol and Mercury (Sci-fi) | `sol-0_4.jpg` |
+| Magnetic Slag Heap | Sol and Mercury (Sci-fi) | `sol-0_5.jpg` |
+| Jagged Wasteland | Sol and Mercury (Sci-fi) | `sol-0_6.jpg` |
+| Endless Slag Heap 81 | Sol and Mercury (Sci-fi) | `sol-0_7.jpg` |
+| Magnetic Wasteland 81 | Sol and Mercury (Sci-fi) | `sol-0_8.jpg` |
+| Glowing Basin 83 | Sol and Mercury (Sci-fi) | `sol-0_9.jpg` |
+| Heat-Shield Bunker | Sol and Mercury (Sci-fi) | `sol-1_0.jpg` |
+| Baked Dune | Sol and Mercury (Sci-fi) | `sol-1_1.jpg` |
+| Silent Crater Rim | Sol and Mercury (Sci-fi) | `sol-1_2.jpg` |
+| Cratered Dune | Sol and Mercury (Sci-fi) | `sol-1_3.jpg` |
+| Endless Wasteland | Sol and Mercury (Sci-fi) | `sol-1_4.jpg` |
+| Endless Plateau | Sol and Mercury (Sci-fi) | `sol-1_5.jpg` |
+| Rusted Iron Field 81 | Sol and Mercury (Sci-fi) | `sol-1_6.jpg` |
+| Humming Plateau 81 | Sol and Mercury (Sci-fi) | `sol-1_7.jpg` |
+| Glowing Furnace Hall 82 | Sol and Mercury (Sci-fi) | `sol-1_8.jpg` |
+| Molten Foundry 82 | Sol and Mercury (Sci-fi) | `sol-1_9.jpg` |
+| Glowing Forge | Sol and Mercury (Sci-fi) | `sol-10_0.jpg` |
+| Towering Furnace Hall | Sol and Mercury (Sci-fi) | `sol-10_1.jpg` |
+| Glowing Foundry | Sol and Mercury (Sci-fi) | `sol-10_2.jpg` |
+| Roaring Prominence | Sol and Mercury (Sci-fi) | `sol-10_3.jpg` |
+| Blinding Arc | Sol and Mercury (Sci-fi) | `sol-10_4.jpg` |
+| Roaring Flare Field | Sol and Mercury (Sci-fi) | `sol-10_5.jpg` |
+| Roaring Corona | Sol and Mercury (Sci-fi) | `sol-10_6.jpg` |
+| Blazing Granule | Sol and Mercury (Sci-fi) | `sol-10_7.jpg` |
+| Boiling Convection Cell | Sol and Mercury (Sci-fi) | `sol-10_8.jpg` |
+| Radiant Convection Cell | Sol and Mercury (Sci-fi) | `sol-10_9.jpg` |
+| Towering Gantry | Sol and Mercury (Sci-fi) | `sol-11_0.jpg` |
+| Forged Forge | Sol and Mercury (Sci-fi) | `sol-11_1.jpg` |
+| Roaring Plume | Sol and Mercury (Sci-fi) | `sol-11_2.jpg` |
+| Burning Flare Field | Sol and Mercury (Sci-fi) | `sol-11_3.jpg` |
+| Crackling Corona | Sol and Mercury (Sci-fi) | `sol-11_4.jpg` |
+| Burning Plume | Sol and Mercury (Sci-fi) | `sol-11_5.jpg` |
+| Blazing Photosphere | Sol and Mercury (Sci-fi) | `sol-11_6.jpg` |
+| Temple of the Sun | Sol and Mercury (Sci-fi) | `sol-11_7.jpg` |
+| Golden Sunspot | Sol and Mercury (Sci-fi) | `sol-11_8.jpg` |
+| Radiant Photosphere | Sol and Mercury (Sci-fi) | `sol-11_9.jpg` |
+| Forged Basin | Sol and Mercury (Sci-fi) | `sol-12_0.jpg` |
+| Roaring Arc | Sol and Mercury (Sci-fi) | `sol-12_1.jpg` |
+| Blinding Corona | Sol and Mercury (Sci-fi) | `sol-12_2.jpg` |
+| Crackling Plume | Sol and Mercury (Sci-fi) | `sol-12_3.jpg` |
+| Shimmering Arc | Sol and Mercury (Sci-fi) | `sol-12_4.jpg` |
+| Blazing Convection Cell | Sol and Mercury (Sci-fi) | `sol-12_5.jpg` |
+| Radiant Sunspot | Sol and Mercury (Sci-fi) | `sol-12_6.jpg` |
+| Golden Photosphere | Sol and Mercury (Sci-fi) | `sol-12_7.jpg` |
+| Radiant Light Plain | Sol and Mercury (Sci-fi) | `sol-12_8.jpg` |
+| Burning Heart | Sol and Mercury (Sci-fi) | `sol-12_9.jpg` |
+| Crackling Flare Field | Sol and Mercury (Sci-fi) | `sol-13_0.jpg` |
+| Burning Prominence | Sol and Mercury (Sci-fi) | `sol-13_1.jpg` |
+| Crackling Arc | Sol and Mercury (Sci-fi) | `sol-13_2.jpg` |
+| Burning Corona | Sol and Mercury (Sci-fi) | `sol-13_3.jpg` |
+| Golden Light Plain | Sol and Mercury (Sci-fi) | `sol-13_4.jpg` |
+| Radiant Granule | Sol and Mercury (Sci-fi) | `sol-13_5.jpg` |
+| Golden Convection Cell | Sol and Mercury (Sci-fi) | `sol-13_6.jpg` |
+| Seething Sunspot | Sol and Mercury (Sci-fi) | `sol-13_7.jpg` |
+| Searing Core | Sol and Mercury (Sci-fi) | `sol-13_8.jpg` |
+| Core Furnace | Sol and Mercury (Sci-fi) | `sol-13_9.jpg` |
+| Shimmering Plume | Sol and Mercury (Sci-fi) | `sol-14_0.jpg` |
+| Blinding Flare Field | Sol and Mercury (Sci-fi) | `sol-14_1.jpg` |
+| Shimmering Prominence | Sol and Mercury (Sci-fi) | `sol-14_2.jpg` |
+| Boiling Sunspot | Sol and Mercury (Sci-fi) | `sol-14_3.jpg` |
+| Seething Photosphere | Sol and Mercury (Sci-fi) | `sol-14_4.jpg` |
+| Boiling Light Plain | Sol and Mercury (Sci-fi) | `sol-14_5.jpg` |
+| Seething Granule | Sol and Mercury (Sci-fi) | `sol-14_6.jpg` |
+| Eternal Gate | Sol and Mercury (Sci-fi) | `sol-14_7.jpg` |
+| Radiant Sanctum | Sol and Mercury (Sci-fi) | `sol-14_8.jpg` |
+| The Core of Sol | Sol and Mercury (Sci-fi) | `sol-14_9.jpg` |
+| Scorched Flat | Sol and Mercury (Sci-fi) | `sol-2_0.jpg` |
+| Cratered Gully | Sol and Mercury (Sci-fi) | `sol-2_1.jpg` |
+| Glittering Flat | Sol and Mercury (Sci-fi) | `sol-2_2.jpg` |
+| Endless Fissure | Sol and Mercury (Sci-fi) | `sol-2_3.jpg` |
+| Humming Slag Heap | Sol and Mercury (Sci-fi) | `sol-2_4.jpg` |
+| Humming Iron Field | Sol and Mercury (Sci-fi) | `sol-2_5.jpg` |
+| Jagged Fissure 81 | Sol and Mercury (Sci-fi) | `sol-2_6.jpg` |
+| Forged Gantry 82 | Sol and Mercury (Sci-fi) | `sol-2_7.jpg` |
+| Towering Forge 82 | Sol and Mercury (Sci-fi) | `sol-2_8.jpg` |
+| Forged Furnace Hall 83 | Sol and Mercury (Sci-fi) | `sol-2_9.jpg` |
+| Barren Ridge | Sol and Mercury (Sci-fi) | `sol-3_0.jpg` |
+| Baked Plain | Sol and Mercury (Sci-fi) | `sol-3_1.jpg` |
+| Rusted Slag Heap | Sol and Mercury (Sci-fi) | `sol-3_2.jpg` |
+| Humming Wasteland | Sol and Mercury (Sci-fi) | `sol-3_3.jpg` |
+| Rusted Plateau | Sol and Mercury (Sci-fi) | `sol-3_4.jpg` |
+| Rusted Fissure | Sol and Mercury (Sci-fi) | `sol-3_5.jpg` |
+| Glowing Furnace Hall | Sol and Mercury (Sci-fi) | `sol-3_6.jpg` |
+| Towering Furnace Hall 81 | Sol and Mercury (Sci-fi) | `sol-3_7.jpg` |
+| Molten Gantry 83 | Sol and Mercury (Sci-fi) | `sol-3_8.jpg` |
+| Clanging Forge 83 | Sol and Mercury (Sci-fi) | `sol-3_9.jpg` |
+| Scorched Dune | Sol and Mercury (Sci-fi) | `sol-4_0.jpg` |
+| Rusted Iron Field | Sol and Mercury (Sci-fi) | `sol-4_1.jpg` |
+| Humming Plateau | Sol and Mercury (Sci-fi) | `sol-4_2.jpg` |
+| Magnetic Fissure | Sol and Mercury (Sci-fi) | `sol-4_3.jpg` |
+| Jagged Iron Field | Sol and Mercury (Sci-fi) | `sol-4_4.jpg` |
+| Towering Forge | Sol and Mercury (Sci-fi) | `sol-4_5.jpg` |
+| Clanging Basin | Sol and Mercury (Sci-fi) | `sol-4_6.jpg` |
+| Forged Forge 81 | Sol and Mercury (Sci-fi) | `sol-4_7.jpg` |
+| Clanging Basin 82 | Sol and Mercury (Sci-fi) | `sol-4_8.jpg` |
+| Shimmering Arc 83 | Sol and Mercury (Sci-fi) | `sol-4_9.jpg` |
+| Rusted Wasteland | Sol and Mercury (Sci-fi) | `sol-5_0.jpg` |
+| Humming Fissure | Sol and Mercury (Sci-fi) | `sol-5_1.jpg` |
+| Magnetic Iron Field | Sol and Mercury (Sci-fi) | `sol-5_2.jpg` |
+| Jagged Plateau | Sol and Mercury (Sci-fi) | `sol-5_3.jpg` |
+| Forged Furnace Hall | Sol and Mercury (Sci-fi) | `sol-5_4.jpg` |
+| Forged Gantry | Sol and Mercury (Sci-fi) | `sol-5_5.jpg` |
+| Molten Basin 81 | Sol and Mercury (Sci-fi) | `sol-5_6.jpg` |
+| Clanging Gantry 81 | Sol and Mercury (Sci-fi) | `sol-5_7.jpg` |
+| Shimmering Flare Field 82 | Sol and Mercury (Sci-fi) | `sol-5_8.jpg` |
+| Crackling Prominence 82 | Sol and Mercury (Sci-fi) | `sol-5_9.jpg` |
+| Jagged Slag Heap | Sol and Mercury (Sci-fi) | `sol-6_0.jpg` |
+| Magnetic Wasteland | Sol and Mercury (Sci-fi) | `sol-6_1.jpg` |
+| Jagged Fissure | Sol and Mercury (Sci-fi) | `sol-6_2.jpg` |
+| Forged Foundry | Sol and Mercury (Sci-fi) | `sol-6_3.jpg` |
+| Clanging Forge | Sol and Mercury (Sci-fi) | `sol-6_4.jpg` |
+| Ferrum Prime's Iron Citadel | Sol and Mercury (Sci-fi) | `sol-6_5.jpg` |
+| Glowing Foundry 81 | Sol and Mercury (Sci-fi) | `sol-6_6.jpg` |
+| Burning Arc | Sol and Mercury (Sci-fi) | `sol-6_7.jpg` |
+| Crackling Arc 81 | Sol and Mercury (Sci-fi) | `sol-6_8.jpg` |
+| Roaring Flare Field 83 | Sol and Mercury (Sci-fi) | `sol-6_9.jpg` |
+| Magnetic Plateau | Sol and Mercury (Sci-fi) | `sol-7_0.jpg` |
+| Endless Slag Heap | Sol and Mercury (Sci-fi) | `sol-7_1.jpg` |
+| Molten Forge | Sol and Mercury (Sci-fi) | `sol-7_2.jpg` |
+| Clanging Furnace Hall | Sol and Mercury (Sci-fi) | `sol-7_3.jpg` |
+| Molten Gantry | Sol and Mercury (Sci-fi) | `sol-7_4.jpg` |
+| Molten Foundry | Sol and Mercury (Sci-fi) | `sol-7_5.jpg` |
+| Crackling Prominence | Sol and Mercury (Sci-fi) | `sol-7_6.jpg` |
+| Blinding Flare Field 81 | Sol and Mercury (Sci-fi) | `sol-7_7.jpg` |
+| Shimmering Prominence 81 | Sol and Mercury (Sci-fi) | `sol-7_8.jpg` |
+| Blinding Plume 82 | Sol and Mercury (Sci-fi) | `sol-7_9.jpg` |
+| Endless Iron Field | Sol and Mercury (Sci-fi) | `sol-8_0.jpg` |
+| Molten Basin | Sol and Mercury (Sci-fi) | `sol-8_1.jpg` |
+| Clanging Gantry | Sol and Mercury (Sci-fi) | `sol-8_2.jpg` |
+| Towering Foundry | Sol and Mercury (Sci-fi) | `sol-8_3.jpg` |
+| Glowing Basin | Sol and Mercury (Sci-fi) | `sol-8_4.jpg` |
+| Heliopause Station | Sol and Mercury (Sci-fi) | `sol-8_5.jpg` |
+| Shimmering Flare Field | Sol and Mercury (Sci-fi) | `sol-8_6.jpg` |
+| Roaring Plume 81 | Sol and Mercury (Sci-fi) | `sol-8_7.jpg` |
+| Burning Arc 82 | Sol and Mercury (Sci-fi) | `sol-8_8.jpg` |
+| Seething Convection Cell | Sol and Mercury (Sci-fi) | `sol-8_9.jpg` |
+| Molten Furnace Hall | Sol and Mercury (Sci-fi) | `sol-9_0.jpg` |
+| Clanging Foundry | Sol and Mercury (Sci-fi) | `sol-9_1.jpg` |
+| Towering Basin | Sol and Mercury (Sci-fi) | `sol-9_2.jpg` |
+| Glowing Gantry | Sol and Mercury (Sci-fi) | `sol-9_3.jpg` |
+| Shimmering Corona | Sol and Mercury (Sci-fi) | `sol-9_4.jpg` |
+| Blinding Prominence | Sol and Mercury (Sci-fi) | `sol-9_5.jpg` |
+| Blinding Plume | Sol and Mercury (Sci-fi) | `sol-9_6.jpg` |
+| Burning Corona 81 | Sol and Mercury (Sci-fi) | `sol-9_7.jpg` |
+| Blazing Light Plain | Sol and Mercury (Sci-fi) | `sol-9_8.jpg` |
+| Boiling Granule | Sol and Mercury (Sci-fi) | `sol-9_9.jpg` |
 | Velvet Rope Entrance | The Pink Flamingo (Modern) | `stripclub-0_0.jpg` |
 | Pink Flamingo Bar | The Pink Flamingo (Modern) | `stripclub-0_1.jpg` |
 | Dressing Room | The Pink Flamingo (Modern) | `stripclub-0_2.jpg` |

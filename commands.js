@@ -11,7 +11,7 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   water: 'WATER. Cool, clear water all around you, green near the surface and darker below, full of drifting light. It pushes gently at your limbs, carries the sound of distant currents, and everything you drop or lose is gone in a swirl of bubbles. Fish flicker past and the sea-floor sand ripples under your feet.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); require('./deities'); require('./align'); require('./fingerinfo'); require('./rewards'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); require('./pizza'); require('./deities'); require('./bless'); require('./align'); require('./fingerinfo'); require('./rewards'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
@@ -73,7 +73,8 @@ function go(p, d, typed) {
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
   { const mb = D.mountBlock && D.mountBlock(p, dest); if (mb) return p.msg(mb, 'sys'); }
   if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
-  p.env.tell(`${p.name} leaves ${DIRS[d] || d}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
+  const from = p.env; p.env.tell(`${p.name} leaves ${DIRS[d] || d}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
+  for (const f of [...from.inv].filter((o) => o.isPlayer && o.following === p && !o.enemy && o.hp > 0 && !o.gone)) { f.msg(`You follow ${p.name} ${DIRS[d] || d}.`, 'sys'); go(f, d, false); } // followers go with you
 }
 
 const C = {
@@ -121,7 +122,7 @@ const C = {
     it.move(p.env); p.msg(`You drop ${it.short}.`);
   },
   inventory(p) { // every equipment slot and what is in it, then the pack. `eq` and `equipment` do the same.
-    const SL = [['weapon', 'Weapon (wielded)'], ['offhand', 'Off-hand weapon'], ['head', 'Head'], ['neck', 'Neck'], ['body', 'Body'], ['shield', 'Shield'], ['bracelet', 'Bracelet'], ['ring', 'Ring'], ['cloak', 'Cloak'], ['belt', 'Belt'], ['feet', 'Feet']];
+    const SL = [['weapon', 'Weapon (wielded)'], ['offhand', 'Off-hand weapon'], ['head', 'Head'], ['face', 'Face'], ['neck', 'Neck'], ['body', 'Body'], ['hands', 'Hands'], ['shield', 'Shield'], ['wrist', 'Wrist'], ['ring', 'Ring'], ['cloak', 'Cloak'], ['belt', 'Belt'], ['legs', 'Legs'], ['feet', 'Feet']];
     p.msg(`Equipment (armor class ${p.ac()}):`, 'rname');
     for (const [s, name] of SL) { const it = p.equip[s]; p.msg(`  ${name.padEnd(17)}: ${it ? it.name + ((s === 'weapon' || s === 'offhand') ? ` (damage ${it.dmg[0]}-${it.dmg[1]}; ${D.WTYPES[D.wtype(it)] || ''}, ${D.hands(it)}-handed)` : it.def.ac ? ` (armor ${it.def.ac})` : '') + (it.kept ? ' [kept]' : '') + (it.exp ? ` [${D.relics.left(it)} min left]` : '') : '(nothing)'}`, it ? 'items' : 'sys'); }
     for (const [s, it] of Object.entries(p.equip)) if (!SL.some(([k]) => k === s)) p.msg(`  ${s.padEnd(17)}: ${it.name}`, 'items');
@@ -489,14 +490,14 @@ const C = {
   remort(p, a) {
     if (!p.env.def.rebirth) return p.msg('Remorting is done at the Hall of Rebirth in Ashfall, west of the Temple of the Dawn.');
     const R = p.remort || 0, opts = Object.entries(D.K.CLASSES).filter(([, k]) => k.remort && (!k.from || p.cls === k.from || p.cls === 'idlemaster'));
-    if (R >= 40) return p.msg('You have reached Remort 40, the pinnacle. There is nothing left to be reborn into.', 'win');
+    if (R >= D.MAXREM) return p.msg(`You have reached Remort ${D.MAXREM}, the pinnacle. There is nothing left to be reborn into.`, 'win');
     if (p.level < 40) return p.msg(`Only level 40 adventurers can remort. You are level ${p.level}.`);
     const args = a.trim().toLowerCase().split(/\s+/), confirm = args[0] === 'confirm', key = confirm ? args[1] : args[0];
     const pick = opts.find(([k, c]) => key && (k === key || c.name.toLowerCase() === key));
     if (!pick) {
       p.msg(`The pool shimmers. You are ${R ? `Remort ${R}` : 'ready to remort'}. Becoming Remort ${R + 1} resets you to level 1 in a new, more powerful class.`, 'rname');
       p.msg('You keep: your name, gender, credits, items (you will need to re-equip them as you level), chrome and implants, contracts and quest points.', 'sys');
-      p.msg('You gain: +4% max health and mana and +3% spell power per remort, +1 attack and defense die every 4 remorts, and a remort class. Levelling gets 10% slower per remort.', 'sys');
+      p.msg('You gain: +4% max health and mana and +3% spell power per remort (+2% and +1.5% from Remort 41 to 200), +1 attack and defense die every 4 remorts (every 8 after Remort 40), a stronger ability at every remort level up to 200 and a remort class. Levelling gets 10% slower per remort (4% after Remort 40).', 'sys');
       for (const [k, c] of opts) p.msg(`  ${c.icon} ${k}: ${c.desc}`, 'spell');
       return p.msg('Type `remort <class>` to preview, then `remort confirm <class>` to be reborn.');
     }
@@ -598,8 +599,8 @@ const C = {
     if (un) p.msg(`  ${un} area${un === 1 ? '' : 's'} not yet visited. Explore them to earn more points.`, 'sys');
   },
   time(p) { // time: the real time. With a watch on your wrist you get the exact time; without one, a guess by the sun.
-    const w = p.equip.bracelet && p.equip.bracelet.def && p.equip.bracelet.def.isWatch, d = new Date();
-    if (w) return p.msg(`You glance at your ${p.equip.bracelet.name}: it is ${d.toLocaleTimeString('en-US')} server time, ${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}.`, 'win');
+    const w = p.equip.wrist && p.equip.wrist.def && p.equip.wrist.def.isWatch, d = new Date();
+    if (w) return p.msg(`You glance at your ${p.equip.wrist.name}: it is ${d.toLocaleTimeString('en-US')} server time, ${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}.`, 'win');
     const h = d.getHours(); p.msg(`You squint at the sky: it looks like ${h < 5 ? 'the middle of the night' : h < 8 ? 'early morning' : h < 12 ? 'morning' : h < 14 ? 'around noon' : h < 17 ? 'afternoon' : h < 20 ? 'evening' : 'night'}. (Wear a watch on your wrist for the exact time: bracelets and watches are sold in shops.)`, 'sys');
   },
   alignment(p, a) { // alignment [good|neutral|evil]
@@ -652,16 +653,34 @@ const C = {
   },
   auto(p, a) { // auto [heal|flee|kill|loot|gag|anyquest|brief|notify <on|off>]: every automatic setting and every mute and gag in one list
     const w = a.trim().toLowerCase().split(/\s+/), name = w[0], val = w[1], MAP = { heal: 'autoheal', autoheal: 'autoheal', flee: 'autoflee', autoflee: 'autoflee', kill: 'autokill', autokill: 'autokill', gag: 'gag', anyquest: 'anyquest', brief: 'brief', notify: 'notify', gossip: 'gossip', bot: 'bot' };
+    if (name === 'remort' && ['on', 'off'].includes(val)) { p.noAutoRemort = val === 'off'; return p.msg(`Automatic remort for Idle Masters is ${val.toUpperCase()}.`, 'win'); }
     if (name === 'loot' || name === 'bag') { return C.bag(p, 'auto ' + ({ on: 'loot', loot: 'loot', overflow: 'overflow', off: 'off' }[val] || '')); }
     if (MAP[name] && ['on', 'off'].includes(val)) return C[MAP[name]](p, val);
     const on = (b) => (b ? 'ON ' : 'OFF'), mu = p.mute || {}, line = (cmd, state, what) => p.msg(`  ${cmd.padEnd(14)} ${state.padEnd(9)} ${what}`, state.trim() === 'ON' || /^(loot|overflow)/.test(state.trim()) ? 'win' : 'items');
     p.msg('AUTO COMMANDS (change one with `auto <name> on|off`, for example `auto heal off`)', 'rname');
     line('autoheal', on(p.autoheal), 'eat or drink your best healing item at 40% health (autoheal on|off)'); line('autoflee', on(p.autoflee), 'run away at 30% health (autoflee on|off)'); line('autokill', on(p.autokill), 'a bare `kill` attacks the first monster in the room (autokill on|off)');
-    line('bag auto loot', String(p.bagMode || 'overflow'), 'loot: monster drops and pickups go straight to the bag; overflow: only when the pack is full; off (bag auto loot|overflow|off, or `auto loot on|off`)'); line('anyquest', on(p.anyQuest), 'accept any quest whatever your level (anyquest on|off)'); line('brief', on(p.brief), 'moving shows only the room name and exits (brief on|off)');
+    line('bag auto loot', String(p.bagMode || 'overflow'), 'loot: monster drops and pickups go straight to the bag; overflow: only when the pack is full; off (bag auto loot|overflow|off, or `auto loot on|off`)'); line('auto remort', p.cls === 'idlemaster' ? on(!p.noAutoRemort) : 'n/a', 'an Idle Master is reborn into the next Idle Master level when it reaches level 40 (auto remort on|off)'); line('anyquest', on(p.anyQuest), 'accept any quest whatever your level (anyquest on|off)'); line('brief', on(p.brief), 'moving shows only the room name and exits (brief on|off)');
     p.msg('MUTE AND GAG', 'rname'); line('gag', on(p.gag), 'combat gag: hide misses and fumbles (gag on|off)'); line('gossip', on(p.gos !== false), 'the gossip channel (gossip on|off)'); line('bot', on(!mu.bot), 'the resident bots channel (bot on|off)'); line('notify', on(p.notify !== false), 'login and logout notices (notify on|off)');
     for (const [k, label] of [['bounty', 'bounty announcements'], ['levels', 'level-up announcements'], ['quests', 'quest-completion announcements'], ['taunts', 'death taunts'], ['deaths', 'death broadcasts'], ['weather', 'weather events']]) line('mute ' + k, mu[k] ? 'MUTED' : 'heard', label + ' (mute ' + k + ' on|off)');
     p.msg('Type `help <name>` for details on any of these.', 'sys');
   },
+  follow(p, a) { // follow <player or bot>: you move automatically when they leave the room (`follow off` stops)
+    const w = a.trim().toLowerCase(); if (p.following && (p.following.gone || p.following.env == null)) p.following = null;
+    if (!w) return p.msg(p.following ? `You are following ${p.following.name}. (\`follow off\` stops.)` : 'You are not following anyone. `follow <name>` (they must be in the room).', 'sys');
+    if (/^(off|stop|none|nobody|me|self)$/.test(w)) { if (!p.following) return p.msg('You are not following anyone.', 'sys'); p.msg(`You stop following ${p.following.name}.`, 'sys'); p.following = null; return; }
+    const t = find(p.env.inv.filter((o) => o.isPlayer && o !== p), a.trim()); if (!t) return p.msg('You do not see them here.', 'sys'); if (t.following === p) return p.msg(`${t.name} is already following you.`, 'sys');
+    p.following = t; p.msg(`You begin following ${t.name}. When they leave a room, you go with them.`, 'win'); if (!t.isBot) t.msg(`${p.name} begins following you.`, 'sys');
+  },
+  nofollow(p) { C.follow(p, 'off'); }, unfollow(p) { C.follow(p, 'off'); },
+  assist(p, a) { // assist [player]: join a fight a teammate is already in
+    if (p.enemy) return p.msg('You are already fighting!', 'hurt'); const mates = D.teamHere(p).filter((o) => o !== p && o.enemy && o.enemy.hp > 0);
+    const ally = a.trim() ? find(p.env.inv.filter((o) => o.isPlayer && o !== p), a.trim()) : mates[0] || p.env.inv.find((o) => o.isPlayer && o !== p && o.enemy && o.enemy.hp > 0);
+    if (!ally) return p.msg(a.trim() ? 'You do not see them here.' : 'Nobody here is fighting. (`assist <name>` picks a player.)', 'sys'); if (!ally.enemy || ally.enemy.hp <= 0 || ally.enemy.env !== p.env) return p.msg(`${ally.name} is not fighting anything.`, 'sys');
+    const t = ally.enemy; if (!p.engage(t)) return p.msg('You cannot join this fight.', 'sys'); p.msg(`You jump in to assist ${ally.name} against ${t.the()}!`, 'win'); if (!ally.isBot) ally.msg(`${p.name} assists you against ${t.the()}!`, 'team'); p.env.tell(`${p.name} assists ${ally.name}.`, p, 'sys');
+  },
+  summonbot(p, a) { D.summonBot(p, a.trim()); }, callbot(p, a) { D.summonBot(p, a.trim()); }, dismissbot(p) { D.dismissBot(p); },
+  bless(p) { D.blessing.status(p); },
+  make(p, a) { D.pizza.make(p, a); }, bake(p) { D.pizza.bake(p); }, deliver(p) { D.pizza.deliver(p); }, // the Pizza Palace quest: make pizza, bake, deliver
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -827,7 +846,7 @@ const C = {
     const slotOf = (d) => (d.type === 'weapon' ? 'weapon' : d.slot), worn = new Set(Object.values(p.equip)), cand = [];
     for (const it of p.inv) if (!worn.has(it) && (it.def.type === 'weapon' || it.def.type === 'armor') && slotOf(it.def)) cand.push({ src: 'pack', it, def: it.def, slot: slotOf(it.def), s: score(it.def, it) });
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (c > 0 && d && (d.type === 'weapon' || d.type === 'armor') && slotOf(d)) cand.push({ src: 'bag', id, def: d, slot: slotOf(d), s: score(d, null) }); }
-    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'bracelet', 'ring', 'cloak', 'belt', 'feet'], out = [], later = [];
+    const slots = ['weapon', 'head', 'neck', 'body', 'shield', 'face', 'hands', 'wrist', 'ring', 'cloak', 'belt', 'legs', 'feet'], out = [], later = [];
     for (const sl of slots) {
       const cur = p.equip[sl], curS = cur ? score(cur.def, cur) : -1, ok = cand.filter((c) => c.slot === sl && D.gearOk(p, c.def.lvl || 1)).sort((x, y) => y.s - x.s), best = ok[0];
       const tooHigh = cand.filter((c) => c.slot === sl && !D.gearOk(p, c.def.lvl || 1) && c.s > Math.max(curS, best ? best.s : -1)).sort((x, y) => y.s - x.s)[0]; if (tooHigh) later.push(`${tooHigh.def.name} (level ${tooHigh.def.lvl})`);
@@ -901,7 +920,7 @@ const C = {
       if (c.remort) p.msg('You become this class by remorting at the Hall of Rebirth (level 40 needed); you restart at level 1 with a permanent 4% health and mana bonus for every remort.', 'sys'); else p.msg('You can pick this class when you create a character. A character can later be reborn into a remort class at level 40.', 'sys');
       if (c.brawn) { const T_ = k === 'titan'; p.msg('NO SPELLS: this class has quick heals only, and makes up for it with big passive bonuses:', 'rname'); p.msg(`  Multiple attacks: ${T_ ? 'three attacks every round from Remort 1, four at Remort 10, five at Remort 15 and six at Remort 20' : 'two attacks every round'}.`, 'items'); p.msg(`  Hulking: ${T_ ? '+15%' : '+10%'} damage, an extra attack die from level 1 (and another every 10 levels), and much faster health regeneration.`, 'items'); p.msg('  Brute Force: every hit has a chance (12% plus 0.4% per level) to land a SMASH! for 50% to 100% extra damage.', 'items'); p.msg('  Thick Skin: shrugs off 6% of every hit you take, plus 0.3% per level.', 'items'); if (T_) p.msg('  Remort bonuses (Titan): +4% damage, +1% SMASH chance and +0.5% damage shrugged off per remort. Remort 5: SMASH hits up to 130% extra. Remort 10: a SMASH may stun. Remort 20: +5% thicker skin. Remort 30: 4% life steal. Remort 40: +25% damage.', 'win'); }
       p.msg(`${sp.length ? 'Abilities' : 'Abilities'} (${sp.length}): type the word to use it, for example \`${(sp[0] || {}).k || 'rage'}\`.`, 'rname'); for (const s of sp) p.msg(`  level ${String(s.lvl).padStart(2)}  ${(s.k).padEnd(11)} ${String(s.mp).padStart(3)} ${k === 'scavenger' ? 'stamina' : 'mana'}  ${s.n}: ${s.d}`, p.level >= s.lvl && p.cls === k ? 'spell' : 'items');
-      if (!c.brawn && !c.remort) p.msg('Remorting adds one extra, stronger ability for every remort level (40 in all).', 'sys');
+      if (!c.brawn && !c.remort) p.msg('Remorting adds one extra, stronger ability for every remort level (200 in all).', 'sys');
       return p.msg(`Player's Guide: /guide/classes.html. See also: classes, spells, remort, class.`, 'sys'); }
     if (topic) { p.msg(`HELP: ${topic[0]}`, 'rname'); for (const para of topic[1]) p.msg(para, 'text'); if (q === 'builder' && (p.wiz || p.architect)) p.msg('You are allowed to build: type `builder` for the link and key.', 'win'); return p.msg('See also: ' + topic[2].join(', '), 'sys'); }
     const DIRW = { n: 1, s: 1, e: 1, w: 1, u: 1, d: 1, north: 1, south: 1, east: 1, west: 1, up: 1, down: 1 }, name = ALIAS[q] || (DIRW[q] ? 'go' : q), doc = H[name];

@@ -768,6 +768,216 @@
   "area": "Starship Aurora (Sci-fi)"
  },
  {
+  "id": "aurora2/0_0",
+  "key": "aurora2-0_0",
+  "name": "Dim Cargo Hold",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/0_1",
+  "key": "aurora2-0_1",
+  "name": "Cluttered Crate Row",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/0_2",
+  "key": "aurora2-0_2",
+  "name": "Dim Freight Lane",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/0_3",
+  "key": "aurora2-0_3",
+  "name": "Cluttered Service Duct",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/0_4",
+  "key": "aurora2-0_4",
+  "name": "Bent Generator Hall",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/1_0",
+  "key": "aurora2-1_0",
+  "name": "Flooded Loading Bay",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/1_1",
+  "key": "aurora2-1_1",
+  "name": "Rusted Cargo Hold",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/1_2",
+  "key": "aurora2-1_2",
+  "name": "Flooded Crate Row",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/1_3",
+  "key": "aurora2-1_3",
+  "name": "Humming Pump Room",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/1_4",
+  "key": "aurora2-1_4",
+  "name": "Overheated Maintenance Bay",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/2_0",
+  "key": "aurora2-2_0",
+  "name": "Rusted Service Duct",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/2_1",
+  "key": "aurora2-2_1",
+  "name": "Sparking Loading Bay",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/2_2",
+  "key": "aurora2-2_2",
+  "name": "Greasy Machine Shop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/2_3",
+  "key": "aurora2-2_3",
+  "name": "Bent Coolant Loop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/2_4",
+  "key": "aurora2-2_4",
+  "name": "Greasy Pump Room",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/3_0",
+  "key": "aurora2-3_0",
+  "name": "Sparking Freight Lane",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/3_1",
+  "key": "aurora2-3_1",
+  "name": "Greasy Maintenance Bay",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/3_2",
+  "key": "aurora2-3_2",
+  "name": "Crew Mess Hall",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/3_3",
+  "key": "aurora2-3_3",
+  "name": "Rattling Machine Shop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/3_4",
+  "key": "aurora2-3_4",
+  "name": "Sealed Gym",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/4_0",
+  "key": "aurora2-4_0",
+  "name": "Rattling Coolant Loop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/4_1",
+  "key": "aurora2-4_1",
+  "name": "Bent Pump Room",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/4_2",
+  "key": "aurora2-4_2",
+  "name": "Rattling Maintenance Bay",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/4_3",
+  "key": "aurora2-4_3",
+  "name": "Sealed Rec Room",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/4_4",
+  "key": "aurora2-4_4",
+  "name": "Ransacked Berth Corridor",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/5_0",
+  "key": "aurora2-5_0",
+  "name": "Humming Machine Shop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/5_1",
+  "key": "aurora2-5_1",
+  "name": "Overheated Coolant Loop",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/5_2",
+  "key": "aurora2-5_2",
+  "name": "Overgrown Mess Hall",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/5_3",
+  "key": "aurora2-5_3",
+  "name": "Ransacked Barracks",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/5_4",
+  "key": "aurora2-5_4",
+  "name": "Red-lit Comms Room",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/6_0",
+  "key": "aurora2-6_0",
+  "name": "Overheated Generator Hall",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/6_1",
+  "key": "aurora2-6_1",
+  "name": "Abandoned Berth Corridor",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/6_2",
+  "key": "aurora2-6_2",
+  "name": "Cramped Gym",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/6_3",
+  "key": "aurora2-6_3",
+  "name": "Frozen Navigation Deck",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
+  "id": "aurora2/6_4",
+  "key": "aurora2-6_4",
+  "name": "Aft Singularity Chamber",
+  "area": "Starship Aurora (Sci-fi)"
+ },
+ {
   "id": "bank/a",
   "key": "bank-a",
   "name": "Bank Lobby",
@@ -3726,6 +3936,198 @@
   "area": "Frostpeak Station (Sci-fi)"
  },
  {
+  "id": "frost2/0_0",
+  "key": "frost2-0_0",
+  "name": "Frozen Tunnel",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/0_1",
+  "key": "frost2-0_1",
+  "name": "Narrow Cavern",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/0_2",
+  "key": "frost2-0_2",
+  "name": "Frozen Ice Gallery",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/0_3",
+  "key": "frost2-0_3",
+  "name": "Narrow Drift",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/1_0",
+  "key": "frost2-1_0",
+  "name": "Echoing Crawlway",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/1_1",
+  "key": "frost2-1_1",
+  "name": "Glittering Tunnel",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/1_2",
+  "key": "frost2-1_2",
+  "name": "Echoing Cavern",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/1_3",
+  "key": "frost2-1_3",
+  "name": "Frosted Cryo Lab",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/2_0",
+  "key": "frost2-2_0",
+  "name": "Glittering Drift",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/2_1",
+  "key": "frost2-2_1",
+  "name": "Blue-lit Crawlway",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/2_2",
+  "key": "frost2-2_2",
+  "name": "Abandoned Laboratory",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/2_3",
+  "key": "frost2-2_3",
+  "name": "Shattered Sample Vault",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/3_0",
+  "key": "frost2-3_0",
+  "name": "Blue-lit Ice Gallery",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/3_1",
+  "key": "frost2-3_1",
+  "name": "Frostpeak Warming Hut",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/3_2",
+  "key": "frost2-3_2",
+  "name": "Shattered Specimen Room",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/3_3",
+  "key": "frost2-3_3",
+  "name": "Humming Generator Hall",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/4_0",
+  "key": "frost2-4_0",
+  "name": "Sealed Sample Vault",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/4_1",
+  "key": "frost2-4_1",
+  "name": "Dripping Cryo Lab",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/4_2",
+  "key": "frost2-4_2",
+  "name": "Frost-rimed Pump House",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/4_3",
+  "key": "frost2-4_3",
+  "name": "Shaking Fuel Store",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/5_0",
+  "key": "frost2-5_0",
+  "name": "Frosted Laboratory",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/5_1",
+  "key": "frost2-5_1",
+  "name": "Frost-rimed Heat Exchanger",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/5_2",
+  "key": "frost2-5_2",
+  "name": "Shaking Turbine Room",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/5_3",
+  "key": "frost2-5_3",
+  "name": "Wind-blasted Landing Pad",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/6_0",
+  "key": "frost2-6_0",
+  "name": "Dark Fuel Store",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/6_1",
+  "key": "frost2-6_1",
+  "name": "Groaning Generator Hall",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/6_2",
+  "key": "frost2-6_2",
+  "name": "Windswept Antenna Field",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/6_3",
+  "key": "frost2-6_3",
+  "name": "Exposed Ridge",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/7_0",
+  "key": "frost2-7_0",
+  "name": "Humming Pump House",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/7_1",
+  "key": "frost2-7_1",
+  "name": "Barren Observation Deck",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/7_2",
+  "key": "frost2-7_2",
+  "name": "Howling Summit",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
+  "id": "frost2/7_3",
+  "key": "frost2-7_3",
+  "name": "Frostpeak Summit Observatory",
+  "area": "Frostpeak Station (Sci-fi)"
+ },
+ {
   "id": "future/trail_abyss_1",
   "key": "future-trail_abyss_1",
   "name": "Service Walkway",
@@ -3766,6 +4168,12 @@
   "key": "future-trail_pluto_1",
   "name": "Service Walkway",
   "area": "Exterminus (Sci-fi)"
+ },
+ {
+  "id": "future/trail_sol_1",
+  "key": "future-trail_sol_1",
+  "name": "Service Walkway",
+  "area": "Pluto (Sci-fi)"
  },
  {
   "id": "grounds/f1",
@@ -4444,6 +4852,306 @@
   "key": "hollow-woods1",
   "name": "Howling Woods",
   "area": "Nightfall Hollow (Fantasy)"
+ },
+ {
+  "id": "jungle/0_0",
+  "key": "jungle-0_0",
+  "name": "Megalithic Jungle Gate",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/0_1",
+  "key": "jungle-0_1",
+  "name": "Humid Stream Bank",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/0_2",
+  "key": "jungle-0_2",
+  "name": "Steaming Clearing",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/0_3",
+  "key": "jungle-0_3",
+  "name": "Humid Trail",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/0_4",
+  "key": "jungle-0_4",
+  "name": "Mist-hung Game Trail",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/1_0",
+  "key": "jungle-1_0",
+  "name": "Buzzing Thicket",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/1_1",
+  "key": "jungle-1_1",
+  "name": "Steaming Fern Path",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/1_2",
+  "key": "jungle-1_2",
+  "name": "Buzzing Stream Bank",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/1_3",
+  "key": "jungle-1_3",
+  "name": "Dense Hollow",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/1_4",
+  "key": "jungle-1_4",
+  "name": "Overgrown Fern Glade",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/2_0",
+  "key": "jungle-2_0",
+  "name": "Dripping Trail",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/2_1",
+  "key": "jungle-2_1",
+  "name": "Tangled Thicket",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/2_2",
+  "key": "jungle-2_2",
+  "name": "Shadowy Thicket",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/2_3",
+  "key": "jungle-2_3",
+  "name": "Overgrown Mud Flat",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/2_4",
+  "key": "jungle-2_4",
+  "name": "Shadowy Hollow",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/3_0",
+  "key": "jungle-3_0",
+  "name": "Tangled Clearing",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/3_1",
+  "key": "jungle-3_1",
+  "name": "Shadowy Fern Glade",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/3_2",
+  "key": "jungle-3_2",
+  "name": "The First Stone Circle",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/3_3",
+  "key": "jungle-3_3",
+  "name": "Humming Thicket",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/3_4",
+  "key": "jungle-3_4",
+  "name": "Spiral-carved Avenue of Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/4_0",
+  "key": "jungle-4_0",
+  "name": "Humming Mud Flat",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/4_1",
+  "key": "jungle-4_1",
+  "name": "Mist-hung Hollow",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/4_2",
+  "key": "jungle-4_2",
+  "name": "Humming Fern Glade",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/4_3",
+  "key": "jungle-4_3",
+  "name": "Spiral-carved Dolmen",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/4_4",
+  "key": "jungle-4_4",
+  "name": "Moss-covered Standing Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/5_0",
+  "key": "jungle-5_0",
+  "name": "Dense Thicket",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/5_1",
+  "key": "jungle-5_1",
+  "name": "Dolmen of the Ancestors",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/5_2",
+  "key": "jungle-5_2",
+  "name": "Ancient Stone Circle",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/5_3",
+  "key": "jungle-5_3",
+  "name": "Moss-covered Monolith",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/5_4",
+  "key": "jungle-5_4",
+  "name": "Ancient Dolmen",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/6_0",
+  "key": "jungle-6_0",
+  "name": "Overgrown Game Trail",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/6_1",
+  "key": "jungle-6_1",
+  "name": "Ancient Standing Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/6_2",
+  "key": "jungle-6_2",
+  "name": "Towering Avenue of Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/6_3",
+  "key": "jungle-6_3",
+  "name": "Monolith Plaza",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/6_4",
+  "key": "jungle-6_4",
+  "name": "Primeval Ridge",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/7_0",
+  "key": "jungle-7_0",
+  "name": "Carved Monolith",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/7_1",
+  "key": "jungle-7_1",
+  "name": "Towering Dolmen",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/7_2",
+  "key": "jungle-7_2",
+  "name": "Carved Standing Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/7_3",
+  "key": "jungle-7_3",
+  "name": "Primeval Stone Gate",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/7_4",
+  "key": "jungle-7_4",
+  "name": "Thundering Giant Plain",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/8_0",
+  "key": "jungle-8_0",
+  "name": "Spiral-carved Stone Circle",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/8_1",
+  "key": "jungle-8_1",
+  "name": "Spinosaurus Swamp",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/8_2",
+  "key": "jungle-8_2",
+  "name": "Trampled Bone Field",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/8_3",
+  "key": "jungle-8_3",
+  "name": "The Giants' Grazing Ground",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/8_4",
+  "key": "jungle-8_4",
+  "name": "Trampled Stone Gate",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/9_0",
+  "key": "jungle-9_0",
+  "name": "Moss-covered Avenue of Stones",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/9_1",
+  "key": "jungle-9_1",
+  "name": "Endless Giant Plain",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/9_2",
+  "key": "jungle-9_2",
+  "name": "Colossal Ridge",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/9_3",
+  "key": "jungle-9_3",
+  "name": "Endless Bone Field",
+  "area": "The Megalithic Jungle (Prehistoric)"
+ },
+ {
+  "id": "jungle/9_4",
+  "key": "jungle-9_4",
+  "name": "The Great Megalith: the Imperator's Lair",
+  "area": "The Megalithic Jungle (Prehistoric)"
  },
  {
   "id": "manor/0_0",
@@ -5967,7 +6675,7 @@
   "id": "modern/trail_brogym_1",
   "key": "modern-trail_brogym_1",
   "name": "City Block",
-  "area": "Multiverse Cinema 12 (Modern)"
+  "area": "Pizza Palace (Modern)"
  },
  {
   "id": "modern/trail_cinema_1",
@@ -5980,6 +6688,12 @@
   "key": "modern-trail_manor_1",
   "name": "City Block",
   "area": "BroGym (Modern)"
+ },
+ {
+  "id": "modern/trail_pizza_1",
+  "key": "modern-trail_pizza_1",
+  "name": "City Block",
+  "area": "Multiverse Cinema 12 (Modern)"
  },
  {
   "id": "modern/trail_stripclub_1",
@@ -6684,6 +7398,96 @@
   "area": "The Otherworld (Fantasy)"
  },
  {
+  "id": "pizza/0_0",
+  "key": "pizza-0_0",
+  "name": "Pizza Palace Entrance",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/0_1",
+  "key": "pizza-0_1",
+  "name": "Birthday Party Room",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/0_2",
+  "key": "pizza-0_2",
+  "name": "Delivery Garage",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/1_0",
+  "key": "pizza-1_0",
+  "name": "Dining Room",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/1_1",
+  "key": "pizza-1_1",
+  "name": "Kitchen Pass",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/1_2",
+  "key": "pizza-1_2",
+  "name": "Back Alley",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/2_0",
+  "key": "pizza-2_0",
+  "name": "Order Counter",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/2_1",
+  "key": "pizza-2_1",
+  "name": "Prep Station",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/2_2",
+  "key": "pizza-2_2",
+  "name": "Dumpster Row",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/3_0",
+  "key": "pizza-3_0",
+  "name": "Soda Fountain and Sides Bar",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/3_1",
+  "key": "pizza-3_1",
+  "name": "Brick Oven Room",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/3_2",
+  "key": "pizza-3_2",
+  "name": "Manager's Office",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/4_0",
+  "key": "pizza-4_0",
+  "name": "Arcade Corner",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/4_1",
+  "key": "pizza-4_1",
+  "name": "Walk-in Pantry",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
+  "id": "pizza/4_2",
+  "key": "pizza-4_2",
+  "name": "Delivery Address: 42 Elm Street",
+  "area": "Pizza Palace (Modern)"
+ },
+ {
   "id": "pluto/0_0",
   "key": "pluto-0_0",
   "name": "Martian Beachhead",
@@ -7048,6 +7852,12 @@
   "key": "prehistoric-trail_cave_1",
   "name": "Game Trail",
   "area": "The Primeval Rift (Prehistoric)"
+ },
+ {
+  "id": "prehistoric/trail_jungle_1",
+  "key": "prehistoric-trail_jungle_1",
+  "name": "Game Trail",
+  "area": "The Mammoth Caverns (Prehistoric)"
  },
  {
   "id": "prime/amber",
@@ -7726,6 +8536,906 @@
   "key": "sea-pens",
   "name": "Shark Pens",
   "area": "Poseidon's Realm (Fantasy)"
+ },
+ {
+  "id": "sol/0_0",
+  "key": "sol-0_0",
+  "name": "Mercury Landing Pad",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_1",
+  "key": "sol-0_1",
+  "name": "Cratered Ridge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_2",
+  "key": "sol-0_2",
+  "name": "Glittering Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_3",
+  "key": "sol-0_3",
+  "name": "Baked Ridge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_4",
+  "key": "sol-0_4",
+  "name": "Silent Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_5",
+  "key": "sol-0_5",
+  "name": "Magnetic Slag Heap",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_6",
+  "key": "sol-0_6",
+  "name": "Jagged Wasteland",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_7",
+  "key": "sol-0_7",
+  "name": "Endless Slag Heap 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_8",
+  "key": "sol-0_8",
+  "name": "Magnetic Wasteland 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/0_9",
+  "key": "sol-0_9",
+  "name": "Glowing Basin 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_0",
+  "key": "sol-1_0",
+  "name": "Heat-Shield Bunker",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_1",
+  "key": "sol-1_1",
+  "name": "Baked Dune",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_2",
+  "key": "sol-1_2",
+  "name": "Silent Crater Rim",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_3",
+  "key": "sol-1_3",
+  "name": "Cratered Dune",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_4",
+  "key": "sol-1_4",
+  "name": "Endless Wasteland",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_5",
+  "key": "sol-1_5",
+  "name": "Endless Plateau",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_6",
+  "key": "sol-1_6",
+  "name": "Rusted Iron Field 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_7",
+  "key": "sol-1_7",
+  "name": "Humming Plateau 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_8",
+  "key": "sol-1_8",
+  "name": "Glowing Furnace Hall 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/1_9",
+  "key": "sol-1_9",
+  "name": "Molten Foundry 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_0",
+  "key": "sol-10_0",
+  "name": "Glowing Forge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_1",
+  "key": "sol-10_1",
+  "name": "Towering Furnace Hall",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_2",
+  "key": "sol-10_2",
+  "name": "Glowing Foundry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_3",
+  "key": "sol-10_3",
+  "name": "Roaring Prominence",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_4",
+  "key": "sol-10_4",
+  "name": "Blinding Arc",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_5",
+  "key": "sol-10_5",
+  "name": "Roaring Flare Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_6",
+  "key": "sol-10_6",
+  "name": "Roaring Corona",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_7",
+  "key": "sol-10_7",
+  "name": "Blazing Granule",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_8",
+  "key": "sol-10_8",
+  "name": "Boiling Convection Cell",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/10_9",
+  "key": "sol-10_9",
+  "name": "Radiant Convection Cell",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_0",
+  "key": "sol-11_0",
+  "name": "Towering Gantry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_1",
+  "key": "sol-11_1",
+  "name": "Forged Forge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_2",
+  "key": "sol-11_2",
+  "name": "Roaring Plume",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_3",
+  "key": "sol-11_3",
+  "name": "Burning Flare Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_4",
+  "key": "sol-11_4",
+  "name": "Crackling Corona",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_5",
+  "key": "sol-11_5",
+  "name": "Burning Plume",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_6",
+  "key": "sol-11_6",
+  "name": "Blazing Photosphere",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_7",
+  "key": "sol-11_7",
+  "name": "Temple of the Sun",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_8",
+  "key": "sol-11_8",
+  "name": "Golden Sunspot",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/11_9",
+  "key": "sol-11_9",
+  "name": "Radiant Photosphere",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_0",
+  "key": "sol-12_0",
+  "name": "Forged Basin",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_1",
+  "key": "sol-12_1",
+  "name": "Roaring Arc",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_2",
+  "key": "sol-12_2",
+  "name": "Blinding Corona",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_3",
+  "key": "sol-12_3",
+  "name": "Crackling Plume",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_4",
+  "key": "sol-12_4",
+  "name": "Shimmering Arc",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_5",
+  "key": "sol-12_5",
+  "name": "Blazing Convection Cell",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_6",
+  "key": "sol-12_6",
+  "name": "Radiant Sunspot",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_7",
+  "key": "sol-12_7",
+  "name": "Golden Photosphere",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_8",
+  "key": "sol-12_8",
+  "name": "Radiant Light Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/12_9",
+  "key": "sol-12_9",
+  "name": "Burning Heart",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_0",
+  "key": "sol-13_0",
+  "name": "Crackling Flare Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_1",
+  "key": "sol-13_1",
+  "name": "Burning Prominence",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_2",
+  "key": "sol-13_2",
+  "name": "Crackling Arc",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_3",
+  "key": "sol-13_3",
+  "name": "Burning Corona",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_4",
+  "key": "sol-13_4",
+  "name": "Golden Light Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_5",
+  "key": "sol-13_5",
+  "name": "Radiant Granule",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_6",
+  "key": "sol-13_6",
+  "name": "Golden Convection Cell",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_7",
+  "key": "sol-13_7",
+  "name": "Seething Sunspot",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_8",
+  "key": "sol-13_8",
+  "name": "Searing Core",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/13_9",
+  "key": "sol-13_9",
+  "name": "Core Furnace",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_0",
+  "key": "sol-14_0",
+  "name": "Shimmering Plume",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_1",
+  "key": "sol-14_1",
+  "name": "Blinding Flare Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_2",
+  "key": "sol-14_2",
+  "name": "Shimmering Prominence",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_3",
+  "key": "sol-14_3",
+  "name": "Boiling Sunspot",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_4",
+  "key": "sol-14_4",
+  "name": "Seething Photosphere",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_5",
+  "key": "sol-14_5",
+  "name": "Boiling Light Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_6",
+  "key": "sol-14_6",
+  "name": "Seething Granule",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_7",
+  "key": "sol-14_7",
+  "name": "Eternal Gate",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_8",
+  "key": "sol-14_8",
+  "name": "Radiant Sanctum",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/14_9",
+  "key": "sol-14_9",
+  "name": "The Core of Sol",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_0",
+  "key": "sol-2_0",
+  "name": "Scorched Flat",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_1",
+  "key": "sol-2_1",
+  "name": "Cratered Gully",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_2",
+  "key": "sol-2_2",
+  "name": "Glittering Flat",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_3",
+  "key": "sol-2_3",
+  "name": "Endless Fissure",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_4",
+  "key": "sol-2_4",
+  "name": "Humming Slag Heap",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_5",
+  "key": "sol-2_5",
+  "name": "Humming Iron Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_6",
+  "key": "sol-2_6",
+  "name": "Jagged Fissure 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_7",
+  "key": "sol-2_7",
+  "name": "Forged Gantry 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_8",
+  "key": "sol-2_8",
+  "name": "Towering Forge 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/2_9",
+  "key": "sol-2_9",
+  "name": "Forged Furnace Hall 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_0",
+  "key": "sol-3_0",
+  "name": "Barren Ridge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_1",
+  "key": "sol-3_1",
+  "name": "Baked Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_2",
+  "key": "sol-3_2",
+  "name": "Rusted Slag Heap",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_3",
+  "key": "sol-3_3",
+  "name": "Humming Wasteland",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_4",
+  "key": "sol-3_4",
+  "name": "Rusted Plateau",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_5",
+  "key": "sol-3_5",
+  "name": "Rusted Fissure",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_6",
+  "key": "sol-3_6",
+  "name": "Glowing Furnace Hall",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_7",
+  "key": "sol-3_7",
+  "name": "Towering Furnace Hall 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_8",
+  "key": "sol-3_8",
+  "name": "Molten Gantry 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/3_9",
+  "key": "sol-3_9",
+  "name": "Clanging Forge 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_0",
+  "key": "sol-4_0",
+  "name": "Scorched Dune",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_1",
+  "key": "sol-4_1",
+  "name": "Rusted Iron Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_2",
+  "key": "sol-4_2",
+  "name": "Humming Plateau",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_3",
+  "key": "sol-4_3",
+  "name": "Magnetic Fissure",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_4",
+  "key": "sol-4_4",
+  "name": "Jagged Iron Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_5",
+  "key": "sol-4_5",
+  "name": "Towering Forge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_6",
+  "key": "sol-4_6",
+  "name": "Clanging Basin",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_7",
+  "key": "sol-4_7",
+  "name": "Forged Forge 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_8",
+  "key": "sol-4_8",
+  "name": "Clanging Basin 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/4_9",
+  "key": "sol-4_9",
+  "name": "Shimmering Arc 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_0",
+  "key": "sol-5_0",
+  "name": "Rusted Wasteland",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_1",
+  "key": "sol-5_1",
+  "name": "Humming Fissure",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_2",
+  "key": "sol-5_2",
+  "name": "Magnetic Iron Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_3",
+  "key": "sol-5_3",
+  "name": "Jagged Plateau",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_4",
+  "key": "sol-5_4",
+  "name": "Forged Furnace Hall",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_5",
+  "key": "sol-5_5",
+  "name": "Forged Gantry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_6",
+  "key": "sol-5_6",
+  "name": "Molten Basin 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_7",
+  "key": "sol-5_7",
+  "name": "Clanging Gantry 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_8",
+  "key": "sol-5_8",
+  "name": "Shimmering Flare Field 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/5_9",
+  "key": "sol-5_9",
+  "name": "Crackling Prominence 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_0",
+  "key": "sol-6_0",
+  "name": "Jagged Slag Heap",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_1",
+  "key": "sol-6_1",
+  "name": "Magnetic Wasteland",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_2",
+  "key": "sol-6_2",
+  "name": "Jagged Fissure",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_3",
+  "key": "sol-6_3",
+  "name": "Forged Foundry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_4",
+  "key": "sol-6_4",
+  "name": "Clanging Forge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_5",
+  "key": "sol-6_5",
+  "name": "Ferrum Prime's Iron Citadel",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_6",
+  "key": "sol-6_6",
+  "name": "Glowing Foundry 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_7",
+  "key": "sol-6_7",
+  "name": "Burning Arc",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_8",
+  "key": "sol-6_8",
+  "name": "Crackling Arc 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/6_9",
+  "key": "sol-6_9",
+  "name": "Roaring Flare Field 83",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_0",
+  "key": "sol-7_0",
+  "name": "Magnetic Plateau",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_1",
+  "key": "sol-7_1",
+  "name": "Endless Slag Heap",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_2",
+  "key": "sol-7_2",
+  "name": "Molten Forge",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_3",
+  "key": "sol-7_3",
+  "name": "Clanging Furnace Hall",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_4",
+  "key": "sol-7_4",
+  "name": "Molten Gantry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_5",
+  "key": "sol-7_5",
+  "name": "Molten Foundry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_6",
+  "key": "sol-7_6",
+  "name": "Crackling Prominence",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_7",
+  "key": "sol-7_7",
+  "name": "Blinding Flare Field 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_8",
+  "key": "sol-7_8",
+  "name": "Shimmering Prominence 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/7_9",
+  "key": "sol-7_9",
+  "name": "Blinding Plume 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_0",
+  "key": "sol-8_0",
+  "name": "Endless Iron Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_1",
+  "key": "sol-8_1",
+  "name": "Molten Basin",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_2",
+  "key": "sol-8_2",
+  "name": "Clanging Gantry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_3",
+  "key": "sol-8_3",
+  "name": "Towering Foundry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_4",
+  "key": "sol-8_4",
+  "name": "Glowing Basin",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_5",
+  "key": "sol-8_5",
+  "name": "Heliopause Station",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_6",
+  "key": "sol-8_6",
+  "name": "Shimmering Flare Field",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_7",
+  "key": "sol-8_7",
+  "name": "Roaring Plume 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_8",
+  "key": "sol-8_8",
+  "name": "Burning Arc 82",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/8_9",
+  "key": "sol-8_9",
+  "name": "Seething Convection Cell",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_0",
+  "key": "sol-9_0",
+  "name": "Molten Furnace Hall",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_1",
+  "key": "sol-9_1",
+  "name": "Clanging Foundry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_2",
+  "key": "sol-9_2",
+  "name": "Towering Basin",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_3",
+  "key": "sol-9_3",
+  "name": "Glowing Gantry",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_4",
+  "key": "sol-9_4",
+  "name": "Shimmering Corona",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_5",
+  "key": "sol-9_5",
+  "name": "Blinding Prominence",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_6",
+  "key": "sol-9_6",
+  "name": "Blinding Plume",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_7",
+  "key": "sol-9_7",
+  "name": "Burning Corona 81",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_8",
+  "key": "sol-9_8",
+  "name": "Blazing Light Plain",
+  "area": "Sol and Mercury (Sci-fi)"
+ },
+ {
+  "id": "sol/9_9",
+  "key": "sol-9_9",
+  "name": "Boiling Granule",
+  "area": "Sol and Mercury (Sci-fi)"
  },
  {
   "id": "stripclub/0_0",

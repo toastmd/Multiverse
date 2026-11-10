@@ -7,8 +7,8 @@ D.fingerExtra = (d, on, rec) => { // fills d.lines (plain text, padded to column
   let rank = 0; try { const i = D.leaderboard(true).findIndex((r) => r.name.toLowerCase() === d.name.toLowerCase()); rank = i >= 0 ? i + 1 : 0; } catch (e) { rank = 0; }
   const bk = src.bestKill, bt = src.bestTeam, dt = src.deity && D.DEITIES && D.DEITIES[src.deity], unread = mail.unread(d.name), total = mail.total ? mail.total(d.name) : unread;
   const idle = on ? (on.isBot ? 'a resident bot (always about)' : D.dur(Date.now() - ((on.prevCmd && Date.now() - on.lastCmd < 1500 ? on.prevCmd : on.lastCmd) || on.loginAt || Date.now()))) : 'not online', at = on ? on.loginAt : d.seen;
-  d.lines = [`Name: ${/^grog$/i.test(d.name) ? 'GROG' : d.name}`, row(`Class: ${d.cn}${d.rm ? ` (Remort ${d.rm})` : ''}`, `Gender: ${String(d.gl || '').replace(/^./, (c) => c.toUpperCase())}`), row(`Level: ${d.lv}`, `Deity:  ${dt ? `${dt.name}, ${dt.title}` : 'none'}`), row(`Leaderboard: ${rank || 'unranked'}`, `Age: ${D.ageYWDH(Date.now() - d.born)}`),
-    row(`Best kill: ${bk ? `${bk.name} (level ${bk.level})` : 'none yet'}`, `Best team kill: ${bt ? `${bt.name} (level ${bt.level})` : 'none yet'}`), `Arch foe: ${src.archFoe || 'none (never killed)'}`, `${on ? 'On since' : 'Last on'}: ${at ? when(at) : 'unknown'}`, `Idle: ${idle}`,
-    `Mail: ${d.fwd ? (d.email ? `forwarding to ${d.email}` : 'forwarding on') : 'no forwarding'}; ${unread} unread, ${Math.max(0, total - unread)} read`];
+  d.lines = [`Name: ${/^grog$/i.test(d.name) ? 'GROG' : d.name}`, `Class: ${d.cn}${d.rm ? ` (Remort ${d.rm})` : ''}`, `Gender: ${String(d.gl || '').replace(/^./, (c) => c.toUpperCase())}`, `Level: ${d.lv}`, `Deity:  ${dt ? `${dt.name}, ${dt.title}` : 'none'}`, `Leaderboard: ${rank || 'unranked'}`,
+    `Best kill: ${bk ? `${bk.name} (level ${bk.level})` : 'none yet'}`, `Best team kill: ${bt ? `${bt.name} (level ${bt.level})` : 'none yet'}`, ...(src.archFoe ? [`Arch foe: ${src.archFoe}`] : []), `${on ? 'On since' : 'Last on'}: ${at ? when(at) : 'unknown'}`, `Idle: ${idle}`,
+    `Mail: ${d.fwd ? (d.email ? `forwarding to ${d.email}` : 'forwarding on') : 'no forwarding'}; ${unread} unread, ${Math.max(0, total - unread)} read`, `Age: ${D.ageYWDH(Date.now() - d.born)}`];
 };
 module.exports = D.fingerExtra;

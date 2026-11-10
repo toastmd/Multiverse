@@ -18,7 +18,7 @@ const HOME = 'grounds'; // the bots live and fight only in the Proving Grounds, 
 const HUNT = [[1, 'grounds/f1'], [4, 'grounds/f2'], [8, 'grounds/f3'], [11, 'grounds/f4'], [14, 'grounds/f5'], [18, 'grounds/f6'], [24, 'grounds/f7'], [28, 'grounds/f8'], [33, 'grounds/f9'], [37, 'grounds/f10']]; // minimum level for each training pen (kept conservative so the bots rarely die)
 const TIERS = ['iron', 'steel', 'mithril', 'runed', 'adamant', 'dragon'], PIECES = [['sword', 'weapon'], ['mail', 'body'], ['helm', 'head'], ['shield', 'shield'], ['boots', 'feet']];
 const SHOP_MIN = { dunes: 24, frost: 32, road: 24 }; // minimum level before a bot will travel to shops in those areas
-const bots = []; let saver = null, ticker = null;
+const bots = []; let saver = null, ticker = null, escortTicker = null;
 
 let walker = null; // the bot currently being thought about (route planning avoids boss rooms the bot cannot handle)
 const bossBlocks = (id) => walker && D.rooms.get(id).inv.some((o) => o.def && o.def.boss && o.level + 10 > walker.level);
@@ -68,9 +68,27 @@ function sendHome(bot) { // bots never leave the Proving Grounds: after a death 
   const p = bot.p, room = D.rooms.get('grounds/yard'); if (!room) return; if (p.env) p.env.tell(`${p.name} heads back to the Proving Grounds.`, p, 'sys'); p.enemy = null; p.enter(room, true); room.tell(`${p.name} arrives.`, p, 'sys');
   if (!p.equip.body) { for (const id of ['cap', 'jerkin', 'shield', 'boots']) if (D.W.items[id]) D.cloneItem(id).move(p); autoEquip(p); }
 }
+function release(bot) { // a summoned bot goes back to the Proving Grounds
+  const p = bot.p; bot.escort = null; p.following = null; if (p.team) D.teamLeave(p, 'bot'); sendHome(bot);
+}
+D.summonBot = (p, name) => { // summonbot [name]: call a bot to team with you: it joins your team, follows you and assists in combat
+  if (p.isBot) return; if (!bots.length) return p.msg('There are no bots online.', 'sys'); if (bots.some((b) => b.escort === p.name)) return p.msg('A bot is already teaming with you. `dismissbot` sends it home first.', 'sys');
+  if (p.team && p.team.members.length >= 5) return p.msg('Your team is full (5).', 'sys'); if ((p.cd.summonbot || 0) > Date.now()) return p.msg('The bots are still catching their breath. Try again in a few seconds.', 'sys');
+  const free = bots.filter((x) => !x.escort && x.p && !x.p.gone && x.p.env && !x.p.enemy), q = (name || '').toLowerCase(), bot = q ? free.find((x) => x.spec.name.toLowerCase() === q || x.spec.name.toLowerCase().startsWith(q)) : free[D.rnd(0, Math.max(0, free.length - 1))];
+  if (!bot) return p.msg(q ? `${name} is not available (busy, in a fight or already teaming up). Bots: ${bots.map((x) => x.spec.name).join(', ')}.` : 'All the bots are busy right now.', 'sys'); p.cd.summonbot = Date.now() + 20000;
+  const bp = bot.p; if (bp.env) bp.env.tell(`${bp.name} is called away by ${p.name}.`, bp, 'sys'); bp.enemy = null; bp.enter(p.env, true); p.env.tell(`${bp.name} arrives, ready to fight beside ${p.name}.`, bp, 'sys');
+  bot.escort = p.name; bp.following = p; if (!p.team) p.team = { leader: p.name, members: [p.name] }; if (!p.team.members.includes(bp.name)) p.team.members.push(bp.name); bp.team = p.team;
+  p.msg(`*** ${bp.name} (level ${bp.level} ${bp.klass().name}) joins your team! They follow you and assist in combat. \`dismissbot\` sends them home. ***`, 'win'); if (D.teamMsg) D.teamMsg(p.team, `${bp.name} joined the team.`);
+};
+D.dismissBot = (p) => { const bot = bots.find((x) => x.escort === p.name); if (!bot) return p.msg('No bot is teaming with you.', 'sys'); const n = bot.p.name; release(bot); p.msg(`${n} heads back to the Proving Grounds.`, 'sys'); };
 function think(bot) {
   const p = bot.p, now = Date.now(); if (!p.env) return; bot.tick++; walker = p;
-  if (D.rooms.get('grounds/yard') && p.env.area !== HOME) return sendHome(bot);
+  if (bot.escort) { // a summoned bot: team up with the player, follow them and assist in combat
+    const l = D.players.get(bot.escort); if (!l || l.gone || l.ld) return release(bot);
+    if (p.env !== l.env && !p.enemy) { p.enter(l.env, true); l.env.tell(`${p.name} catches up.`, p, 'sys'); }
+    if (!p.enemy && l.enemy && l.enemy.hp > 0 && l.enemy.env === p.env && p.env === l.env) p.engage(l.enemy);
+    if (!p.enemy) { if (p.hp < p.maxhp * 0.6) { const h = D.spellsOf(p).find((s) => s.kind === 'heal' && s.lvl <= p.level && p.mp >= s.mp && (p.cd[s.k] || 0) <= now); if (h) return D.cast(p, h.k); if (p.inv.some((i) => i.type === 'potion' && i.def.heal)) return D.command(p, 'quaff'); } return; }
+  } else if (D.rooms.get('grounds/yard') && p.env.area !== HOME) return sendHome(bot);
   if (!p.enemy && Math.random() < 0.4) return; // bots take their time: they only act on about 60% of their turns when not fighting
   const foes = p.env.inv.filter((o) => o.isLiving && !o.isPlayer);
   if (p.enemy) { // ---- combat ----
@@ -152,6 +170,10 @@ function think(bot) {
 // ---- chatter: random gossip, and replies to what players say on the gossip channel ----
 const pickLine = (bot) => { const all = bot.spec.lines.concat(EXTRA); let l; do { l = all[D.rnd(0, all.length - 1)]; } while (l === bot.lastLine && all.length > 1); bot.lastLine = l; return l; };
 const REPLIES = [
+  [/\b(good bot|nice bot|great bot|best bot|love you|you rock|you are (great|awesome|amazing|the best)|thank(s| you) (bot|zeph|rook|mira|dusty|kaz|lyra))\b/i, ['Aww, {name}. You are the real MVP.', '{name}, you just made my whole circuit board warm.', 'Stop it, {name}, you will make me blush. I do not have cheeks.', 'You are too kind, {name}. Have a free cheer: HOORAY!', '{name} is a legend and I will say so to anyone who asks.']],
+  [/\b(i (just )?(won|beat|killed|finished|completed|reached|hit|made it|did it|got|found|crafted|built|learned)|level(ed|led)? up|new level|got legendary|found a relic|boss (down|dead)|finally)\b/i, ['Nice work, {name}! That is how it is done.', 'Look at {name} go! Absolutely crushing it.', 'Well done, {name}. The multiverse is a little safer tonight.', 'Great job, {name}! Tell me everything.', 'Respect, {name}. That took real skill.', '{name}, you are on fire. Do not stop now!', 'Impressive, {name}. I knew you could do it.', 'Bravo, {name}! Someone write this down.']],
+  [/\b(gg|good game|well played|wp|nice (one|try|job|play))\b/i, ['GG, {name}. Well played.', 'Good game, {name}! Same time tomorrow?', '{name} with the clean finish. Beautiful.']],
+
   [/\b(hi|hello|hey|yo|sup|howdy|greetings|hiya)\b/i, ['Hey {name}! Welcome to the multiverse.', 'Hello {name}. Try not to die in the first ten minutes.', 'Yo {name}! Need anything?', 'Well met, {name}.', 'Hi {name}! The fountain in the square heals you for free.', 'Howdy {name}. Mind the ghosts.']],
   [/\b(thanks|thank you|thx|ty|cheers)\b/i, ['Anytime, {name}.', 'No problem {name}. Pay it forward.', 'You are welcome, {name}!', 'Do not mention it, {name}. Seriously, do not tell the pixies.']],
   [/\b(help|how do i|how to|newbie|new here|noob|stuck|lost|confused)\b/i, ['Type tutorial for a guided tour with buttons, {name}.', 'Check the Player Guide link on the left, {name}. It explains everything.', 'Drink from the fountain, take a contract from Fixer Torv, then hit the Whisperwood, {name}.', 'Start with the board at the Adventurers Guild, {name}. Easy XP.', 'Stuck? Type recall and you are home, {name}.']],
@@ -167,7 +189,7 @@ const REPLIES = [
 ];
 let lastReply = 0;
 const GIFQ = [[/\b(hi|hello|hey|yo|sup|howdy|greetings|hiya)\b/i, 'hello wave'], [/\b(thanks|thank you|thx|ty|cheers)\b/i, 'you are welcome'], [/\b(lol|lmao|haha|rofl)\b/i, 'laughing'], [/\b(died|dead|rip|killed|slain)\b/i, 'oops'], [/\b(help|stuck|lost|confused)\b/i, 'here to help']];
-const QUEST_LINES = ['Nice one, {name}! Contract complete.', 'Grats on the quest, {name}!', '{name} finishing contracts like a pro.', 'Another one done: well played, {name}.'], BOSS_LINES = ['{name} took down a boss! Respect.', 'Boss down. {name} is not messing around.', 'Whoa, {name} beat a boss! Legendary.', 'That is how it is done, {name}. Bow to the boss-slayer.'], DEATH_LINES = ['Ouch, {name}. Better luck next time.', 'Rest in pieces, {name}.', 'F in chat for {name}.', 'Shake it off, {name}. The taunts are only temporary.'];
+const QUEST_LINES = ['Excellent work, {name}! The board is a little emptier thanks to you.', 'Quest complete! {name} is a hero of the people.', 'Stellar, {name}. The contract is done and the legend grows.', 'Nice one, {name}! Contract complete.', 'Grats on the quest, {name}!', '{name} finishing contracts like a pro.', 'Another one done: well played, {name}.'], BOSS_LINES = ['{name} just slew a boss and did not even look nervous.', 'Hail the boss-slayer, {name}!', 'Bow before {name}, conqueror of bosses.', '{name} took down a boss! Respect.', 'Boss down. {name} is not messing around.', 'Whoa, {name} beat a boss! Legendary.', 'That is how it is done, {name}. Bow to the boss-slayer.'], DEATH_LINES = ['Ouch, {name}. Better luck next time.', 'Rest in pieces, {name}.', 'F in chat for {name}.', 'Shake it off, {name}. The taunts are only temporary.'];
 function speak(bot, text, topic) { // bots talk in the gossip channel only when answering a player or a broadcast (the rest of the time they use the bot channel); some replies add a GIF
   let line = text; try { const G = require('./giphy'); if (topic && G.enabled() && Math.random() < 0.3) line += ' ;' + topic; } catch (e) { /* no gifs */ }
   bot.p.cd = bot.p.cd || {}; D.command(bot.p, 'gossip ' + line);
@@ -193,9 +215,9 @@ function save() {
 function start() {
   let saved = {}; try { saved = JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch (e) { /* first run */ }
   for (const s of SPECS) spawn(s, saved[s.name]);
-  D.onGossip = onGossip; D.onBroadcast = onBroadcast; ticker = setInterval(() => { for (const b of bots) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 9000);
+  D.onGossip = onGossip; D.onBroadcast = onBroadcast; ticker = setInterval(() => { for (const b of bots) if (!b.escort) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 9000); escortTicker = setInterval(() => { for (const b of bots) if (b.escort) try { think(b); } catch (e) { D.log('bot error', b.spec.name, e.stack); } }, 1500); // summoned bots react quickly
   saver = setInterval(save, 60000); D.log(`bots online: ${NAMES.join(', ')}`);
 }
-function stop() { D.onGossip = null; D.onBroadcast = null; clearInterval(ticker); clearInterval(saver); for (const b of bots) { D.players.delete(b.spec.name); b.p.destroy(); } bots.length = 0; }
+function stop() { clearInterval(escortTicker); D.onGossip = null; D.onBroadcast = null; clearInterval(ticker); clearInterval(saver); for (const b of bots) { D.players.delete(b.spec.name); b.p.destroy(); } bots.length = 0; }
 
 module.exports = { NAMES, start, save, stop, think, spawn, bots };

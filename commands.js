@@ -11,7 +11,7 @@ const GROUND = { // what `look ground` (or `look grass`, `look dirt`...) shows f
   water: 'WATER. Cool, clear water all around you, green near the surface and darker below, full of drifting light. It pushes gently at your limbs, carries the sound of distant currents, and everything you drop or lose is gone in a swirl of bubbles. Fish flicker past and the sea-floor sand ripples under your feet.',
   metal: 'METAL. Deck plating and ridged grating, bolted at the seams and scuffed bright where people walk. It rings under your boots, hums faintly with the machines below, and is cold or hot depending on what is behind it. Scratches, rivets and warning stencils everywhere: someone built this to last, and to be walked on.',
 };
-D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); require('./pizza'); require('./deities'); require('./bless'); require('./align'); require('./fingerinfo'); require('./rewards'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
+D.bones = require('./bones'); D.farming = require('./farming'); const WPN = require('./weapons'); require('./status'); require('./tasks'); require('./ink'); require('./mounts'); require('./idler'); require('./pizza'); require('./homes'); require('./worldmap'); require('./daynight'); require('./scars'); require('./reputation'); require('./bodyguard'); require('./deities'); require('./bless'); require('./align'); require('./fingerinfo'); require('./rewards'); D.news = require('./news'); D.daily = require('./daily'); D.jukebox = require('./jukebox'); D.cinema = require('./cinema'); const events = require('./events'); D.events = events; D.taxi = require('./taxi'); // holiday events and the milestone taxi // holiday events (events.js)
 require('./ships'); // the Tharsis and the Crimson Fang (launch)
 const ALIAS = { played: 'age', explored: 'explore', dice: 'bones', heal: 'quaff', read: 'look', tell: 'phone', ride: 'taxi', fly: 'launch', treat: 'trickortreat', trick: 'trickortreat', event: 'events', pay: 'give', reclass: 'changeclass', l: 'look', i: 'inventory', inv: 'inventory', eq: 'inventory', equipment: 'inventory', k: 'kill', attack: 'kill', take: 'get', sc: 'score', chat: 'gossip', gos: 'gossip', journal: 'quests', q: 'quests', contracts: 'quests', jobs: 'quests', runs: 'quests', chrome: 'cyber', trades: 'tradeskills', tradeskill: 'tradeskills', eat: 'quaff', rc: 'recall', run: 'speedwalk', cmds: 'commands', cmd: 'commands', bj: 'blackjack', cards: 'blackjack', bounty: 'bounties', wanted: 'bounties', top: 'leaderboard', lb: 'leaderboard', achievements: 'leaderboard', af: 'autoflee', aliases: 'alias', '?': 'help', unwield: 'remove', c: 'cast', spell: 'spells', abilities: 'spells', skills: 'spells', unwear: 'remove' };
 
@@ -21,7 +21,7 @@ const find = (list, w) => { // a name, or a name and a number when there are sev
   return list.find((o) => o.isId(w));
 };
 // legendary items sell for their full value (everything else 40%, materials 60% at the Salvage Exchange)
-const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (def.legend ? 1 : def.farm && p.env.def.farmmarket ? 0.9 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
+const priceOf = (p, def) => { const v = Math.floor((def.value || 0) * (1 + D.repSell(p)) * (def.legend ? 1 : def.farm && p.env.def.farmmarket ? 0.9 : def.type === 'material' && p.env.def.exchange ? 0.6 : 0.4)); return def.type === 'material' ? Math.max(1, v) : v; }; // every gathered material sells for at least 1 credit
 const UPMAX = 10, upCost = (def, up) => Math.round((1000 + 300 * (def.lvl || 1)) * 1.75 ** up), upSpent = (i) => { let n = 0; for (let k = 0; k < (i.up || 0); k++) n += upCost(i.def, k); return n; }; // weapon upgrades: +1 to +10, each costs 1.75x the last
 const sellPrice = (p, i) => priceOf(p, i.def) + Math.round(0.35 * upSpent(i)); // a shop pays back 35% of what you spent on upgrades
 const BOUND = /^(bag|holding|bag of holding|tools?|fishing pole|pole|mining pick|herbalist|sickle|hammer|alembic|skillet|crowbar)$/i;
@@ -71,6 +71,8 @@ function go(p, d, typed) {
   if (p.enemy) return typed ? C.flee(p, d) : p.msg('You are fighting! Try to flee.', 'hurt'); // typing an exit in a fight tries to flee that way
   if (p.bj) D.blackjack.forfeit(p);
   const dest = D.rooms.get(to); if (!dest) return p.msg('The way is blocked.');
+  if (dest.def.home && D.homes && !D.homes.canEnter(p, dest.def.home)) return p.msg('The door is locked: this is a private home. Its owner can invite you (`home invite <name>`) or open the door (`home access open`).', 'sys');
+  { const vb = D.voidBlock && D.voidBlock(p, dest); if (vb) return p.msg(vb, 'sys'); }
   { const mb = D.mountBlock && D.mountBlock(p, dest); if (mb) return p.msg(mb, 'sys'); }
   if (dest.def.locked && !dest.unlocked) return p.msg('The vault door is locked tight. You need the bank vault key (the Bank Manager carries it), then `unlock vault`.');
   const from = p.env; p.env.tell(`${p.name} leaves ${DIRS[d] || d}.`, p); p.enter(dest, true); dest.tell(`${p.name} arrives.`, p); dest.look(p);
@@ -312,17 +314,17 @@ const C = {
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     p.msg(`${p.env.name}. You have ${p.gold} credits.`, 'rname'); p.msg(p.env.def.exchange ? 'The Exchange pays 60% of value for gathered materials. Type `sell materials`.' : 'We also buy gathered materials (ore, herbs, fish...). Type `sell materials`.', 'sys');
     const rows = sh.stock.map((id) => { const d = D.W.items[id]; return { id, d, st: d.dmg ? `damage ${d.dmg[0]}-${d.dmg[1]}` : d.ac ? `armor ${d.ac}` : d.heal ? `heals ${d.heal}${d.mana ? `, mana ${d.mana}` : ''}` : d.mana ? `restores ${d.mana} mana` : '', lv: d.lvl ? `(level ${d.lvl})` : '' }; });
-    const NW = Math.max(...rows.map((r) => r.d.name.length)), SW = Math.max(...rows.map((r) => r.st.length)), LW = Math.max(...rows.map((r) => r.lv.length)), CW = Math.max(...rows.map((r) => String(r.d.value).length)); // fixed columns so everything lines up
-    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${D.cn({ id: r.id, ...r.d }, r.d.name)}${' '.repeat(NW - r.d.name.length)}  ${r.st.padEnd(SW)}  ${r.lv.padEnd(LW)}  Credits: ${String(r.d.value).padStart(CW)}`, p.gold >= r.d.value ? 'shopy' : 'shopn'));
+    const NW = Math.max(...rows.map((r) => r.d.name.length)), SW = Math.max(...rows.map((r) => r.st.length)), LW = Math.max(...rows.map((r) => r.lv.length)), CW = Math.max(...rows.map((r) => String(D.shopCost(p, r.d)).length)); // fixed columns so everything lines up
+    rows.forEach((r, i) => p.msg(`${String(i + 1).padStart(2)}. ${D.cn({ id: r.id, ...r.d }, r.d.name)}${' '.repeat(NW - r.d.name.length)}  ${r.st.padEnd(SW)}  ${r.lv.padEnd(LW)}  Credits: ${String(D.shopCost(p, r.d)).padStart(CW)}`, p.gold >= D.shopCost(p, r.d) ? 'shopy' : 'shopn'));
     p.msg('Buy with `buy <number>` or `buy <name>` (for more than one: `buy 3 <number>`).', 'sys');
   },
   buy(p, a) {
     const sh = p.env.def.shop; if (!sh) return p.msg('There is no shop here.');
     const m = a.trim().match(/^(\d+)\s+(.+)$/), n = m ? Math.min(+m[1], 20) : 1, w = (m ? m[2] : a).trim().toLowerCase(); if (!w) return p.msg('Buy what? (see `list`)');
     const id = /^\d+$/.test(w) ? sh.stock[+w - 1] : sh.stock.find((i) => { const d = D.W.items[i]; return i === w || d.name.toLowerCase() === w || d.name.toLowerCase().split(' ').includes(w) || (d.ids || []).includes(w); });
-    if (!id) return p.msg(/^\d+$/.test(w) ? `There is no item number ${w} (see \`list\`).` : "That isn't for sale here."); const d = D.W.items[id]; let bought = 0;
-    for (let i = 0; i < n; i++) { if (p.gold < d.value) { p.msg('You cannot afford that.'); break; } if (p.inv.length >= p.cap() && (p.bagMode === 'off' || D.bagUsed(p) >= D.bagCap(p))) { p.msg('Your pack and bag are full.'); break; } p.gold -= d.value; D.give(p, id, 'normal'); bought++; }
-    if (bought) p.msg(`You buy ${bought} x ${d.name} for ${bought * d.value} credits.`, 'win');
+    if (!id) return p.msg(/^\d+$/.test(w) ? `There is no item number ${w} (see \`list\`).` : "That isn't for sale here."); const d = D.W.items[id], unit = D.shopCost(p, d); let bought = 0;
+    for (let i = 0; i < n; i++) { if (p.gold < unit) { p.msg('You cannot afford that.'); break; } if (p.inv.length >= p.cap() && (p.bagMode === 'off' || D.bagUsed(p) >= D.bagCap(p))) { p.msg('Your pack and bag are full.'); break; } p.gold -= unit; D.give(p, id, 'normal'); bought++; }
+    if (bought) p.msg(`You buy ${bought} x ${d.name} for ${bought * unit} credits${unit < d.value ? ` (your reputation saves you ${bought * (d.value - unit)})` : ''}.`, 'win');
   },
   sell(p, a) {
     if (!p.env.def.shop) return p.msg('Nobody here will buy your things.');
@@ -385,6 +387,12 @@ const C = {
     p.enter(dest, true); dest.tell(`${p.name} appears in a flash of light.`, p); dest.look(p);
   },
   tradeskills: (p, a) => D.tradeSkills(p, a), learn: (p, a) => D.learnSkill(p, a), unlearn: (p, a) => D.unlearnSkill(p, a),
+  worldmap(p) { D.worldMapShow(p); }, world(p) { D.worldMapShow(p); }, wmap(p) { D.worldMapShow(p); },
+  light(p) { if (D.spellsOf(p).some((s) => s.k === 'light' && s.lvl <= p.level)) return D.cast(p, 'light'); D.makeTorch(p); }, scars(p) { if (!(p.scars || []).length) return p.msg('You have no scars. (Every death leaves one.)', 'sys'); D.scarsShow(p, p); p.msg(p.scars.slice(-30).map((s, i) => `  ${i + 1}. ${s.kind} on your ${s.part}${s.by ? `, from ${s.by}` : ''}`).join('\n'), 'sys'); }, reputation(p) { D.repShow(p); }, standing(p) { D.repShow(p); },
+  hire(p, a) { if (/^(a |the )?bodyguard/i.test(a.trim())) D.bgHire(p); else p.msg('Hire what? `hire bodyguard` at the Ironside Bodyguard Agency.', 'sys'); }, rent(p, a) { if (/^(a |the )?bodyguard/i.test(a.trim())) D.bgHire(p); else p.msg('Rent what? `rent bodyguard` at the Ironside Bodyguard Agency.', 'sys'); }, bodyguard(p) { D.bgStatus(p); },
+  chop(p) { if (!p.skills.woodcutting) D.learnSkill(p, 'woodcutting'); D.tradeGather(p, 'woodcutting'); },
+  claim(p, a) { if (/^land\b|^$/i.test(a.trim())) D.homes.claim(p); else p.msg('Claim what? `claim land` on a homestead plot.', 'sys'); }, home(p, a) { D.homes.home(p, a); }, homes(p) { D.homes.homes(p); }, build(p, a) { D.homes.build(p, a); }, saw(p, a) { D.homes.saw(p, a); }, fill(p, a) { D.homes.fill(p, a); }, mix(p, a) { D.homes.mix(p, a); }, form(p, a) { D.homes.form(p, a); }, pour(p, a) { D.homes.pour(p, a); },
+  furnish(p, a) { D.homes.furnish(p, a); }, unfurnish(p, a) { D.homes.unfurnish(p, a); }, roomname(p, a) { D.homes.roomText(p, a, 'name'); }, roomdesc(p, a) { D.homes.roomText(p, a, 'desc'); },
   forage(p) { if (p.skills.foraging) return D.tradeGather(p, 'foraging'); if (p.cls === 'scavenger') return D.cast(p, 'forage'); D.tradeGather(p, 'foraging'); },
   mine(p) { if (p.skills.mining) return D.tradeGather(p, 'mining'); if (p.cls === 'scavenger') return D.cast(p, 'prospect'); D.tradeGather(p, 'mining'); },
   fish(p) { if (p.skills.fishing) return D.tradeGather(p, 'fishing'); if (p.cls === 'scavenger') return D.cast(p, 'cast_line'); D.tradeGather(p, 'fishing'); },
@@ -491,7 +499,7 @@ const C = {
     if (!p.env.def.rebirth) return p.msg('Remorting is done at the Hall of Rebirth in Ashfall, west of the Temple of the Dawn.');
     const R = p.remort || 0, opts = Object.entries(D.K.CLASSES).filter(([, k]) => k.remort && (!k.from || p.cls === k.from || p.cls === 'idlemaster'));
     if (R >= D.MAXREM) return p.msg(`You have reached Remort ${D.MAXREM}, the pinnacle. There is nothing left to be reborn into.`, 'win');
-    if (p.level < 40) return p.msg(`Only level 40 adventurers can remort. You are level ${p.level}.`);
+    if (p.level < D.REMORT_LEVEL) return p.msg(`Only level ${D.REMORT_LEVEL} adventurers can remort. You are level ${p.level}.`);
     const args = a.trim().toLowerCase().split(/\s+/), confirm = args[0] === 'confirm', key = confirm ? args[1] : args[0];
     const pick = opts.find(([k, c]) => key && (k === key || c.name.toLowerCase() === key));
     if (!pick) {
@@ -536,9 +544,9 @@ const C = {
   rest(p) { if (!p.env.def.inn) return p.msg('You can only rest properly at the inn.'); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck(); p.msg('You sit by the fire and rest. You feel renewed.', 'win'); },
   score(p, a) { // a graphical character sheet (the client opens a window); `score text` prints the text version
     if (a.trim().toLowerCase() === 'text') return C.scoretext(p);
-    p.send({ t: 'score', d: scoreData(p) }); p.msg('Your character sheet is open. (Type `score text` for the text version.)', 'sys');
+    p.send({ t: 'score', d: { ...scoreData(p), rep: D.repTotal(p), repT: D.repTitle(D.repTotal(p)), scars: (p.scars || []).length, repAreas: Object.entries(p.rep || {}).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([a, v]) => [(D.AREA_LABEL && D.AREA_LABEL[a]) || a, v]) } }); p.msg('Your character sheet is open. (Type `score text` for the text version.)', 'sys');
   },
-  scoretext(p) {
+  scoretext(p) { setTimeout(() => { p.msg(`Reputation: ${D.repTotal(p)} (${D.repTitle(D.repTotal(p))}). Scars: ${(p.scars || []).length}. Type \`reputation\` or \`scars\`.`, 'sys'); }, 50);
     const n = (v) => Math.round(v).toLocaleString('en-US'), k = p.klass(), at = p.attrs(), worn = new Set(Object.values(p.equip));
     const mats = {}, cons = {}; let goods = 0;
     for (const [id, c] of Object.entries(p.bag)) { const d = D.W.items[id]; if (!d) continue; if (d.type === 'material') mats[d.name] = (mats[d.name] || 0) + c; goods += priceOf(p, d) * c; } // the bag counts too
@@ -550,7 +558,7 @@ const C = {
     p.msg(`${[D.preTitle(p), p.name].filter(Boolean).join(' ')}${p.title ? ', ' + p.title : ''}: ${p.remort ? `Remort ${p.remort} ` : ''}${D.genderLabel(p.gender)} ${k.name}${p.wiz ? ' (wizard)' : ''}`, 'rname');
     const need = p.xpNeed(p.level);
     p.msg(p.level < D.MAXLV ? `Level ${p.level}. Experience ${n(p.xp)} of ${n(need)}: ${n(Math.max(0, need - p.xp))} more XP for level ${p.level + 1}.`
-      : `Level ${D.MAXLV} (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < 40 ? 'Remort at the Hall of Rebirth to start again.' : 'You have reached Remort 40, the pinnacle.'}`);
+      : `Level ${D.MAXLV} (maximum). Experience ${n(p.xp)}. ${(p.remort || 0) < D.MAXREM ? 'Remort at the Hall of Rebirth to start again.' : `You have reached Remort ${D.MAXREM}, the pinnacle.`}`);
     p.msg(`Vitals: HP ${n(p.hp)}/${n(p.maxhp)}, ${p.cls === 'scavenger' ? 'Stamina' : 'Mana'} ${n(p.mp)}/${n(p.maxmp)}, Luck ${p.luck}/${p.maxLuck()}, Aura ${p.aura().toFixed(1)}/${p.auraMax().toFixed(1)}.`);
     p.msg(`Bounty points: ${n(p.bounty || 0)} (${n(p.bounties || 0)} bounties collected).`, 'items');
     p.msg(`Deity: ${D.deityLine(p)}. Bag: ${D.bagCap(p)} slots (${p.bagBonus || 0} from bounty rewards). (type \`vow\`)`, 'items');
@@ -659,7 +667,7 @@ const C = {
     const on = (b) => (b ? 'ON ' : 'OFF'), mu = p.mute || {}, line = (cmd, state, what) => p.msg(`  ${cmd.padEnd(14)} ${state.padEnd(9)} ${what}`, state.trim() === 'ON' || /^(loot|overflow)/.test(state.trim()) ? 'win' : 'items');
     p.msg('AUTO COMMANDS (change one with `auto <name> on|off`, for example `auto heal off`)', 'rname');
     line('autoheal', on(p.autoheal), 'eat or drink your best healing item at 40% health (autoheal on|off)'); line('autoflee', on(p.autoflee), 'run away at 30% health (autoflee on|off)'); line('autokill', on(p.autokill), 'a bare `kill` attacks the first monster in the room (autokill on|off)');
-    line('bag auto loot', String(p.bagMode || 'overflow'), 'loot: monster drops and pickups go straight to the bag; overflow: only when the pack is full; off (bag auto loot|overflow|off, or `auto loot on|off`)'); line('auto remort', p.cls === 'idlemaster' ? on(!p.noAutoRemort) : 'n/a', 'an Idle Master is reborn into the next Idle Master level when it reaches level 40 (auto remort on|off)'); line('anyquest', on(p.anyQuest), 'accept any quest whatever your level (anyquest on|off)'); line('brief', on(p.brief), 'moving shows only the room name and exits (brief on|off)');
+    line('bag auto loot', String(p.bagMode || 'overflow'), 'loot: monster drops and pickups go straight to the bag; overflow: only when the pack is full; off (bag auto loot|overflow|off, or `auto loot on|off`)'); line('auto remort', p.cls === 'idlemaster' ? on(!p.noAutoRemort) : 'n/a', 'an Idle Master is reborn into the next Idle Master level when it reaches level 200 (auto remort on|off)'); line('anyquest', on(p.anyQuest), 'accept any quest whatever your level (anyquest on|off)'); line('brief', on(p.brief), 'moving shows only the room name and exits (brief on|off)');
     p.msg('MUTE AND GAG', 'rname'); line('gag', on(p.gag), 'combat gag: hide misses and fumbles (gag on|off)'); line('gossip', on(p.gos !== false), 'the gossip channel (gossip on|off)'); line('bot', on(!mu.bot), 'the resident bots channel (bot on|off)'); line('notify', on(p.notify !== false), 'login and logout notices (notify on|off)');
     for (const [k, label] of [['bounty', 'bounty announcements'], ['levels', 'level-up announcements'], ['quests', 'quest-completion announcements'], ['taunts', 'death taunts'], ['deaths', 'death broadcasts'], ['weather', 'weather events']]) line('mute ' + k, mu[k] ? 'MUTED' : 'heard', label + ' (mute ' + k + ' on|off)');
     p.msg('Type `help <name>` for details on any of these.', 'sys');
@@ -680,7 +688,7 @@ const C = {
   },
   summonbot(p, a) { D.summonBot(p, a.trim()); }, callbot(p, a) { D.summonBot(p, a.trim()); }, dismissbot(p) { D.dismissBot(p); },
   bless(p) { D.blessing.status(p); },
-  make(p, a) { D.pizza.make(p, a); }, bake(p) { D.pizza.bake(p); }, deliver(p) { D.pizza.deliver(p); }, // the Pizza Palace quest: make pizza, bake, deliver
+  make(p, a) { if (/^torch/i.test(a.trim())) return D.makeTorch(p); D.pizza.make(p, a); }, bake(p) { D.pizza.bake(p); }, deliver(p) { D.pizza.deliver(p); }, // the Pizza Palace quest: make pizza, bake, deliver
   uptime(p) { // uptime: how long the game has been online
     const s = Math.floor((Date.now() - D.startedAt) / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), part = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     p.msg(`MULTIVERSE MUD has been online for ${[d && part(d, 'day'), (d || h) && part(h, 'hour'), part(m, 'minute')].filter(Boolean).join(', ')}${s < 60 ? ` (${s} seconds)` : ''}. Started ${new Date(D.startedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}.`, 'win');
@@ -696,8 +704,8 @@ const C = {
   leaderboard(p, a) { // top 10 achievements: level, quests completed, tradeskills raised
     const all = D.leaderboard(true), top = all.slice(0, 10), me = all.find((r) => r.name === p.name);
     p.send({ t: 'board', list: top, me, total: all.length }); if (a.trim() === 'window') return;
-    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40, plus bounty points x40, plus exploration points x5; a remort counts as 40 levels):', 'rname');
-    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  bounty ${String(r.b).padStart(3)}  explored ${String(r.ex || 0).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
+    p.msg('Top 10 achievements (score = level x100, plus quests x250, plus tradeskill levels raised x40, plus bounty points x40, plus exploration points x5; a remort counts as 200 levels; reputation is shown too):', 'rname');
+    top.forEach((r) => p.msg(`${String(r.rank).padStart(2)}. ${r.name.padEnd(12)} ${r.rm ? `R${r.rm} ` : ''}L${r.lv} ${r.cn.padEnd(12)} quests ${String(r.q).padStart(2)}  skills +${String(r.t).padStart(3)}  bounty ${String(r.b).padStart(3)}  explored ${String(r.ex || 0).padStart(3)}  reputation ${String(r.rep || 0).padStart(3)}  score ${r.score}`, r.name === p.name ? 'win' : 'sys'));
     if (me && me.rank > 10) p.msg(`You are ranked #${me.rank} of ${all.length} with ${me.score} points.`, 'sys');
   },
   // ---- teams: kills split XP and credits between teammates standing in the same room (+10% for each extra member, up to 5 players) ----
@@ -917,7 +925,7 @@ const C = {
     if (cl && !(H[q] && q === full) && !T[q]) { const [k, c] = cl, kit = (D.W.items[c.kit] || {}).name || c.kit, sp = D.K.SPELLS[k] || [];
       p.msg(`HELP: ${c.name}  (${c.remort ? 'remort class' : 'base class'}) ${c.icon || ''}`, 'rname'); p.msg(c.desc, 'text');
       p.msg(`Health per level ${c.hpl}, mana ${k === 'scavenger' ? '(stamina) ' : ''}per level ${c.mpl}, regeneration +${c.rg}. Strength ${c.str >= 0 ? '+' : ''}${c.str}, dexterity ${c.dex >= 0 ? '+' : ''}${c.dex}, constitution ${c.con >= 0 ? '+' : ''}${c.con}. Starts with: ${kit}.`, 'items');
-      if (c.remort) p.msg('You become this class by remorting at the Hall of Rebirth (level 40 needed); you restart at level 1 with a permanent 4% health and mana bonus for every remort.', 'sys'); else p.msg('You can pick this class when you create a character. A character can later be reborn into a remort class at level 40.', 'sys');
+      if (c.remort) p.msg('You become this class by remorting at the Hall of Rebirth (level 200 needed); you restart at level 1 with a permanent 4% health and mana bonus for every remort.', 'sys'); else p.msg('You can pick this class when you create a character. A character can later be reborn into a remort class at level 200.', 'sys');
       if (c.brawn) { const T_ = k === 'titan'; p.msg('NO SPELLS: this class has quick heals only, and makes up for it with big passive bonuses:', 'rname'); p.msg(`  Multiple attacks: ${T_ ? 'three attacks every round from Remort 1, four at Remort 10, five at Remort 15 and six at Remort 20' : 'two attacks every round'}.`, 'items'); p.msg(`  Hulking: ${T_ ? '+15%' : '+10%'} damage, an extra attack die from level 1 (and another every 10 levels), and much faster health regeneration.`, 'items'); p.msg('  Brute Force: every hit has a chance (12% plus 0.4% per level) to land a SMASH! for 50% to 100% extra damage.', 'items'); p.msg('  Thick Skin: shrugs off 6% of every hit you take, plus 0.3% per level.', 'items'); if (T_) p.msg('  Remort bonuses (Titan): +4% damage, +1% SMASH chance and +0.5% damage shrugged off per remort. Remort 5: SMASH hits up to 130% extra. Remort 10: a SMASH may stun. Remort 20: +5% thicker skin. Remort 30: 4% life steal. Remort 40: +25% damage.', 'win'); }
       p.msg(`${sp.length ? 'Abilities' : 'Abilities'} (${sp.length}): type the word to use it, for example \`${(sp[0] || {}).k || 'rage'}\`.`, 'rname'); for (const s of sp) p.msg(`  level ${String(s.lvl).padStart(2)}  ${(s.k).padEnd(11)} ${String(s.mp).padStart(3)} ${k === 'scavenger' ? 'stamina' : 'mana'}  ${s.n}: ${s.d}`, p.level >= s.lvl && p.cls === k ? 'spell' : 'items');
       if (!c.brawn && !c.remort) p.msg('Remorting adds one extra, stronger ability for every remort level (200 in all).', 'sys');
@@ -948,7 +956,7 @@ D.remort = (p, cls) => { // reset to level 1 as a remort class, keeping the thin
   p.recalc(); p.hp = p.maxhp; p.mp = p.maxmp; p.luck = p.maxLuck();
   p.send({ t: 'sound', k: 'levelup' }); D.announce(`${p.name} has remorted and is now Remort ${p.remort}, a level 1 ${p.klass().name}!`);
   p.msg(`*** You are reborn! You are now Remort ${p.remort}, a ${p.klass().name}. Your equipment is in your pack; wear what you can as you level. ***`, 'win');
-  p.sendSpells(); p.sendStats(); p.env.look(p);
+  if (D.grantPowerArmor) D.grantPowerArmor(p); p.sendSpells(); p.sendStats(); p.env.look(p);
 };
 
 const SOCIALS = require('./socials');
@@ -972,8 +980,10 @@ const runAlias = (p, name, rest) => { // player aliases: "alias g get all" then 
   try { const segs = p.aliases[name].split(';').map((s) => s.trim()).filter(Boolean).slice(0, 8); segs.forEach((s, i) => D.command(p, i === segs.length - 1 && rest ? `${s} ${rest}` : s)); } finally { p._ad--; }
 };
 Object.assign(C, WPN.commands(find));
+{ const _dm = C.dismiss; C.dismiss = function (p, a) { if (/^(my |the |a )?bodyguard/i.test(a.trim())) return D.bgDismiss(p); return _dm ? _dm.call(C, p, a) : p.msg('Dismiss what? `dismiss bodyguard`, or `dismissbot` for a bot.', 'sys'); }; }
+{ const _ab = C.abandon, _pl = C.plant; C.abandon = function (p, a) { if (/^land\b/i.test(a.trim())) return D.homes.abandon(p, a.trim().slice(4)); return _ab.call(C, p, a); }; C.plant = function (p, a) { if (/^sapling/i.test(a.trim())) return D.homes.sapling(p); return _pl.call(C, p, a); }; } // `abandon land` and `plant sapling` belong to the homestead
 { const _help = C.help; C.help = function (p, a) { _help.call(C, p, a); const q = (a || '').trim().toLowerCase().split(/\s+/)[0]; if (/^(vow|deity|deities|goddess|goddesses|seraphina|elyndra|morgath|lagatha)$/.test(q)) D.showDeityPic(p, D.DEITIES[q] ? q : ''); } } // the goddesses' pictures appear with their help
-{ const _look = C.look; C.look = function (p, a) { _look.call(C, p, a); if (a) { const w = a.replace(/^at\s+/, '').trim(); const t = /^(me|self|myself)$/i.test(w) ? p : find(p.env.inv.filter((o) => o.isPlayer), w); if (t && t.isPlayer) { if (t !== p && D.mountOf(t)) p.msg(`${t.name} is riding ${D.mountOf(t).short || D.mountOf(t).name}.`, 'sys'); if (Object.keys(t.marks || {}).length) D.ink.show(p, t); } } }; } // markings and mounts show when you look at someone
+{ const _look = C.look; C.look = function (p, a) { _look.call(C, p, a); if (a) { const w = a.replace(/^at\s+/, '').trim(); const t = /^(me|self|myself)$/i.test(w) ? p : find(p.env.inv.filter((o) => o.isPlayer), w); if (t && t.isPlayer) { if (D.scarsShow && (t.scars || []).length) D.scarsShow(p, t); if (t !== p && D.mountOf(t)) p.msg(`${t.name} is riding ${D.mountOf(t).short || D.mountOf(t).name}.`, 'sys'); if (Object.keys(t.marks || {}).length) D.ink.show(p, t); } } }; } // markings and mounts show when you look at someone
 { const _eq = C.equip; C.equip = function (p, a) { _eq.call(C, p, a); if (!/^(list|check|preview)$/i.test((a || '').trim())) { D.fixHands(p); p.recalc(); } }; } // the auto-equip respects hands // wield / dual / wear / remove / weaponskills with hands and weapon skills
 D.command = (p, line) => {
   const m = line.trim().match(/^(\S+)\s*(.*)$/); if (!m) return;

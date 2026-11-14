@@ -8,7 +8,7 @@ D.fingerExtra = (d, on, rec) => { // fills d.lines (plain text, padded to column
   const bk = src.bestKill, bt = src.bestTeam, dt = src.deity && D.DEITIES && D.DEITIES[src.deity], unread = mail.unread(d.name), total = mail.total ? mail.total(d.name) : unread;
   const idle = on ? (on.isBot ? 'a resident bot (always about)' : D.dur(Date.now() - ((on.prevCmd && Date.now() - on.lastCmd < 1500 ? on.prevCmd : on.lastCmd) || on.loginAt || Date.now()))) : 'not online', at = on ? on.loginAt : d.seen;
   d.lines = [`Name: ${/^grog$/i.test(d.name) ? 'GROG' : d.name}`, `Class: ${d.cn}${d.rm ? ` (Remort ${d.rm})` : ''}`, `Gender: ${String(d.gl || '').replace(/^./, (c) => c.toUpperCase())}`, `Level: ${d.lv}`, `Deity:  ${dt ? `${dt.name}, ${dt.title}` : 'none'}`, `Leaderboard: ${rank || 'unranked'}`,
-    `Best kill: ${bk ? `${bk.name} (level ${bk.level})` : 'none yet'}`, `Best team kill: ${bt ? `${bt.name} (level ${bt.level})` : 'none yet'}`, ...(src.archFoe ? [`Arch foe: ${src.archFoe}`] : []), `${on ? 'On since' : 'Last on'}: ${at ? when(at) : 'unknown'}`, `Idle: ${idle}`,
+    `Best kill: ${bk ? `${bk.name} (level ${bk.level})` : 'none yet'}`, `Best team kill: ${bt ? `${bt.name} (level ${bt.level})` : 'none yet'}`, ...(src.archFoe ? [`Arch foe: ${src.archFoe}`] : []), ...((src.scars || []).length ? [`Scars: ${src.scars.length} (${src.scars.slice(-3).map((s) => `${s.kind} on the ${s.part}`).join('; ')}${src.scars.length > 3 ? '; ...' : ''})`] : []), `${on ? 'On since' : 'Last on'}: ${at ? when(at) : 'unknown'}`, `Idle: ${idle}`,
     `Mail: ${d.fwd ? (d.email ? `forwarding to ${d.email}` : 'forwarding on') : 'no forwarding'}; ${unread} unread, ${Math.max(0, total - unread)} read`, `Age: ${D.ageYWDH(Date.now() - d.born)}`];
 };
 module.exports = D.fingerExtra;

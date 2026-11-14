@@ -29,6 +29,7 @@ const power = (p, sp, r) => Math.round((rnd(r[0], r[1]) + Math.floor(p.level * (
 const evt = (p, t, sp, o) => p.env.fx({ a: p.info(), b: t.info(), hit: true, crit: false, dmg: 0, spell: { n: sp.n, i: sp.i, c: sp.c }, ...o });
 
 const KIND = {
+  light: (p) => { D.lightUp(p, 15 * 60000, 'You conjure a floating ball of light that drifts along beside you.'); },
   dmg(p, sp, rest) {
     const ts = sp.aoe ? foes(p) : [pick(p, rest)]; if (!ts[0]) return sp.aoe ? (p.msg('There is nothing to hit.'), false) : false;
     p.msg(`${sp.i} ${sp.n}: ${FL.castLine(sp, sp.aoe ? 'your enemies' : ts[0].the())}`, p.enemy ? 'spellfx' : 'spell'); p.env.tell(`${p.name} casts ${sp.n}!`, p, 'combat2');

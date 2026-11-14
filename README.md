@@ -40,6 +40,22 @@ The setting mixes three genres: Old West towns with saloons (Ashfall Junction, R
 ## If the new interface does not appear
 The server now sends `Cache-Control: no-store` for the game page and makes every other file revalidate, stamps the page with a build id (shown as "build ..." at the top of the settings panel), and the server tells the page which build it expects at login. If a browser is showing an old cached copy, the page reloads itself once; if that does not fix it, it prints a warning in the text window. An old copy from before this change has no such check, so do one hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on a Mac) after restarting the server, and make sure you unzipped the whole new folder over the old one (public/index.html must be the new file).
 
+## Day and night, scars, reputation, bodyguards, the Extinction Event and the World Map
+- **Day and night** (`daynight.js`): a game day is 48 real minutes (`world.dayMinutes` in `data/config.json`); darkness follows a smooth curve (brightest 1 pm, night 9 pm to 5 am) with a clock and a screen veil in the client. At night, outdoors (natural terrain, not indoors, not safe or camp, not in a town-like area), you need light: the `light` spell (Magician, Cleric, Druid, Alchemist, Necromancer, Bard, Wirewalker, Engineer, Dragon) or `make torch`. Without light the room description, items and monsters are hidden and attacks are -30%.
+- **Scars** (`scars.js`): every player death adds a scar on a random body part, typed by what killed you; shown on `look` and `finger`; `scars` lists them. Saved with the character.
+- **Reputation** (`reputation.js`): quests give reputation in their quest giver's area; +1% kill credits, +1% selling and 0.5% shop discount per point (caps 50/50/30), local reputation full and elsewhere a quarter. In `score`, `reputation` and the leaderboard (in-game, website and API).
+- **Bodyguards** (`bodyguard.js`): the Ironside Bodyguard Agency (a safe room off an Ashfall street): `hire bodyguard` (600 credits per level, an hour), half your level, strikes your enemy every round, -10% XP and credits while active; `bodyguard`, `dismiss bodyguard`.
+- **The Extinction Event** (`extinction.js`): the prehistoric realm had the fewest areas (3), so it got a 60-room level-200 area built tough (monster health multipliers of 1.5x to 5x). Chrona's 8 quests, legendary Time-Eater and First Fang.
+- **The World Map** (`worldmap.js`, `public/worldmap.js`): `worldmap` or the World Map button: all 1,800+ rooms on one page, region by region, with your position and explored rooms; `/api/pub/worldmap` serves the data; the Player Guide's World Map page uses `worldmap.json`.
+- Fix: the good-vs-evil damage bonus had been swallowed into a code comment and never applied.
+
+## Level cap 200, the Homestead, Perdition Gulch, enhanced combat view and future-realm stats
+- **Level cap 200** (`D.MAXLV`, `D.REMORT_LEVEL`): players now level to 200 and remort at level 200 (bots still remort at 40, in the Proving Grounds). Idle Masters are reborn automatically at 200. The leaderboard counts a remort as 200 levels.
+- **Monster stats by level** (`gen.js statsFor`): health follows level^1.5 and above level 100 grows steeper (x4 health and x2.2 damage at level 200). The future realm rework now really recomputes health, damage, armor, XP and gold for the new levels (before, only the level number had changed). The Proving Grounds keep their old low-level copies of those monsters (`pg_*`), and the fantasy marsh is no longer caught by the Mars rework.
+- **The Homestead** (`homes.js`): east of the farm, 54 rooms (51 plots). `claim land` (10k / 50k / 250k credits, 3 plots per player), the Woodcutting tradeskill (`chop`), `saw`, the concrete chain (`fill bucket`, `mix`, `form`, `pour`), and `build` hut > cabin > house > keep > compound > castle > fortress with materials, credits and real-time build waits (they finish while you are logged out). Inside: `build room <dir> <name>` (3/6/10/16/25/40 rooms), `roomname`, `roomdesc`, `furnish` (15 kinds), `home access`, `home invite`, `home name`, `homes`, `plant sapling`, `abandon land confirm`. Everything is saved in `data/homes.json`.
+- **Perdition Gulch** (`perdition.js`, Old West realm, levels 195-200, 50 rooms): the Old West had the lowest top level (36) so it got the new level-200 area: ghost gunslingers, skinwalkers, hellhounds, phantom railroad, Devil's Canyon; bosses Dead-Eye Dan (196), the Wendigo King (198), Marshal Abaddon (200); Sheriff Silas Crane's 8 quests.
+- **Combat view**: Classic (the portrait frames, the default) or Enhanced (two full fighters); switch in Settings or with the Classic/Enhanced button in the combat window.
+
 ## Future realm at level 200, 50-room Aurora and Frostpeak, Megalithic Jungle, Pizza Palace, goddess blessings
 - **Future realm rework** (`futurelevels.js`): every future area except the Proving Grounds and Sol is raised to levels 185-200 (Aurora 185-190, Frostpeak 186-191, Ember 188-193, Mars 189-194, Abyss 192-196, Exterminus 194-198, Pluto 196-200); the gear they drop and sell is scaled to match (level capped at 200) and the quests that hunt them are scaled and set to the level-100 minimum.
 - **Starship Aurora and Frostpeak Station** are 50 rooms each (`futureext.js`): new cargo/machine/crew/command decks and ice tunnels/labs/generator halls/summit, attached to the east end of each.
@@ -447,3 +463,14 @@ Save as ~/Library/LaunchAgents/com.ashfall.mud.plist (fix both paths; `which nod
     </dict></plist>
 
     launchctl load ~/Library/LaunchAgents/com.ashfall.mud.plist
+
+
+## Volcano, the Ore-Kings, the Void, Power Armor and a new guide
+
+- **Mount Cinderfang** (prehistoric, levels 120-140, 60 rooms): lava, fire creatures, two bosses (Cinderfang the Lava Wyrm, Ignis the Caldera Giant), a full gear set, a legendary drop each and Kaldra the Ashspeaker's 6 quests.
+- **The Ore-Kings' Reach** (prehistoric, levels 62-80, 50 rooms): a mix of the Bronze Age and the Iron Age, with two warlords (Brask the Bronze King, Dagan Ironhand), gear, legendary drops and Hild the Smith-Mother's 5 quests.
+- **The Void** (future realm, 100 rooms): needs level + remorts of 250 (level 200 and Remort 50) to cross the threshold; room descriptions are drawn in dark gray (room flag `dim`, client class `voiddesc`); six kinds of hard "void" monsters at level 250 and the boss Nihil, the Void Sovereign. Stepping past the gate starts an automatic 30-minute contract (`void.js`) to kill every void; success pays a huge reward automatically, running out of time cancels it and it can be retaken.
+- **Power Armor** (`poweramor.js`): body-slot suit loaded into a Titan's pack at Remort 20 (also granted at login to Titans already at Remort 20+).
+- All three areas are in the hub realm lists, milestones, the World Map, help and the guide.
+- **Terrain** textures are regenerated (512 px, tileable: blade-by-blade grass with clover, pebbled cracked dirt, mossy flagstones, stained concrete, riveted diamond-plate and caustic water). The **class pictures** got a photographic grade pass (key light, vignette, skin and fabric grain); they are still stylized portraits, since no image generator is available: see ART_PROMPTS.md to swap in real art.
+- **The Player's Guide** has a new modern look: glass header, scroll progress bar, 3D-tilting hero and cards, a drifting depth starfield, staggered scroll reveals (all disabled for `prefers-reduced-motion`). Source: `tools/guide_assets/guide.css` and `guide.js`.

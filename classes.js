@@ -23,7 +23,7 @@ const CLASSES = {
   scavenger:   { name: 'Prospector',    icon: '🧑‍🌾', hpl: 13, mpl: 6,  rg: 2, str: 1,  dex: 1,  con: 2,  kit: 'scrapknife', desc: 'A prospector and trailblazer, not a fighter: botany, mining, fishing and crafting skills. Carries more. (Old West)' },
 };
 
-// ---- Remort classes: unlocked only by remorting at level 40. pwr multiplies spell power; remort classes also start with more health. ----
+// ---- Remort classes: unlocked only by remorting at level 200. pwr multiplies spell power; remort classes also start with more health. ----
 Object.assign(CLASSES, {
   dragon:       { name: 'Dragon',       icon: '🐉', remort: true, pwr: 1.4, hpl: 15, mpl: 10, rg: 3, str: 4, dex: 0, con: 3, kit: 'dclaws', desc: 'An awakened wyrm in human shape. Breath weapons, scales and sheer draconic power. (Remort class)' },
   android:      { name: 'Android',      icon: '🤖', remort: true, pwr: 1.4, hpl: 12, mpl: 11, rg: 3, str: 1, dex: 3, con: 1, kit: 'parm',   desc: 'A self-aware combat frame. Precision weapons, nanite repair and overcharged systems. (Remort class)' },

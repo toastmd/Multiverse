@@ -66,7 +66,7 @@ function api(req, res) {
 }
 const file = (name) => path.join(DATA, name.toLowerCase() + '.json');
 // ---- achievements leaderboard: level (a remort counts as 40 more levels), quests completed and tradeskill levels raised ----
-const ach = (r) => { const lvl = (r.remort || 0) * 40 + (r.level || 1), ex = Array.isArray(r.explored) ? r.explored.length : 0, q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); const b = r.bounty || 0; return { lvl, q, t, b, ex, score: lvl * 100 + q * 250 + t * 40 + b * 40 + ex * 5 }; };
+const ach = (r) => { const lvl = (r.remort || 0) * 200 + (r.level || 1), ex = Array.isArray(r.explored) ? r.explored.length : 0, q = (r.qdone || []).length, t = Object.values(r.skills || {}).reduce((s, k) => s + Math.max(0, ((k && k.lvl) || 1) - 1), 0); const b = r.bounty || 0, rep = Object.values(r.rep || {}).reduce((s, v) => s + (v | 0), 0); return { lvl, q, t, b, ex, rep, score: lvl * 100 + q * 250 + t * 40 + b * 40 + ex * 5 }; };
 let boardCache = { at: 0, rows: [] };
 D.leaderboard = (force) => {
   if (!force && Date.now() - boardCache.at < 15000) return boardCache.rows; const rows = new Map();
@@ -148,7 +148,7 @@ function login(conn, m) {
   const old = D.players.get(name); if (old) { const oc = old.conn; drop(old, true); oc && oc.close(); }
   const cls = D.K.CLASSES[m.cls] && !D.K.CLASSES[m.cls].remort ? m.cls : 'barbarian'; /* remort classes cannot be picked at creation */ const p = new D.Player(name, fresh ? cls : rec.cls); if (fresh) p.gender = ['male', 'female', 'nonbinary'].includes(m.gender) ? m.gender : 'nonbinary'; p.rec = { salt: rec.salt, hash: rec.hash, ip: conn.ip || rec.ip || '' }; p.conn = conn; conn.player = p;
   p.send = (o) => conn.send(o); if (!fresh) p.load(rec); else { p.wiz = rec.wiz; const kit = D.cloneItem(p.klass().kit); kit.move(p); p.equip.weapon = kit; D.cloneItem('potion').move(p); }
-  D.initAge(p, rec, fresh); if (fresh && D.news) D.news.log('new', p); D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
+  D.initAge(p, rec, fresh); if (D.grantPowerArmor) D.grantPowerArmor(p); if (fresh && D.news) D.news.log('new', p); D.players.set(name, p); D.savePlayer(p); conn.send({ t: 'ok', name, v: D.build() }); p.sendSpells(); p.sendKeypad(); p.sendTriggers(); p.sendMutes(); p.sendTut(true); p.send({ t: 'sound', k: 'login' }); D.tutQuest(p); D.mail.sync(p); { const un = D.mail.unread(name); if (un) p.msg(`\u2709 You have ${un} unread mudmail${un > 1 ? 's' : ''}. Type \`mail\` to read ${un > 1 ? 'them' : 'it'}.`, 'mail'); }
   p.msg(fresh ? `Welcome to MULTIVERSE MUD, ${name}. Type 'help' for commands. The Dawn Clinic (the Temple, north of the inn) patches up new runners for free: type pray. The Chrome Clinic, west of the inn, sells cyberware.` : `Welcome back, ${name}.`, 'sys');
   const room = D.rooms.get(rec.room) || D.rooms.get(D.W.start);
   const startArea = D.rooms.get(D.W.start).area; for (const r of D.rooms.values()) if (r.area === startArea) p.visited.add(r.path); // the first area (Ashfall) is fully mapped from the start
@@ -207,7 +207,8 @@ const TYPES = { '.svg': 'image/svg+xml', '.json': 'application/json', '.wav': 'a
 const server = http.createServer((req, res) => {
   if (req.url.startsWith('/api/pub/')) { // public, read-only JSON for the website: the top players and who is online (no rooms, no private details)
     const send = (obj) => { res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=10', 'Access-Control-Allow-Origin': '*' }); res.end(JSON.stringify(obj)); }, route = req.url.split('?')[0];
-    if (route === '/api/pub/top') { const rows = D.leaderboard().filter((r) => !r.bot).slice(0, 50).map((r, i) => ({ rank: i + 1, name: r.name, cls: r.cn, lv: r.lv, rm: r.rm, quests: r.q, skills: r.t, bounty: r.b, explored: r.ex || 0, score: r.score, online: r.on })); return send({ updated: Date.now(), players: rows }); }
+    if (route === '/api/pub/worldmap') return send(D.worldMapPublic());
+    if (route === '/api/pub/top') { const rows = D.leaderboard().filter((r) => !r.bot).slice(0, 50).map((r, i) => ({ rank: i + 1, name: r.name, cls: r.cn, lv: r.lv, rm: r.rm, quests: r.q, skills: r.t, bounty: r.b, explored: r.ex || 0, score: r.score, online: r.on, reputation: r.rep || 0 })); return send({ updated: Date.now(), players: rows }); }
     if (route === '/api/pub/who') { const all = [...D.players.values()].map((p) => ({ name: p.name, cls: p.klass().name, lv: p.level, rm: p.remort || 0, align: p.align || 'neutral', status: p.ld ? 'linkdead' : 'online', bot: !!p.isBot, mins: Math.floor((Date.now() - (p.loginAt || Date.now())) / 60000) })); return send({ updated: Date.now(), online: all.filter((x) => x.status === 'online').length, linkdead: all.filter((x) => x.status === 'linkdead').length, players: all.sort((a, b) => (a.status === 'linkdead') - (b.status === 'linkdead') || a.name.localeCompare(b.name)) }); }
     res.writeHead(404); return res.end('not found'); }
   if (req.url.startsWith('/api/')) return api(req, res);

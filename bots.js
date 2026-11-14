@@ -146,8 +146,8 @@ function think(bot) {
     return;
   }
   // ---- reborn: at level 40, walk to the Hall of Rebirth and remort ----
-  if (p.level >= 40 && (p.remort || 0) < 40) {
-    if (here === 'town/hall_of_rebirth') return D.command(p, 'remort confirm ' + ['dragon', 'android', 'shapeshifter'][D.rnd(0, 2)]);
+  if (p.level >= 40 && (p.remort || 0) < 40) { // bots are reborn at level 40 (they only train in the Proving Grounds)
+    if (here === 'town/hall_of_rebirth') return D.remort(p, ['dragon', 'android', 'shapeshifter'][D.rnd(0, 2)]);
     const d = nextStep(here, 'town/hall_of_rebirth'); if (d) return D.command(p, d);
   }
   // ---- starter gear from Brann's free rack ----

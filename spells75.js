@@ -29,4 +29,5 @@ module.exports = (SPELLS, S) => {
     idlemaster: T(['heal', 'heal', 'heal'], [['siestaages', 'Siesta of Ages', 'A rest worth a thousand years.'], ['enlightenment', 'Enlightened Rest', 'Peace beyond thought.'], ['nirvana', 'Nirvana', 'Nothing hurts. Nothing ever did.']], ['\u{1F9D8}', '\u2728', '\u{1F54A}\uFE0F'], '#9fb2c0', { mp: [30, 45, 60] }),
   };
   for (const [cls, list] of Object.entries(ADD)) if (SPELLS[cls]) SPELLS[cls].push(...list);
+  for (const cls of ['magician', 'cleric', 'druid', 'alchemist', 'necromancer', 'bard', 'wirewalker', 'engineer', 'dragon']) if (SPELLS[cls] && !SPELLS[cls].some((s) => s.k === 'light')) SPELLS[cls].unshift(S('light', 'Light', 1, 6, 'light', '\u{1F4A1}', '#ffe08a', 'Conjure a floating ball of light that follows you for fifteen minutes: you can see in the dark.', { cd: 5 })); // spellcasters can make light; everyone else uses `make torch`
 };

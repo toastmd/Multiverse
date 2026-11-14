@@ -71,7 +71,7 @@ D.tradeGather = (p, id) => {
   if (s.res === 'fish' && p.env.terrain !== 'water') return p.msg('You need water to fish: a pond, a stream, a pool or the sea.', 'sys');
   const nodes = p.env.nodes || {}; if (!(nodes[s.res] > 0)) return p.msg(`There are no ${s.nodeName} here.`);
   p.cd['t_' + id] = now + Math.max(1800, 3000 - 300 * (t - 1)); const got = {}; let xp = 4, bagged = 0, floor = 0;
-  let n = rnd(1, 1 + Math.floor(k.lvl / 12)) + (p.cls === 'scavenger' ? 1 : 0) + (Math.random() < 0.1 * t ? 1 : 0);
+  let n = (rnd(1, 1 + Math.floor(k.lvl / 12)) + (p.cls === 'scavenger' ? 1 : 0) + (Math.random() < 0.1 * t ? 1 : 0)) * (s.yield || 1);
   const pool = s.loot.filter((l) => k.lvl >= l.min).map((l) => [l.id, l.w + (l.rare ? Math.floor(k.lvl / 4) + 2 * (t - 1) : 0), l.rare]), total = pool.reduce((a, e) => a + e[1], 0);
   for (; n > 0; n--) {
     let r = Math.random() * total, pick = pool[0]; for (const e of pool) { if ((r -= e[1]) < 0) { pick = e; break; } }

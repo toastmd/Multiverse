@@ -2,10 +2,12 @@
 // The future is dangerous: every future area (except the Proving Grounds and Sol and Mercury, which have their own levels) is raised to levels around 200, so only high-remort heroes can take them on.
 // Monsters get their new levels, the gear they drop and the shops sell is scaled to match, and the quests that hunt them are scaled too.
 const NEW = { aurora: [185, 190], frost: [186, 191], ember: [188, 193], mars: [189, 194], abyss: [192, 196], exterminus: [194, 198], pluto: [196, 200] }; // new level range of each area
+const { statsFor } = require('./gen');
 module.exports = (items, mobs, rooms) => {
-  const mobArea = {}; for (const a of ['pluto', 'exterminus', 'abyss', 'mars', 'ember', 'frost', 'aurora']) for (const r of Object.values(rooms)) if (r.area === a || (r.area || '').startsWith(a)) for (const m of r.mobs || []) if (!mobArea[m] && mobs[m]) mobArea[m] = a;
+  const mobArea = {}; for (const a of ['pluto', 'exterminus', 'abyss', 'mars', 'ember', 'frost', 'aurora']) for (const r of Object.values(rooms)) if (r.area === a) for (const m of r.mobs || []) if (!mobArea[m] && mobs[m]) mobArea[m] = a;
+  for (const r of Object.values(rooms)) if (r.area === 'grounds') r.mobs = (r.mobs || []).map((m) => { if (!mobArea[m]) return m; const c = 'pg_' + m; if (!mobs[c]) mobs[c] = JSON.parse(JSON.stringify(mobs[m])); return c; }); // the Proving Grounds keep the old, low-level versions
   const span = {}; for (const [m, a] of Object.entries(mobArea)) { const lv = mobs[m].level; span[a] = span[a] || [lv, lv]; span[a] = [Math.min(span[a][0], lv), Math.max(span[a][1], lv)]; }
-  const factor = {}; let n = 0; for (const [m, a] of Object.entries(mobArea)) { const [lo, hi] = span[a], [nlo, nhi] = NEW[a], old = mobs[m].level, lv = hi > lo ? Math.round(nlo + (old - lo) / (hi - lo) * (nhi - nlo)) : Math.round((nlo + nhi) / 2); factor[m] = lv / Math.max(1, old); mobs[m].level = lv; mobs[m].oldLevel = old; n++; }
+  const factor = {}; let n = 0; for (const [m, a] of Object.entries(mobArea)) { const [lo, hi] = span[a], [nlo, nhi] = NEW[a], old = mobs[m].level, lv = hi > lo ? Math.round(nlo + (old - lo) / (hi - lo) * (nhi - nlo)) : Math.round((nlo + nhi) / 2); factor[m] = lv / Math.max(1, old); const d = mobs[m], b = d.boss ? 1 : 0, big = Math.max(0.5, Math.min(6, d.hp / Math.max(1, statsFor(old, b, 1).hp))); Object.assign(d, statsFor(lv, b, big), { level: lv, oldLevel: old }); n++; } // health, damage, armor, XP and gold are recomputed for the new level
   // gear: whatever these monsters drop and these shops sell grows with them
   const itemF = {}; const note = (id, f) => { const d = items[id]; if (!d || itemF[id] || !(d.type === 'weapon' || d.type === 'armor')) return; itemF[id] = f; };
   for (const [m, f] of Object.entries(factor)) for (const [id] of mobs[m].drops || []) note(id, f);

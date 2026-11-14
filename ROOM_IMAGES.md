@@ -4,7 +4,7 @@ The game shows a static picture under the map for the room you are in. Put one i
 
 Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder, then run `python3 tools/import_art.py <folder>`. It crops each to 16:9, resizes and installs them.
 
-1652 rooms:
+2032 rooms:
 
 | Room | Area | File name (public/img/rooms/) |
 |---|---|---|
@@ -597,6 +597,66 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Clanking Weld Bay | Exterminus (Sci-fi) | `exterminus-6_7.jpg` |
 | Gleaming Assembly Line | Exterminus (Sci-fi) | `exterminus-6_8.jpg` |
 | Endless Weld Bay | Exterminus (Sci-fi) | `exterminus-6_9.jpg` |
+| Ashen Fern Waste | The Extinction Event (Prehistoric) | `extinction-0_0.jpg` |
+| Glassy Fire Break | The Extinction Event (Prehistoric) | `extinction-0_1.jpg` |
+| Chrona's Gate | The Extinction Event (Prehistoric) | `extinction-0_2.jpg` |
+| Glassy Cinder Field | The Extinction Event (Prehistoric) | `extinction-0_3.jpg` |
+| Shattered Impact Ridge | The Extinction Event (Prehistoric) | `extinction-0_4.jpg` |
+| Howling Crater Field | The Extinction Event (Prehistoric) | `extinction-0_5.jpg` |
+| Smoking Ridge | The Extinction Event (Prehistoric) | `extinction-1_0.jpg` |
+| Cracked Fern Waste | The Extinction Event (Prehistoric) | `extinction-1_1.jpg` |
+| Smoking Fire Break | The Extinction Event (Prehistoric) | `extinction-1_2.jpg` |
+| Shattered Crater Field | The Extinction Event (Prehistoric) | `extinction-1_3.jpg` |
+| Fused Lava Run | The Extinction Event (Prehistoric) | `extinction-1_4.jpg` |
+| Boiling Glass Flat | The Extinction Event (Prehistoric) | `extinction-1_5.jpg` |
+| Cracked Cinder Field | The Extinction Event (Prehistoric) | `extinction-2_0.jpg` |
+| Burnt Ridge | The Extinction Event (Prehistoric) | `extinction-2_1.jpg` |
+| Boiling Plain | The Extinction Event (Prehistoric) | `extinction-2_2.jpg` |
+| Red-lit Glass Flat | The Extinction Event (Prehistoric) | `extinction-2_3.jpg` |
+| Boiling Crater Field | The Extinction Event (Prehistoric) | `extinction-2_4.jpg` |
+| Humming Rim | The Extinction Event (Prehistoric) | `extinction-2_5.jpg` |
+| Burnt Ash Plain | The Extinction Event (Prehistoric) | `extinction-3_0.jpg` |
+| Boiling Lava Run | The Extinction Event (Prehistoric) | `extinction-3_1.jpg` |
+| Red-lit Impact Ridge | The Extinction Event (Prehistoric) | `extinction-3_2.jpg` |
+| Fused Plain | The Extinction Event (Prehistoric) | `extinction-3_3.jpg` |
+| Humming Vent | The Extinction Event (Prehistoric) | `extinction-3_4.jpg` |
+| Burning Meteor Heap | The Extinction Event (Prehistoric) | `extinction-3_5.jpg` |
+| Fused Glass Flat | The Extinction Event (Prehistoric) | `extinction-4_0.jpg` |
+| Red-lit Crater Field | The Extinction Event (Prehistoric) | `extinction-4_1.jpg` |
+| Impact Crater Rim | The Extinction Event (Prehistoric) | `extinction-4_2.jpg` |
+| Humming Meteor Heap | The Extinction Event (Prehistoric) | `extinction-4_3.jpg` |
+| Burning Rim | The Extinction Event (Prehistoric) | `extinction-4_4.jpg` |
+| Glowing Scorch | The Extinction Event (Prehistoric) | `extinction-4_5.jpg` |
+| Shattered Plain | The Extinction Event (Prehistoric) | `extinction-5_0.jpg` |
+| Howling Glass Flat | The Extinction Event (Prehistoric) | `extinction-5_1.jpg` |
+| Glowing Overlook | The Extinction Event (Prehistoric) | `extinction-5_2.jpg` |
+| Cracking Scorch | The Extinction Event (Prehistoric) | `extinction-5_3.jpg` |
+| Glowing Meteor Heap | The Extinction Event (Prehistoric) | `extinction-5_4.jpg` |
+| Endless Moment | The Extinction Event (Prehistoric) | `extinction-5_5.jpg` |
+| Howling Impact Ridge | The Extinction Event (Prehistoric) | `extinction-6_0.jpg` |
+| Glowing Rim | The Extinction Event (Prehistoric) | `extinction-6_1.jpg` |
+| Cracking Vent | The Extinction Event (Prehistoric) | `extinction-6_2.jpg` |
+| Towering Overlook | The Extinction Event (Prehistoric) | `extinction-6_3.jpg` |
+| Endless Age | The Extinction Event (Prehistoric) | `extinction-6_4.jpg` |
+| Frozen Epoch | The Extinction Event (Prehistoric) | `extinction-6_5.jpg` |
+| Towering Scorch | The Extinction Event (Prehistoric) | `extinction-7_0.jpg` |
+| Cracking Meteor Heap | The Extinction Event (Prehistoric) | `extinction-7_1.jpg` |
+| Towering Rim | The Extinction Event (Prehistoric) | `extinction-7_2.jpg` |
+| Endless Instant | The Extinction Event (Prehistoric) | `extinction-7_3.jpg` |
+| The Fossil Cathedral | The Extinction Event (Prehistoric) | `extinction-7_4.jpg` |
+| Timeless Age | The Extinction Event (Prehistoric) | `extinction-7_5.jpg` |
+| Humming Overlook | The Extinction Event (Prehistoric) | `extinction-8_0.jpg` |
+| Burning Scorch | The Extinction Event (Prehistoric) | `extinction-8_1.jpg` |
+| Timeless Epoch | The Extinction Event (Prehistoric) | `extinction-8_2.jpg` |
+| Frozen Moment | The Extinction Event (Prehistoric) | `extinction-8_3.jpg` |
+| Timeless Instant | The Extinction Event (Prehistoric) | `extinction-8_4.jpg` |
+| Frozen Hour | The Extinction Event (Prehistoric) | `extinction-8_5.jpg` |
+| Burning Vent | The Extinction Event (Prehistoric) | `extinction-9_0.jpg` |
+| Shimmering Hour | The Extinction Event (Prehistoric) | `extinction-9_1.jpg` |
+| Ticking Age | The Extinction Event (Prehistoric) | `extinction-9_2.jpg` |
+| Shimmering Epoch | The Extinction Event (Prehistoric) | `extinction-9_3.jpg` |
+| Ticking Moment | The Extinction Event (Prehistoric) | `extinction-9_4.jpg` |
+| The Eye of Time | The Extinction Event (Prehistoric) | `extinction-9_5.jpg` |
 | Winding Path | Mount Olympus (Fantasy) | `fantasy-trail_asgard_1.jpg` |
 | Winding Path | Poseidon's Realm (Fantasy) | `fantasy-trail_atlantis_1.jpg` |
 | Winding Path | Atlantis (Fantasy) | `fantasy-trail_camelot_1.jpg` |
@@ -704,6 +764,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Service Walkway | Ember Wastes (Sci-fi) | `future-trail_mars_1.jpg` |
 | Service Walkway | Exterminus (Sci-fi) | `future-trail_pluto_1.jpg` |
 | Service Walkway | Pluto (Sci-fi) | `future-trail_sol_1.jpg` |
+| Service Walkway | Sol and Mercury (Sci-fi) | `future-trail_void_1.jpg` |
 | Rat Run | The Proving Grounds (Bots) | `grounds-f1.jpg` |
 | Void Ring | The Proving Grounds (Bots) | `grounds-f10.jpg` |
 | Bone Yard | The Proving Grounds (Bots) | `grounds-f2.jpg` |
@@ -817,6 +878,110 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Hollowmoor Square | Nightfall Hollow (Fantasy) | `hollow-square.jpg` |
 | Bat Tower | Nightfall Hollow (Fantasy) | `hollow-tower.jpg` |
 | Howling Woods | Nightfall Hollow (Fantasy) | `hollow-woods1.jpg` |
+| Homestead Land Office | Homestead (Farm) | `homestead-0_0.jpg` |
+| Homestead Plot 9 | Homestead (Farm) | `homestead-0_1.jpg` |
+| Homestead Plot 18 | Homestead (Farm) | `homestead-0_2.jpg` |
+| Homestead Plot 27 | Homestead (Farm) | `homestead-0_3.jpg` |
+| Homestead Plot 36 | Homestead (Farm) | `homestead-0_4.jpg` |
+| Homestead Plot 45 | Homestead (Farm) | `homestead-0_5.jpg` |
+| Lumber and Supply Yard | Homestead (Farm) | `homestead-1_0.jpg` |
+| Homestead Plot 10 | Homestead (Farm) | `homestead-1_1.jpg` |
+| Homestead Plot 19 | Homestead (Farm) | `homestead-1_2.jpg` |
+| Homestead Plot 28 | Homestead (Farm) | `homestead-1_3.jpg` |
+| Homestead Plot 37 | Homestead (Farm) | `homestead-1_4.jpg` |
+| Homestead Plot 46 | Homestead (Farm) | `homestead-1_5.jpg` |
+| Well and Sawmill | Homestead (Farm) | `homestead-2_0.jpg` |
+| Homestead Plot 11 | Homestead (Farm) | `homestead-2_1.jpg` |
+| Homestead Plot 20 | Homestead (Farm) | `homestead-2_2.jpg` |
+| Homestead Plot 29 | Homestead (Farm) | `homestead-2_3.jpg` |
+| Homestead Plot 38 | Homestead (Farm) | `homestead-2_4.jpg` |
+| Homestead Plot 47 | Homestead (Farm) | `homestead-2_5.jpg` |
+| Homestead Plot 3 | Homestead (Farm) | `homestead-3_0.jpg` |
+| Homestead Plot 12 | Homestead (Farm) | `homestead-3_1.jpg` |
+| Homestead Plot 21 | Homestead (Farm) | `homestead-3_2.jpg` |
+| Homestead Plot 30 | Homestead (Farm) | `homestead-3_3.jpg` |
+| Homestead Plot 39 | Homestead (Farm) | `homestead-3_4.jpg` |
+| Homestead Plot 48 | Homestead (Farm) | `homestead-3_5.jpg` |
+| Homestead Plot 4 | Homestead (Farm) | `homestead-4_0.jpg` |
+| Homestead Plot 13 | Homestead (Farm) | `homestead-4_1.jpg` |
+| Homestead Plot 22 | Homestead (Farm) | `homestead-4_2.jpg` |
+| Homestead Plot 31 | Homestead (Farm) | `homestead-4_3.jpg` |
+| Homestead Plot 40 | Homestead (Farm) | `homestead-4_4.jpg` |
+| Homestead Plot 49 | Homestead (Farm) | `homestead-4_5.jpg` |
+| Homestead Plot 5 | Homestead (Farm) | `homestead-5_0.jpg` |
+| Homestead Plot 14 | Homestead (Farm) | `homestead-5_1.jpg` |
+| Homestead Plot 23 | Homestead (Farm) | `homestead-5_2.jpg` |
+| Homestead Plot 32 | Homestead (Farm) | `homestead-5_3.jpg` |
+| Homestead Plot 41 | Homestead (Farm) | `homestead-5_4.jpg` |
+| Homestead Plot 50 | Homestead (Farm) | `homestead-5_5.jpg` |
+| Homestead Plot 6 | Homestead (Farm) | `homestead-6_0.jpg` |
+| Homestead Plot 15 | Homestead (Farm) | `homestead-6_1.jpg` |
+| Homestead Plot 24 | Homestead (Farm) | `homestead-6_2.jpg` |
+| Homestead Plot 33 | Homestead (Farm) | `homestead-6_3.jpg` |
+| Homestead Plot 42 | Homestead (Farm) | `homestead-6_4.jpg` |
+| Homestead Plot 51 | Homestead (Farm) | `homestead-6_5.jpg` |
+| Homestead Plot 7 | Homestead (Farm) | `homestead-7_0.jpg` |
+| Homestead Plot 16 | Homestead (Farm) | `homestead-7_1.jpg` |
+| Homestead Plot 25 | Homestead (Farm) | `homestead-7_2.jpg` |
+| Homestead Plot 34 | Homestead (Farm) | `homestead-7_3.jpg` |
+| Homestead Plot 43 | Homestead (Farm) | `homestead-7_4.jpg` |
+| Homestead Plot 52 | Homestead (Farm) | `homestead-7_5.jpg` |
+| Homestead Plot 8 | Homestead (Farm) | `homestead-8_0.jpg` |
+| Homestead Plot 17 | Homestead (Farm) | `homestead-8_1.jpg` |
+| Homestead Plot 26 | Homestead (Farm) | `homestead-8_2.jpg` |
+| Homestead Plot 35 | Homestead (Farm) | `homestead-8_3.jpg` |
+| Homestead Plot 44 | Homestead (Farm) | `homestead-8_4.jpg` |
+| Homestead Plot 53 | Homestead (Farm) | `homestead-8_5.jpg` |
+| Timbered Hill-Fort | The Ore-Kings' Reach (Prehistoric) | `ironage-0_0.jpg` |
+| Palisaded Barley Field | The Ore-Kings' Reach (Prehistoric) | `ironage-0_1.jpg` |
+| Hild's Forge-Gate | The Ore-Kings' Reach (Prehistoric) | `ironage-0_2.jpg` |
+| Palisaded Grave Mound | The Ore-Kings' Reach (Prehistoric) | `ironage-0_3.jpg` |
+| Rutted Standing Stone | The Ore-Kings' Reach (Prehistoric) | `ironage-0_4.jpg` |
+| Smoky Tin Mine | The Ore-Kings' Reach (Prehistoric) | `ironage-1_0.jpg` |
+| Hill-top Hill-Fort | The Ore-Kings' Reach (Prehistoric) | `ironage-1_1.jpg` |
+| Smoky Barley Field | The Ore-Kings' Reach (Prehistoric) | `ironage-1_2.jpg` |
+| Wagon-worn Ford | The Ore-Kings' Reach (Prehistoric) | `ironage-1_3.jpg` |
+| Dangerous Ore Cart Way | The Ore-Kings' Reach (Prehistoric) | `ironage-1_4.jpg` |
+| Hill-top Grave Mound | The Ore-Kings' Reach (Prehistoric) | `ironage-2_0.jpg` |
+| Green Tin Mine | The Ore-Kings' Reach (Prehistoric) | `ironage-2_1.jpg` |
+| Dusty Trade Road | The Ore-Kings' Reach (Prehistoric) | `ironage-2_2.jpg` |
+| Wagon-worn Chariot Track | The Ore-Kings' Reach (Prehistoric) | `ironage-2_3.jpg` |
+| Rutted Ford | The Ore-Kings' Reach (Prehistoric) | `ironage-2_4.jpg` |
+| Green Round-House | The Ore-Kings' Reach (Prehistoric) | `ironage-3_0.jpg` |
+| Dusty Ore Cart Way | The Ore-Kings' Reach (Prehistoric) | `ironage-3_1.jpg` |
+| Wagon-worn Standing Stone | The Ore-Kings' Reach (Prehistoric) | `ironage-3_2.jpg` |
+| Long Trade Road | The Ore-Kings' Reach (Prehistoric) | `ironage-3_3.jpg` |
+| Smoking Spike Wall | The Ore-Kings' Reach (Prehistoric) | `ironage-3_4.jpg` |
+| Long Chariot Track | The Ore-Kings' Reach (Prehistoric) | `ironage-4_0.jpg` |
+| Brask's Great Hall | The Ore-Kings' Reach (Prehistoric) | `ironage-4_1.jpg` |
+| Long Ore Cart Way | The Ore-Kings' Reach (Prehistoric) | `ironage-4_2.jpg` |
+| Smoking Bloomery | The Ore-Kings' Reach (Prehistoric) | `ironage-4_3.jpg` |
+| Roaring War-Camp | The Ore-Kings' Reach (Prehistoric) | `ironage-4_4.jpg` |
+| Rutted Trade Road | The Ore-Kings' Reach (Prehistoric) | `ironage-5_0.jpg` |
+| Dangerous Chariot Track | The Ore-Kings' Reach (Prehistoric) | `ironage-5_1.jpg` |
+| Banner-hung Forge Ring | The Ore-Kings' Reach (Prehistoric) | `ironage-5_2.jpg` |
+| Spiked Skull Pole | The Ore-Kings' Reach (Prehistoric) | `ironage-5_3.jpg` |
+| Banner-hung Bloomery | The Ore-Kings' Reach (Prehistoric) | `ironage-5_4.jpg` |
+| Dangerous Standing Stone | The Ore-Kings' Reach (Prehistoric) | `ironage-6_0.jpg` |
+| Banner-hung War-Camp | The Ore-Kings' Reach (Prehistoric) | `ironage-6_1.jpg` |
+| Spiked Spike Wall | The Ore-Kings' Reach (Prehistoric) | `ironage-6_2.jpg` |
+| Blood-red Forge Ring | The Ore-Kings' Reach (Prehistoric) | `ironage-6_3.jpg` |
+| Foul Anvil Hill | The Ore-Kings' Reach (Prehistoric) | `ironage-6_4.jpg` |
+| Blood-red Skull Pole | The Ore-Kings' Reach (Prehistoric) | `ironage-7_0.jpg` |
+| Spiked Bloomery | The Ore-Kings' Reach (Prehistoric) | `ironage-7_1.jpg` |
+| Blood-red War-Camp | The Ore-Kings' Reach (Prehistoric) | `ironage-7_2.jpg` |
+| Foul Ore Pit | The Ore-Kings' Reach (Prehistoric) | `ironage-7_3.jpg` |
+| Glowing Great Forge | The Ore-Kings' Reach (Prehistoric) | `ironage-7_4.jpg` |
+| Smoking Forge Ring | The Ore-Kings' Reach (Prehistoric) | `ironage-8_0.jpg` |
+| Roaring Skull Pole | The Ore-Kings' Reach (Prehistoric) | `ironage-8_1.jpg` |
+| Clinking Furnace Hall | The Ore-Kings' Reach (Prehistoric) | `ironage-8_2.jpg` |
+| Glowing Slag Heap | The Ore-Kings' Reach (Prehistoric) | `ironage-8_3.jpg` |
+| Clinking Ore Pit | The Ore-Kings' Reach (Prehistoric) | `ironage-8_4.jpg` |
+| Roaring Spike Wall | The Ore-Kings' Reach (Prehistoric) | `ironage-9_0.jpg` |
+| Molten Great Forge | The Ore-Kings' Reach (Prehistoric) | `ironage-9_1.jpg` |
+| Black Anvil Hill | The Ore-Kings' Reach (Prehistoric) | `ironage-9_2.jpg` |
+| Molten Furnace Hall | The Ore-Kings' Reach (Prehistoric) | `ironage-9_3.jpg` |
+| The Iron Throne-Forge | The Ore-Kings' Reach (Prehistoric) | `ironage-9_4.jpg` |
 | Megalithic Jungle Gate | The Megalithic Jungle (Prehistoric) | `jungle-0_0.jpg` |
 | Humid Stream Bank | The Megalithic Jungle (Prehistoric) | `jungle-0_1.jpg` |
 | Steaming Clearing | The Megalithic Jungle (Prehistoric) | `jungle-0_2.jpg` |
@@ -1129,6 +1294,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Meridian Tower Plaza | Modern District (Modern) | `modern-tw_front.jpg` |
 | Dusty Trail | Silverado Mines (Old West) | `oldwest-trail_bank_1.jpg` |
 | Dusty Trail | Redrock Trail (Old West) | `oldwest-trail_mines_1.jpg` |
+| Dusty Trail | Brimstone Rail Yard (Old West) | `oldwest-trail_perdition_1.jpg` |
 | Dusty Trail | Dry Gulch Bank (Old West) | `oldwest-trail_rail_1.jpg` |
 | Dusty Trail | Tombstone Gulch (Old West) | `oldwest-trail_road_1.jpg` |
 | Foot of Mount Olympus | Mount Olympus (Fantasy) | `olympus-0_0.jpg` |
@@ -1241,6 +1407,56 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Tower of Balor | The Otherworld (Fantasy) | `otherworld-9_2.jpg` |
 | Thundering Court | The Otherworld (Fantasy) | `otherworld-9_3.jpg` |
 | The Dagda's Cauldron Hall | The Otherworld (Fantasy) | `otherworld-9_4.jpg` |
+| Moonlit Boot Hill | Perdition Gulch (Old West) | `perdition-0_0.jpg` |
+| Sunken Potter's Field | Perdition Gulch (Old West) | `perdition-0_1.jpg` |
+| Perdition Gate | Perdition Gulch (Old West) | `perdition-0_2.jpg` |
+| Sunken Cairn | Perdition Gulch (Old West) | `perdition-0_3.jpg` |
+| Silent Boardwalk | Perdition Gulch (Old West) | `perdition-0_4.jpg` |
+| Fog-bound Mausoleum | Perdition Gulch (Old West) | `perdition-1_0.jpg` |
+| Crooked Boot Hill | Perdition Gulch (Old West) | `perdition-1_1.jpg` |
+| Fog-bound Potter's Field | Perdition Gulch (Old West) | `perdition-1_2.jpg` |
+| Silent Saloon Row | Perdition Gulch (Old West) | `perdition-1_3.jpg` |
+| Creaking Livery | Perdition Gulch (Old West) | `perdition-1_4.jpg` |
+| Crooked Cairn | Perdition Gulch (Old West) | `perdition-2_0.jpg` |
+| Overgrown Mausoleum | Perdition Gulch (Old West) | `perdition-2_1.jpg` |
+| Boarded Main Street | Perdition Gulch (Old West) | `perdition-2_2.jpg` |
+| Dusty Hotel Ruin | Perdition Gulch (Old West) | `perdition-2_3.jpg` |
+| Boarded Saloon Row | Perdition Gulch (Old West) | `perdition-2_4.jpg` |
+| Overgrown Grave Row | Perdition Gulch (Old West) | `perdition-3_0.jpg` |
+| Boarded Livery | Perdition Gulch (Old West) | `perdition-3_1.jpg` |
+| Dusty Boardwalk | Perdition Gulch (Old West) | `perdition-3_2.jpg` |
+| Creaking Main Street | Perdition Gulch (Old West) | `perdition-3_3.jpg` |
+| Flickering Boxcar | Perdition Gulch (Old West) | `perdition-3_4.jpg` |
+| Creaking Hotel Ruin | Perdition Gulch (Old West) | `perdition-4_0.jpg` |
+| Dusty Saloon Row | Perdition Gulch (Old West) | `perdition-4_1.jpg` |
+| The Hanging Tree | Perdition Gulch (Old West) | `perdition-4_2.jpg` |
+| Smoking Water Tower | Perdition Gulch (Old West) | `perdition-4_3.jpg` |
+| Shrieking Tracks | Perdition Gulch (Old West) | `perdition-4_4.jpg` |
+| Silent Main Street | Perdition Gulch (Old West) | `perdition-5_0.jpg` |
+| Burned Hotel Ruin | Perdition Gulch (Old West) | `perdition-5_1.jpg` |
+| Rusted Depot | Perdition Gulch (Old West) | `perdition-5_2.jpg` |
+| Smoking Trestle | Perdition Gulch (Old West) | `perdition-5_3.jpg` |
+| Flickering Water Tower | Perdition Gulch (Old West) | `perdition-5_4.jpg` |
+| Burned Boardwalk | Perdition Gulch (Old West) | `perdition-6_0.jpg` |
+| Rusted Tracks | Perdition Gulch (Old West) | `perdition-6_1.jpg` |
+| Smoking Boxcar | Perdition Gulch (Old West) | `perdition-6_2.jpg` |
+| The Wendigo's Den | Perdition Gulch (Old West) | `perdition-6_3.jpg` |
+| Burning Brimstone Flat | Perdition Gulch (Old West) | `perdition-6_4.jpg` |
+| Spectral Trestle | Perdition Gulch (Old West) | `perdition-7_0.jpg` |
+| Phantom Depot | Perdition Gulch (Old West) | `perdition-7_1.jpg` |
+| Spectral Tracks | Perdition Gulch (Old West) | `perdition-7_2.jpg` |
+| Burning Lava Fall | Perdition Gulch (Old West) | `perdition-7_3.jpg` |
+| Red Rim | Perdition Gulch (Old West) | `perdition-7_4.jpg` |
+| Flickering Depot | Perdition Gulch (Old West) | `perdition-8_0.jpg` |
+| Shrieking Trestle | Perdition Gulch (Old West) | `perdition-8_1.jpg` |
+| Cursed Hoodoo | Perdition Gulch (Old West) | `perdition-8_2.jpg` |
+| Red Canyon Floor | Perdition Gulch (Old West) | `perdition-8_3.jpg` |
+| Cursed Lava Fall | Perdition Gulch (Old West) | `perdition-8_4.jpg` |
+| Shrieking Boxcar | Perdition Gulch (Old West) | `perdition-9_0.jpg` |
+| Bottomless Rim | Perdition Gulch (Old West) | `perdition-9_1.jpg` |
+| Sulphurous Brimstone Flat | Perdition Gulch (Old West) | `perdition-9_2.jpg` |
+| Bottomless Hoodoo | Perdition Gulch (Old West) | `perdition-9_3.jpg` |
+| The Devil's Courthouse | Perdition Gulch (Old West) | `perdition-9_4.jpg` |
 | Pizza Palace Entrance | Pizza Palace (Modern) | `pizza-0_0.jpg` |
 | Birthday Party Room | Pizza Palace (Modern) | `pizza-0_1.jpg` |
 | Delivery Garage | Pizza Palace (Modern) | `pizza-0_2.jpg` |
@@ -1317,7 +1533,10 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Grim Bridge | Pluto (Sci-fi) | `pluto-9_4.jpg` |
 | The Warlord's Frozen Throne | Pluto (Sci-fi) | `pluto-9_5.jpg` |
 | Game Trail | The Primeval Rift (Prehistoric) | `prehistoric-trail_cave_1.jpg` |
+| Game Trail | Mount Cinderfang (Prehistoric) | `prehistoric-trail_extinction_1.jpg` |
+| Game Trail | The Megalithic Jungle (Prehistoric) | `prehistoric-trail_ironage_1.jpg` |
 | Game Trail | The Mammoth Caverns (Prehistoric) | `prehistoric-trail_jungle_1.jpg` |
+| Game Trail | The Ore-Kings' Reach (Prehistoric) | `prehistoric-trail_volcano_1.jpg` |
 | Amber Hollow | The Primeval Rift (Prehistoric) | `prime-amber.jpg` |
 | The Tyrant's Arena | The Primeval Rift (Prehistoric) | `prime-arena.jpg` |
 | Cycad Grove | The Primeval Rift (Prehistoric) | `prime-cyc.jpg` |
@@ -1615,6 +1834,7 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Ironbound Armory | Ashfall Junction (Old West) | `town-armory.jpg` |
 | Back Alley | Ashfall Junction (Old West) | `town-back_alley.jpg` |
 | Baker's Row | Ashfall Junction (Old West) | `town-bakers_row.jpg` |
+| Ironside Bodyguard Agency | Ashfall Junction (Old West) | `town-bodyguard.jpg` |
 | Chapel Garden | Ashfall Junction (Old West) | `town-chapel_garden.jpg` |
 | Chrome Clinic | Ashfall Junction (Old West) | `town-clinic.jpg` |
 | Cobbler Lane | Ashfall Junction (Old West) | `town-cobbler_lane.jpg` |
@@ -1636,6 +1856,166 @@ Quick way: save your downloads as `room-<key>.png` (or .jpg/.webp) in one folder
 | Stables | Ashfall Junction (Old West) | `town-stables.jpg` |
 | Temple of the Dawn | Ashfall Junction (Old West) | `town-temple.jpg` |
 | Watchtower | Ashfall Junction (Old West) | `town-watchtower.jpg` |
+| Gray Edge | The Void (Sci-fi) | `void-0_0.jpg` |
+| Fading Hush | The Void (Sci-fi) | `void-0_1.jpg` |
+| The Warden's Threshold | The Void (Sci-fi) | `void-0_2.jpg` |
+| Fading Fog | The Void (Sci-fi) | `void-0_3.jpg` |
+| Gray Shallows | The Void (Sci-fi) | `void-0_4.jpg` |
+| Empty Void-Field | The Void (Sci-fi) | `void-0_5.jpg` |
+| Lightless Gulf | The Void (Sci-fi) | `void-0_6.jpg` |
+| Muffled Void-Field 81 | The Void (Sci-fi) | `void-0_7.jpg` |
+| Empty Gulf 81 | The Void (Sci-fi) | `void-0_8.jpg` |
+| Crushing Dark Spiral 83 | The Void (Sci-fi) | `void-0_9.jpg` |
+| Fading Shallows | The Void (Sci-fi) | `void-1_0.jpg` |
+| Silent Edge | The Void (Sci-fi) | `void-1_1.jpg` |
+| Cold Hush | The Void (Sci-fi) | `void-1_2.jpg` |
+| Gray Drift | The Void (Sci-fi) | `void-1_3.jpg` |
+| Muffled Gulf | The Void (Sci-fi) | `void-1_4.jpg` |
+| Muffled Nowhere | The Void (Sci-fi) | `void-1_5.jpg` |
+| Hollow Expanse 81 | The Void (Sci-fi) | `void-1_6.jpg` |
+| Echoless Nowhere 81 | The Void (Sci-fi) | `void-1_7.jpg` |
+| Crushing Maw-Field 82 | The Void (Sci-fi) | `void-1_8.jpg` |
+| Drowned Throat 83 | The Void (Sci-fi) | `void-1_9.jpg` |
+| Silent Fog | The Void (Sci-fi) | `void-2_0.jpg` |
+| Cold Shallows | The Void (Sci-fi) | `void-2_1.jpg` |
+| Dim Edge | The Void (Sci-fi) | `void-2_2.jpg` |
+| Muffled Silence | The Void (Sci-fi) | `void-2_3.jpg` |
+| Echoless Void-Field | The Void (Sci-fi) | `void-2_4.jpg` |
+| Echoless Expanse | The Void (Sci-fi) | `void-2_5.jpg` |
+| Lightless Silence 81 | The Void (Sci-fi) | `void-2_6.jpg` |
+| Crushing Throat 81 | The Void (Sci-fi) | `void-2_7.jpg` |
+| Drowned Abyss 82 | The Void (Sci-fi) | `void-2_8.jpg` |
+| Starving Maw-Field 83 | The Void (Sci-fi) | `void-2_9.jpg` |
+| Cold Drift | The Void (Sci-fi) | `void-3_0.jpg` |
+| Dim Fog | The Void (Sci-fi) | `void-3_1.jpg` |
+| Hollow Void-Field | The Void (Sci-fi) | `void-3_2.jpg` |
+| Echoless Gulf | The Void (Sci-fi) | `void-3_3.jpg` |
+| Hollow Nowhere | The Void (Sci-fi) | `void-3_4.jpg` |
+| Hollow Silence | The Void (Sci-fi) | `void-3_5.jpg` |
+| Sinking Throat | The Void (Sci-fi) | `void-3_6.jpg` |
+| Drowned Maw-Field 81 | The Void (Sci-fi) | `void-3_7.jpg` |
+| Starving Well 82 | The Void (Sci-fi) | `void-3_8.jpg` |
+| Lightless Abyss 83 | The Void (Sci-fi) | `void-3_9.jpg` |
+| Dim Hush | The Void (Sci-fi) | `void-4_0.jpg` |
+| Hollow Expanse | The Void (Sci-fi) | `void-4_1.jpg` |
+| Echoless Nowhere | The Void (Sci-fi) | `void-4_2.jpg` |
+| Empty Silence | The Void (Sci-fi) | `void-4_3.jpg` |
+| Lightless Expanse | The Void (Sci-fi) | `void-4_4.jpg` |
+| Crushing Dark Spiral | The Void (Sci-fi) | `void-4_5.jpg` |
+| Crushing Maw-Field | The Void (Sci-fi) | `void-4_6.jpg` |
+| Starving Abyss 81 | The Void (Sci-fi) | `void-4_7.jpg` |
+| Lightless Dark Spiral 82 | The Void (Sci-fi) | `void-4_8.jpg` |
+| Sinking Well 83 | The Void (Sci-fi) | `void-4_9.jpg` |
+| Hollow Gulf | The Void (Sci-fi) | `void-5_0.jpg` |
+| Echoless Silence | The Void (Sci-fi) | `void-5_1.jpg` |
+| Empty Expanse | The Void (Sci-fi) | `void-5_2.jpg` |
+| Lightless Nowhere | The Void (Sci-fi) | `void-5_3.jpg` |
+| Crushing Well | The Void (Sci-fi) | `void-5_4.jpg` |
+| Drowned Throat | The Void (Sci-fi) | `void-5_5.jpg` |
+| Drowned Abyss | The Void (Sci-fi) | `void-5_6.jpg` |
+| Lightless Well 81 | The Void (Sci-fi) | `void-5_7.jpg` |
+| Sinking Throat 82 | The Void (Sci-fi) | `void-5_8.jpg` |
+| Final Silence | The Void (Sci-fi) | `void-5_9.jpg` |
+| Lightless Void-Field | The Void (Sci-fi) | `void-6_0.jpg` |
+| Empty Gulf | The Void (Sci-fi) | `void-6_1.jpg` |
+| Lightless Silence | The Void (Sci-fi) | `void-6_2.jpg` |
+| Crushing Throat | The Void (Sci-fi) | `void-6_3.jpg` |
+| Drowned Dark Spiral | The Void (Sci-fi) | `void-6_4.jpg` |
+| Starving Maw-Field | The Void (Sci-fi) | `void-6_5.jpg` |
+| Starving Well | The Void (Sci-fi) | `void-6_6.jpg` |
+| Sinking Dark Spiral 81 | The Void (Sci-fi) | `void-6_7.jpg` |
+| Final Singularity | The Void (Sci-fi) | `void-6_8.jpg` |
+| Null Zero | The Void (Sci-fi) | `void-6_9.jpg` |
+| Empty Nowhere | The Void (Sci-fi) | `void-7_0.jpg` |
+| Muffled Void-Field | The Void (Sci-fi) | `void-7_1.jpg` |
+| Crushing Abyss | The Void (Sci-fi) | `void-7_2.jpg` |
+| Drowned Maw-Field | The Void (Sci-fi) | `void-7_3.jpg` |
+| Starving Throat | The Void (Sci-fi) | `void-7_4.jpg` |
+| Lightless Abyss | The Void (Sci-fi) | `void-7_5.jpg` |
+| Lightless Dark Spiral | The Void (Sci-fi) | `void-7_6.jpg` |
+| Final Core | The Void (Sci-fi) | `void-7_7.jpg` |
+| Null End | The Void (Sci-fi) | `void-7_8.jpg` |
+| Unmade Singularity | The Void (Sci-fi) | `void-7_9.jpg` |
+| Muffled Expanse | The Void (Sci-fi) | `void-8_0.jpg` |
+| Starving Dark Spiral | The Void (Sci-fi) | `void-8_1.jpg` |
+| Drowned Well | The Void (Sci-fi) | `void-8_2.jpg` |
+| Starving Abyss | The Void (Sci-fi) | `void-8_3.jpg` |
+| Lightless Maw-Field | The Void (Sci-fi) | `void-8_4.jpg` |
+| Sinking Well | The Void (Sci-fi) | `void-8_5.jpg` |
+| Unmade Zero | The Void (Sci-fi) | `void-8_6.jpg` |
+| Null Silence | The Void (Sci-fi) | `void-8_7.jpg` |
+| Unmade Core | The Void (Sci-fi) | `void-8_8.jpg` |
+| Absolute End | The Void (Sci-fi) | `void-8_9.jpg` |
+| Sinking Maw-Field | The Void (Sci-fi) | `void-9_0.jpg` |
+| Lightless Throat | The Void (Sci-fi) | `void-9_1.jpg` |
+| Sinking Dark Spiral | The Void (Sci-fi) | `void-9_2.jpg` |
+| Lightless Well | The Void (Sci-fi) | `void-9_3.jpg` |
+| Sinking Abyss | The Void (Sci-fi) | `void-9_4.jpg` |
+| Ending End | The Void (Sci-fi) | `void-9_5.jpg` |
+| Absolute Singularity | The Void (Sci-fi) | `void-9_6.jpg` |
+| Ending Zero | The Void (Sci-fi) | `void-9_7.jpg` |
+| Absolute Silence | The Void (Sci-fi) | `void-9_8.jpg` |
+| The Throne of Nothing | The Void (Sci-fi) | `void-9_9.jpg` |
+| Ashen Fern Slope | Mount Cinderfang (Prehistoric) | `volcano-0_0.jpg` |
+| Smoking Hot Spring | Mount Cinderfang (Prehistoric) | `volcano-0_1.jpg` |
+| Kaldra's Fire Camp | Mount Cinderfang (Prehistoric) | `volcano-0_2.jpg` |
+| Smoking Scorched Glade | Mount Cinderfang (Prehistoric) | `volcano-0_3.jpg` |
+| Cooling Obsidian Field | Mount Cinderfang (Prehistoric) | `volcano-0_4.jpg` |
+| Steaming Basalt Flat | Mount Cinderfang (Prehistoric) | `volcano-0_5.jpg` |
+| Dusty Cinder Path | Mount Cinderfang (Prehistoric) | `volcano-1_0.jpg` |
+| Charred Fern Slope | Mount Cinderfang (Prehistoric) | `volcano-1_1.jpg` |
+| Dusty Hot Spring | Mount Cinderfang (Prehistoric) | `volcano-1_2.jpg` |
+| Cooling Basalt Flat | Mount Cinderfang (Prehistoric) | `volcano-1_3.jpg` |
+| Steaming Magma Stream | Mount Cinderfang (Prehistoric) | `volcano-1_4.jpg` |
+| Glowing Fumarole | Mount Cinderfang (Prehistoric) | `volcano-1_5.jpg` |
+| Charred Scorched Glade | Mount Cinderfang (Prehistoric) | `volcano-2_0.jpg` |
+| Grey Cinder Path | Mount Cinderfang (Prehistoric) | `volcano-2_1.jpg` |
+| Glowing Lava Flow | Mount Cinderfang (Prehistoric) | `volcano-2_2.jpg` |
+| Steaming Fumarole | Mount Cinderfang (Prehistoric) | `volcano-2_3.jpg` |
+| Glowing Basalt Flat | Mount Cinderfang (Prehistoric) | `volcano-2_4.jpg` |
+| Rumbling Cinder Cone | Mount Cinderfang (Prehistoric) | `volcano-2_5.jpg` |
+| Grey Ash Forest | Mount Cinderfang (Prehistoric) | `volcano-3_0.jpg` |
+| Glowing Magma Stream | Mount Cinderfang (Prehistoric) | `volcano-3_1.jpg` |
+| Rippled Obsidian Field | Mount Cinderfang (Prehistoric) | `volcano-3_2.jpg` |
+| Cracked Lava Flow | Mount Cinderfang (Prehistoric) | `volcano-3_3.jpg` |
+| Rumbling Ash Slide | Mount Cinderfang (Prehistoric) | `volcano-3_4.jpg` |
+| Roaring Vent | Mount Cinderfang (Prehistoric) | `volcano-3_5.jpg` |
+| Cracked Fumarole | Mount Cinderfang (Prehistoric) | `volcano-4_0.jpg` |
+| Rippled Basalt Flat | Mount Cinderfang (Prehistoric) | `volcano-4_1.jpg` |
+| Cracked Magma Stream | Mount Cinderfang (Prehistoric) | `volcano-4_2.jpg` |
+| Rumbling Vent | Mount Cinderfang (Prehistoric) | `volcano-4_3.jpg` |
+| Roaring Cinder Cone | Mount Cinderfang (Prehistoric) | `volcano-4_4.jpg` |
+| Steep Fire Pit | Mount Cinderfang (Prehistoric) | `volcano-4_5.jpg` |
+| Cooling Lava Flow | Mount Cinderfang (Prehistoric) | `volcano-5_0.jpg` |
+| The Magma Throat | Mount Cinderfang (Prehistoric) | `volcano-5_1.jpg` |
+| Steep Ridge | Mount Cinderfang (Prehistoric) | `volcano-5_2.jpg` |
+| Sulfurous Fire Pit | Mount Cinderfang (Prehistoric) | `volcano-5_3.jpg` |
+| Steep Vent | Mount Cinderfang (Prehistoric) | `volcano-5_4.jpg` |
+| Boiling Rim | Mount Cinderfang (Prehistoric) | `volcano-5_5.jpg` |
+| Steaming Obsidian Field | Mount Cinderfang (Prehistoric) | `volcano-6_0.jpg` |
+| Steep Cinder Cone | Mount Cinderfang (Prehistoric) | `volcano-6_1.jpg` |
+| Sulfurous Ash Slide | Mount Cinderfang (Prehistoric) | `volcano-6_2.jpg` |
+| Ember-lit Ridge | Mount Cinderfang (Prehistoric) | `volcano-6_3.jpg` |
+| Boiling Heart-Vent | Mount Cinderfang (Prehistoric) | `volcano-6_4.jpg` |
+| Molten Magma Chamber | Mount Cinderfang (Prehistoric) | `volcano-6_5.jpg` |
+| Ember-lit Fire Pit | Mount Cinderfang (Prehistoric) | `volcano-7_0.jpg` |
+| Sulfurous Vent | Mount Cinderfang (Prehistoric) | `volcano-7_1.jpg` |
+| Ember-lit Cinder Cone | Mount Cinderfang (Prehistoric) | `volcano-7_2.jpg` |
+| Boiling Fire Stair | Mount Cinderfang (Prehistoric) | `volcano-7_3.jpg` |
+| Molten Lava Lake | Mount Cinderfang (Prehistoric) | `volcano-7_4.jpg` |
+| Searing Heart-Vent | Mount Cinderfang (Prehistoric) | `volcano-7_5.jpg` |
+| Rumbling Ridge | Mount Cinderfang (Prehistoric) | `volcano-8_0.jpg` |
+| Roaring Fire Pit | Mount Cinderfang (Prehistoric) | `volcano-8_1.jpg` |
+| Searing Magma Chamber | Mount Cinderfang (Prehistoric) | `volcano-8_2.jpg` |
+| Molten Rim | Mount Cinderfang (Prehistoric) | `volcano-8_3.jpg` |
+| Searing Fire Stair | Mount Cinderfang (Prehistoric) | `volcano-8_4.jpg` |
+| Blazing Lava Lake | Mount Cinderfang (Prehistoric) | `volcano-8_5.jpg` |
+| Roaring Ash Slide | Mount Cinderfang (Prehistoric) | `volcano-9_0.jpg` |
+| Bellowing Lava Lake | Mount Cinderfang (Prehistoric) | `volcano-9_1.jpg` |
+| Blazing Heart-Vent | Mount Cinderfang (Prehistoric) | `volcano-9_2.jpg` |
+| Bellowing Magma Chamber | Mount Cinderfang (Prehistoric) | `volcano-9_3.jpg` |
+| Blazing Rim | Mount Cinderfang (Prehistoric) | `volcano-9_4.jpg` |
+| The Heart of the Mountain | Mount Cinderfang (Prehistoric) | `volcano-9_5.jpg` |
 | Arena Lobby and Box Office | Championship Wrestling Federation (Modern) | `wrestling-0_0.jpg` |
 | Fan Entrance | Championship Wrestling Federation (Modern) | `wrestling-0_1.jpg` |
 | Parking Lot and Tour Buses | Championship Wrestling Federation (Modern) | `wrestling-0_2.jpg` |

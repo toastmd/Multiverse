@@ -156,19 +156,26 @@ function login(conn, m) {
 }
 
 // ---- minimal RFC 6455 WebSocket ----
-function ws(req, socket) {
+const darkflow = require('./darkflow');
+const dfDeps = { login: (c, m) => login(c, m), exists: (n) => fs.existsSync(file(n[0].toUpperCase() + n.slice(1).toLowerCase())) };
+const hostUrl = (req) => (process.env.PUBLIC_URL || (req && req.headers.host ? `http://${req.headers.host}` : '')).replace(/\/$/, '');
+function ws(req, socket, df) {
   const key = req.headers['sec-websocket-key']; if (!key) return socket.destroy();
   const acc = crypto.createHash('sha1').update(key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
   socket.write(`HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ${acc}\r\n\r\n`);
   const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim(), raw = (process.env.TRUST_PROXY && fwd) || socket.remoteAddress || '', ip = raw.replace(/^::ffff:/, '');
   const c = { buf: Buffer.alloc(0), player: null, count: 0, closed: false, ip };
-  setImmediate(() => c.send({ t: 'classes', list: Object.entries(D.K.CLASSES).filter(([, v]) => !v.remort).map(([k, v]) => ({ k, name: v.name, icon: v.icon, desc: v.desc })) }));
-  c.raw = (op, pl) => {
+  let dfc = null; // a Darkflow (text + GMCP) connection: the same game, spoken as ANSI text and GMCP frames
+  if (df) { c.raw = (op, pl) => { if (c.closed) return; const n = pl.length; const h = n < 126 ? Buffer.from([0x80 | op, n]) : n < 65536 ? Buffer.from([0x80 | op, 126, n >> 8, n & 255]) : (() => { const b = Buffer.alloc(10); b[0] = 0x80 | op; b[1] = 127; b.writeBigUInt64BE(BigInt(n), 2); return b; })(); socket.write(Buffer.concat([h, pl])); };
+    dfc = darkflow.create({ text: (t) => c.raw(1, Buffer.from(t)), gmcp: (t) => c.raw(2, Buffer.from(t)), close: () => c.close(), publicUrl: hostUrl(req) }, ip, dfDeps);
+    c.send = (o) => dfc.send(o); Object.defineProperty(dfc, 'player', { get: () => c.player, set: (v) => { c.player = v; } }); setImmediate(() => dfc.banner()); }
+  if (!df) setImmediate(() => c.send({ t: 'classes', list: Object.entries(D.K.CLASSES).filter(([, v]) => !v.remort).map(([k, v]) => ({ k, name: v.name, icon: v.icon, desc: v.desc })) }));
+  if (!df) c.raw = (op, pl) => {
     if (c.closed) return; const n = pl.length;
     const h = n < 126 ? Buffer.from([0x80 | op, n]) : n < 65536 ? Buffer.from([0x80 | op, 126, n >> 8, n & 255]) : (() => { const b = Buffer.alloc(10); b[0] = 0x80 | op; b[1] = 127; b.writeBigUInt64BE(BigInt(n), 2); return b; })();
     socket.write(Buffer.concat([h, pl]));
   };
-  c.send = (o) => c.raw(1, Buffer.from(JSON.stringify(o)));
+  if (!df) c.send = (o) => c.raw(1, Buffer.from(JSON.stringify(o)));
   c.close = () => { if (c.closed) return; c.raw(8, Buffer.alloc(0)); c.closed = true; socket.end(); };
   const t = setInterval(() => (c.count = 0), 1000);
   socket.on('close', () => { clearInterval(t); c.closed = true; const pl = c.player; if (pl && !pl.isBot && !pl.quitting && !pl.gone && pl.conn === c) linkLost(pl); else drop(pl); });
@@ -184,7 +191,11 @@ function ws(req, socket) {
       let pl = Buffer.from(b.subarray(off + (masked ? 4 : 0), end));
       if (masked) { const k = b.subarray(off, off + 4); for (let i = 0; i < pl.length; i++) pl[i] ^= k[i & 3]; }
       c.buf = b.subarray(end);
-      if (op === 8) return c.close(); if (op === 9) { c.raw(10, pl); continue; } if (op !== 1) continue;
+      if (op === 8) return c.close(); if (op === 9) { c.raw(10, pl); continue; }
+      if (df) { // Darkflow: text frames are lines typed by the player, binary frames are GMCP
+        if (op === 2) { const t = pl.toString('utf8'), i = t.indexOf(' '); let data; try { data = i < 0 ? undefined : JSON.parse(t.slice(i + 1)); } catch (e) { data = t.slice(i + 1); } try { dfc.onGmcp(i < 0 ? t : t.slice(0, i), data); } catch (e) { D.log('gmcp error', e.stack); } continue; }
+        if (op !== 1) continue; if (++c.count > 40) continue; try { for (const l of pl.toString('utf8').split(/\r?\n/)) dfc.onLine(l); } catch (e) { D.log('command error', e.stack); } continue; }
+      if (op !== 1) continue;
       if (++c.count > 25) continue; let m; try { m = JSON.parse(pl.toString('utf8')); } catch { continue; }
       try {
         if (m.t === 'login' && !c.player) login(c, m);
@@ -223,7 +234,15 @@ const server = http.createServer((req, res) => {
   if (req.headers['if-modified-since'] && new Date(req.headers['if-modified-since']) >= lm) { res.writeHead(304, { 'Cache-Control': 'no-cache' }); return res.end(); }
   res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Last-Modified': lm.toUTCString() }); fs.createReadStream(f).pipe(res);
 });
-server.on('upgrade', (req, socket) => (req.url === '/ws' ? ws(req, socket) : socket.destroy()));
+server.on('upgrade', (req, socket) => { const u = String(req.url || '/').split('?')[0]; if (u === '/ws') return ws(req, socket, false); if (u === '/' || u === '/darkflow' || u === '/mud') return ws(req, socket, true); socket.destroy(); }); // /ws = the browser client, / = Darkflow
+// plain telnet (with GMCP) for Darkflow's /proxy bridge and ordinary MUD clients; TELNET_PORT=0 turns it off
+const TELNET_PORT = process.env.TELNET_PORT === undefined ? 4242 : +process.env.TELNET_PORT;
+if (TELNET_PORT) {
+  const ts = require('net').createServer((sock) => { const ip = String(sock.remoteAddress || '').replace(/^::ffff:/, ''); const c = darkflow.telnet(sock, ip, dfDeps, hostUrl(null) || (process.env.PUBLIC_URL || ''));
+    sock.setKeepAlive(true, 30000); sock.on('error', () => sock.destroy());
+    sock.on('close', () => { c.closed = true; const pl = c.player; if (pl && !pl.isBot && !pl.quitting && !pl.gone && pl.conn === c) linkLost(pl); else drop(pl); }); });
+  ts.on('error', (e) => D.log(`telnet port ${TELNET_PORT} unavailable: ${e.message}`)); ts.listen(TELNET_PORT, HOST, () => D.log(`telnet (Darkflow proxy / MUD clients) on port ${TELNET_PORT}`));
+}
 server.listen(PORT, HOST, () => { D.log(`MULTIVERSE MUD listening on http://${HOST}:${PORT}  (${D.rooms.size} rooms)`); D.log(`Area builder: http://localhost:${PORT}/builder.html   builder key: ${BKEY}`); D.events.start(); D.taxi.start(); bots.start(); bridge.start(); github.start(); bounty.start(); weather.start(); reports.start(); D.mail.start(); });
 // ---- shutdown: saves every player, tells them, closes connections and stops the process ----
 let stopTimer = null, halting = false;

@@ -474,3 +474,9 @@ Save as ~/Library/LaunchAgents/com.ashfall.mud.plist (fix both paths; `which nod
 - All three areas are in the hub realm lists, milestones, the World Map, help and the guide.
 - **Terrain** textures are regenerated (512 px, tileable: blade-by-blade grass with clover, pebbled cracked dirt, mossy flagstones, stained concrete, riveted diamond-plate and caustic water). The **class pictures** got a photographic grade pass (key light, vignette, skin and fabric grain); they are still stylized portraits, since no image generator is available: see ART_PROMPTS.md to swap in real art.
 - **The Player's Guide** has a new modern look: glass header, scroll progress bar, 3D-tilting hero and cards, a drifting depth starfield, staggered scroll reveals (all disabled for `prefers-reduced-motion`). Source: `tools/guide_assets/guide.css` and `guide.js`.
+
+
+## Darkflow support
+
+MULTIVERSE MUD now works in the Darkflow client: WebSocket (text + binary GMCP) on the game port path `/`, plus a telnet listener with GMCP on port 4242 (`TELNET_PORT`).
+Vitals, status, worth, inventory, buffs, enemy, room, room image, chat and map panels are fed with GMCP. See `DARKFLOW.md`; smoke test: `node tools/test_darkflow.js`.
